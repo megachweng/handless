@@ -18,18 +18,6 @@ function sortBindings(a: ShortcutBinding, b: ShortcutBinding): number {
   return a.id.localeCompare(b.id);
 }
 
-/** Get a display label for a binding */
-function getBindingLabel(
-  binding: ShortcutBinding,
-  prompts: { id: string; name: string }[],
-): string {
-  if (binding.id === "transcribe") return "Transcribe";
-  const prompt = binding.post_process_prompt_id
-    ? prompts.find((p) => p.id === binding.post_process_prompt_id)
-    : null;
-  return prompt ? `Transcribe + ${prompt.name}` : "Transcribe";
-}
-
 export const ShortcutBindingsCard: React.FC = () => {
   const { t } = useTranslation();
   const { getSetting, refreshSettings } = useSettings();
@@ -91,33 +79,24 @@ export const ShortcutBindingsCard: React.FC = () => {
   return (
     <SettingsGroup title={t("settings.general.shortcuts.title")}>
       {transcribeBindings.map((binding) => (
-        <div key={binding.id} className="px-3 py-2.5">
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-sm font-medium truncate shrink-0">
-              {getBindingLabel(binding, prompts)}
-            </span>
-            <div className="flex items-center gap-2">
-              <ShortcutInput shortcutId={binding.id} compact={true} />
-              {canDelete(binding.id) && (
-                <button
-                  onClick={() => handleRemove(binding.id)}
-                  className="p-1 text-muted/40 hover:text-red-400 transition-colors rounded hover:bg-red-400/10"
-                  title={t("settings.general.shortcuts.remove")}
-                >
-                  <X size={14} />
-                </button>
-              )}
-            </div>
-          </div>
+        <div key={binding.id} className="flex items-center gap-2 px-3 py-1.5">
+          <ShortcutInput shortcutId={binding.id} compact={true} />
           {prompts.length > 0 && (
-            <div className="mt-1.5">
-              <Dropdown
-                options={strategyOptions}
-                selectedValue={binding.post_process_prompt_id || NONE_VALUE}
-                onSelect={(value) => handleStrategyChange(binding.id, value)}
-                className="w-full"
-              />
-            </div>
+            <Dropdown
+              options={strategyOptions}
+              selectedValue={binding.post_process_prompt_id || NONE_VALUE}
+              onSelect={(value) => handleStrategyChange(binding.id, value)}
+              className="flex-1 min-w-0"
+            />
+          )}
+          {canDelete(binding.id) && (
+            <button
+              onClick={() => handleRemove(binding.id)}
+              className="p-1 text-muted/40 hover:text-red-400 transition-colors rounded hover:bg-red-400/10"
+              title={t("settings.general.shortcuts.remove")}
+            >
+              <X size={14} />
+            </button>
           )}
         </div>
       ))}
