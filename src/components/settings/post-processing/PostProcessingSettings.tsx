@@ -22,6 +22,8 @@ import { usePostProcessProviderState } from "../PostProcessingSettingsApi/usePos
 import { ShortcutInput } from "../ShortcutInput";
 import { useSettings } from "../../../hooks/useSettings";
 
+const BUILTIN_PROMPT_PREFIX = "default_";
+
 const PostProcessingSettingsApiComponent: React.FC = () => {
   const { t } = useTranslation();
   const state = usePostProcessProviderState();
@@ -242,6 +244,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
   };
 
   const hasPrompts = prompts.length > 0;
+  const isBuiltIn = selectedPromptId.startsWith(BUILTIN_PROMPT_PREFIX);
   const isDirty =
     !!selectedPrompt &&
     (draftName.trim() !== selectedPrompt.name ||
@@ -300,6 +303,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
                   "settings.postProcessing.prompts.promptLabelPlaceholder",
                 )}
                 variant="compact"
+                disabled={isBuiltIn}
               />
             </div>
 
@@ -313,6 +317,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
                 placeholder={t(
                   "settings.postProcessing.prompts.promptInstructionsPlaceholder",
                 )}
+                disabled={isBuiltIn}
               />
               <p
                 className="text-xs text-muted/70"
@@ -322,24 +327,26 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
               />
             </div>
 
-            <div className="flex gap-2 pt-2">
-              <Button
-                onClick={handleUpdatePrompt}
-                variant="primary"
-                size="md"
-                disabled={!draftName.trim() || !draftText.trim() || !isDirty}
-              >
-                {t("settings.postProcessing.prompts.updatePrompt")}
-              </Button>
-              <Button
-                onClick={() => handleDeletePrompt(selectedPromptId)}
-                variant="secondary"
-                size="md"
-                disabled={!selectedPromptId || prompts.length <= 1}
-              >
-                {t("settings.postProcessing.prompts.deletePrompt")}
-              </Button>
-            </div>
+            {!isBuiltIn && (
+              <div className="flex gap-2 pt-2">
+                <Button
+                  onClick={handleUpdatePrompt}
+                  variant="primary"
+                  size="md"
+                  disabled={!draftName.trim() || !draftText.trim() || !isDirty}
+                >
+                  {t("settings.postProcessing.prompts.updatePrompt")}
+                </Button>
+                <Button
+                  onClick={() => handleDeletePrompt(selectedPromptId)}
+                  variant="secondary"
+                  size="md"
+                  disabled={!selectedPromptId || prompts.length <= 1}
+                >
+                  {t("settings.postProcessing.prompts.deletePrompt")}
+                </Button>
+              </div>
+            )}
           </div>
         )}
 

@@ -918,6 +918,10 @@ pub fn update_post_process_prompt(
     name: String,
     prompt: String,
 ) -> Result<(), String> {
+    if settings::is_builtin_prompt(&id) {
+        return Err("Cannot modify a built-in prompt".to_string());
+    }
+
     let mut settings = settings::get_settings(&app);
 
     if let Some(existing_prompt) = settings
@@ -937,6 +941,10 @@ pub fn update_post_process_prompt(
 #[tauri::command]
 #[specta::specta]
 pub fn delete_post_process_prompt(app: AppHandle, id: String) -> Result<(), String> {
+    if settings::is_builtin_prompt(&id) {
+        return Err("Cannot delete a built-in prompt".to_string());
+    }
+
     let mut settings = settings::get_settings(&app);
 
     // Don't allow deleting the last prompt

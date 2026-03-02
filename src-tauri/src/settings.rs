@@ -379,7 +379,7 @@ pub struct AppSettings {
     pub post_process_models: HashMap<String, String>,
     #[serde(default = "default_post_process_prompts")]
     pub post_process_prompts: Vec<LLMPrompt>,
-    #[serde(default)]
+    #[serde(default = "default_post_process_selected_prompt_id")]
     pub post_process_selected_prompt_id: Option<String>,
     #[serde(default)]
     pub mute_while_recording: bool,
@@ -604,12 +604,37 @@ fn default_post_process_models() -> HashMap<String, String> {
     map
 }
 
+const BUILTIN_PROMPT_PREFIX: &str = "default_";
+const BUILTIN_PROMPT_CORRECT: &str = "default_correct";
+const BUILTIN_PROMPT_IMPROVE: &str = "default_improve";
+const BUILTIN_PROMPT_RESTRUCTURE: &str = "default_restructure";
+
+pub fn is_builtin_prompt(id: &str) -> bool {
+    id.starts_with(BUILTIN_PROMPT_PREFIX)
+}
+
 fn default_post_process_prompts() -> Vec<LLMPrompt> {
-    vec![LLMPrompt {
-        id: "default_improve_transcriptions".to_string(),
-        name: "Improve Transcriptions".to_string(),
-        prompt: "Clean this transcript:\n1. Fix spelling, capitalization, and punctuation errors\n2. Convert number words to digits (twenty-five → 25, ten percent → 10%, five dollars → $5)\n3. Replace spoken punctuation with symbols (period → ., comma → ,, question mark → ?)\n4. Remove filler words (um, uh, like as filler)\n5. Keep the language in the original version (if it was french, keep it in french for example)\n\nPreserve exact meaning and word order. Do not paraphrase or reorder content.\n\nReturn only the cleaned transcript.\n\nTranscript:\n${output}".to_string(),
-    }]
+    vec![
+        LLMPrompt {
+            id: BUILTIN_PROMPT_CORRECT.to_string(),
+            name: "Correct Transcript".to_string(),
+            prompt: "Clean this transcript:\n1. Fix spelling, capitalization, and punctuation errors\n2. Convert number words to digits (twenty-five → 25, ten percent → 10%, five dollars → $5)\n3. Replace spoken punctuation with symbols (period → ., comma → ,, question mark → ?)\n4. Remove filler words (um, uh, like as filler)\n5. Keep the language in the original version (if it was french, keep it in french for example)\n\nPreserve exact meaning and word order. Do not paraphrase or reorder content.\n\nReturn only the cleaned transcript.\n\nTranscript:\n${output}".to_string(),
+        },
+        LLMPrompt {
+            id: BUILTIN_PROMPT_IMPROVE.to_string(),
+            name: "Improve Fluency".to_string(),
+            prompt: "Improve this transcript:\n1. Fix spelling, capitalization, and punctuation errors\n2. Convert number words to digits (twenty-five → 25, ten percent → 10%, five dollars → $5)\n3. Replace spoken punctuation with symbols (period → ., comma → ,, question mark → ?)\n4. Remove filler words (um, uh, like as filler)\n5. Improve sentence fluency and readability\n6. Rephrase awkward spoken constructions into natural written prose\n7. Keep the language in the original version (if it was french, keep it in french for example)\n\nPreserve the speaker's intent and meaning. Do not add or remove information.\n\nReturn only the improved transcript.\n\nTranscript:\n${output}".to_string(),
+        },
+        LLMPrompt {
+            id: BUILTIN_PROMPT_RESTRUCTURE.to_string(),
+            name: "Restructure & Format".to_string(),
+            prompt: "Restructure and format this transcript:\n1. Fix spelling, capitalization, and punctuation errors\n2. Convert number words to digits (twenty-five → 25, ten percent → 10%, five dollars → $5)\n3. Replace spoken punctuation with symbols (period → ., comma → ,, question mark → ?)\n4. Remove filler words (um, uh, like as filler)\n5. Improve sentence fluency and readability\n6. Rephrase awkward spoken constructions into natural written prose\n7. Break content into logical paragraphs when the speaker changes topic\n8. Use bullet points or numbered lists only when the speaker is clearly listing items\n9. Keep the language in the original version (if it was french, keep it in french for example)\n\nKeep the output as natural prose. Do not add headings, titles, or article-like formatting. Preserve all information.\n\nReturn only the restructured transcript.\n\nTranscript:\n${output}".to_string(),
+        },
+    ]
+}
+
+fn default_post_process_selected_prompt_id() -> Option<String> {
+    Some(BUILTIN_PROMPT_CORRECT.to_string())
 }
 
 fn default_typing_tool() -> TypingTool {
@@ -725,6 +750,48 @@ fn ensure_stt_defaults(settings: &mut AppSettings) -> bool {
 
 fn ensure_post_process_defaults(settings: &mut AppSettings) -> bool {
     let mut changed = false;
+
+    // Sync built-in prompts: add missing ones and update content/name for existing ones
+    let default_prompts = default_post_process_prompts();
+    for default_prompt in &default_prompts {
+        match settings
+            .post_process_prompts
+            .iter_mut()
+            .find(|p| p.id == default_prompt.id)
+        {
+            Some(existing) => {
+                if existing.prompt != default_prompt.prompt
+                    || existing.name != default_prompt.name
+                {
+                    existing.prompt = default_prompt.prompt.clone();
+                    existing.name = default_prompt.name.clone();
+                    changed = true;
+                }
+            }
+            None => {
+                debug!("Adding missing default prompt: {}", default_prompt.id);
+                settings.post_process_prompts.push(default_prompt.clone());
+                changed = true;
+            }
+        }
+    }
+
+    // Migrate from old default_improve_transcriptions prompt
+    if let Some(old_idx) = settings
+        .post_process_prompts
+        .iter()
+        .position(|p| p.id == "default_improve_transcriptions")
+    {
+        // If the user had the old default selected, switch to the new default
+        if settings.post_process_selected_prompt_id.as_deref()
+            == Some("default_improve_transcriptions")
+        {
+            settings.post_process_selected_prompt_id = Some(BUILTIN_PROMPT_CORRECT.to_string());
+        }
+        settings.post_process_prompts.remove(old_idx);
+        changed = true;
+    }
+
     for provider in default_post_process_providers() {
         // Use match to do a single lookup - either sync existing or add new
         match settings
@@ -871,7 +938,7 @@ pub fn get_default_settings() -> AppSettings {
         post_process_api_keys: default_post_process_api_keys(),
         post_process_models: default_post_process_models(),
         post_process_prompts: default_post_process_prompts(),
-        post_process_selected_prompt_id: None,
+        post_process_selected_prompt_id: default_post_process_selected_prompt_id(),
         mute_while_recording: false,
         append_trailing_space: false,
         app_language: default_app_language(),
@@ -975,7 +1042,7 @@ pub fn get_settings(app: &AppHandle) -> AppSettings {
         .store(SETTINGS_STORE_PATH)
         .expect("Failed to initialize store");
 
-    let mut settings = if let Some(settings_value) = store.get("settings") {
+    if let Some(settings_value) = store.get("settings") {
         serde_json::from_value::<AppSettings>(settings_value).unwrap_or_else(|_| {
             let default_settings = get_default_settings();
             store.set("settings", serde_json::to_value(&default_settings).unwrap());
@@ -985,15 +1052,7 @@ pub fn get_settings(app: &AppHandle) -> AppSettings {
         let default_settings = get_default_settings();
         store.set("settings", serde_json::to_value(&default_settings).unwrap());
         default_settings
-    };
-
-    let stt_changed = ensure_stt_defaults(&mut settings);
-    let pp_changed = ensure_post_process_defaults(&mut settings);
-    if stt_changed || pp_changed {
-        store.set("settings", serde_json::to_value(&settings).unwrap());
     }
-
-    settings
 }
 
 pub fn write_settings(app: &AppHandle, settings: AppSettings) {
