@@ -363,7 +363,7 @@
         "title": "Prompt",
         "selectedPrompt": {
           "title": "Wybrany prompt",
-          "description": "Wybierz szablon do ulepszania transkrypcji lub utwórz nowy. Użyj ${output} w treści, aby odwołać się do przechwyconej transkrypcji."
+          "description": "Wybierz szablon do ulepszania transkrypcji lub utwórz nowy. Przechwycona transkrypcja jest automatycznie dostarczana do promptu."
         },
         "noPrompts": "Brak dostępnych promptów",
         "selectPrompt": "Wybierz prompt",
@@ -371,8 +371,8 @@
         "promptLabel": "Etykieta promptu",
         "promptLabelPlaceholder": "Wpisz nazwę promptu",
         "promptInstructions": "Instrukcje promptu",
-        "promptInstructionsPlaceholder": "Wpisz instrukcje do wykonania po transkrypcji. Przykład: Popraw gramatykę i jasność dla następującego tekstu: ${output}",
-        "promptTip": "Wskazówka: użyj <code>${output}</code>, aby wstawić transkrybowany tekst do promptu.",
+        "promptInstructionsPlaceholder": "Wpisz instrukcje do wykonania po transkrypcji. Transkrypcja jest automatycznie dołączana.",
+        "promptTip": "Wskazówka: Transkrybowany tekst jest automatycznie dostarczany jako dane wejściowe do promptu.",
         "updatePrompt": "Zaktualizuj prompt",
         "deletePrompt": "Usuń prompt",
         "createPrompt": "Utwórz prompt",

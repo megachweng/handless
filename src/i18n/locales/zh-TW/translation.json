@@ -363,7 +363,7 @@
         "title": "提示詞",
         "selectedPrompt": {
           "title": "已選提示詞",
-          "description": "選擇用於最佳化轉錄的範本或建立新範本。在提示詞文字中使用 ${output} 來引用轉錄結果"
+          "description": "選擇用於最佳化轉錄的範本或建立新範本。擷取的轉錄會自動提供給提示詞。"
         },
         "noPrompts": "沒有可用的提示詞",
         "selectPrompt": "選擇提示詞",
@@ -371,8 +371,8 @@
         "promptLabel": "提示詞名稱",
         "promptLabelPlaceholder": "輸入提示詞名稱",
         "promptInstructions": "提示詞指令",
-        "promptInstructionsPlaceholder": "撰寫轉錄後要執行的指令。範例：改善以下文字的語法和清晰度: ${output}",
-        "promptTip": "提示：使用 <code>${output}</code> 將轉錄文字插入到您的提示詞中",
+        "promptInstructionsPlaceholder": "撰寫轉錄後要執行的指令。轉錄內容會自動附加。",
+        "promptTip": "提示：轉錄文字會自動作為輸入提供給提示詞。",
         "updatePrompt": "更新提示詞",
         "deletePrompt": "刪除提示詞",
         "createPrompt": "建立提示詞",

@@ -363,7 +363,7 @@
         "title": "プロンプト",
         "selectedPrompt": {
           "title": "選択したプロンプト",
-          "description": "文字起こしを改善するテンプレートを選択するか、新しく作成します。プロンプトテキスト内で${output}を使用して、キャプチャした文字起こしを参照します。"
+          "description": "文字起こしを改善するテンプレートを選択するか、新しく作成します。キャプチャした文字起こしはプロンプトに自動的に提供されます。"
         },
         "noPrompts": "プロンプトがありません",
         "selectPrompt": "プロンプトを選択",
@@ -371,8 +371,8 @@
         "promptLabel": "プロンプト名",
         "promptLabelPlaceholder": "プロンプト名を入力",
         "promptInstructions": "プロンプトの指示",
-        "promptInstructionsPlaceholder": "文字起こし後に実行する指示を記述します。例：以下のテキストの文法と明瞭さを改善してください: ${output}",
-        "promptTip": "ヒント：<code>${output}</code>を使用して、文字起こしテキストをプロンプトに挿入します。",
+        "promptInstructionsPlaceholder": "文字起こし後に実行する指示を記述します。文字起こしは自動的に追加されます。",
+        "promptTip": "ヒント：文字起こしテキストはプロンプトへの入力として自動的に提供されます。",
         "updatePrompt": "プロンプトを更新",
         "deletePrompt": "プロンプトを削除",
         "createPrompt": "プロンプトを作成",

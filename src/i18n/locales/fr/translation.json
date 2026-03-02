@@ -363,7 +363,7 @@
         "title": "Prompt",
         "selectedPrompt": {
           "title": "Prompt sélectionné",
-          "description": "Sélectionnez un modèle pour affiner les transcriptions ou créez-en un nouveau. Utilisez ${output} dans le texte du prompt pour référencer la transcription capturée."
+          "description": "Sélectionnez un modèle pour affiner les transcriptions ou créez-en un nouveau. La transcription capturée est automatiquement fournie au prompt."
         },
         "noPrompts": "Aucun prompt disponible",
         "selectPrompt": "Sélectionner un prompt",
@@ -371,8 +371,8 @@
         "promptLabel": "Libellé du prompt",
         "promptLabelPlaceholder": "Entrez le nom du prompt",
         "promptInstructions": "Instructions du prompt",
-        "promptInstructionsPlaceholder": "Écrivez les instructions à exécuter après la transcription. Exemple : Améliorer la grammaire et la clarté du texte suivant : ${output}",
-        "promptTip": "Astuce : Utilisez <code>${output}</code> pour insérer le texte transcrit dans votre prompt.",
+        "promptInstructionsPlaceholder": "Écrivez les instructions à exécuter après la transcription. La transcription est automatiquement ajoutée.",
+        "promptTip": "Astuce : Le texte transcrit est automatiquement fourni comme entrée au prompt.",
         "updatePrompt": "Mettre à jour le prompt",
         "deletePrompt": "Supprimer le prompt",
         "createPrompt": "Créer le prompt",

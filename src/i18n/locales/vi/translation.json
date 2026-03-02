@@ -363,7 +363,7 @@
         "title": "Prompt",
         "selectedPrompt": {
           "title": "Prompt đã chọn",
-          "description": "Chọn một mẫu để tinh chỉnh bản ghi hoặc tạo mới. Sử dụng ${output} trong văn bản prompt để tham chiếu bản ghi đã chụp."
+          "description": "Chọn một mẫu để tinh chỉnh bản ghi hoặc tạo mới. Bản ghi đã chụp được tự động cung cấp cho prompt."
         },
         "noPrompts": "Không có prompt nào",
         "selectPrompt": "Chọn một prompt",
@@ -371,8 +371,8 @@
         "promptLabel": "Nhãn Prompt",
         "promptLabelPlaceholder": "Nhập tên prompt",
         "promptInstructions": "Hướng dẫn Prompt",
-        "promptInstructionsPlaceholder": "Viết hướng dẫn để chạy sau khi chuyển đổi. Ví dụ: Cải thiện ngữ pháp và độ rõ ràng cho văn bản sau: ${output}",
-        "promptTip": "Mẹo: Sử dụng <code>${output}</code> để chèn văn bản đã chuyển đổi vào prompt của bạn.",
+        "promptInstructionsPlaceholder": "Viết hướng dẫn để chạy sau khi chuyển đổi. Bản ghi được tự động thêm vào.",
+        "promptTip": "Mẹo: Văn bản đã chuyển đổi được tự động cung cấp làm đầu vào cho prompt.",
         "updatePrompt": "Cập nhật Prompt",
         "deletePrompt": "Xóa Prompt",
         "createPrompt": "Tạo Prompt",

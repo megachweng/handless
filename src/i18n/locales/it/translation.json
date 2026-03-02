@@ -363,7 +363,7 @@
         "title": "Prompt",
         "selectedPrompt": {
           "title": "Prompt Selezionato",
-          "description": "Seleziona un template per migliorare le trascrizioni o creane uno nuovo. Usa ${output} nel prompt per fare riferimento alla trascrizione."
+          "description": "Seleziona un template per migliorare le trascrizioni o creane uno nuovo. La trascrizione catturata viene fornita automaticamente al prompt."
         },
         "noPrompts": "Nessun prompt disponibile.",
         "selectPrompt": "Scegli un prompt",
@@ -371,8 +371,8 @@
         "promptLabel": "Etichetta del Prompt",
         "promptLabelPlaceholder": "Inserisci il nome del prompt",
         "promptInstructions": "Istruzioni del Prompt",
-        "promptInstructionsPlaceholder": "Scrivi le istruzioni da eseguire dopo la trascrizione. Esempio: Migliora la grammatica e la chiarezza per il seguente testo: ${output}",
-        "promptTip": "Suggerimento: Usa <code>${output}</code> per inserire il testo trascritto nel tuo prompt.",
+        "promptInstructionsPlaceholder": "Scrivi le istruzioni da eseguire dopo la trascrizione. La trascrizione viene aggiunta automaticamente.",
+        "promptTip": "Suggerimento: Il testo trascritto viene fornito automaticamente come input al prompt.",
         "updatePrompt": "Aggiorna Prompt",
         "deletePrompt": "Elimina Prompt",
         "createPrompt": "Crea Prompt",

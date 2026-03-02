@@ -363,7 +363,7 @@
         "title": "Prompt",
         "selectedPrompt": {
           "title": "Prompt Selecionado",
-          "description": "Selecione um modelo para refinar transcrições ou crie um novo. Use ${output} dentro do texto do prompt para referenciar a transcrição capturada."
+          "description": "Selecione um modelo para refinar transcrições ou crie um novo. A transcrição capturada é fornecida automaticamente ao prompt."
         },
         "noPrompts": "Nenhum prompt disponível",
         "selectPrompt": "Selecionar um prompt",
@@ -371,8 +371,8 @@
         "promptLabel": "Rótulo do Prompt",
         "promptLabelPlaceholder": "Digite o nome do prompt",
         "promptInstructions": "Instruções do Prompt",
-        "promptInstructionsPlaceholder": "Escreva as instruções para executar após a transcrição. Exemplo: Melhore a gramática e clareza do seguinte texto: ${output}",
-        "promptTip": "Dica: Use <code>${output}</code> para inserir o texto transcrito no seu prompt.",
+        "promptInstructionsPlaceholder": "Escreva as instruções para executar após a transcrição. A transcrição é adicionada automaticamente.",
+        "promptTip": "Dica: O texto transcrito é fornecido automaticamente como entrada ao prompt.",
         "updatePrompt": "Atualizar Prompt",
         "deletePrompt": "Excluir Prompt",
         "createPrompt": "Criar Prompt",

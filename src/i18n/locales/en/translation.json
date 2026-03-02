@@ -437,7 +437,7 @@
         "title": "Prompt",
         "selectedPrompt": {
           "title": "Selected Prompt",
-          "description": "Select a template for refining transcriptions or create a new one. Use ${output} inside the prompt text to reference the captured transcript."
+          "description": "Select a template for refining transcriptions or create a new one. The captured transcript is automatically provided to the prompt."
         },
         "noPrompts": "No prompts available",
         "selectPrompt": "Select a prompt",
@@ -445,8 +445,8 @@
         "promptLabel": "Prompt Label",
         "promptLabelPlaceholder": "Enter prompt name",
         "promptInstructions": "Prompt Instructions",
-        "promptInstructionsPlaceholder": "Write the instructions to run after transcription. Example: Improve grammar and clarity for the following text: ${output}",
-        "promptTip": "Tip: Use <code>${output}</code> to insert the transcribed text in your prompt.",
+        "promptInstructionsPlaceholder": "Write the instructions to run after transcription. The transcript is automatically appended.",
+        "promptTip": "Tip: The transcribed text is automatically provided to the prompt as input.",
         "updatePrompt": "Update Prompt",
         "deletePrompt": "Delete Prompt",
         "createPrompt": "Create Prompt",
