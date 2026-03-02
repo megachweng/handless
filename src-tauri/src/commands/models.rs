@@ -149,7 +149,7 @@ pub async fn test_stt_api_key(
     let base_url = provider.base_url.clone();
 
     if realtime {
-        crate::cloud_stt::realtime::test_api_key(&provider_id, &api_key, &base_url, &model)
+        crate::cloud_stt::realtime::test_api_key(&provider_id, &api_key, &model)
             .await
             .map_err(|e| e.to_string())?;
     } else {

@@ -72,7 +72,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "ta", "th", "tr", "uk", "ur", "vi", "cy",
             ].into_iter().map(String::from).collect(),
             supports_translation: true,
-            supports_realtime: true,
+            supports_realtime: false,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.openai.com/v1".to_string(),

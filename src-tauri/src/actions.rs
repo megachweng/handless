@@ -364,10 +364,6 @@ impl ShortcutAction for TranscribeAction {
                     .get(&settings.stt_provider_id)
                     .cloned()
                     .unwrap_or_default(),
-                base_url: settings
-                    .stt_provider(&settings.stt_provider_id)
-                    .map(|p| p.base_url.clone())
-                    .unwrap_or_default(),
                 model: settings
                     .stt_cloud_models
                     .get(&settings.stt_provider_id)

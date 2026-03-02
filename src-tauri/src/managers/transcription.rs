@@ -468,7 +468,6 @@ impl TranscriptionManager {
                 crate::cloud_stt::realtime::transcribe(
                     &settings.stt_provider_id,
                     &api_key,
-                    &provider.base_url,
                     &model,
                     wav_bytes,
                     cloud_options.as_ref(),

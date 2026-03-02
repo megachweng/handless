@@ -12,7 +12,6 @@ pub struct StreamingHandles {
 pub struct SessionConfig {
     pub provider_id: String,
     pub api_key: String,
-    pub base_url: String,
     pub model: String,
     pub options: Option<serde_json::Value>,
     /// Optional channel for streaming transcription deltas to the UI.
@@ -39,17 +38,6 @@ impl RealtimeStreamingSession {
             "soniox" => {
                 super::soniox::start_streaming(
                     &config.api_key,
-                    &config.model,
-                    audio_rx,
-                    config.options,
-                    config.delta_tx,
-                )
-                .await?
-            }
-            "openai_stt" => {
-                super::openai::start_streaming(
-                    &config.api_key,
-                    &config.base_url,
                     &config.model,
                     audio_rx,
                     config.options,
