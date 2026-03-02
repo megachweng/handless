@@ -54,7 +54,10 @@ fn build_soniox_config(
             }
             config["context"] = ctx;
         }
-        for key in ["enable_speaker_diarization", "enable_language_identification"] {
+        for key in [
+            "enable_speaker_diarization",
+            "enable_language_identification",
+        ] {
             if opts.get(key).and_then(|v| v.as_bool()).unwrap_or(false) {
                 config[key] = serde_json::json!(true);
             }
@@ -107,9 +110,7 @@ pub async fn test_api_key(api_key: &str, model: &str) -> Result<()> {
         }
         Ok(None) => {}
         Err(_) => {
-            return Err(anyhow::anyhow!(
-                "Soniox RT: timed out waiting for response"
-            ));
+            return Err(anyhow::anyhow!("Soniox RT: timed out waiting for response"));
         }
     }
 
@@ -123,11 +124,7 @@ pub async fn transcribe(
     audio_wav: Vec<u8>,
     options: Option<&serde_json::Value>,
 ) -> Result<String> {
-    debug!(
-        "Soniox RT: model={}, audio_size={}",
-        model,
-        audio_wav.len()
-    );
+    debug!("Soniox RT: model={}, audio_size={}", model, audio_wav.len());
 
     let config = build_soniox_config(api_key, model, "auto", options);
 
@@ -136,14 +133,10 @@ pub async fn transcribe(
         .map_err(|e| anyhow::anyhow!("Soniox RT connection failed: {}", e))?;
     let (mut write, mut read) = ws_stream.split();
 
-    write
-        .send(Message::Text(config.to_string()))
-        .await?;
+    write.send(Message::Text(config.to_string())).await?;
 
     for chunk in audio_wav.chunks(CHUNK_SIZE) {
-        write
-            .send(Message::Binary(chunk.to_vec()))
-            .await?;
+        write.send(Message::Binary(chunk.to_vec())).await?;
     }
 
     // Empty string signals end of audio

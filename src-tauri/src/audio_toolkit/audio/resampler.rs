@@ -9,13 +9,7 @@ pub fn resample_i16(samples: &[i16], from_hz: u32, to_hz: u32) -> anyhow::Result
     }
 
     let chunk_size = RESAMPLER_CHUNK_SIZE;
-    let mut resampler = FftFixedIn::<f32>::new(
-        from_hz as usize,
-        to_hz as usize,
-        chunk_size,
-        1,
-        1,
-    )?;
+    let mut resampler = FftFixedIn::<f32>::new(from_hz as usize, to_hz as usize, chunk_size, 1, 1)?;
 
     let input_f32: Vec<f32> = samples.iter().map(|&s| s as f32 / 32768.0).collect();
     let mut output = Vec::with_capacity(
