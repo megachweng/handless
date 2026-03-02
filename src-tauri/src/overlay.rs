@@ -31,7 +31,7 @@ tauri_panel! {
 }
 
 const OVERLAY_WIDTH: f64 = 500.0;
-const OVERLAY_HEIGHT: f64 = 36.0;
+const OVERLAY_HEIGHT: f64 = 120.0;
 
 #[cfg(target_os = "macos")]
 const OVERLAY_TOP_OFFSET: f64 = 46.0;
@@ -288,6 +288,12 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
     }
 }
 
+#[derive(Clone, serde::Serialize)]
+struct OverlayPayload<'a> {
+    state: &'a str,
+    position: &'a str,
+}
+
 fn show_overlay_state(app_handle: &AppHandle, state: &str) {
     // Check if overlay should be shown based on position setting
     let settings = settings::get_settings(app_handle);
@@ -304,7 +310,17 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
         #[cfg(target_os = "windows")]
         force_overlay_topmost(&overlay_window);
 
-        let _ = overlay_window.emit("show-overlay", state);
+        let position_str = match settings.overlay_position {
+            OverlayPosition::Top => "top",
+            _ => "bottom",
+        };
+        let _ = overlay_window.emit(
+            "show-overlay",
+            OverlayPayload {
+                state,
+                position: position_str,
+            },
+        );
     }
 }
 

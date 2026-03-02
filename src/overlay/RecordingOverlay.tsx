@@ -1,5 +1,11 @@
 import { listen } from "@tauri-apps/api/event";
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import {
   MicrophoneIcon,
@@ -13,56 +19,140 @@ import { getLanguageDirection } from "@/lib/utils/rtl";
 
 type OverlayState = "recording" | "transcribing" | "processing";
 
+const BAR_COUNT = 9;
+const LERP_SPEED = 0.12;
+const STREAMING_WIDTH = 420;
+const STREAMING_LINE_HEIGHT = 18;
+const MAX_LINES = 5;
+const OVERLAY_PADDING = 12;
+
 const RecordingOverlay: React.FC = () => {
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [state, setState] = useState<OverlayState>("recording");
-  const [levels, setLevels] = useState<number[]>(Array(16).fill(0));
   const [streamingText, setStreamingText] = useState("");
-  const smoothedLevelsRef = useRef<number[]>(Array(16).fill(0));
+  const [overlayPosition, setOverlayPosition] = useState<"top" | "bottom">(
+    "top",
+  );
+
+  // Bar animation via rAF — bypasses React rendering
+  const targetLevelsRef = useRef<number[]>(Array(BAR_COUNT).fill(0));
+  const currentLevelsRef = useRef<number[]>(Array(BAR_COUNT).fill(0));
+  const barElementsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const rafIdRef = useRef<number>(0);
+
+  // Word tracking for per-word animation
+  const prevWordCountRef = useRef(0);
+  const [words, setWords] = useState<{ text: string; isNew: boolean }[]>([]);
+
+  // Streaming text height measurement
   const streamingTextRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState(0);
   const direction = getLanguageDirection(i18n.language);
 
-  // Auto-scroll streaming text to show latest content
-  useEffect(() => {
-    if (streamingTextRef.current) {
-      streamingTextRef.current.scrollLeft =
-        streamingTextRef.current.scrollWidth;
+  const hasStreamingText = state === "recording" && streamingText.length > 0;
+
+  // Compute overlay dimensions — inline style so CSS transitions animate all changes
+  const overlayWidth = (() => {
+    if (!isVisible) return 36;
+    if (hasStreamingText) return STREAMING_WIDTH;
+    return 172;
+  })();
+
+  const overlayHeight = (() => {
+    if (!isVisible) return 36;
+    if (hasStreamingText && contentHeight > 0) {
+      const maxTextHeight = STREAMING_LINE_HEIGHT * MAX_LINES;
+      const clampedHeight = Math.min(contentHeight, maxTextHeight);
+      return Math.max(36, clampedHeight + OVERLAY_PADDING);
+    }
+    return 36;
+  })();
+
+  // Track words (runs before paint to avoid flicker)
+  useLayoutEffect(() => {
+    if (streamingText) {
+      const allWords = streamingText.split(/\s+/).filter(Boolean);
+      const prevCount = prevWordCountRef.current;
+      setWords(
+        allWords.map((w, i) => ({
+          text: w,
+          isNew: i >= prevCount && prevCount > 0,
+        })),
+      );
+      prevWordCountRef.current = allWords.length;
+    } else {
+      setWords([]);
+      prevWordCountRef.current = 0;
+      setContentHeight(0);
     }
   }, [streamingText]);
 
+  // rAF loop: lerp current toward target levels, write directly to DOM
+  const animateBars = useCallback(() => {
+    const current = currentLevelsRef.current;
+    const target = targetLevelsRef.current;
+
+    for (let i = 0; i < BAR_COUNT; i++) {
+      current[i] += (target[i] - current[i]) * LERP_SPEED;
+      const v = current[i];
+      const el = barElementsRef.current[i];
+      if (el) {
+        const h = Math.min(20, 4 + Math.pow(v, 0.65) * 16);
+        el.style.height = `${h}px`;
+        el.style.opacity = `${0.35 + Math.min(0.65, v * 1.2)}`;
+      }
+    }
+
+    rafIdRef.current = requestAnimationFrame(animateBars);
+  }, []);
+
+  // Start/stop rAF loop based on visibility + recording state
+  useEffect(() => {
+    if (isVisible && state === "recording") {
+      rafIdRef.current = requestAnimationFrame(animateBars);
+    }
+    return () => cancelAnimationFrame(rafIdRef.current);
+  }, [isVisible, state, animateBars]);
+
+  // Measure streaming text height + auto-scroll to show latest content
+  useLayoutEffect(() => {
+    if (streamingTextRef.current && hasStreamingText) {
+      setContentHeight(streamingTextRef.current.scrollHeight);
+      streamingTextRef.current.scrollTop =
+        streamingTextRef.current.scrollHeight;
+    }
+  }, [words, hasStreamingText]);
+
   useEffect(() => {
     const setupEventListeners = async () => {
-      // Listen for show-overlay event from Rust
-      const unlistenShow = await listen("show-overlay", async (event) => {
-        // Sync language from settings each time overlay is shown
+      const unlistenShow = await listen<{
+        state: OverlayState;
+        position: "top" | "bottom";
+      }>("show-overlay", async (event) => {
         await syncLanguageFromSettings();
-        const overlayState = event.payload as OverlayState;
+        const { state: overlayState, position } = event.payload;
         setState(overlayState);
+        setOverlayPosition(position);
         setStreamingText("");
+        // Reset bar levels on new session
+        targetLevelsRef.current = Array(BAR_COUNT).fill(0);
+        currentLevelsRef.current = Array(BAR_COUNT).fill(0);
         setIsVisible(true);
       });
 
-      // Listen for hide-overlay event from Rust
       const unlistenHide = await listen("hide-overlay", () => {
         setIsVisible(false);
       });
 
-      // Listen for mic-level updates
+      // Store target levels — the rAF loop handles interpolation
       const unlistenLevel = await listen<number[]>("mic-level", (event) => {
-        const newLevels = event.payload as number[];
-
-        // Apply smoothing to reduce jitter
-        const smoothed = smoothedLevelsRef.current.map((prev, i) => {
-          const target = newLevels[i] || 0;
-          return prev * 0.7 + target * 0.3; // Smooth transition
-        });
-
-        smoothedLevelsRef.current = smoothed;
-        setLevels(smoothed.slice(0, 9));
+        const newLevels = event.payload;
+        for (let i = 0; i < BAR_COUNT; i++) {
+          targetLevelsRef.current[i] = newLevels[i] || 0;
+        }
       });
 
-      // Listen for streaming transcription text
       const unlistenStreaming = await listen<string>(
         "streaming-text",
         (event) => {
@@ -70,7 +160,6 @@ const RecordingOverlay: React.FC = () => {
         },
       );
 
-      // Cleanup function
       return () => {
         unlistenShow();
         unlistenHide();
@@ -84,19 +173,17 @@ const RecordingOverlay: React.FC = () => {
 
   const getIcon = () => {
     if (state === "recording") {
-      return <MicrophoneIcon />;
-    } else {
-      return <TranscriptionIcon />;
+      return <MicrophoneIcon width={20} height={20} />;
     }
+    return <TranscriptionIcon width={20} height={20} />;
   };
 
-  const hasStreamingText = state === "recording" && streamingText.length > 0;
-
   return (
-    <div className="overlay-wrapper">
+    <div className={`overlay-wrapper position-${overlayPosition}`}>
       <div
         dir={direction}
-        className={`recording-overlay ${isVisible ? "fade-in" : ""} ${hasStreamingText ? "has-text" : ""}`}
+        style={{ width: overlayWidth, height: overlayHeight }}
+        className={`recording-overlay ${isVisible ? "fade-in" : ""}`}
       >
         <div className="overlay-left">{getIcon()}</div>
 
@@ -104,19 +191,23 @@ const RecordingOverlay: React.FC = () => {
           {state === "recording" &&
             (hasStreamingText ? (
               <div ref={streamingTextRef} className="streaming-text">
-                {streamingText}
+                {words.map((w, i) => (
+                  <React.Fragment key={i}>
+                    {i > 0 && " "}
+                    <span className={w.isNew ? "word-appear" : undefined}>
+                      {w.text}
+                    </span>
+                  </React.Fragment>
+                ))}
               </div>
             ) : (
               <div className="bars-container">
-                {levels.map((v, i) => (
+                {Array.from({ length: BAR_COUNT }, (_, i) => (
                   <div
                     key={i}
                     className="bar"
-                    style={{
-                      height: `${Math.min(20, 4 + Math.pow(v, 0.7) * 16)}px`, // Cap at 20px max height
-                      transition:
-                        "height 60ms ease-out, opacity 120ms ease-out",
-                      opacity: Math.max(0.2, v * 1.7), // Minimum opacity for visibility
+                    ref={(el) => {
+                      barElementsRef.current[i] = el;
                     }}
                   />
                 ))}
@@ -140,7 +231,7 @@ const RecordingOverlay: React.FC = () => {
                 commands.cancelOperation();
               }}
             >
-              <CancelIcon />
+              <CancelIcon width={18} height={18} />
             </div>
           )}
         </div>
