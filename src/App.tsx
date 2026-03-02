@@ -35,7 +35,7 @@ function App() {
   const [isReturningUser, setIsReturningUser] = useState(false);
   const [currentSection, setCurrentSection] =
     useState<SidebarSection>("general");
-  const { settings, updateSetting, refreshAudioDevices, refreshOutputDevices } =
+  const { settings, updateSetting, refreshAudioDevices, refreshOutputDevices, setupDeviceWatcher } =
     useSettings();
   const resolvedTheme = useTheme();
   const direction = getLanguageDirection(i18n.language);
@@ -61,9 +61,10 @@ function App() {
         console.warn("Failed to initialize:", e);
       });
       refreshAudioDevices();
+      setupDeviceWatcher();
       refreshOutputDevices();
     }
-  }, [onboardingStep, refreshAudioDevices, refreshOutputDevices]);
+  }, [onboardingStep, refreshAudioDevices, setupDeviceWatcher, refreshOutputDevices]);
 
   // Handle keyboard shortcuts for debug mode toggle
   useEffect(() => {

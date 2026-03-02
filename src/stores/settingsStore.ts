@@ -2,6 +2,9 @@ import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import type { AppSettings as Settings, AudioDevice } from "@/bindings";
 import { commands } from "@/bindings";
+import { listen } from "@tauri-apps/api/event";
+
+let deviceWatcherUnlisten: (() => void) | null = null;
 
 interface SettingsStore {
   settings: Settings | null;
@@ -9,6 +12,7 @@ interface SettingsStore {
   isLoading: boolean;
   isUpdating: Record<string, boolean>;
   audioDevices: AudioDevice[];
+  effectiveMicrophone: string | null;
   outputDevices: AudioDevice[];
   customSounds: { start: boolean; stop: boolean };
   postProcessModelOptions: Record<string, string[]>;
@@ -23,6 +27,8 @@ interface SettingsStore {
   resetSetting: (key: keyof Settings) => Promise<void>;
   refreshSettings: () => Promise<void>;
   refreshAudioDevices: () => Promise<void>;
+  refreshEffectiveMicrophone: () => Promise<void>;
+  setupDeviceWatcher: () => Promise<void>;
   refreshOutputDevices: () => Promise<void>;
   updateBinding: (id: string, binding: string) => Promise<void>;
   resetBinding: (id: string) => Promise<void>;
@@ -108,6 +114,10 @@ const settingUpdaters: {
         ? "default"
         : (value as string),
     ),
+  microphone_priority: async (value) => {
+    await commands.setMicrophonePriority(value as string[]);
+    useSettingsStore.getState().refreshEffectiveMicrophone();
+  },
   clamshell_microphone: (value) =>
     commands.setClamshellMicrophone(
       (value as string) === "Default" ? "default" : (value as string),
@@ -162,6 +172,7 @@ export const useSettingsStore = create<SettingsStore>()(
     isLoading: true,
     isUpdating: {},
     audioDevices: [],
+    effectiveMicrophone: null,
     outputDevices: [],
     customSounds: { start: false, stop: false },
     postProcessModelOptions: {},
@@ -226,6 +237,25 @@ export const useSettingsStore = create<SettingsStore>()(
         console.error("Failed to load audio devices:", error);
         set({ audioDevices: [DEFAULT_AUDIO_DEVICE] });
       }
+      get().refreshEffectiveMicrophone();
+    },
+
+    refreshEffectiveMicrophone: async () => {
+      try {
+        const result = await commands.getEffectiveMicrophoneName();
+        if (result.status === "ok") {
+          set({ effectiveMicrophone: result.data });
+        }
+      } catch (error) {
+        console.error("Failed to get effective microphone:", error);
+      }
+    },
+
+    setupDeviceWatcher: async () => {
+      if (deviceWatcherUnlisten) return;
+      deviceWatcherUnlisten = await listen("audio-devices-changed", () => {
+        get().refreshAudioDevices();
+      });
     },
 
     // Load output devices

@@ -330,6 +330,8 @@ pub struct AppSettings {
     #[serde(default)]
     pub selected_microphone: Option<String>,
     #[serde(default)]
+    pub microphone_priority: Vec<String>,
+    #[serde(default)]
     pub clamshell_microphone: Option<String>,
     #[serde(default)]
     pub selected_output_device: Option<String>,
@@ -917,6 +919,7 @@ pub fn get_default_settings() -> AppSettings {
         selected_model: "".to_string(),
         always_on_microphone: false,
         selected_microphone: None,
+        microphone_priority: Vec::new(),
         clamshell_microphone: None,
         selected_output_device: None,
         translate_to_english: false,
@@ -1008,6 +1011,18 @@ pub fn load_or_create_app_settings(app: &AppHandle) -> AppSettings {
                     if !settings.bindings.contains_key(&key) {
                         debug!("Adding missing binding: {}", key);
                         settings.bindings.insert(key, value);
+                        updated = true;
+                    }
+                }
+
+                // Migrate: populate microphone_priority from selected_microphone
+                if settings.microphone_priority.is_empty() {
+                    if let Some(ref mic) = settings.selected_microphone {
+                        debug!(
+                            "Migrating selected_microphone '{}' to microphone_priority",
+                            mic
+                        );
+                        settings.microphone_priority = vec![mic.clone()];
                         updated = true;
                     }
                 }

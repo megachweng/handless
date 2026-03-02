@@ -2,6 +2,7 @@ pub(crate) mod actions;
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 mod apple_intelligence;
 mod audio_feedback;
+mod device_watcher;
 pub mod audio_toolkit;
 pub mod cli;
 mod clipboard;
@@ -133,6 +134,9 @@ fn initialize_core_logic(app_handle: &AppHandle) {
 
     // Managed state for active realtime streaming session
     app_handle.manage(actions::ActiveStreamingState::default());
+
+    // Subscribe to OS audio device change notifications
+    device_watcher::start(app_handle);
 
     // Note: Shortcuts are NOT initialized here.
     // The frontend is responsible for calling the `initialize_shortcuts` command
@@ -340,6 +344,7 @@ pub fn run(cli_args: CliArgs) {
         commands::audio::update_microphone_mode,
         commands::audio::get_microphone_mode,
         commands::audio::get_available_microphones,
+        commands::audio::set_microphone_priority,
         commands::audio::set_selected_microphone,
         commands::audio::get_selected_microphone,
         commands::audio::get_available_output_devices,
@@ -349,6 +354,7 @@ pub fn run(cli_args: CliArgs) {
         commands::audio::check_custom_sounds,
         commands::audio::set_clamshell_microphone,
         commands::audio::get_clamshell_microphone,
+        commands::audio::get_effective_microphone_name,
         commands::audio::is_recording,
         commands::transcription::set_model_unload_timeout,
         commands::transcription::get_model_load_status,

@@ -1,10 +1,12 @@
 use crate::audio_feedback;
 use crate::audio_toolkit::audio::{list_input_devices, list_output_devices};
+use crate::helpers::clamshell;
 use crate::managers::audio::{AudioRecordingManager, MicrophoneMode};
 use crate::settings::{get_settings, write_settings};
 use log::warn;
 use serde::{Deserialize, Serialize};
 use specta::Type;
+use std::collections::HashSet;
 use std::sync::Arc;
 use tauri::{AppHandle, Manager};
 
@@ -85,6 +87,21 @@ pub fn get_available_microphones() -> Result<Vec<AudioDevice>, String> {
     }));
 
     Ok(result)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn set_microphone_priority(app: AppHandle, priority: Vec<String>) -> Result<(), String> {
+    let mut settings = get_settings(&app);
+    settings.microphone_priority = priority;
+    write_settings(&app, settings);
+
+    // Update the audio manager to use the new device
+    let rm = app.state::<Arc<AudioRecordingManager>>();
+    rm.update_selected_device()
+        .map_err(|e| format!("Failed to update selected device: {}", e))?;
+
+    Ok(())
 }
 
 #[tauri::command]
@@ -192,6 +209,44 @@ pub fn get_clamshell_microphone(app: AppHandle) -> Result<String, String> {
     Ok(settings
         .clamshell_microphone
         .unwrap_or_else(|| "default".to_string()))
+}
+
+/// Returns the name of the microphone the backend would currently select.
+/// Mirrors the resolution logic in `AudioRecordingManager::get_effective_microphone_device`.
+#[tauri::command]
+#[specta::specta]
+pub fn get_effective_microphone_name(app: AppHandle) -> Result<String, String> {
+    let settings = get_settings(&app);
+
+    // Clamshell override
+    let use_clamshell = clamshell::is_clamshell().unwrap_or(false)
+        && settings.clamshell_microphone.is_some();
+    if use_clamshell {
+        return Ok(settings.clamshell_microphone.unwrap());
+    }
+
+    // Priority list
+    if !settings.microphone_priority.is_empty() {
+        let available: HashSet<String> = list_input_devices()
+            .unwrap_or_default()
+            .into_iter()
+            .map(|d| d.name)
+            .collect();
+
+        for name in &settings.microphone_priority {
+            if name == "Default" || available.contains(name) {
+                return Ok(name.clone());
+            }
+        }
+        return Ok("Default".to_string());
+    }
+
+    // Legacy fallback
+    if let Some(ref mic) = settings.selected_microphone {
+        return Ok(mic.clone());
+    }
+
+    Ok("Default".to_string())
 }
 
 #[tauri::command]

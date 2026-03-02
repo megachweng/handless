@@ -183,6 +183,16 @@ impl AudioRecordingManager {
 
     /* ---------- helper methods --------------------------------------------- */
 
+    fn find_device_by_name(name: &str) -> Option<cpal::Device> {
+        match list_input_devices() {
+            Ok(devices) => devices.into_iter().find(|d| d.name == name).map(|d| d.device),
+            Err(e) => {
+                debug!("Failed to list devices, using default: {}", e);
+                None
+            }
+        }
+    }
+
     fn get_effective_microphone_device(&self, settings: &AppSettings) -> Option<cpal::Device> {
         // Check if we're in clamshell mode and have a clamshell microphone configured
         let use_clamshell_mic = if let Ok(is_clamshell) = clamshell::is_clamshell() {
@@ -191,23 +201,47 @@ impl AudioRecordingManager {
             false
         };
 
-        let device_name = if use_clamshell_mic {
-            settings.clamshell_microphone.as_ref().unwrap()
-        } else {
-            settings.selected_microphone.as_ref()?
-        };
+        if use_clamshell_mic {
+            let device_name = settings.clamshell_microphone.as_ref().unwrap();
+            return Self::find_device_by_name(device_name);
+        }
 
-        // Find the device by name
-        match list_input_devices() {
-            Ok(devices) => devices
-                .into_iter()
-                .find(|d| d.name == *device_name)
-                .map(|d| d.device),
-            Err(e) => {
-                debug!("Failed to list devices, using default: {}", e);
-                None
+        // Use microphone_priority list: return the first available device
+        if !settings.microphone_priority.is_empty() {
+            match list_input_devices() {
+                Ok(mut devices) => {
+                    for priority_name in &settings.microphone_priority {
+                        // "Default" means system default → return None
+                        if priority_name == "Default" {
+                            debug!("Priority list: using system default microphone");
+                            return None;
+                        }
+                        if let Some(idx) = devices.iter().position(|d| d.name == *priority_name) {
+                            debug!("Priority list: using '{}'", priority_name);
+                            return Some(devices.swap_remove(idx).device);
+                        }
+                        debug!(
+                            "Priority list: '{}' not available, trying next",
+                            priority_name
+                        );
+                    }
+                    // None of the priority devices are available → fall through to default
+                    debug!("Priority list: no devices available, using system default");
+                    return None;
+                }
+                Err(e) => {
+                    debug!("Failed to list devices, using default: {}", e);
+                    return None;
+                }
             }
         }
+
+        // Legacy fallback: use selected_microphone if set
+        if let Some(ref device_name) = settings.selected_microphone {
+            return Self::find_device_by_name(device_name);
+        }
+
+        None
     }
 
     /* ---------- microphone life-cycle -------------------------------------- */
