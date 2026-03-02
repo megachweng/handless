@@ -40,7 +40,7 @@ export const ApiKeyField: React.FC<ApiKeyFieldProps> = React.memo(
     };
 
     return (
-      <div className="flex items-center gap-1">
+      <div className={`relative ${className}`}>
         <Input
           type="password"
           value={localValue}
@@ -52,13 +52,13 @@ export const ApiKeyField: React.FC<ApiKeyFieldProps> = React.memo(
           placeholder={placeholder}
           variant="compact"
           disabled={disabled}
-          className={`flex-1 ${className}`}
+          className={`w-full ${localValue ? "pr-7" : ""}`}
         />
         {localValue && (
           <button
             type="button"
             onClick={handleCopy}
-            className="text-text/50 hover:text-accent transition-colors cursor-pointer p-1"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 text-text/50 hover:text-accent transition-colors cursor-pointer p-0.5"
             title={t("settings.history.copyToClipboard")}
           >
             {showCopied ? (

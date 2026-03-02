@@ -50,8 +50,8 @@ const neutralBorder = "color-mix(in srgb, var(--color-muted) 80%, transparent)";
 const selectStyles: StylesConfig<SelectOption, false> = {
   control: (base, state) => ({
     ...base,
-    minHeight: 40,
-    borderRadius: 6,
+    minHeight: 30,
+    borderRadius: 4,
     borderColor: state.isFocused ? "var(--color-accent)" : neutralBorder,
     boxShadow: state.isFocused ? "0 0 0 1px var(--color-accent)" : "none",
     backgroundColor: state.isFocused ? focusBackground : baseBackground,
@@ -65,19 +65,23 @@ const selectStyles: StylesConfig<SelectOption, false> = {
   }),
   valueContainer: (base) => ({
     ...base,
-    paddingInline: 10,
-    paddingBlock: 6,
+    paddingInline: 8,
+    paddingBlock: 2,
   }),
   input: (base) => ({
     ...base,
     color: "var(--color-text)",
+    margin: 0,
+    padding: 0,
   }),
   singleValue: (base) => ({
     ...base,
     color: "var(--color-text)",
+    fontWeight: 600,
   }),
   dropdownIndicator: (base, state) => ({
     ...base,
+    padding: 4,
     color: state.isFocused
       ? "var(--color-accent)"
       : "color-mix(in srgb, var(--color-muted) 80%, transparent)",
@@ -87,6 +91,7 @@ const selectStyles: StylesConfig<SelectOption, false> = {
   }),
   clearIndicator: (base) => ({
     ...base,
+    padding: 4,
     color: "color-mix(in srgb, var(--color-muted) 80%, transparent)",
     ":hover": {
       color: "var(--color-accent)",

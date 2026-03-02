@@ -22,6 +22,12 @@ import { usePostProcessProviderState } from "../PostProcessingSettingsApi/usePos
 import { useSettings } from "../../../hooks/useSettings";
 
 const BUILTIN_PROMPT_PREFIX = "default_";
+const FIELD_WIDTH = "w-[260px]";
+
+/** Invisible spacer matching the ResetButton width to keep fields aligned across rows. */
+const FieldAlignmentSpacer = () => (
+  <div className="w-[26px] shrink-0" aria-hidden="true" />
+);
 
 const PostProcessingSettingsApiComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -41,7 +47,9 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
             options={state.providerOptions}
             value={state.selectedProviderId}
             onChange={state.handleProviderSelect}
+            className={FIELD_WIDTH}
           />
+          <FieldAlignmentSpacer />
         </div>
       </SettingContainer>
 
@@ -69,8 +77,9 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
                     "settings.postProcessing.api.baseUrl.placeholder",
                   )}
                   disabled={state.isBaseUrlUpdating}
-                  className="min-w-[380px]"
+                  className={FIELD_WIDTH}
                 />
+                <FieldAlignmentSpacer />
               </div>
             </SettingContainer>
           )}
@@ -90,8 +99,9 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
                   "settings.postProcessing.api.apiKey.placeholder",
                 )}
                 disabled={state.isApiKeyUpdating}
-                className="min-w-[320px]"
+                className={FIELD_WIDTH}
               />
+              <FieldAlignmentSpacer />
             </div>
           </SettingContainer>
         </>
@@ -106,7 +116,7 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
               : t("settings.postProcessing.api.model.descriptionDefault")
           }
           descriptionMode="tooltip"
-          layout="stacked"
+          layout="horizontal"
           grouped={true}
         >
           <div className="flex items-center gap-2">
@@ -125,13 +135,12 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
               onSelect={state.handleModelSelect}
               onCreate={state.handleModelCreate}
               onBlur={() => {}}
-              className="flex-1 min-w-[380px]"
+              className={FIELD_WIDTH}
             />
             <ResetButton
               onClick={state.handleRefreshModels}
               disabled={state.isFetchingModels}
               ariaLabel={t("settings.postProcessing.api.model.refreshModels")}
-              className="flex h-10 w-10 items-center justify-center"
             >
               <RefreshCcw
                 className={`h-4 w-4 ${state.isFetchingModels ? "animate-spin" : ""}`}
