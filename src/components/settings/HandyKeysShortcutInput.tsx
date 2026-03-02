@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { listen } from "@tauri-apps/api/event";
 import { formatKeyCombination } from "../../lib/utils/keyboard";
-import { ResetButton } from "../ui/ResetButton";
 import { SettingContainer } from "../ui/SettingContainer";
+import { ShortcutKeyBadge } from "./ShortcutKeyBadge";
 import { useSettings } from "../../hooks/useSettings";
 import { useOsType } from "../../hooks/useOsType";
 import { commands } from "@/bindings";
@@ -14,6 +14,7 @@ interface HandyKeysShortcutInputProps {
   grouped?: boolean;
   shortcutId: string;
   disabled?: boolean;
+  compact?: boolean;
 }
 
 interface HandyKeysEvent {
@@ -28,6 +29,7 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
   grouped = false,
   shortcutId,
   disabled = false,
+  compact = false,
 }) => {
   const { t } = useTranslation();
   const { getSetting, updateBinding, resetBinding, isUpdating, isLoading } =
@@ -240,6 +242,23 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
   }
 
   const binding = bindings[shortcutId];
+
+  const keyBadge = binding ? (
+    <ShortcutKeyBadge
+      isEditing={isRecording}
+      editingRef={shortcutRef}
+      currentKeysDisplay={formatCurrentKeys()}
+      bindingDisplay={formatKeyCombination(binding.current_binding, osType)}
+      onStartRecording={startRecording}
+      onReset={() => resetBinding(shortcutId)}
+      resetDisabled={isUpdating(`binding_${shortcutId}`)}
+    />
+  ) : null;
+
+  if (compact) {
+    return keyBadge;
+  }
+
   if (!binding) {
     return (
       <SettingContainer
@@ -274,27 +293,7 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
       disabled={disabled}
       layout="horizontal"
     >
-      <div className="flex items-center space-x-1">
-        {isRecording ? (
-          <div
-            ref={shortcutRef}
-            className="px-2 py-1 text-sm font-semibold border border-accent bg-accent/30 rounded"
-          >
-            {formatCurrentKeys()}
-          </div>
-        ) : (
-          <div
-            className="px-2 py-1 text-sm font-semibold bg-muted/10 border border-muted/80 hover:bg-accent/10 rounded cursor-pointer hover:border-accent"
-            onClick={startRecording}
-          >
-            {formatKeyCombination(binding.current_binding, osType)}
-          </div>
-        )}
-        <ResetButton
-          onClick={() => resetBinding(shortcutId)}
-          disabled={isUpdating(`binding_${shortcutId}`)}
-        />
-      </div>
+      {keyBadge}
     </SettingContainer>
   );
 };

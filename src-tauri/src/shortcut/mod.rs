@@ -115,11 +115,10 @@ pub fn change_binding(
 
     let mut settings = settings::get_settings(&app);
 
-    // Get the binding to modify, or create it from defaults if it doesn't exist
+    // Get the binding to modify from current settings, or fall back to defaults
     let binding_to_modify = match settings.bindings.get(&id) {
         Some(binding) => binding.clone(),
         None => {
-            // Try to get the default binding for this id
             let default_settings = settings::get_default_settings();
             match default_settings.bindings.get(&id) {
                 Some(default_binding) => {
@@ -130,7 +129,7 @@ pub fn change_binding(
                     default_binding.clone()
                 }
                 None => {
-                    let error_msg = format!("Binding with id '{}' not found in defaults", id);
+                    let error_msg = format!("Binding with id '{}' not found", id);
                     warn!("change_binding error: {}", error_msg);
                     return Ok(BindingResponse {
                         success: false,
@@ -231,6 +230,100 @@ pub fn resume_binding(app: AppHandle, id: String) -> Result<(), String> {
         }
     }
     Ok(())
+}
+
+// ============================================================================
+// Dynamic Transcribe Binding Commands
+// ============================================================================
+
+#[tauri::command]
+#[specta::specta]
+pub fn add_transcribe_binding(
+    app: AppHandle,
+    binding_key: String,
+    prompt_id: Option<String>,
+) -> Result<BindingResponse, String> {
+    if binding_key.trim().is_empty() {
+        return Err("Binding key cannot be empty".to_string());
+    }
+
+    let mut settings = settings::get_settings(&app);
+
+    // Validate the shortcut for the current keyboard implementation
+    validate_shortcut_for_implementation(&binding_key, settings.keyboard_implementation)?;
+
+    // Generate unique binding ID
+    let id = format!(
+        "transcribe_custom_{}",
+        chrono::Utc::now().timestamp_millis()
+    );
+
+    let new_binding = ShortcutBinding {
+        id: id.clone(),
+        name: "Custom Transcription".to_string(),
+        description: "Custom transcription shortcut.".to_string(),
+        default_binding: binding_key.clone(),
+        current_binding: binding_key,
+        post_process_prompt_id: prompt_id,
+    };
+
+    // Register the shortcut with the OS
+    if let Err(e) = register_shortcut(&app, new_binding.clone()) {
+        let error_msg = format!("Failed to register shortcut: {}", e);
+        error!("add_transcribe_binding error: {}", error_msg);
+        return Ok(BindingResponse {
+            success: false,
+            binding: None,
+            error: Some(error_msg),
+        });
+    }
+
+    settings.bindings.insert(id, new_binding.clone());
+    settings::write_settings(&app, settings);
+
+    Ok(BindingResponse {
+        success: true,
+        binding: Some(new_binding),
+        error: None,
+    })
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn remove_transcribe_binding(app: AppHandle, id: String) -> Result<(), String> {
+    // Prevent removal of the primary transcribe and cancel bindings
+    if id == "transcribe" || id == "cancel" {
+        return Err("Cannot remove built-in binding".to_string());
+    }
+
+    let mut settings = settings::get_settings(&app);
+
+    if let Some(binding) = settings.bindings.get(&id).cloned() {
+        let _ = unregister_shortcut(&app, binding);
+    }
+
+    settings.bindings.remove(&id);
+    settings::write_settings(&app, settings);
+
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn update_binding_prompt(
+    app: AppHandle,
+    id: String,
+    prompt_id: Option<String>,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+
+    if let Some(binding) = settings.bindings.get_mut(&id) {
+        binding.post_process_prompt_id = prompt_id;
+        settings::write_settings(&app, settings);
+        Ok(())
+    } else {
+        Err(format!("Binding '{}' not found", id))
+    }
 }
 
 // ============================================================================
@@ -386,38 +479,38 @@ fn register_all_shortcuts_for_implementation(
     let default_bindings = settings::get_default_settings().bindings;
     let mut current_settings = settings::get_settings(app);
 
-    for (id, default_binding) in &default_bindings {
+    // Iterate over all user bindings (default + custom)
+    let binding_ids: Vec<String> = current_settings.bindings.keys().cloned().collect();
+    for id in &binding_ids {
         // Skip cancel shortcut as it's dynamically registered
         if id == "cancel" {
             continue;
         }
 
-        // Skip post-processing shortcut when the feature is disabled
-        if id == "transcribe_with_post_process" && !current_settings.post_process_enabled {
-            continue;
-        }
-
-        let mut binding = current_settings
-            .bindings
-            .get(id)
-            .cloned()
-            .unwrap_or_else(|| default_binding.clone());
+        let mut binding = current_settings.bindings.get(id).cloned().unwrap();
 
         // Validate the shortcut for the target implementation
         if let Err(e) =
             validate_shortcut_for_implementation(&binding.current_binding, implementation)
         {
-            info!(
-                "Shortcut '{}' ({}) is invalid for {:?}: {}. Resetting to default.",
-                id, binding.current_binding, implementation, e
-            );
-
-            // Reset to default
-            binding.current_binding = default_binding.current_binding.clone();
-            current_settings
-                .bindings
-                .insert(id.clone(), binding.clone());
-            reset_bindings.push(id.clone());
+            // Only reset default bindings to their defaults; skip invalid custom bindings
+            if let Some(default_binding) = default_bindings.get(id) {
+                info!(
+                    "Shortcut '{}' ({}) is invalid for {:?}: {}. Resetting to default.",
+                    id, binding.current_binding, implementation, e
+                );
+                binding.current_binding = default_binding.current_binding.clone();
+                current_settings
+                    .bindings
+                    .insert(id.clone(), binding.clone());
+                reset_bindings.push(id.clone());
+            } else {
+                info!(
+                    "Custom shortcut '{}' ({}) is invalid for {:?}: {}. Skipping.",
+                    id, binding.current_binding, implementation, e
+                );
+                continue;
+            }
         }
 
         // Register with the appropriate implementation
@@ -769,29 +862,6 @@ pub fn change_auto_submit_key_setting(app: AppHandle, key: String) -> Result<(),
     };
     settings.auto_submit_key = parsed;
     settings::write_settings(&app, settings);
-    Ok(())
-}
-
-#[tauri::command]
-#[specta::specta]
-pub fn change_post_process_enabled_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
-    let mut settings = settings::get_settings(&app);
-    settings.post_process_enabled = enabled;
-    settings::write_settings(&app, settings.clone());
-
-    // Register or unregister the post-processing shortcut
-    if let Some(binding) = settings
-        .bindings
-        .get("transcribe_with_post_process")
-        .cloned()
-    {
-        if enabled {
-            let _ = register_shortcut(&app, binding);
-        } else {
-            let _ = unregister_shortcut(&app, binding);
-        }
-    }
-
     Ok(())
 }
 

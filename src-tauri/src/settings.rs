@@ -83,6 +83,8 @@ pub struct ShortcutBinding {
     pub description: String,
     pub default_binding: String,
     pub current_binding: String,
+    #[serde(default)]
+    pub post_process_prompt_id: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Type)]
@@ -628,7 +630,7 @@ fn default_post_process_prompts() -> Vec<LLMPrompt> {
         LLMPrompt {
             id: BUILTIN_PROMPT_RESTRUCTURE.to_string(),
             name: "Restructure & Format".to_string(),
-            prompt: "Restructure this transcript into well-organized written text:\n\nFirst, analyze the transcript and identify the distinct topics or ideas the speaker covers. Then apply all of the following:\n\n1. Fix spelling, capitalization, and punctuation errors\n2. Convert number words to digits (twenty-five → 25, ten percent → 10%, five dollars → $5)\n3. Replace spoken punctuation with symbols (period → ., comma → ,, question mark → ?)\n4. Remove filler words (um, uh, like, you know, I mean, so, basically, right)\n5. Remove unnecessary repetition (stutters, repeated words/phrases)\n6. When the speaker corrects themselves mid-sentence, keep only the final intended version\n7. Rephrase awkward spoken constructions into clear, natural written prose\n8. Keep the speaker's original word choices (verbs, adjectives, nouns) unless clearly incorrect or nonsensical\n9. Group sentences about the same topic or idea into their own paragraph. Start a new paragraph whenever the speaker shifts to a different subject, argument, or aspect. A single long transcript should typically produce multiple paragraphs.\n10. When the speaker lists items, steps, or key points, format them as a bullet or numbered list\n11. Limit structure to at most 2 levels of depth (paragraphs and single-level bullets/lists within them). Never nest deeper — this is a cleaned transcript, not an article.\n12. Keep the original language (if spoken in French, output in French)\n\nOutput natural prose paragraphs. Do not add headings, titles, or section labels. Preserve all information.\n\nReturn only the restructured text.".to_string(),
+            prompt: "Restructure this transcript into well-organized written text:\n\nFirst, analyze the transcript and identify the distinct topics or ideas the speaker covers. Then apply all of the following:\n\n1. Fix spelling, capitalization, and punctuation errors\n2. Convert number words to digits (twenty-five → 25, ten percent → 10%, five dollars → $5)\n3. Replace spoken punctuation with symbols (period → ., comma → ,, question mark → ?)\n4. Remove filler words (um, uh, like, you know, I mean, so, basically, right)\n5. Remove unnecessary repetition (stutters, repeated words/phrases)\n6. When the speaker corrects themselves mid-sentence, keep only the final intended version\n7. Rephrase awkward spoken constructions into clear, natural written prose\n8. Keep the speaker's original word choices (verbs, adjectives, nouns) unless clearly incorrect or nonsensical\n9. Group sentences about the same topic or idea into their own paragraph. Start a new paragraph whenever the speaker shifts to a different subject, argument, or aspect. For short transcripts (a few sentences), a single paragraph is usually sufficient — only split if there is a clear topic change.\n10. When the speaker lists items, steps, or key points, format them as a bullet or numbered list\n11. Limit structure to at most 2 levels of depth (paragraphs and single-level bullets/lists within them). Never nest deeper — this is a cleaned transcript, not an article.\n12. Keep the original language (if spoken in French, output in French)\n\nOutput natural prose paragraphs. Do not add headings, titles, or section labels. Preserve all information.\n\nReturn only the restructured text.".to_string(),
         },
     ]
 }
@@ -867,6 +869,7 @@ pub fn get_default_settings() -> AppSettings {
             description: "Converts your speech into text.".to_string(),
             default_binding: default_shortcut.to_string(),
             current_binding: default_shortcut.to_string(),
+            post_process_prompt_id: None,
         },
     );
     #[cfg(target_os = "windows")]
@@ -887,6 +890,7 @@ pub fn get_default_settings() -> AppSettings {
                 .to_string(),
             default_binding: default_post_process_shortcut.to_string(),
             current_binding: default_post_process_shortcut.to_string(),
+            post_process_prompt_id: Some(BUILTIN_PROMPT_CORRECT.to_string()),
         },
     );
     bindings.insert(
@@ -897,6 +901,7 @@ pub fn get_default_settings() -> AppSettings {
             description: "Cancels the current recording.".to_string(),
             default_binding: "escape".to_string(),
             current_binding: "escape".to_string(),
+            post_process_prompt_id: None,
         },
     );
 
@@ -1003,6 +1008,23 @@ pub fn load_or_create_app_settings(app: &AppHandle) -> AppSettings {
                     if !settings.bindings.contains_key(&key) {
                         debug!("Adding missing binding: {}", key);
                         settings.bindings.insert(key, value);
+                        updated = true;
+                    }
+                }
+
+                // Migrate: populate post_process_prompt_id for existing
+                // transcribe_with_post_process binding from the global setting
+                if let Some(binding) = settings.bindings.get_mut("transcribe_with_post_process") {
+                    if binding.post_process_prompt_id.is_none() {
+                        let prompt_id = settings
+                            .post_process_selected_prompt_id
+                            .clone()
+                            .unwrap_or_else(|| BUILTIN_PROMPT_CORRECT.to_string());
+                        debug!(
+                            "Migrating transcribe_with_post_process prompt_id to '{}'",
+                            prompt_id
+                        );
+                        binding.post_process_prompt_id = Some(prompt_id);
                         updated = true;
                     }
                 }

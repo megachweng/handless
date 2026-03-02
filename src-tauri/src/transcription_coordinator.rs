@@ -1,11 +1,15 @@
-use crate::actions::ACTION_MAP;
+use crate::actions::{ShortcutAction, TranscribeAction};
 use crate::managers::audio::AudioRecordingManager;
 use log::{debug, error, warn};
+use once_cell::sync::Lazy;
 use std::sync::mpsc::{self, Sender};
 use std::sync::Arc;
 use std::thread;
 use std::time::{Duration, Instant};
 use tauri::{AppHandle, Manager};
+
+/// Singleton TranscribeAction used by the coordinator for all transcribe bindings.
+static TRANSCRIBE_ACTION: Lazy<TranscribeAction> = Lazy::new(|| TranscribeAction);
 
 const DEBOUNCE: Duration = Duration::from_millis(30);
 
@@ -38,7 +42,7 @@ pub struct TranscriptionCoordinator {
 }
 
 pub fn is_transcribe_binding(id: &str) -> bool {
-    id == "transcribe" || id == "transcribe_with_post_process"
+    id == "transcribe" || id.starts_with("transcribe_")
 }
 
 impl TranscriptionCoordinator {
@@ -159,11 +163,7 @@ impl TranscriptionCoordinator {
 }
 
 fn start(app: &AppHandle, stage: &mut Stage, binding_id: &str, hotkey_string: &str) {
-    let Some(action) = ACTION_MAP.get(binding_id) else {
-        warn!("No action in ACTION_MAP for '{binding_id}'");
-        return;
-    };
-    action.start(app, binding_id, hotkey_string);
+    TRANSCRIBE_ACTION.start(app, binding_id, hotkey_string);
     if app
         .try_state::<Arc<AudioRecordingManager>>()
         .map_or(false, |a| a.is_recording())
@@ -175,10 +175,6 @@ fn start(app: &AppHandle, stage: &mut Stage, binding_id: &str, hotkey_string: &s
 }
 
 fn stop(app: &AppHandle, stage: &mut Stage, binding_id: &str, hotkey_string: &str) {
-    let Some(action) = ACTION_MAP.get(binding_id) else {
-        warn!("No action in ACTION_MAP for '{binding_id}'");
-        return;
-    };
-    action.stop(app, binding_id, hotkey_string);
+    TRANSCRIBE_ACTION.stop(app, binding_id, hotkey_string);
     *stage = Stage::Processing;
 }

@@ -160,9 +160,25 @@ async changeAutoSubmitKeySetting(key: string) : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async changePostProcessEnabledSetting(enabled: boolean) : Promise<Result<null, string>> {
+async addTranscribeBinding(bindingKey: string, promptId: string | null) : Promise<Result<BindingResponse, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("change_post_process_enabled_setting", { enabled }) };
+    return { status: "ok", data: await TAURI_INVOKE("add_transcribe_binding", { bindingKey, promptId }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async removeTranscribeBinding(id: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("remove_transcribe_binding", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async updateBindingPrompt(id: string, promptId: string | null) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("update_binding_prompt", { id, promptId }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -816,7 +832,7 @@ export type PasteMethod = "ctrl_v" | "direct" | "none" | "shift_insert" | "ctrl_
 export type PostProcessProvider = { id: string; label: string; base_url: string; allow_base_url_edit?: boolean; models_endpoint?: string | null; supports_structured_output?: boolean }
 export type ProviderBackend = { type: "Local"; engine_type: EngineType; filename: string; url: string | null; size_mb: number; is_downloaded: boolean; is_downloading: boolean; partial_size: number; is_directory: boolean; accuracy_score: number; speed_score: number; is_custom: boolean } | { type: "Cloud"; base_url: string; default_model: string; console_url: string | null }
 export type RecordingRetentionPeriod = "never" | "preserve_limit" | "days_3" | "weeks_2" | "months_3"
-export type ShortcutBinding = { id: string; name: string; description: string; default_binding: string; current_binding: string }
+export type ShortcutBinding = { id: string; name: string; description: string; default_binding: string; current_binding: string; post_process_prompt_id?: string | null }
 export type SoundTheme = "marimba" | "pop" | "custom"
 export type SttProvider = { id: string; label: string; provider_type: SttProviderType; base_url: string; default_model: string }
 export type SttProviderInfo = { id: string; name: string; description: string; supported_languages: string[]; supports_translation: boolean; supports_realtime: boolean; is_recommended: boolean; backend: ProviderBackend; available_options?: CloudProviderOption[] }

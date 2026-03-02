@@ -149,6 +149,12 @@
     },
     "general": {
       "title": "General",
+      "shortcuts": {
+        "title": "Shortcuts",
+        "strategyNone": "None",
+        "addNew": "Add Shortcut",
+        "remove": "Remove shortcut"
+      },
       "shortcut": {
         "title": "Handless Shortcuts",
         "description": "Configure keyboard shortcuts to trigger speech-to-text recording",
