@@ -73,6 +73,9 @@ interface SettingsStore {
     realtime: boolean,
   ) => Promise<void>;
 
+  // Internal helpers
+  _invalidatePostProcessVerified: (providerId: string) => void;
+
   // Internal state setters
   setSettings: (settings: Settings | null) => void;
   setDefaultSettings: (defaultSettings: Settings | null) => void;

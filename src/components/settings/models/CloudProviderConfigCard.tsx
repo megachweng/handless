@@ -470,7 +470,11 @@ export const CloudProviderConfigCard: React.FC<
                 <button
                   type="button"
                   className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md text-text/60 hover:text-text hover:bg-muted/20 transition-colors"
-                  onClick={() => openUrl(provider.backend.console_url!)}
+                  onClick={() => {
+                    if (provider.backend.type === "Cloud" && provider.backend.console_url) {
+                      openUrl(provider.backend.console_url);
+                    }
+                  }}
                 >
                   <ExternalLink className="w-3 h-3" />
                   {t("settings.models.cloudProviders.getApiKey")}

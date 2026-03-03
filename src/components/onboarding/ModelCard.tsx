@@ -64,7 +64,8 @@ const ModelCard: React.FC<ModelCardProps> = ({
   const isFeatured = variant === "featured";
   const isCloud = provider.backend.type === "Cloud";
   const isLocal = provider.backend.type === "Local";
-  const isCustom = isLocal && provider.backend.is_custom;
+  const isCustom =
+    provider.backend.type === "Local" && provider.backend.is_custom;
   const isClickable =
     status === "available" || status === "active" || status === "downloadable";
 
@@ -131,7 +132,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
             {isCloud && configuredModel ? configuredModel : displayDescription}
           </p>
         </div>
-        {isLocal &&
+        {provider.backend.type === "Local" &&
           (provider.backend.accuracy_score > 0 ||
             provider.backend.speed_score > 0) && (
             <div className="hidden sm:flex items-center ml-4">
@@ -201,7 +202,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
             <span>{t("modelSelector.capabilities.translate")}</span>
           </div>
         )}
-        {isLocal && status === "downloadable" && (
+        {provider.backend.type === "Local" && status === "downloadable" && (
           <span className="flex items-center gap-1.5 ml-auto text-xs text-text/50 bg-muted/10 px-1.5 py-0.5 rounded">
             <Download className="w-3 h-3" />
             <span>{formatModelSize(Number(provider.backend.size_mb))}</span>
