@@ -11,10 +11,14 @@ import { toast } from "sonner";
 
 const NONE_VALUE = "__none__";
 
-/** Sort transcribe bindings: "transcribe" first, rest alphabetically */
+/** Sort transcribe bindings: "transcribe" first, built-ins next, custom last */
 function sortBindings(a: ShortcutBinding, b: ShortcutBinding): number {
   if (a.id === "transcribe") return -1;
   if (b.id === "transcribe") return 1;
+  const aCustom = a.id.startsWith("transcribe_custom_");
+  const bCustom = b.id.startsWith("transcribe_custom_");
+  if (aCustom && !bCustom) return 1;
+  if (!aCustom && bCustom) return -1;
   return a.id.localeCompare(b.id);
 }
 
@@ -22,6 +26,7 @@ export const ShortcutBindingsCard: React.FC = () => {
   const { t } = useTranslation();
   const { getSetting, refreshSettings } = useSettings();
   const [isAdding, setIsAdding] = useState(false);
+  const [recordingNewId, setRecordingNewId] = useState<string | null>(null);
 
   const bindings = getSetting("bindings") || {};
   const prompts = getSetting("post_process_prompts") || [];
@@ -51,12 +56,12 @@ export const ShortcutBindingsCard: React.FC = () => {
   const handleAdd = async () => {
     setIsAdding(true);
     try {
-      const result = await commands.addTranscribeBinding(
-        "ctrl+alt+shift+f12",
-        null,
-      );
-      if (result.status === "ok" && result.data.success) {
+      // Create binding with empty key — user will record it next
+      const result = await commands.addTranscribeBinding("", null);
+      if (result.status === "ok" && result.data.success && result.data.binding) {
         await refreshSettings();
+        // Enter recording mode for the new binding
+        setRecordingNewId(result.data.binding.id);
       } else if (result.status === "ok" && result.data.error) {
         toast.error(result.data.error);
       }
@@ -64,6 +69,16 @@ export const ShortcutBindingsCard: React.FC = () => {
       toast.error(String(error));
     } finally {
       setIsAdding(false);
+    }
+  };
+
+  const handleAutoRecordEnd = async (recorded: boolean) => {
+    const id = recordingNewId;
+    setRecordingNewId(null);
+    if (!recorded && id) {
+      // User cancelled — remove the empty binding
+      await commands.removeTranscribeBinding(id).catch(console.error);
+      await refreshSettings();
     }
   };
 
@@ -80,7 +95,14 @@ export const ShortcutBindingsCard: React.FC = () => {
     <SettingsGroup title={t("settings.general.shortcuts.title")}>
       {transcribeBindings.map((binding) => (
         <div key={binding.id} className="flex items-center gap-2 px-3 py-1.5">
-          <ShortcutInput shortcutId={binding.id} compact={true} />
+          <ShortcutInput
+            shortcutId={binding.id}
+            compact={true}
+            autoRecord={binding.id === recordingNewId}
+            onAutoRecordEnd={
+              binding.id === recordingNewId ? handleAutoRecordEnd : undefined
+            }
+          />
           {prompts.length > 0 && (
             <Dropdown
               options={strategyOptions}
@@ -102,7 +124,7 @@ export const ShortcutBindingsCard: React.FC = () => {
       ))}
       <button
         onClick={handleAdd}
-        disabled={isAdding}
+        disabled={isAdding || recordingNewId !== null}
         className="flex items-center gap-1.5 w-full px-3 py-2 text-xs text-muted hover:text-text transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
       >
         <Plus size={13} />

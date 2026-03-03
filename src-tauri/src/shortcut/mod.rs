@@ -243,14 +243,7 @@ pub fn add_transcribe_binding(
     binding_key: String,
     prompt_id: Option<String>,
 ) -> Result<BindingResponse, String> {
-    if binding_key.trim().is_empty() {
-        return Err("Binding key cannot be empty".to_string());
-    }
-
     let mut settings = settings::get_settings(&app);
-
-    // Validate the shortcut for the current keyboard implementation
-    validate_shortcut_for_implementation(&binding_key, settings.keyboard_implementation)?;
 
     // Generate unique binding ID
     let id = format!(
@@ -263,19 +256,24 @@ pub fn add_transcribe_binding(
         name: "Custom Transcription".to_string(),
         description: "Custom transcription shortcut.".to_string(),
         default_binding: binding_key.clone(),
-        current_binding: binding_key,
+        current_binding: binding_key.clone(),
         post_process_prompt_id: prompt_id,
     };
 
-    // Register the shortcut with the OS
-    if let Err(e) = register_shortcut(&app, new_binding.clone()) {
-        let error_msg = format!("Failed to register shortcut: {}", e);
-        error!("add_transcribe_binding error: {}", error_msg);
-        return Ok(BindingResponse {
-            success: false,
-            binding: None,
-            error: Some(error_msg),
-        });
+    // Only validate and register if a non-empty key was provided.
+    // An empty key means the binding is pending user recording.
+    if !binding_key.trim().is_empty() {
+        validate_shortcut_for_implementation(&binding_key, settings.keyboard_implementation)?;
+
+        if let Err(e) = register_shortcut(&app, new_binding.clone()) {
+            let error_msg = format!("Failed to register shortcut: {}", e);
+            error!("add_transcribe_binding error: {}", error_msg);
+            return Ok(BindingResponse {
+                success: false,
+                binding: None,
+                error: Some(error_msg),
+            });
+        }
     }
 
     settings.bindings.insert(id, new_binding.clone());

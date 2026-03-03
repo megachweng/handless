@@ -15,6 +15,8 @@ interface HandyKeysShortcutInputProps {
   shortcutId: string;
   disabled?: boolean;
   compact?: boolean;
+  autoRecord?: boolean;
+  onAutoRecordEnd?: (recorded: boolean) => void;
 }
 
 interface HandyKeysEvent {
@@ -30,6 +32,8 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
   shortcutId,
   disabled = false,
   compact = false,
+  autoRecord = false,
+  onAutoRecordEnd,
 }) => {
   const { t } = useTranslation();
   const { getSetting, updateBinding, resetBinding, isUpdating, isLoading } =
@@ -58,8 +62,11 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
     // Stop backend recording
     await commands.stopHandyKeysRecording().catch(console.error);
 
-    // Restore original binding
-    if (originalBinding) {
+    if (autoRecord && onAutoRecordEnd) {
+      // autoRecord mode: let parent handle cleanup
+      onAutoRecordEnd(false);
+    } else if (originalBinding) {
+      // Restore original binding
       try {
         await updateBinding(shortcutId, originalBinding);
       } catch (error) {
@@ -72,7 +79,7 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
     setCurrentKeys("");
     currentKeysRef.current = "";
     setOriginalBinding("");
-  }, [isRecording, originalBinding, shortcutId, updateBinding, t]);
+  }, [isRecording, originalBinding, shortcutId, updateBinding, t, autoRecord, onAutoRecordEnd]);
 
   // Set up event listener for handy-keys events
   useEffect(() => {
@@ -96,8 +103,10 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
           } else if (!is_key_down && currentKeysRef.current) {
             // Key released - commit the shortcut using the ref value
             const keysToCommit = currentKeysRef.current;
+            let success = false;
             try {
               await updateBinding(shortcutId, keysToCommit);
+              success = true;
             } catch (error) {
               console.error("Failed to change binding:", error);
               toast.error(
@@ -127,6 +136,10 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
             setCurrentKeys("");
             currentKeysRef.current = "";
             setOriginalBinding("");
+
+            if (autoRecord && onAutoRecordEnd) {
+              onAutoRecordEnd(success);
+            }
           }
         },
       );
@@ -202,6 +215,13 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
       );
     }
   };
+
+  // Auto-start recording when autoRecord prop is set
+  useEffect(() => {
+    if (autoRecord && !isRecording && bindings[shortcutId]) {
+      startRecording();
+    }
+  }, [autoRecord, shortcutId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Format the current shortcut keys being recorded
   const formatCurrentKeys = (): string => {

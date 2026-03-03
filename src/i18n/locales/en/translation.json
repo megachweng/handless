@@ -162,7 +162,7 @@
         "loading": "Loading shortcuts...",
         "none": "No shortcuts configured",
         "notFound": "Shortcut not found",
-        "pressKeys": "Press keys...",
+        "pressKeys": "Recording...",
         "bindings": {
           "transcribe": {
             "name": "Transcribe Shortcut",

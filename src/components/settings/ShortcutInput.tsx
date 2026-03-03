@@ -9,6 +9,10 @@ interface ShortcutInputProps {
   shortcutId: string;
   disabled?: boolean;
   compact?: boolean;
+  /** Automatically start recording on mount */
+  autoRecord?: boolean;
+  /** Called when autoRecord recording ends (true = key recorded, false = cancelled) */
+  onAutoRecordEnd?: (recorded: boolean) => void;
 }
 
 /**
