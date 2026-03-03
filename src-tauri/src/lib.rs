@@ -45,7 +45,7 @@ use tauri::{AppHandle, Emitter, Listener, Manager};
 use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
 use tauri_plugin_log::{Builder as LogBuilder, RotationStrategy, Target, TargetKind};
 
-use crate::settings::get_settings;
+use crate::settings::{get_settings, ModelUnloadTimeout};
 
 // Global atomic to store the file log level filter
 // We use u8 to store the log::LevelFilter as a number
@@ -134,6 +134,15 @@ fn initialize_core_logic(app_handle: &AppHandle) {
 
     // Managed state for active realtime streaming session
     app_handle.manage(actions::ActiveStreamingState::default());
+
+    // Preload the transcription model in the background so it's ready
+    // for the first transcription without the 2-5s cold-start delay.
+    {
+        let settings = get_settings(app_handle);
+        if settings.model_unload_timeout != ModelUnloadTimeout::Immediately {
+            transcription_manager.initiate_model_load();
+        }
+    }
 
     // Subscribe to OS audio device change notifications
     device_watcher::start(app_handle);
