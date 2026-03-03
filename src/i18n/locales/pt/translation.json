@@ -227,12 +227,7 @@
         "app": "Aplicativo",
         "output": "Saída",
         "transcription": "Transcrição",
-        "history": "Histórico",
-        "experimental": "Experimental"
-      },
-      "experimentalToggle": {
-        "label": "Recursos Experimentais",
-        "description": "Ativar recursos experimentais que ainda estão em desenvolvimento."
+        "history": "Histórico"
       },
       "startHidden": {
         "label": "Iniciar Oculto",
@@ -358,7 +353,8 @@
           "placeholderWithOptions": "Buscar ou selecionar um modelo",
           "placeholderNoOptions": "Digite o nome de um modelo",
           "refreshModels": "Atualizar modelos"
-        }
+        },
+        "verified": "Verificado"
       },
       "prompts": {
         "title": "Prompt",

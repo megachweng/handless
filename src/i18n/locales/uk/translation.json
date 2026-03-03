@@ -227,12 +227,7 @@
         "app": "Додаток",
         "output": "Вивід",
         "transcription": "Транскрипція",
-        "history": "Історія",
-        "experimental": "Експериментальне"
-      },
-      "experimentalToggle": {
-        "label": "Експериментальні функції",
-        "description": "Увімкнути експериментальні функції, які ще в розробці."
+        "history": "Історія"
       },
       "startHidden": {
         "label": "Запуск у фоні",
@@ -358,7 +353,8 @@
           "placeholderWithOptions": "Шукайте або оберіть модель",
           "placeholderNoOptions": "Введіть назву моделі",
           "refreshModels": "Оновити моделі"
-        }
+        },
+        "verified": "Перевірено"
       },
       "prompts": {
         "title": "Промпт",

@@ -227,12 +227,7 @@
         "app": "App",
         "output": "Output",
         "transcription": "Trascrizione",
-        "history": "Cronologia",
-        "experimental": "Sperimentale"
-      },
-      "experimentalToggle": {
-        "label": "Funzionalità Sperimentali",
-        "description": "Abilita le funzionalità sperimentali ancora in fase di sviluppo."
+        "history": "Cronologia"
       },
       "startHidden": {
         "label": "Avvia in Background",
@@ -358,7 +353,8 @@
           "placeholderWithOptions": "Cerca o scegli un modello",
           "placeholderNoOptions": "Digita il nome di un modello",
           "refreshModels": "Aggiorna modelli"
-        }
+        },
+        "verified": "Verificato"
       },
       "prompts": {
         "title": "Prompt",

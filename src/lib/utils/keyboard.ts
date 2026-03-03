@@ -168,22 +168,47 @@ const capitalizeKey = (key: string): string => {
   return key.replace(/\b\w/g, (c) => c.toUpperCase());
 };
 
+/** macOS modifier symbols */
+const MACOS_SYMBOLS: Record<string, string> = {
+  command: "⌘",
+  cmd: "⌘",
+  shift: "⇧",
+  option: "⌥",
+  alt: "⌥",
+  ctrl: "⌃",
+  control: "⌃",
+  fn: "fn",
+};
+
 /**
  * Format a single key part for display.
  * Handles _left/_right suffixes and capitalizes names.
- * e.g. "shift_left" -> "Left Shift", "option" -> "Option", "space" -> "Space"
+ * On macOS, modifier keys are shown as symbols (⌘ ⇧ ⌥ ⌃).
  */
-const formatKeyPart = (part: string): string => {
+const formatKeyPart = (part: string, osType: OSType): string => {
   const trimmed = part.trim();
   if (!trimmed) return "";
 
+  // Strip _left/_right suffix to get the base key name
+  let baseName = trimmed;
   if (trimmed.endsWith("_left")) {
-    const name = trimmed.slice(0, -5);
-    return `Left ${capitalizeKey(name)}`;
+    baseName = trimmed.slice(0, -5);
+  } else if (trimmed.endsWith("_right")) {
+    baseName = trimmed.slice(0, -6);
+  }
+
+  // On macOS, use symbols for modifiers
+  if (osType === "macos") {
+    const symbol = MACOS_SYMBOLS[baseName.toLowerCase()];
+    if (symbol) return symbol;
+  }
+
+  // Non-macOS or non-modifier: use text with Left/Right prefix
+  if (trimmed.endsWith("_left")) {
+    return `Left ${capitalizeKey(baseName)}`;
   }
   if (trimmed.endsWith("_right")) {
-    const name = trimmed.slice(0, -6);
-    return `Right ${capitalizeKey(name)}`;
+    return `Right ${capitalizeKey(baseName)}`;
   }
 
   return capitalizeKey(trimmed);
@@ -192,14 +217,15 @@ const formatKeyPart = (part: string): string => {
 /**
  * Get display-friendly key combination string for the current OS
  * Formats raw hotkey strings like "option_left+shift+space" into
- * human-readable form like "Left Option + Shift + Space"
+ * human-readable form. On macOS, uses symbols: "⌥⇧Space"
  */
 export const formatKeyCombination = (
   combination: string,
-  _osType: OSType,
+  osType: OSType,
 ): string => {
   if (!combination) return "";
-  return combination.split("+").map(formatKeyPart).join(" + ");
+  const parts = combination.split("+").map((part) => formatKeyPart(part, osType));
+  return osType === "macos" ? parts.join("") : parts.join(" + ");
 };
 
 /**

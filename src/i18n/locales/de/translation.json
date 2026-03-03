@@ -227,12 +227,7 @@
         "app": "App",
         "output": "Ausgabe",
         "transcription": "Transkription",
-        "history": "Verlauf",
-        "experimental": "Experimentell"
-      },
-      "experimentalToggle": {
-        "label": "Experimentelle Funktionen",
-        "description": "Experimentelle Funktionen aktivieren, die sich noch in Entwicklung befinden."
+        "history": "Verlauf"
       },
       "startHidden": {
         "label": "Versteckt starten",
@@ -358,7 +353,8 @@
           "placeholderWithOptions": "Modell suchen oder auswählen",
           "placeholderNoOptions": "Modellnamen eingeben",
           "refreshModels": "Modelle aktualisieren"
-        }
+        },
+        "verified": "Verifiziert"
       },
       "prompts": {
         "title": "Prompt",

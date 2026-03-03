@@ -865,15 +865,6 @@ pub fn change_auto_submit_key_setting(app: AppHandle, key: String) -> Result<(),
 
 #[tauri::command]
 #[specta::specta]
-pub fn change_experimental_enabled_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
-    let mut settings = settings::get_settings(&app);
-    settings.experimental_enabled = enabled;
-    settings::write_settings(&app, settings);
-    Ok(())
-}
-
-#[tauri::command]
-#[specta::specta]
 pub fn change_post_process_base_url_setting(
     app: AppHandle,
     provider_id: String,
@@ -897,6 +888,9 @@ pub fn change_post_process_base_url_setting(
     }
 
     provider.base_url = base_url;
+    settings
+        .post_process_verified_providers
+        .remove(&provider_id);
     settings::write_settings(&app, settings);
     Ok(())
 }
@@ -925,7 +919,12 @@ pub fn change_post_process_api_key_setting(
 ) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     validate_provider_exists(&settings, &provider_id)?;
-    settings.post_process_api_keys.insert(provider_id, api_key);
+    settings
+        .post_process_verified_providers
+        .remove(&provider_id);
+    settings
+        .post_process_api_keys
+        .insert(provider_id, api_key);
     settings::write_settings(&app, settings);
     Ok(())
 }
@@ -939,6 +938,7 @@ pub fn change_post_process_model_setting(
 ) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     validate_provider_exists(&settings, &provider_id)?;
+    settings.post_process_verified_providers.remove(&provider_id);
     settings.post_process_models.insert(provider_id, model);
     settings::write_settings(&app, settings);
     Ok(())
@@ -1080,7 +1080,16 @@ pub async fn fetch_post_process_models(
         ));
     }
 
-    crate::llm_client::fetch_models(provider, api_key).await
+    let models = crate::llm_client::fetch_models(provider, api_key).await?;
+
+    // Mark provider as verified after successful model fetch
+    let mut settings = settings::get_settings(&app);
+    settings
+        .post_process_verified_providers
+        .insert(provider_id);
+    settings::write_settings(&app, settings);
+
+    Ok(models)
 }
 
 #[tauri::command]

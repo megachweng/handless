@@ -392,8 +392,6 @@ pub struct AppSettings {
     #[serde(default = "default_app_language")]
     pub app_language: String,
     #[serde(default)]
-    pub experimental_enabled: bool,
-    #[serde(default)]
     pub keyboard_implementation: KeyboardImplementation,
     #[serde(default = "default_show_tray_icon")]
     pub show_tray_icon: bool,
@@ -406,6 +404,8 @@ pub struct AppSettings {
     pub app_theme: AppTheme,
     #[serde(default)]
     pub stt_verified_providers: HashSet<String>,
+    #[serde(default)]
+    pub post_process_verified_providers: HashSet<String>,
     #[serde(default = "default_stt_cloud_options")]
     pub stt_cloud_options: HashMap<String, String>,
     #[serde(default)]
@@ -950,7 +950,6 @@ pub fn get_default_settings() -> AppSettings {
         mute_while_recording: false,
         append_trailing_space: false,
         app_language: default_app_language(),
-        experimental_enabled: false,
         keyboard_implementation: KeyboardImplementation::default(),
         show_tray_icon: default_show_tray_icon(),
         paste_delay_ms: default_paste_delay_ms(),
@@ -958,6 +957,7 @@ pub fn get_default_settings() -> AppSettings {
         external_script_path: None,
         app_theme: AppTheme::default(),
         stt_verified_providers: HashSet::new(),
+        post_process_verified_providers: HashSet::new(),
         stt_cloud_options: default_stt_cloud_options(),
         stt_realtime_enabled: HashMap::new(),
     }

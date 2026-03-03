@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { RefreshCcw } from "lucide-react";
+import { Check, RefreshCcw } from "lucide-react";
 import { commands } from "@/bindings";
 
 import { Alert } from "../../ui/Alert";
@@ -24,9 +24,16 @@ import { useSettings } from "../../../hooks/useSettings";
 const BUILTIN_PROMPT_PREFIX = "default_";
 const FIELD_WIDTH = "w-[260px]";
 
-/** Invisible spacer matching the ResetButton width to keep fields aligned across rows. */
-const FieldAlignmentSpacer = () => (
-  <div className="w-[26px] shrink-0" aria-hidden="true" />
+/** Trailing slot matching the ResetButton width to keep fields aligned across rows. */
+const FieldAlignmentSpacer = ({
+  children,
+}: { children?: React.ReactNode }) => (
+  <div
+    className="w-[26px] shrink-0 flex items-center justify-center"
+    {...(!children && { "aria-hidden": true })}
+  >
+    {children}
+  </div>
 );
 
 const PostProcessingSettingsApiComponent: React.FC = () => {
@@ -101,7 +108,14 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
                 disabled={state.isApiKeyUpdating}
                 className={FIELD_WIDTH}
               />
-              <FieldAlignmentSpacer />
+              <FieldAlignmentSpacer>
+                {state.isVerified && (
+                  <Check
+                    className="w-4 h-4 text-green-500"
+                    aria-label={t("settings.postProcessing.api.verified")}
+                  />
+                )}
+              </FieldAlignmentSpacer>
             </div>
           </SettingContainer>
         </>

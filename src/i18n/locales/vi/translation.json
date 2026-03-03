@@ -227,12 +227,7 @@
         "app": "Ứng dụng",
         "output": "Đầu ra",
         "transcription": "Chuyển đổi",
-        "history": "Lịch sử",
-        "experimental": "Thử nghiệm"
-      },
-      "experimentalToggle": {
-        "label": "Tính năng thử nghiệm",
-        "description": "Bật các tính năng thử nghiệm đang trong quá trình phát triển."
+        "history": "Lịch sử"
       },
       "startHidden": {
         "label": "Khởi động ẩn",
@@ -358,7 +353,8 @@
           "placeholderWithOptions": "Tìm kiếm hoặc chọn một mô hình",
           "placeholderNoOptions": "Nhập tên mô hình",
           "refreshModels": "Làm mới mô hình"
-        }
+        },
+        "verified": "Đã xác minh"
       },
       "prompts": {
         "title": "Prompt",

@@ -227,12 +227,7 @@
         "app": "Uygulama",
         "output": "Çıktı",
         "transcription": "Transkripsiyon",
-        "history": "Geçmiş",
-        "experimental": "Deneysel"
-      },
-      "experimentalToggle": {
-        "label": "Deneysel Özellikler",
-        "description": "Hala geliştirme aşamasında olan deneysel özellikleri etkinleştir."
+        "history": "Geçmiş"
       },
       "startHidden": {
         "label": "Gizli Başlat",
@@ -358,7 +353,8 @@
           "placeholderWithOptions": "Model ara veya seç",
           "placeholderNoOptions": "Model adı yazın",
           "refreshModels": "Modelleri Yenile"
-        }
+        },
+        "verified": "Doğrulandı"
       },
       "prompts": {
         "title": "Prompt",

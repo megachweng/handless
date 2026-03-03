@@ -154,7 +154,8 @@
         "title": "Shortcuts",
         "strategyNone": "None",
         "addNew": "Add Shortcut",
-        "remove": "Remove shortcut"
+        "remove": "Remove shortcut",
+        "postProcessNotReady": "Configure a post-processing provider first"
       },
       "shortcut": {
         "title": "Handless Shortcuts",
@@ -298,8 +299,7 @@
         "app": "App",
         "output": "Output",
         "transcription": "Transcription",
-        "history": "History",
-        "experimental": "Experimental"
+        "history": "History"
       },
       "theme": {
         "title": "Theme",
@@ -309,10 +309,6 @@
           "light": "Light",
           "system": "System"
         }
-      },
-      "experimentalToggle": {
-        "label": "Experimental Features",
-        "description": "Enable experimental features that are still in development."
       },
       "startHidden": {
         "label": "Start Hidden",
@@ -424,6 +420,7 @@
           "description": "API base URL for the selected provider. Only the custom provider can be edited.",
           "placeholder": "https://api.openai.com/v1"
         },
+        "verified": "Verified",
         "apiKey": {
           "title": "API Key",
           "description": "API key for the selected provider.",

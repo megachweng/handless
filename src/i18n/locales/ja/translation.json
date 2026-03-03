@@ -227,12 +227,7 @@
         "app": "アプリ",
         "output": "出力",
         "transcription": "文字起こし",
-        "history": "履歴",
-        "experimental": "実験的"
-      },
-      "experimentalToggle": {
-        "label": "実験的機能",
-        "description": "まだ開発中の実験的機能を有効にします。"
+        "history": "履歴"
       },
       "startHidden": {
         "label": "非表示で起動",
@@ -358,7 +353,8 @@
           "placeholderWithOptions": "モデルを検索または選択",
           "placeholderNoOptions": "モデル名を入力",
           "refreshModels": "モデルを更新"
-        }
+        },
+        "verified": "確認済み"
       },
       "prompts": {
         "title": "プロンプト",

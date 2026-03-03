@@ -15,14 +15,10 @@ import { AutoSubmit } from "../AutoSubmit";
 import { AppendTrailingSpace } from "../AppendTrailingSpace";
 import { HistoryLimit } from "../HistoryLimit";
 import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
-import { ExperimentalToggle } from "../ExperimentalToggle";
-import { useSettings } from "../../../hooks/useSettings";
 import { KeyboardImplementationSelector } from "../debug/KeyboardImplementationSelector";
 
 export const AdvancedSettings: React.FC = () => {
   const { t } = useTranslation();
-  const { getSetting } = useSettings();
-  const experimentalEnabled = getSetting("experimental_enabled") || false;
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-4">
@@ -33,7 +29,10 @@ export const AdvancedSettings: React.FC = () => {
         <ShowTrayIcon descriptionMode="tooltip" grouped={true} />
         <ShowOverlay descriptionMode="tooltip" grouped={true} />
         <ModelUnloadTimeoutSetting descriptionMode="tooltip" grouped={true} />
-        <ExperimentalToggle descriptionMode="tooltip" grouped={true} />
+        <KeyboardImplementationSelector
+          descriptionMode="tooltip"
+          grouped={true}
+        />
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.advanced.groups.output")}>
@@ -55,15 +54,6 @@ export const AdvancedSettings: React.FC = () => {
           grouped={true}
         />
       </SettingsGroup>
-
-      {experimentalEnabled && (
-        <SettingsGroup title={t("settings.advanced.groups.experimental")}>
-          <KeyboardImplementationSelector
-            descriptionMode="tooltip"
-            grouped={true}
-          />
-        </SettingsGroup>
-      )}
     </div>
   );
 };

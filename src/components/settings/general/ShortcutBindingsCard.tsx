@@ -24,12 +24,18 @@ function sortBindings(a: ShortcutBinding, b: ShortcutBinding): number {
 
 export const ShortcutBindingsCard: React.FC = () => {
   const { t } = useTranslation();
-  const { getSetting, refreshSettings } = useSettings();
+  const { settings, getSetting, refreshSettings } = useSettings();
   const [isAdding, setIsAdding] = useState(false);
   const [recordingNewId, setRecordingNewId] = useState<string | null>(null);
 
   const bindings = getSetting("bindings") || {};
   const prompts = getSetting("post_process_prompts") || [];
+
+  // Post-processing requires a verified provider (or Apple Intelligence)
+  const providerId = settings?.post_process_provider_id ?? "";
+  const isPostProcessReady =
+    providerId === "apple_intelligence" ||
+    (settings?.post_process_verified_providers?.includes(providerId) ?? false);
 
   // Filter to transcribe-prefixed bindings only
   const transcribeBindings = Object.values(bindings)
@@ -91,37 +97,65 @@ export const ShortcutBindingsCard: React.FC = () => {
 
   const canDelete = (id: string) => id !== "transcribe" && id !== "cancel";
 
+  const showStrategyColumn = prompts.length > 0;
+
   return (
     <SettingsGroup title={t("settings.general.shortcuts.title")}>
-      {transcribeBindings.map((binding) => (
-        <div key={binding.id} className="flex items-center gap-2 px-3 py-1.5">
-          <ShortcutInput
-            shortcutId={binding.id}
-            compact={true}
-            autoRecord={binding.id === recordingNewId}
-            onAutoRecordEnd={
-              binding.id === recordingNewId ? handleAutoRecordEnd : undefined
-            }
-          />
-          {prompts.length > 0 && (
-            <Dropdown
-              options={strategyOptions}
-              selectedValue={binding.post_process_prompt_id || NONE_VALUE}
-              onSelect={(value) => handleStrategyChange(binding.id, value)}
-              className="flex-1 min-w-0"
-            />
-          )}
-          {canDelete(binding.id) && (
-            <button
-              onClick={() => handleRemove(binding.id)}
-              className="p-1 text-muted/40 hover:text-red-400 transition-colors rounded hover:bg-red-400/10"
-              title={t("settings.general.shortcuts.remove")}
-            >
-              <X size={14} />
-            </button>
-          )}
-        </div>
-      ))}
+      <div
+        className={`grid ${showStrategyColumn ? "grid-cols-[auto_1fr_auto]" : "grid-cols-[auto_auto]"} gap-x-2 items-center`}
+      >
+        {transcribeBindings.map((binding) => (
+          <React.Fragment key={binding.id}>
+            <div className="px-3 py-1.5">
+              <ShortcutInput
+                shortcutId={binding.id}
+                compact={true}
+                autoRecord={binding.id === recordingNewId}
+                onAutoRecordEnd={
+                  binding.id === recordingNewId
+                    ? handleAutoRecordEnd
+                    : undefined
+                }
+              />
+            </div>
+            {showStrategyColumn && (
+              <div
+                className="py-1.5"
+                title={
+                  !isPostProcessReady
+                    ? t("settings.general.shortcuts.postProcessNotReady")
+                    : undefined
+                }
+              >
+                <Dropdown
+                  options={strategyOptions}
+                  selectedValue={
+                    binding.post_process_prompt_id || NONE_VALUE
+                  }
+                  onSelect={(value) =>
+                    handleStrategyChange(binding.id, value)
+                  }
+                  disabled={!isPostProcessReady}
+                  className="w-full"
+                />
+              </div>
+            )}
+            <div className="px-3 py-1.5 flex justify-center">
+              {canDelete(binding.id) ? (
+                <button
+                  onClick={() => handleRemove(binding.id)}
+                  className="p-1 text-muted/40 hover:text-red-400 transition-colors rounded hover:bg-red-400/10"
+                  title={t("settings.general.shortcuts.remove")}
+                >
+                  <X size={14} />
+                </button>
+              ) : (
+                <div className="w-6" />
+              )}
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
       <button
         onClick={handleAdd}
         disabled={isAdding || recordingNewId !== null}

@@ -227,12 +227,7 @@
         "app": "앱",
         "output": "출력",
         "transcription": "전사",
-        "history": "히스토리",
-        "experimental": "실험적"
-      },
-      "experimentalToggle": {
-        "label": "실험적 기능",
-        "description": "개발 중인 실험적 기능을 활성화합니다."
+        "history": "히스토리"
       },
       "startHidden": {
         "label": "숨김으로 시작",
@@ -358,7 +353,8 @@
           "placeholderWithOptions": "모델 검색 또는 선택",
           "placeholderNoOptions": "모델 이름 입력",
           "refreshModels": "모델 새로고침"
-        }
+        },
+        "verified": "인증됨"
       },
       "prompts": {
         "title": "프롬프트",

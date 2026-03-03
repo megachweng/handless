@@ -17,6 +17,7 @@ type PostProcessProviderState = {
   apiKey: string;
   handleApiKeyChange: (value: string) => void;
   isApiKeyUpdating: boolean;
+  isVerified: boolean;
   model: string;
   handleModelChange: (value: string) => void;
   modelOptions: ModelOption[];
@@ -207,6 +208,10 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
 
   const isCustomProvider = selectedProvider?.id === "custom";
 
+  const isVerified =
+    settings?.post_process_verified_providers?.includes(selectedProviderId) ??
+    false;
+
   // No automatic fetching - user must click refresh button
 
   return {
@@ -222,6 +227,7 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
     apiKey,
     handleApiKeyChange,
     isApiKeyUpdating,
+    isVerified,
     model,
     handleModelChange,
     modelOptions,

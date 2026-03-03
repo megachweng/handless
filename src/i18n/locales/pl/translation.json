@@ -227,12 +227,7 @@
         "app": "Aplikacja",
         "output": "Wyjście",
         "transcription": "Transkrypcja",
-        "history": "Historia",
-        "experimental": "Eksperymentalne"
-      },
-      "experimentalToggle": {
-        "label": "Funkcje Eksperymentalne",
-        "description": "Włącz funkcje eksperymentalne, które są jeszcze w fazie rozwoju."
+        "history": "Historia"
       },
       "startHidden": {
         "label": "Uruchom ukryty",
@@ -358,7 +353,8 @@
           "placeholderWithOptions": "Wyszukaj lub wybierz model",
           "placeholderNoOptions": "Wpisz nazwę modelu",
           "refreshModels": "Odśwież modele"
-        }
+        },
+        "verified": "Zweryfikowano"
       },
       "prompts": {
         "title": "Prompt",

@@ -158,8 +158,6 @@ const settingUpdaters: {
     commands.changeAppendTrailingSpaceSetting(value as boolean),
   log_level: (value) => commands.setLogLevel(value as any),
   app_language: (value) => commands.changeAppLanguageSetting(value as string),
-  experimental_enabled: (value) =>
-    commands.changeExperimentalEnabledSetting(value as boolean),
   show_tray_icon: (value) =>
     commands.changeShowTrayIconSetting(value as boolean),
   app_theme: (value) => commands.changeAppThemeSetting(value as string),
@@ -462,6 +460,23 @@ export const useSettingsStore = create<SettingsStore>()(
       }
     },
 
+    /** Optimistically remove a provider from the verified set. */
+    _invalidatePostProcessVerified: (providerId: string) => {
+      set((state) => {
+        const current =
+          state.settings?.post_process_verified_providers ?? [];
+        if (!state.settings || !current.includes(providerId)) return state;
+        return {
+          settings: {
+            ...state.settings,
+            post_process_verified_providers: current.filter(
+              (id) => id !== providerId,
+            ),
+          },
+        };
+      });
+    },
+
     // Generic updater for post-processing provider settings
     updatePostProcessSetting: async (
       settingType: "api_key" | "model",
@@ -491,6 +506,7 @@ export const useSettingsStore = create<SettingsStore>()(
     },
 
     updatePostProcessBaseUrl: async (providerId, baseUrl) => {
+      get()._invalidatePostProcessVerified(providerId);
       const { setUpdating, refreshSettings } = get();
       const updateKey = `post_process_base_url:${providerId}`;
 
@@ -532,12 +548,14 @@ export const useSettingsStore = create<SettingsStore>()(
     },
 
     updatePostProcessApiKey: async (providerId, apiKey) => {
+      get()._invalidatePostProcessVerified(providerId);
       // Clear cached models when API key changes - user should click refresh after
       get().setPostProcessModelOptions(providerId, []);
       return get().updatePostProcessSetting("api_key", providerId, apiKey);
     },
 
     updatePostProcessModel: async (providerId, model) => {
+      get()._invalidatePostProcessVerified(providerId);
       return get().updatePostProcessSetting("model", providerId, model);
     },
 
@@ -552,6 +570,20 @@ export const useSettingsStore = create<SettingsStore>()(
         const result = await commands.fetchPostProcessModels(providerId);
         if (result.status === "ok") {
           setPostProcessModelOptions(providerId, result.data);
+          // Backend marks the provider as verified on success — update
+          // the local store directly to avoid an extra IPC round-trip.
+          set((state) => {
+            const current =
+              state.settings?.post_process_verified_providers ?? [];
+            if (!state.settings || current.includes(providerId))
+              return state;
+            return {
+              settings: {
+                ...state.settings,
+                post_process_verified_providers: [...current, providerId],
+              },
+            };
+          });
           return result.data;
         } else {
           console.error("Failed to fetch models:", result.error);

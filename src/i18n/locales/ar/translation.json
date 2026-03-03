@@ -205,12 +205,7 @@
         "app": "التطبيق",
         "output": "الإخراج",
         "transcription": "التفريغ الصوتي",
-        "history": "السجل",
-        "experimental": "تجريبي"
-      },
-      "experimentalToggle": {
-        "label": "الميزات التجريبية",
-        "description": ".تمكين الميزات التجريبية التي لا تزال قيد التطوير"
+        "history": "السجل"
       },
       "startHidden": {
         "label": "بدء مخفي",
@@ -336,7 +331,8 @@
           "placeholderWithOptions": "ابحث عن نموذج أو اختره",
           "placeholderNoOptions": "اكتب اسم النموذج",
           "refreshModels": "تحديث النماذج"
-        }
+        },
+        "verified": "تم التحقق"
       },
       "prompts": {
         "title": "المطالبة",

@@ -227,12 +227,7 @@
         "app": "Приложение",
         "output": "Вывод",
         "transcription": "Транскрипция",
-        "history": "История",
-        "experimental": "Экспериментальное"
-      },
-      "experimentalToggle": {
-        "label": "Экспериментальные функции",
-        "description": "Включить экспериментальные функции, которые находятся в разработке."
+        "history": "История"
       },
       "startHidden": {
         "label": "Запускать скрыто",
@@ -358,7 +353,8 @@
           "placeholderWithOptions": "Найдите или выберите модель",
           "placeholderNoOptions": "Введите название модели",
           "refreshModels": "Обновить модели"
-        }
+        },
+        "verified": "Подтверждено"
       },
       "prompts": {
         "title": "Быстрый",

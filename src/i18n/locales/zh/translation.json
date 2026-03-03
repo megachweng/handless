@@ -227,12 +227,7 @@
         "app": "应用",
         "output": "输出",
         "transcription": "转录",
-        "history": "历史",
-        "experimental": "实验性"
-      },
-      "experimentalToggle": {
-        "label": "实验性功能",
-        "description": "启用仍在开发中的实验性功能。"
+        "history": "历史"
       },
       "startHidden": {
         "label": "隐藏启动",
@@ -358,7 +353,8 @@
           "placeholderWithOptions": "搜索或选择模型",
           "placeholderNoOptions": "输入模型名称",
           "refreshModels": "刷新模型"
-        }
+        },
+        "verified": "已验证"
       },
       "prompts": {
         "title": "提示词",

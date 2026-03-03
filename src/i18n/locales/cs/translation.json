@@ -227,12 +227,7 @@
         "app": "Aplikace",
         "output": "Výstup",
         "transcription": "Přepis",
-        "history": "Historie",
-        "experimental": "Experimentální"
-      },
-      "experimentalToggle": {
-        "label": "Experimentální funkce",
-        "description": "Povolit experimentální funkce, které jsou stále ve vývoji."
+        "history": "Historie"
       },
       "startHidden": {
         "label": "Spouštět skrytě",
@@ -358,7 +353,8 @@
           "placeholderWithOptions": "Vyhledejte nebo vyberte model",
           "placeholderNoOptions": "Zadejte název modelu",
           "refreshModels": "Obnovit modely"
-        }
+        },
+        "verified": "Ověřeno"
       },
       "prompts": {
         "title": "Prompt",
