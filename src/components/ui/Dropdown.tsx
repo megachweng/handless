@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
+import * as SelectPrimitive from "@radix-ui/react-select";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
 
 export interface DropdownOption {
   value: string;
@@ -27,89 +29,88 @@ export const Dropdown: React.FC<DropdownProps> = ({
   onRefresh,
 }) => {
   const { t } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const selectedOption = options.find(
-    (option) => option.value === selectedValue,
-  );
-
-  const handleSelect = (value: string) => {
-    onSelect(value);
-    setIsOpen(false);
-  };
-
-  const handleToggle = () => {
-    if (disabled) return;
-    if (!isOpen && onRefresh) onRefresh();
-    setIsOpen(!isOpen);
-  };
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
-      <button
-        type="button"
-        className={`px-2 py-1 text-sm font-semibold bg-muted/10 border border-muted/80 rounded min-w-[160px] w-full text-start flex items-center justify-between transition-all duration-150 ${
+    <SelectPrimitive.Root
+      value={selectedValue ?? undefined}
+      onValueChange={onSelect}
+      disabled={disabled}
+      onOpenChange={(open) => {
+        if (open && onRefresh) onRefresh();
+      }}
+    >
+      <SelectPrimitive.Trigger
+        className={cn(
+          "px-2 py-1 text-sm font-semibold bg-muted-foreground/10 border border-input rounded",
+          "min-w-[160px] w-full text-start flex items-center justify-between",
+          "transition-all duration-150",
           disabled
             ? "opacity-50 cursor-not-allowed"
-            : "hover:bg-accent/10 cursor-pointer hover:border-accent"
-        }`}
-        onClick={handleToggle}
-        disabled={disabled}
+            : "hover:bg-primary/10 cursor-pointer hover:border-primary",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+          className,
+        )}
       >
-        <span className="truncate">{selectedOption?.label || placeholder}</span>
-        <svg
-          className={`w-4 h-4 ms-2 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </button>
-      {isOpen && !disabled && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-surface border border-muted/80 rounded shadow-lg z-50 max-h-60 overflow-y-auto">
-          {options.length === 0 ? (
-            <div className="px-2 py-1 text-sm text-muted">
-              {t("common.noOptionsFound")}
-            </div>
-          ) : (
-            options.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                className={`w-full px-2 py-1 text-sm text-start hover:bg-accent/10 transition-colors duration-150 ${
-                  selectedValue === option.value
-                    ? "bg-accent/20 font-semibold"
-                    : ""
-                } ${option.disabled ? "opacity-50 cursor-not-allowed" : ""}`}
-                onClick={() => handleSelect(option.value)}
-                disabled={option.disabled}
-              >
-                <span className="truncate">{option.label}</span>
-              </button>
-            ))
+        <span className="truncate">
+          <SelectPrimitive.Value placeholder={placeholder} />
+        </span>
+        <SelectPrimitive.Icon>
+          <svg
+            className="w-4 h-4 ms-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </SelectPrimitive.Icon>
+      </SelectPrimitive.Trigger>
+
+      <SelectPrimitive.Portal>
+        <SelectPrimitive.Content
+          className={cn(
+            "overflow-hidden bg-popover border border-input rounded shadow-lg z-50",
+            "animate-in fade-in-0 zoom-in-95",
+            "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
+            "data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2",
           )}
-        </div>
-      )}
-    </div>
+          position="popper"
+          sideOffset={4}
+          align="start"
+        >
+          <SelectPrimitive.Viewport className="max-h-60">
+            {options.length === 0 ? (
+              <div className="px-2 py-1 text-sm text-muted-foreground">
+                {t("common.noOptionsFound")}
+              </div>
+            ) : (
+              options.map((option) => (
+                <SelectPrimitive.Item
+                  key={option.value}
+                  value={option.value}
+                  disabled={option.disabled}
+                  className={cn(
+                    "w-full px-2 py-1 text-sm text-start cursor-pointer select-none outline-none",
+                    "transition-colors duration-150",
+                    "data-[highlighted]:bg-primary/10",
+                    "data-[state=checked]:bg-primary/20 data-[state=checked]:font-semibold",
+                    "data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed",
+                  )}
+                >
+                  <SelectPrimitive.ItemText>
+                    {option.label}
+                  </SelectPrimitive.ItemText>
+                </SelectPrimitive.Item>
+              ))
+            )}
+          </SelectPrimitive.Viewport>
+        </SelectPrimitive.Content>
+      </SelectPrimitive.Portal>
+    </SelectPrimitive.Root>
   );
 };

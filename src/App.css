@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
 
 @font-face {
   font-family: "Geist";
@@ -21,6 +22,8 @@
 @theme {
   --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* App palette — used directly (bg-accent, text-muted, etc.) */
   --color-text: #fafafa;
   --color-background: #050505;
   --color-surface: #141414;
@@ -29,10 +32,29 @@
   --color-border: rgba(250, 250, 250, 0.08);
   --color-background-translucent: rgba(18, 18, 18, 0.35);
   --color-surface-translucent: rgba(30, 30, 30, 0.25);
-  --radius: 5px;
   --color-error: #ff5f57;
   --color-warning: #febc2e;
   --color-success: #28c840;
+  --color-info: #3b82f6;
+
+  /* shadcn semantic tokens — enables bg-primary, text-muted-foreground, etc. */
+  --color-foreground: var(--color-text);
+  --color-primary: var(--color-accent);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--color-surface);
+  --color-secondary-foreground: var(--color-text);
+  --color-destructive: var(--color-error);
+  --color-destructive-foreground: #ffffff;
+  --color-muted-foreground: var(--color-muted);
+  --color-accent-foreground: var(--color-text);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-text);
+  --color-popover: var(--color-surface);
+  --color-popover-foreground: var(--color-text);
+  --color-ring: var(--color-accent);
+  --color-input: var(--color-border);
+
+  --radius: 5px;
 }
 
 html,
@@ -78,8 +100,10 @@ body {
     --color-error: #dc3d35;
     --color-warning: #b58300;
     --color-success: #1a8f2d;
+    --color-info: #2563eb;
     /* accent stays #ef6f2f — brand color, used on buttons with white text */
   }
+
 }
 
 .container {

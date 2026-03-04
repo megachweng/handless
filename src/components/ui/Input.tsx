@@ -1,32 +1,39 @@
 import React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  variant?: "default" | "compact";
-}
+const inputVariants = cva(
+  "flex w-full rounded-md border border-input bg-transparent text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "h-9 px-3 py-1",
+        compact: "px-2 py-1",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
 
-export const Input: React.FC<InputProps> = ({
-  className = "",
-  variant = "default",
-  disabled,
-  ...props
-}) => {
-  const baseClasses =
-    "px-2 py-1 text-sm font-semibold bg-muted/10 border border-muted/80 rounded text-start transition-all duration-150";
+interface InputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
+    VariantProps<typeof inputVariants> {}
 
-  const interactiveClasses = disabled
-    ? "opacity-60 cursor-not-allowed bg-muted/10 border-muted/40"
-    : "hover:bg-accent/10 hover:border-accent focus:outline-none focus:bg-accent/20 focus:border-accent";
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, variant, type, ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        className={cn(inputVariants({ variant, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
+  },
+);
+Input.displayName = "Input";
 
-  const variantClasses = {
-    default: "px-3 py-2",
-    compact: "px-2 py-1",
-  } as const;
-
-  return (
-    <input
-      className={`${baseClasses} ${variantClasses[variant]} ${interactiveClasses} ${className}`}
-      disabled={disabled}
-      {...props}
-    />
-  );
-};
+export { Input, inputVariants };
+export type { InputProps };

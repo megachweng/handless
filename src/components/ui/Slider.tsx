@@ -1,74 +1,25 @@
 import React from "react";
-import { SettingContainer } from "./SettingContainer";
+import * as SliderPrimitive from "@radix-ui/react-slider";
+import { cn } from "@/lib/utils";
 
-interface SliderProps {
-  value: number;
-  onChange: (value: number) => void;
-  min: number;
-  max: number;
-  step?: number;
-  disabled?: boolean;
-  label: string;
-  description: string;
-  descriptionMode?: "inline" | "tooltip";
-  grouped?: boolean;
-  showValue?: boolean;
-  formatValue?: (value: number) => string;
-}
+const Slider = React.forwardRef<
+  React.ComponentRef<typeof SliderPrimitive.Root>,
+  React.ComponentProps<typeof SliderPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <SliderPrimitive.Root
+    ref={ref}
+    className={cn(
+      "relative flex w-full touch-none select-none items-center",
+      className,
+    )}
+    {...props}
+  >
+    <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-muted-foreground/20">
+      <SliderPrimitive.Range className="absolute h-full bg-primary" />
+    </SliderPrimitive.Track>
+    <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-primary/50 bg-white shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 cursor-pointer" />
+  </SliderPrimitive.Root>
+));
+Slider.displayName = "Slider";
 
-export const Slider: React.FC<SliderProps> = ({
-  value,
-  onChange,
-  min,
-  max,
-  step = 0.01,
-  disabled = false,
-  label,
-  description,
-  descriptionMode = "tooltip",
-  grouped = false,
-  showValue = true,
-  formatValue = (v) => v.toFixed(2),
-}) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(parseFloat(e.target.value));
-  };
-
-  return (
-    <SettingContainer
-      title={label}
-      description={description}
-      descriptionMode={descriptionMode}
-      grouped={grouped}
-      layout="horizontal"
-      disabled={disabled}
-    >
-      <div className="w-full">
-        <div className="flex items-center space-x-1 h-6">
-          <input
-            type="range"
-            min={min}
-            max={max}
-            step={step}
-            value={value}
-            onChange={handleChange}
-            disabled={disabled}
-            className="flex-grow h-2 rounded appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{
-              background: `linear-gradient(to right, var(--color-accent) ${
-                ((value - min) / (max - min)) * 100
-              }%, rgba(128, 128, 128, 0.2) ${
-                ((value - min) / (max - min)) * 100
-              }%)`,
-            }}
-          />
-          {showValue && (
-            <span className="text-sm font-medium text-text/90 min-w-10 text-end">
-              {formatValue(value)}
-            </span>
-          )}
-        </div>
-      </div>
-    </SettingContainer>
-  );
-};
+export { Slider };

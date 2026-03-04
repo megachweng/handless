@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Slider } from "../../ui/Slider";
+import { SliderSetting as Slider } from "../../ui/SliderSetting";
 import { useSettings } from "../../../hooks/useSettings";
 
 interface WordCorrectionThresholdProps {

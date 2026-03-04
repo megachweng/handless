@@ -1,114 +1,52 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import React from "react";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import { cn } from "@/lib/utils";
 
-type TooltipPosition = "top" | "bottom";
+const TooltipProvider = TooltipPrimitive.Provider;
+const TooltipRoot = TooltipPrimitive.Root;
+const TooltipTrigger = TooltipPrimitive.Trigger;
 
-interface TooltipCoords {
-  top: number;
-  left: number;
-  arrowLeft: number;
-  actualPosition: TooltipPosition;
-}
+const TooltipContent = React.forwardRef<
+  React.ComponentRef<typeof TooltipPrimitive.Content>,
+  React.ComponentProps<typeof TooltipPrimitive.Content>
+>(({ className, sideOffset = 4, ...props }, ref) => (
+  <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Content
+      ref={ref}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 overflow-hidden rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className,
+      )}
+      {...props}
+    />
+  </TooltipPrimitive.Portal>
+));
+TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
-interface TooltipProps {
-  targetRef: React.RefObject<HTMLElement>;
-  position?: TooltipPosition;
+export { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent };
+
+/**
+ * Simple tooltip wrapper for common use cases.
+ * Wraps children in a Radix Tooltip with the given content.
+ */
+interface SimpleTooltipProps {
+  content: React.ReactNode;
+  side?: "top" | "bottom" | "left" | "right";
   children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-const TOOLTIP_WIDTH = 200;
-const VIEWPORT_PADDING = 12;
-const GAP = 8;
-const ARROW_MARGIN = 12;
-const DEFAULT_HEIGHT = 60;
-
-export const Tooltip: React.FC<TooltipProps> = ({
-  targetRef,
-  position = "top",
+export const SimpleTooltip: React.FC<SimpleTooltipProps> = ({
+  content,
+  side = "top",
   children,
-}) => {
-  const [coords, setCoords] = useState<TooltipCoords | null>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
-
-  const updatePosition = useCallback(() => {
-    if (!targetRef.current) return;
-
-    const targetRect = targetRef.current.getBoundingClientRect();
-    const tooltipHeight = tooltipRef.current?.offsetHeight || DEFAULT_HEIGHT;
-
-    let actualPosition = position;
-    let top: number;
-
-    if (position === "top") {
-      const spaceAbove = targetRect.top - tooltipHeight - GAP;
-      if (spaceAbove < VIEWPORT_PADDING) {
-        actualPosition = "bottom";
-        top = targetRect.bottom + GAP;
-      } else {
-        top = targetRect.top - GAP - tooltipHeight;
-      }
-    } else {
-      const spaceBelow =
-        window.innerHeight - targetRect.bottom - tooltipHeight - GAP;
-      if (spaceBelow < VIEWPORT_PADDING) {
-        actualPosition = "top";
-        top = targetRect.top - GAP - tooltipHeight;
-      } else {
-        top = targetRect.bottom + GAP;
-      }
-    }
-
-    const targetCenter = targetRect.left + targetRect.width / 2;
-    let left = targetCenter - TOOLTIP_WIDTH / 2;
-
-    if (left < VIEWPORT_PADDING) {
-      left = VIEWPORT_PADDING;
-    } else if (left + TOOLTIP_WIDTH > window.innerWidth - VIEWPORT_PADDING) {
-      left = window.innerWidth - TOOLTIP_WIDTH - VIEWPORT_PADDING;
-    }
-
-    const arrowLeft = Math.min(
-      Math.max(targetCenter - left, ARROW_MARGIN),
-      TOOLTIP_WIDTH - ARROW_MARGIN,
-    );
-
-    setCoords({ top, left, arrowLeft, actualPosition });
-  }, [targetRef, position]);
-
-  useEffect(() => {
-    updatePosition();
-
-    window.addEventListener("scroll", updatePosition, true);
-    window.addEventListener("resize", updatePosition);
-
-    return () => {
-      window.removeEventListener("scroll", updatePosition, true);
-      window.removeEventListener("resize", updatePosition);
-    };
-  }, [updatePosition]);
-
-  const arrowClasses =
-    coords?.actualPosition === "top" ? "top-full" : "bottom-full rotate-180";
-
-  return createPortal(
-    <div
-      ref={tooltipRef}
-      style={{
-        position: "fixed",
-        top: coords?.top ?? -9999,
-        left: coords?.left ?? -9999,
-        width: TOOLTIP_WIDTH,
-        zIndex: 9999,
-        opacity: coords ? 1 : 0,
-      }}
-      className="px-3 py-2 bg-background-translucent backdrop-blur-sm border border-muted/80 rounded shadow-lg whitespace-normal transition-opacity duration-150"
-    >
-      {children}
-      <div
-        style={{ left: coords?.arrowLeft ?? 0 }}
-        className={`absolute ${arrowClasses} transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-muted/80`}
-      />
-    </div>,
-    document.body,
-  );
-};
+  open,
+  onOpenChange,
+}) => (
+  <TooltipRoot open={open} onOpenChange={onOpenChange}>
+    <TooltipTrigger asChild>{children}</TooltipTrigger>
+    <TooltipContent side={side}>{content}</TooltipContent>
+  </TooltipRoot>
+);

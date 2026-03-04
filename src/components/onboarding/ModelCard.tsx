@@ -111,10 +111,10 @@ const ModelCard: React.FC<ModelCardProps> = ({
               </Badge>
             )}
             {showRecommended && provider.is_recommended && (
-              <Badge variant="primary">{t("onboarding.recommended")}</Badge>
+              <Badge variant="default">{t("onboarding.recommended")}</Badge>
             )}
             {status === "active" && (
-              <Badge variant="primary">{t("modelSelector.active")}</Badge>
+              <Badge variant="default">{t("modelSelector.active")}</Badge>
             )}
             {isCustom && (
               <Badge variant="secondary">{t("modelSelector.custom")}</Badge>

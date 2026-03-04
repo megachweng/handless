@@ -373,7 +373,7 @@ export const CloudProviderConfigCard: React.FC<
           </Badge>
         )}
         {effectiveStatus === "active" && (
-          <Badge variant="primary">{t("modelSelector.active")}</Badge>
+          <Badge variant="default">{t("modelSelector.active")}</Badge>
         )}
         {showVerifyHint && (
           <span className="text-xs text-amber-400 font-medium animate-pulse">

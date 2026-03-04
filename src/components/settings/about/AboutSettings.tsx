@@ -53,7 +53,7 @@ export const AboutSettings: React.FC = () => {
           description={t("settings.about.supportDevelopment.description")}
           grouped={true}
         >
-          <Button variant="primary" size="md" onClick={handleDonateClick}>
+          <Button variant="default" size="default" onClick={handleDonateClick}>
             {t("settings.about.supportDevelopment.button")}
           </Button>
         </SettingContainer>
@@ -65,7 +65,7 @@ export const AboutSettings: React.FC = () => {
         >
           <Button
             variant="secondary"
-            size="md"
+            size="default"
             onClick={() => openUrl("https://github.com/ElwinLiu/handless")}
           >
             {t("settings.about.sourceCode.button")}

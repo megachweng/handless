@@ -80,8 +80,8 @@ export const CustomWords: React.FC<CustomWordsProps> = React.memo(
                 newWord.trim().length > 50 ||
                 isUpdating("custom_words")
               }
-              variant="primary"
-              size="md"
+              variant="default"
+              size="default"
             >
               {t("settings.advanced.customWords.add")}
             </Button>

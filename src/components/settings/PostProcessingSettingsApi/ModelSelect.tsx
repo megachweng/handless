@@ -1,6 +1,6 @@
 import React from "react";
 import type { ModelOption } from "./types";
-import { Select } from "../../ui/Select";
+import { Select } from "../../ui/ComboSelect";
 
 type ModelSelectProps = {
   value: string;

@@ -62,7 +62,7 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
 
       {state.isAppleProvider ? (
         state.appleIntelligenceUnavailable ? (
-          <Alert variant="error" contained>
+          <Alert variant="destructive" contained>
             {t("settings.postProcessing.api.appleIntelligence.unavailable")}
           </Alert>
         ) : null
@@ -303,8 +303,8 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
           />
           <Button
             onClick={handleStartCreate}
-            variant="primary"
-            size="md"
+            variant="default"
+            size="default"
             disabled={isCreating}
           >
             {t("settings.postProcessing.prompts.createNew")}
@@ -353,8 +353,8 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
               <div className="flex gap-2 pt-2">
                 <Button
                   onClick={handleUpdatePrompt}
-                  variant="primary"
-                  size="md"
+                  variant="default"
+                  size="default"
                   disabled={!draftName.trim() || !draftText.trim() || !isDirty}
                 >
                   {t("settings.postProcessing.prompts.updatePrompt")}
@@ -362,7 +362,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
                 <Button
                   onClick={() => handleDeletePrompt(selectedPromptId)}
                   variant="secondary"
-                  size="md"
+                  size="default"
                   disabled={!selectedPromptId || prompts.length <= 1}
                 >
                   {t("settings.postProcessing.prompts.deletePrompt")}
@@ -421,8 +421,8 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
             <div className="flex gap-2 pt-2">
               <Button
                 onClick={handleCreatePrompt}
-                variant="primary"
-                size="md"
+                variant="default"
+                size="default"
                 disabled={!draftName.trim() || !draftText.trim()}
               >
                 {t("settings.postProcessing.prompts.createPrompt")}
@@ -430,7 +430,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
               <Button
                 onClick={handleCancelCreate}
                 variant="secondary"
-                size="md"
+                size="default"
               >
                 {t("settings.postProcessing.prompts.cancel")}
               </Button>
