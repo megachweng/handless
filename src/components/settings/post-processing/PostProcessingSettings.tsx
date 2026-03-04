@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Check, RefreshCcw } from "lucide-react";
 import { commands } from "@/bindings";
+import { listen } from "@tauri-apps/api/event";
 
 import { Alert } from "../../ui/Alert";
 import {
@@ -412,13 +413,38 @@ export const PostProcessingSettingsPrompts = React.memo(
 );
 PostProcessingSettingsPrompts.displayName = "PostProcessingSettingsPrompts";
 
+interface PostProcessStats {
+  model: string;
+  tokens_per_second: number | null;
+  elapsed_ms: number;
+}
+
 export const PostProcessingSettings: React.FC = () => {
   const { t } = useTranslation();
+  const [stats, setStats] = useState<PostProcessStats | null>(null);
+
+  useEffect(() => {
+    const unlisten = listen<PostProcessStats>("post-process-stats", (event) => {
+      setStats(event.payload);
+    });
+    return () => {
+      unlisten.then((fn) => fn());
+    };
+  }, []);
+
+  const statsLine = stats
+    ? `${stats.model}${stats.tokens_per_second != null ? ` — ${stats.tokens_per_second.toFixed(1)} tok/s` : ""}`
+    : null;
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-4">
       <SettingsGroup title={t("settings.postProcessing.api.title")}>
         <PostProcessingSettingsApi />
+        {statsLine && (
+          <div className="px-3 pb-2">
+            <p className="text-xs text-muted/70">{statsLine}</p>
+          </div>
+        )}
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.postProcessing.prompts.title")}>

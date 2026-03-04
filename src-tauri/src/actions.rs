@@ -17,6 +17,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::Instant;
 use tauri::AppHandle;
+use tauri::Emitter;
 use tauri::Manager;
 use tokio::sync::Mutex as TokioMutex;
 
@@ -338,9 +339,22 @@ impl ShortcutAction for TranscribeAction {
                             } else {
                                 None
                             };
-                            if let Some(processed_text) = processed {
-                                post_processed_text = Some(processed_text.clone());
-                                final_text = processed_text;
+                            if let Some(result) = processed {
+                                let tps_display = result.stats.tokens_per_second
+                                    .map(|tps| format!("{:.1} tok/s", tps))
+                                    .unwrap_or_else(|| "N/A".to_string());
+                                info!(
+                                    "Post-processing completed: model='{}', elapsed={}ms, tps={}, prompt_id='{}'",
+                                    result.stats.model,
+                                    result.stats.elapsed_ms,
+                                    tps_display,
+                                    post_process_prompt_id.as_deref().unwrap_or("unknown"),
+                                );
+
+                                let _ = ah.emit("post-process-stats", &result.stats);
+
+                                post_processed_text = Some(result.text.clone());
+                                final_text = result.text;
 
                                 if let Some(ref pid) = post_process_prompt_id {
                                     if let Some(prompt) = settings

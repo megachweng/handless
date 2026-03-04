@@ -32,9 +32,17 @@ struct ChatCompletionRequest {
     response_format: Option<ResponseFormat>,
 }
 
+#[derive(Debug, Clone, Deserialize)]
+pub struct Usage {
+    pub completion_tokens: Option<u64>,
+    pub prompt_tokens: Option<u64>,
+    pub total_tokens: Option<u64>,
+}
+
 #[derive(Debug, Deserialize)]
 struct ChatCompletionResponse {
     choices: Vec<ChatChoice>,
+    usage: Option<Usage>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -101,7 +109,7 @@ pub async fn send_chat_completion(
     api_key: String,
     model: &str,
     prompt: String,
-) -> Result<Option<String>, String> {
+) -> Result<(Option<String>, Option<Usage>), String> {
     send_chat_completion_with_schema(provider, api_key, model, prompt, None, None).await
 }
 
@@ -115,7 +123,7 @@ pub async fn send_chat_completion_with_schema(
     user_content: String,
     system_prompt: Option<String>,
     json_schema: Option<Value>,
-) -> Result<Option<String>, String> {
+) -> Result<(Option<String>, Option<Usage>), String> {
     let base_url = provider.base_url.trim_end_matches('/');
     let url = format!("{}/chat/completions", base_url);
 
@@ -180,10 +188,11 @@ pub async fn send_chat_completion_with_schema(
         .await
         .map_err(|e| format!("Failed to parse API response: {}", e))?;
 
-    Ok(completion
+    let content = completion
         .choices
         .first()
-        .and_then(|choice| choice.message.content.clone()))
+        .and_then(|choice| choice.message.content.clone());
+    Ok((content, completion.usage))
 }
 
 /// Fetch available models from an OpenAI-compatible API

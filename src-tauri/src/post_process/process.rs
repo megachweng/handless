@@ -1,7 +1,42 @@
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 use crate::apple_intelligence;
+use crate::post_process::client::Usage;
 use crate::settings::{AppSettings, APPLE_INTELLIGENCE_PROVIDER_ID};
 use log::{debug, error, warn};
+use serde::Serialize;
+use std::time::Instant;
+
+#[derive(Debug, Clone, Serialize)]
+pub struct PostProcessStats {
+    pub elapsed_ms: u64,
+    pub tokens_per_second: Option<f64>,
+    pub model: String,
+}
+
+#[derive(Debug, Clone)]
+pub struct PostProcessResult {
+    pub text: String,
+    pub stats: PostProcessStats,
+}
+
+impl PostProcessResult {
+    fn new(text: String, start: Instant, usage: Option<&Usage>, model: String) -> Self {
+        let elapsed = start.elapsed();
+        Self {
+            text,
+            stats: PostProcessStats {
+                elapsed_ms: elapsed.as_millis() as u64,
+                tokens_per_second: usage
+                    .and_then(|u| u.completion_tokens)
+                    .and_then(|tokens| {
+                        let secs = elapsed.as_secs_f64();
+                        if secs > 0.0 { Some(tokens as f64 / secs) } else { None }
+                    }),
+                model,
+            },
+        }
+    }
+}
 
 /// Field name for structured output JSON schema
 const TRANSCRIPTION_FIELD: &str = "transcription";
@@ -27,7 +62,7 @@ pub async fn post_process_transcription(
     settings: &AppSettings,
     transcription: &str,
     prompt_id: &str,
-) -> Option<String> {
+) -> Option<PostProcessResult> {
     let provider = match settings.active_post_process_provider().cloned() {
         Some(provider) => provider,
         None => {
@@ -99,6 +134,7 @@ pub async fn post_process_transcription(
                 }
 
                 let token_limit = model.trim().parse::<i32>().unwrap_or(0);
+                let start = Instant::now();
                 return match apple_intelligence::process_text_with_system_prompt(
                     &system_prompt,
                     &user_content,
@@ -114,7 +150,7 @@ pub async fn post_process_transcription(
                                 "Apple Intelligence post-processing succeeded. Output length: {} chars",
                                 result.len()
                             );
-                            Some(result)
+                            Some(PostProcessResult::new(result, start, None, model))
                         }
                     }
                     Err(err) => {
@@ -144,6 +180,7 @@ pub async fn post_process_transcription(
             "additionalProperties": false
         });
 
+        let start = Instant::now();
         match crate::post_process::client::send_chat_completion_with_schema(
             &provider,
             api_key.clone(),
@@ -154,9 +191,9 @@ pub async fn post_process_transcription(
         )
         .await
         {
-            Ok(Some(content)) => {
+            Ok((Some(content), usage)) => {
                 // Parse the JSON response to extract the transcription field
-                match serde_json::from_str::<serde_json::Value>(&content) {
+                let text = match serde_json::from_str::<serde_json::Value>(&content) {
                     Ok(json) => {
                         if let Some(transcription_value) =
                             json.get(TRANSCRIPTION_FIELD).and_then(|t| t.as_str())
@@ -167,10 +204,10 @@ pub async fn post_process_transcription(
                                 provider.id,
                                 result.len()
                             );
-                            return Some(result);
+                            result
                         } else {
                             error!("Structured output response missing 'transcription' field");
-                            return Some(strip_invisible_chars(&content));
+                            strip_invisible_chars(&content)
                         }
                     }
                     Err(e) => {
@@ -178,11 +215,12 @@ pub async fn post_process_transcription(
                             "Failed to parse structured output JSON: {}. Returning raw content.",
                             e
                         );
-                        return Some(strip_invisible_chars(&content));
+                        strip_invisible_chars(&content)
                     }
-                }
+                };
+                return Some(PostProcessResult::new(text, start, usage.as_ref(), model));
             }
-            Ok(None) => {
+            Ok((None, _)) => {
                 error!("LLM API response has no content");
                 return None;
             }
@@ -205,19 +243,20 @@ pub async fn post_process_transcription(
     };
     debug!("Processed prompt length: {} chars", processed_prompt.len());
 
+    let start = Instant::now();
     match crate::post_process::client::send_chat_completion(&provider, api_key, &model, processed_prompt)
         .await
     {
-        Ok(Some(content)) => {
+        Ok((Some(content), usage)) => {
             let content = strip_invisible_chars(&content);
             debug!(
                 "LLM post-processing succeeded for provider '{}'. Output length: {} chars",
                 provider.id,
                 content.len()
             );
-            Some(content)
+            Some(PostProcessResult::new(content, start, usage.as_ref(), model))
         }
-        Ok(None) => {
+        Ok((None, _)) => {
             error!("LLM API response has no content");
             None
         }
