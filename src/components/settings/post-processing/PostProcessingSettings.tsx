@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, RefreshCcw } from "lucide-react";
+import { Check, Pencil, RefreshCcw } from "lucide-react";
 import { commands } from "@/bindings";
 
 import { Alert } from "../../ui/Alert";
@@ -172,6 +172,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
   const { getSetting, updateSetting, isUpdating, refreshSettings } =
     useSettings();
   const [isCreating, setIsCreating] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
   const [draftName, setDraftName] = useState("");
   const [draftText, setDraftText] = useState("");
 
@@ -201,6 +202,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
     if (!promptId) return;
     updateSetting("post_process_selected_prompt_id", promptId);
     setIsCreating(false);
+    setIsEditingName(false);
   };
 
   const handleCreatePrompt = async () => {
@@ -261,6 +263,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
 
   const handleStartCreate = () => {
     setIsCreating(true);
+    setIsEditingName(false);
     setDraftName("");
     setDraftText("");
   };
@@ -271,6 +274,25 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
     !!selectedPrompt &&
     (draftName.trim() !== selectedPrompt.name ||
       draftText.trim() !== selectedPrompt.prompt.trim());
+
+  const promptBodyFields = (
+    <>
+      <Textarea
+        value={draftText}
+        onChange={(e) => setDraftText(e.target.value)}
+        placeholder={t(
+          "settings.postProcessing.prompts.promptInstructionsPlaceholder",
+        )}
+        disabled={!isCreating && isBuiltIn}
+      />
+      <p
+        className="text-xs text-muted/70"
+        dangerouslySetInnerHTML={{
+          __html: t("settings.postProcessing.prompts.promptTip"),
+        }}
+      />
+    </>
+  );
 
   return (
     <SettingContainer
@@ -313,41 +335,40 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
 
         {!isCreating && hasPrompts && selectedPrompt && (
           <div className="space-y-3">
-            <div className="space-y-2 flex flex-col">
-              <label className="text-sm font-semibold">
-                {t("settings.postProcessing.prompts.promptLabel")}
-              </label>
-              <Input
-                type="text"
-                value={draftName}
-                onChange={(e) => setDraftName(e.target.value)}
-                placeholder={t(
-                  "settings.postProcessing.prompts.promptLabelPlaceholder",
-                )}
-                variant="compact"
-                disabled={isBuiltIn}
-              />
+            <div className="flex items-center gap-1.5">
+              {isEditingName && !isBuiltIn ? (
+                <Input
+                  type="text"
+                  value={draftName}
+                  onChange={(e) => setDraftName(e.target.value)}
+                  onBlur={() => setIsEditingName(false)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") setIsEditingName(false);
+                    if (e.key === "Escape") {
+                      setDraftName(selectedPrompt.name);
+                      setIsEditingName(false);
+                    }
+                  }}
+                  variant="compact"
+                  className="text-sm font-semibold max-w-[200px]"
+                  autoFocus
+                />
+              ) : (
+                <button
+                  type="button"
+                  className="flex items-center gap-1.5 text-sm font-semibold hover:text-foreground/80 transition-colors disabled:cursor-default disabled:hover:text-current"
+                  onClick={() => setIsEditingName(true)}
+                  disabled={isBuiltIn}
+                >
+                  {draftName || selectedPrompt.name}
+                  {!isBuiltIn && (
+                    <Pencil className="w-3 h-3 text-muted-foreground" />
+                  )}
+                </button>
+              )}
             </div>
 
-            <div className="space-y-2 flex flex-col">
-              <label className="text-sm font-semibold">
-                {t("settings.postProcessing.prompts.promptInstructions")}
-              </label>
-              <Textarea
-                value={draftText}
-                onChange={(e) => setDraftText(e.target.value)}
-                placeholder={t(
-                  "settings.postProcessing.prompts.promptInstructionsPlaceholder",
-                )}
-                disabled={isBuiltIn}
-              />
-              <p
-                className="text-xs text-muted/70"
-                dangerouslySetInnerHTML={{
-                  __html: t("settings.postProcessing.prompts.promptTip"),
-                }}
-              />
-            </div>
+            {promptBodyFields}
 
             {!isBuiltIn && (
               <div className="flex gap-2 pt-2">
@@ -384,39 +405,19 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
 
         {isCreating && (
           <div className="space-y-3">
-            <div className="space-y-2 block flex flex-col">
-              <label className="text-sm font-semibold text-text">
-                {t("settings.postProcessing.prompts.promptLabel")}
-              </label>
-              <Input
-                type="text"
-                value={draftName}
-                onChange={(e) => setDraftName(e.target.value)}
-                placeholder={t(
-                  "settings.postProcessing.prompts.promptLabelPlaceholder",
-                )}
-                variant="compact"
-              />
-            </div>
+            <Input
+              type="text"
+              value={draftName}
+              onChange={(e) => setDraftName(e.target.value)}
+              placeholder={t(
+                "settings.postProcessing.prompts.promptLabelPlaceholder",
+              )}
+              variant="compact"
+              className="text-sm font-semibold max-w-[200px]"
+              autoFocus
+            />
 
-            <div className="space-y-2 flex flex-col">
-              <label className="text-sm font-semibold">
-                {t("settings.postProcessing.prompts.promptInstructions")}
-              </label>
-              <Textarea
-                value={draftText}
-                onChange={(e) => setDraftText(e.target.value)}
-                placeholder={t(
-                  "settings.postProcessing.prompts.promptInstructionsPlaceholder",
-                )}
-              />
-              <p
-                className="text-xs text-muted/70"
-                dangerouslySetInnerHTML={{
-                  __html: t("settings.postProcessing.prompts.promptTip"),
-                }}
-              />
-            </div>
+            {promptBodyFields}
 
             <div className="flex gap-2 pt-2">
               <Button

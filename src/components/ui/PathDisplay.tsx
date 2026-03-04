@@ -25,7 +25,7 @@ export const PathDisplay: React.FC<PathDisplayProps> = ({
         variant="secondary"
         size="sm"
         disabled={disabled}
-        className="px-3 py-2"
+        className="shrink-0"
       >
         {t("common.open")}
       </Button>
