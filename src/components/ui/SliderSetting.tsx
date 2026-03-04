@@ -41,7 +41,7 @@ export const SliderSetting: React.FC<SliderSettingProps> = ({
       layout="horizontal"
       disabled={disabled}
     >
-      <div className="w-full">
+      <div className="w-40">
         <div className="flex items-center space-x-1 h-6">
           <Slider
             className={cn(

@@ -1,4 +1,4 @@
-use crate::settings::PostProcessProvider;
+use crate::post_process::providers::PostProcessProvider;
 use log::debug;
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE, REFERER, USER_AGENT};
 use serde::{Deserialize, Serialize};

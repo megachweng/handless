@@ -284,6 +284,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
           "settings.postProcessing.prompts.promptInstructionsPlaceholder",
         )}
         disabled={!isCreating && isBuiltIn}
+        className="min-h-[200px]"
       />
       <p
         className="text-xs text-muted/70"
@@ -295,15 +296,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
   );
 
   return (
-    <SettingContainer
-      title={t("settings.postProcessing.prompts.selectedPrompt.title")}
-      description={t(
-        "settings.postProcessing.prompts.selectedPrompt.description",
-      )}
-      descriptionMode="tooltip"
-      layout="stacked"
-      grouped={true}
-    >
+    <div className="px-3 py-1.5">
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <Dropdown
@@ -439,7 +432,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
           </div>
         )}
       </div>
-    </SettingContainer>
+    </div>
   );
 };
 

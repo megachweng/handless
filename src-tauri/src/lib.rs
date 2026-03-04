@@ -10,9 +10,9 @@ mod cloud_stt;
 mod commands;
 mod helpers;
 mod input;
-mod llm_client;
 mod managers;
 mod overlay;
+pub mod post_process;
 mod settings;
 mod shortcut;
 mod signal_handle;
@@ -298,15 +298,15 @@ pub fn run(cli_args: CliArgs) {
         shortcut::add_transcribe_binding,
         shortcut::remove_transcribe_binding,
         shortcut::update_binding_prompt,
-        shortcut::change_post_process_base_url_setting,
-        shortcut::change_post_process_api_key_setting,
-        shortcut::change_post_process_model_setting,
-        shortcut::set_post_process_provider,
-        shortcut::fetch_post_process_models,
-        shortcut::add_post_process_prompt,
-        shortcut::update_post_process_prompt,
-        shortcut::delete_post_process_prompt,
-        shortcut::set_post_process_selected_prompt,
+        post_process::commands::change_post_process_base_url_setting,
+        post_process::commands::change_post_process_api_key_setting,
+        post_process::commands::change_post_process_model_setting,
+        post_process::commands::set_post_process_provider,
+        post_process::commands::fetch_post_process_models,
+        post_process::commands::add_post_process_prompt,
+        post_process::commands::update_post_process_prompt,
+        post_process::commands::delete_post_process_prompt,
+        post_process::commands::set_post_process_selected_prompt,
         shortcut::update_custom_words,
         shortcut::suspend_binding,
         shortcut::resume_binding,
