@@ -55,7 +55,6 @@ pub fn change_post_process_model_setting(
 ) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     validate_provider_exists(&settings, &provider_id)?;
-    settings.post_process_verified_providers.remove(&provider_id);
     settings.post_process_models.insert(provider_id, model);
     settings::write_settings(&app, settings);
     Ok(())
