@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useSettings } from "../../../hooks/useSettings";
 import { commands, type PostProcessProvider } from "@/bindings";
-import type { ModelOption } from "./types";
 import type { DropdownOption } from "../../ui/Dropdown";
 
 type PostProcessProviderState = {
@@ -21,13 +20,11 @@ type PostProcessProviderState = {
   fetchError: string | undefined;
   clearFetchError: () => void;
   model: string;
-  handleModelChange: (value: string) => void;
-  modelOptions: ModelOption[];
+  modelOptions: DropdownOption[];
   isModelUpdating: boolean;
   isFetchingModels: boolean;
   handleProviderSelect: (providerId: string) => void;
   handleModelSelect: (value: string) => void;
-  handleModelCreate: (value: string) => void;
   handleRefreshModels: () => void;
 };
 
@@ -153,26 +150,9 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
     [apiKey, selectedProviderId, updatePostProcessApiKey],
   );
 
-  const handleModelChange = useCallback(
-    (value: string) => {
-      const trimmed = value.trim();
-      if (trimmed !== model) {
-        void updatePostProcessModel(selectedProviderId, trimmed);
-      }
-    },
-    [model, selectedProviderId, updatePostProcessModel],
-  );
-
   const handleModelSelect = useCallback(
     (value: string) => {
       void updatePostProcessModel(selectedProviderId, value.trim());
-    },
-    [selectedProviderId, updatePostProcessModel],
-  );
-
-  const handleModelCreate = useCallback(
-    (value: string) => {
-      void updatePostProcessModel(selectedProviderId, value);
     },
     [selectedProviderId, updatePostProcessModel],
   );
@@ -184,9 +164,9 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
 
   const availableModelsRaw = postProcessModelOptions[selectedProviderId] || [];
 
-  const modelOptions = useMemo<ModelOption[]>(() => {
+  const modelOptions = useMemo<DropdownOption[]>(() => {
     const seen = new Set<string>();
-    const options: ModelOption[] = [];
+    const options: DropdownOption[] = [];
 
     const upsert = (value: string | null | undefined) => {
       const trimmed = value?.trim();
@@ -250,13 +230,11 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
     fetchError,
     clearFetchError,
     model,
-    handleModelChange,
     modelOptions,
     isModelUpdating,
     isFetchingModels,
     handleProviderSelect,
     handleModelSelect,
-    handleModelCreate,
     handleRefreshModels,
   };
 };

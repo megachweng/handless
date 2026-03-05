@@ -23,7 +23,6 @@ export const OutputDeviceSelector: React.FC<OutputDeviceSelectorProps> =
         isUpdating,
         isLoading,
         outputDevices,
-        refreshOutputDevices,
       } = useSettings();
 
       const selectedOutputDevice =
@@ -68,7 +67,6 @@ export const OutputDeviceSelector: React.FC<OutputDeviceSelectorProps> =
                 isLoading ||
                 outputDevices.length === 0
               }
-              onRefresh={refreshOutputDevices}
             />
             <ResetButton
               onClick={handleReset}

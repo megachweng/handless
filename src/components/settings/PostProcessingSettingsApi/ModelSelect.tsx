@@ -1,16 +1,14 @@
 import React from "react";
-import type { ModelOption } from "./types";
-import { Select } from "../../ui/ComboSelect";
+import { Dropdown, type DropdownOption } from "../../ui/Dropdown";
 
 type ModelSelectProps = {
   value: string;
-  options: ModelOption[];
+  options: DropdownOption[];
   disabled?: boolean;
   placeholder?: string;
   isLoading?: boolean;
   onSelect: (value: string) => void;
-  onCreate: (value: string) => void;
-  onBlur: () => void;
+  onCreateValue?: (value: string) => void;
   className?: string;
 };
 
@@ -22,31 +20,19 @@ export const ModelSelect: React.FC<ModelSelectProps> = React.memo(
     placeholder,
     isLoading,
     onSelect,
-    onCreate,
-    onBlur,
+    onCreateValue,
     className = "flex-1",
   }) => {
-    const handleCreate = (inputValue: string) => {
-      const trimmed = inputValue.trim();
-      if (!trimmed) return;
-      onCreate(trimmed);
-    };
-
-    const computedClassName = `text-sm ${className}`;
-
     return (
-      <Select
-        className={computedClassName}
-        value={value || null}
+      <Dropdown
+        selectedValue={value || null}
         options={options}
-        onChange={(selected) => onSelect(selected ?? "")}
-        onCreateOption={handleCreate}
-        onBlur={onBlur}
+        onSelect={onSelect}
         placeholder={placeholder}
-        disabled={disabled}
-        isLoading={isLoading}
-        isCreatable
-        formatCreateLabel={(input) => `Use "${input}"`}
+        disabled={disabled || isLoading}
+        className={className}
+        creatable
+        onCreateValue={onCreateValue}
       />
     );
   },

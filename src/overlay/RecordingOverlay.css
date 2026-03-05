@@ -130,3 +130,34 @@
   pointer-events: none;
   transition: width 150ms ease-out;
 }
+
+/* Thinking dots — sequential bounce */
+.thinking-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 24px;
+  z-index: 1;
+}
+
+.thinking-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ff8c00;
+  opacity: 0.5;
+  animation: thinking-bounce 900ms ease-in-out infinite;
+}
+
+@keyframes thinking-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}

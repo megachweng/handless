@@ -257,10 +257,21 @@ const RecordingOverlay: React.FC = () => {
           ))}
 
         {isPostProcessing && (
-          <div
-            className="progress-fill"
-            style={{ width: `${progress * 100}%` }}
-          />
+          <>
+            <div
+              className="progress-fill"
+              style={{ width: `${progress * 100}%` }}
+            />
+            <div className="thinking-dots">
+              {Array.from({ length: 6 }, (_, i) => (
+                <div
+                  key={i}
+                  className="thinking-dot"
+                  style={{ animationDelay: `${i * 150}ms` }}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>

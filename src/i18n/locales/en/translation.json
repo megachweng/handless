@@ -608,7 +608,8 @@
     "yes": "Yes",
     "no": "No",
     "noOptionsFound": "No options found",
-    "copyToClipboard": "Copy to clipboard"
+    "copyToClipboard": "Copy to clipboard",
+    "search": "Search..."
   },
   "accessibility": {
     "permissionsRequired": "Accessibility Permissions Required",

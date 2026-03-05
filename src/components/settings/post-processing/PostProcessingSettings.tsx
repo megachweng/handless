@@ -164,8 +164,7 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
                   : t("settings.postProcessing.api.model.placeholderNoOptions")
               }
               onSelect={state.handleModelSelect}
-              onCreate={state.handleModelCreate}
-              onBlur={() => {}}
+              onCreateValue={state.handleModelSelect}
               className={FIELD_WIDTH}
             />
             <ResetButton

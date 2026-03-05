@@ -21,7 +21,6 @@ export const ClamshellMicrophoneSelector: React.FC<ClamshellMicrophoneSelectorPr
       isUpdating,
       isLoading,
       audioDevices,
-      refreshAudioDevices,
     } = useSettings();
 
     const [isLaptop, setIsLaptop] = useState<boolean>(false);
@@ -89,7 +88,6 @@ export const ClamshellMicrophoneSelector: React.FC<ClamshellMicrophoneSelectorPr
               isLoading ||
               audioDevices.length === 0
             }
-            onRefresh={refreshAudioDevices}
           />
           <ResetButton
             onClick={handleReset}

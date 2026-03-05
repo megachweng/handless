@@ -67,6 +67,8 @@
   --shadow-glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   --shadow-accent-glow: 0 0 12px rgba(239, 111, 47, 0.25);
 
+  --color-glass-bg-solid: #1e1e1e;
+
   --glass-blur: 12px;
   --glass-blur-heavy: 24px;
   --glass-blur-light: 6px;
@@ -119,6 +121,7 @@ body {
     /* accent stays #ef6f2f — brand color, used on buttons with white text */
 
     --color-glass-bg: rgba(0, 0, 0, 0.03);
+    --color-glass-bg-solid: #eae8e6;
     --color-glass-border: rgba(0, 0, 0, 0.08);
     --color-glass-border-hover: rgba(0, 0, 0, 0.14);
     --color-glass-highlight: rgba(0, 0, 0, 0.04);

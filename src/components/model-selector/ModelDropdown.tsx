@@ -32,14 +32,14 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
       }}
       tabIndex={0}
       role="button"
-      className={`w-full px-3 py-2 text-start hover:bg-muted/10 transition-colors cursor-pointer focus:outline-none ${
-        active ? "bg-accent/10 text-accent" : ""
+      className={`w-full px-3 py-2 text-start hover:bg-primary/10 transition-colors cursor-pointer focus:outline-none ${
+        active ? "bg-primary/20 font-semibold" : ""
       }`}
     >
       <div className="flex items-center justify-between">
         <div>{children}</div>
         {active && (
-          <div className="text-xs text-accent">{t("modelSelector.active")}</div>
+          <div className="text-xs text-primary">{t("modelSelector.active")}</div>
         )}
       </div>
     </div>
@@ -95,7 +95,7 @@ const ModelDropdown: React.FC<ModelDropdownProps> = ({
     downloadedLocalProviders.length > 0 || cloudProviders.length > 0;
 
   return (
-    <div className="absolute bottom-full start-0 mb-2 w-64 max-h-[60vh] overflow-y-auto bg-background-translucent backdrop-blur-sm border border-muted/20 rounded shadow-lg py-2 z-50">
+    <div className="absolute bottom-full start-0 mb-2 w-64 max-h-[60vh] overflow-y-auto glass-panel rounded-lg shadow-glass-hover backdrop-blur-sm py-2 z-50">
       {hasAny ? (
         <>
           {downloadedLocalProviders.length > 0 && (
