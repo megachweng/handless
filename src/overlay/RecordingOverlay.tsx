@@ -6,20 +6,14 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useTranslation } from "react-i18next";
-import {
-  MicrophoneIcon,
-  TranscriptionIcon,
-  CancelIcon,
-} from "../components/icons";
+
 import "./RecordingOverlay.css";
-import { commands } from "@/bindings";
 import i18n, { syncLanguageFromSettings } from "@/i18n";
 import { getLanguageDirection } from "@/lib/utils/rtl";
 
 type OverlayState = "recording" | "transcribing" | "processing";
 
-const BAR_COUNT = 9;
+const DOT_COUNT = 11;
 const LERP_SPEED = 0.12;
 const STREAMING_WIDTH = 300;
 const STREAMING_LINE_HEIGHT = 18;
@@ -27,19 +21,28 @@ const MAX_LINES = 5;
 const OVERLAY_PADDING = 12;
 
 const RecordingOverlay: React.FC = () => {
-  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [state, setState] = useState<OverlayState>("recording");
   const [streamingText, setStreamingText] = useState("");
   const [overlayPosition, setOverlayPosition] = useState<"top" | "bottom">(
     "top",
   );
+  const [progress, setProgress] = useState(0);
 
-  // Bar animation via rAF — bypasses React rendering
-  const targetLevelsRef = useRef<number[]>(Array(BAR_COUNT).fill(0));
-  const currentLevelsRef = useRef<number[]>(Array(BAR_COUNT).fill(0));
-  const barElementsRef = useRef<(HTMLDivElement | null)[]>([]);
+  // Dot animation via rAF — bypasses React rendering
+  const targetLevelsRef = useRef<number[]>(Array(DOT_COUNT).fill(0));
+  const currentLevelsRef = useRef<number[]>(Array(DOT_COUNT).fill(0));
+  const dotElementsRef = useRef<(HTMLDivElement | null)[]>([]);
   const rafIdRef = useRef<number>(0);
+  const frameCountRef = useRef(0);
+  const idleJitterRef = useRef<number[]>(Array(DOT_COUNT).fill(0));
+
+  // Progress bar refs
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+    null,
+  );
+  const progressStartTimeRef = useRef<number>(0);
+  const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Word tracking for per-word animation
   const prevWordCountRef = useRef(0);
@@ -51,22 +54,23 @@ const RecordingOverlay: React.FC = () => {
   const direction = getLanguageDirection(i18n.language);
 
   const hasStreamingText = state === "recording" && streamingText.length > 0;
+  const isPostProcessing = state === "transcribing" || state === "processing";
 
-  // Compute overlay dimensions — inline style so CSS transitions animate all changes
+  // Compute overlay dimensions
   const overlayWidth = (() => {
-    if (!isVisible) return 36;
+    if (!isVisible) return 33;
     if (hasStreamingText) return STREAMING_WIDTH;
-    return 150;
+    return 70;
   })();
 
   const overlayHeight = (() => {
-    if (!isVisible) return 36;
+    if (!isVisible) return 33;
     if (hasStreamingText && contentHeight > 0) {
       const maxTextHeight = STREAMING_LINE_HEIGHT * MAX_LINES;
       const clampedHeight = Math.min(contentHeight, maxTextHeight);
-      return Math.max(36, clampedHeight + OVERLAY_PADDING);
+      return Math.max(33, clampedHeight + OVERLAY_PADDING);
     }
-    return 36;
+    return 33;
   })();
 
   // Track words (runs before paint to avoid flicker)
@@ -89,31 +93,68 @@ const RecordingOverlay: React.FC = () => {
   }, [streamingText]);
 
   // rAF loop: lerp current toward target levels, write directly to DOM
-  const animateBars = useCallback(() => {
+  const animateDots = useCallback(() => {
     const current = currentLevelsRef.current;
     const target = targetLevelsRef.current;
+    const frame = frameCountRef.current++;
+    const jitter = idleJitterRef.current;
 
-    for (let i = 0; i < BAR_COUNT; i++) {
+    for (let i = 0; i < DOT_COUNT; i++) {
       current[i] += (target[i] - current[i]) * LERP_SPEED;
-      const v = current[i];
-      const el = barElementsRef.current[i];
+      const el = dotElementsRef.current[i];
       if (el) {
-        const h = Math.min(20, 4 + Math.pow(v, 0.65) * 16);
+        const v = current[i];
+        const idleStrength = Math.max(0, 1 - v * 4);
+
+        // Idle: slow, gentle drift — update one random dot every ~12 frames
+        if (frame % 12 === i % 12) {
+          jitter[i] = Math.random() * 3 * idleStrength; // subtle 0–3px
+        }
+
+        // Speaking: very drastic height, pow(0.4) makes even moderate levels tall
+        const audioH = Math.pow(v, 0.4) * 22;
+        const h = 3 + audioH + jitter[i];
         el.style.height = `${h}px`;
-        el.style.opacity = `${0.35 + Math.min(0.65, v * 1.2)}`;
+        el.style.borderRadius = h > 3 ? "1px" : "50%";
+        el.style.opacity = `${0.4 + Math.min(0.6, v * 2)}`;
       }
     }
 
-    rafIdRef.current = requestAnimationFrame(animateBars);
+    rafIdRef.current = requestAnimationFrame(animateDots);
   }, []);
 
   // Start/stop rAF loop based on visibility + recording state
   useEffect(() => {
     if (isVisible && state === "recording") {
-      rafIdRef.current = requestAnimationFrame(animateBars);
+      rafIdRef.current = requestAnimationFrame(animateDots);
     }
     return () => cancelAnimationFrame(rafIdRef.current);
-  }, [isVisible, state, animateBars]);
+  }, [isVisible, state, animateDots]);
+
+  const clearProgressInterval = useCallback(() => {
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current);
+      progressIntervalRef.current = null;
+    }
+  }, []);
+
+  // Progress bar simulation for post-processing
+  useEffect(() => {
+    if (isPostProcessing && isVisible) {
+      setProgress(0);
+      progressStartTimeRef.current = Date.now();
+
+      progressIntervalRef.current = setInterval(() => {
+        const elapsed = (Date.now() - progressStartTimeRef.current) / 1000;
+        // Ease-out curve: approaches 0.85 over ~8 seconds
+        const t = Math.min(elapsed / 8, 1);
+        const eased = 1 - Math.pow(1 - t, 2.5);
+        setProgress(eased * 0.85);
+      }, 50);
+
+      return clearProgressInterval;
+    }
+  }, [isPostProcessing, isVisible, clearProgressInterval]);
 
   // Measure streaming text height + auto-scroll to show latest content
   useLayoutEffect(() => {
@@ -125,58 +166,62 @@ const RecordingOverlay: React.FC = () => {
   }, [words, hasStreamingText]);
 
   useEffect(() => {
-    const setupEventListeners = async () => {
-      const unlistenShow = await listen<{
-        state: OverlayState;
-        position: "top" | "bottom";
-      }>("show-overlay", async (event) => {
-        await syncLanguageFromSettings();
-        const { state: overlayState, position } = event.payload;
-        setState(overlayState);
-        setOverlayPosition(position);
-        setStreamingText("");
-        // Reset bar levels on new session
-        targetLevelsRef.current = Array(BAR_COUNT).fill(0);
-        currentLevelsRef.current = Array(BAR_COUNT).fill(0);
-        setIsVisible(true);
-      });
+    const unlisteners: Array<() => void> = [];
 
-      const unlistenHide = await listen("hide-overlay", () => {
-        setIsVisible(false);
-      });
-
-      // Store target levels — the rAF loop handles interpolation
-      const unlistenLevel = await listen<number[]>("mic-level", (event) => {
-        const newLevels = event.payload;
-        for (let i = 0; i < BAR_COUNT; i++) {
-          targetLevelsRef.current[i] = newLevels[i] || 0;
-        }
-      });
-
-      const unlistenStreaming = await listen<string>(
-        "streaming-text",
-        (event) => {
-          setStreamingText(event.payload);
-        },
+    const setup = async () => {
+      unlisteners.push(
+        await listen<{
+          state: OverlayState;
+          position: "top" | "bottom";
+        }>("show-overlay", async (event) => {
+          await syncLanguageFromSettings();
+          const { state: overlayState, position } = event.payload;
+          setState(overlayState);
+          setOverlayPosition(position);
+          setStreamingText("");
+          setProgress(0);
+          // Reset dot levels on new session
+          targetLevelsRef.current = Array(DOT_COUNT).fill(0);
+          currentLevelsRef.current = Array(DOT_COUNT).fill(0);
+          setIsVisible(true);
+        }),
       );
 
-      return () => {
-        unlistenShow();
-        unlistenHide();
-        unlistenLevel();
-        unlistenStreaming();
-      };
+      unlisteners.push(
+        await listen("hide-overlay", () => {
+          clearProgressInterval();
+          setProgress(1);
+          // Delay hide slightly so the user sees 100%
+          hideTimeoutRef.current = setTimeout(
+            () => setIsVisible(false),
+            200,
+          );
+        }),
+      );
+
+      unlisteners.push(
+        await listen<number[]>("mic-level", (event) => {
+          const newLevels = event.payload;
+          for (let i = 0; i < DOT_COUNT; i++) {
+            targetLevelsRef.current[i] = newLevels[i] || 0;
+          }
+        }),
+      );
+
+      unlisteners.push(
+        await listen<string>("streaming-text", (event) => {
+          setStreamingText(event.payload);
+        }),
+      );
     };
 
-    setupEventListeners();
-  }, []);
+    setup();
 
-  const getIcon = () => {
-    if (state === "recording") {
-      return <MicrophoneIcon width={20} height={20} />;
-    }
-    return <TranscriptionIcon width={20} height={20} />;
-  };
+    return () => {
+      unlisteners.forEach((fn) => fn());
+      if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+    };
+  }, [clearProgressInterval]);
 
   return (
     <div className={`overlay-wrapper position-${overlayPosition}`}>
@@ -185,56 +230,38 @@ const RecordingOverlay: React.FC = () => {
         style={{ width: overlayWidth, height: overlayHeight }}
         className={`recording-overlay ${isVisible ? "fade-in" : ""}`}
       >
-        <div className="overlay-left">{getIcon()}</div>
-
-        <div className="overlay-middle">
-          {state === "recording" &&
-            (hasStreamingText ? (
-              <div ref={streamingTextRef} className="streaming-text">
-                {words.map((w, i) => (
-                  <React.Fragment key={i}>
-                    {i > 0 && " "}
-                    <span className={w.isNew ? "word-appear" : undefined}>
-                      {w.text}
-                    </span>
-                  </React.Fragment>
-                ))}
-              </div>
-            ) : (
-              <div className="bars-container">
-                {Array.from({ length: BAR_COUNT }, (_, i) => (
-                  <div
-                    key={i}
-                    className="bar"
-                    ref={(el) => {
-                      barElementsRef.current[i] = el;
-                    }}
-                  />
-                ))}
-              </div>
-            ))}
-          {state === "transcribing" && (
-            <div className="transcribing-text">
-              {t("overlay.transcribing")}
+        {state === "recording" &&
+          (hasStreamingText ? (
+            <div ref={streamingTextRef} className="streaming-text">
+              {words.map((w, i) => (
+                <React.Fragment key={i}>
+                  {i > 0 && " "}
+                  <span className={w.isNew ? "word-appear" : undefined}>
+                    {w.text}
+                  </span>
+                </React.Fragment>
+              ))}
             </div>
-          )}
-          {state === "processing" && (
-            <div className="transcribing-text">{t("overlay.processing")}</div>
-          )}
-        </div>
-
-        <div className="overlay-right">
-          {state === "recording" && (
-            <div
-              className="cancel-button"
-              onClick={() => {
-                commands.cancelOperation();
-              }}
-            >
-              <CancelIcon width={18} height={18} />
+          ) : (
+            <div className="dots-container">
+              {Array.from({ length: DOT_COUNT }, (_, i) => (
+                <div
+                  key={i}
+                  className="dot"
+                  ref={(el) => {
+                    dotElementsRef.current[i] = el;
+                  }}
+                />
+              ))}
             </div>
-          )}
-        </div>
+          ))}
+
+        {isPostProcessing && (
+          <div
+            className="progress-fill"
+            style={{ width: `${progress * 100}%` }}
+          />
+        )}
       </div>
     </div>
   );
