@@ -411,20 +411,16 @@
         "title": "単語修正しきい値",
         "description": "カスタム単語修正の感度"
       },
-      "historyLimit": {
-        "title": "履歴上限",
-        "description": "保持する履歴エントリーの最大数",
-        "entries": "件"
-      },
       "recordingRetention": {
-        "title": "録音の自動削除",
-        "description": "古い録音を自動的に削除して容量を節約",
+        "title": "履歴のクリーンアップ",
+        "description": "未保存の古いエントリーを自動的に削除して容量を節約",
         "never": "しない",
-        "preserveLimit": "最新{{count}}件を保持",
+        "preserveLimit": "最新を保持...",
         "days3": "3日後",
         "weeks2": "2週間後",
         "months3": "3ヶ月後",
-        "placeholder": "保持期間を選択..."
+        "placeholder": "保持期間を選択...",
+        "entries": "件"
       },
       "alwaysOnMicrophone": {
         "label": "マイク常時オン",

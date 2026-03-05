@@ -411,20 +411,16 @@
         "title": "Umbral de Corrección de Palabras",
         "description": "Sensibilidad para correcciones de palabras personalizadas"
       },
-      "historyLimit": {
-        "title": "Límite de Historial",
-        "description": "Número máximo de entradas de historial a conservar",
-        "entries": "entradas"
-      },
       "recordingRetention": {
-        "title": "Eliminación automática de grabaciones",
-        "description": "Eliminar automáticamente grabaciones antiguas para ahorrar espacio",
+        "title": "Limpieza del historial",
+        "description": "Eliminar automáticamente entradas antiguas no guardadas para ahorrar espacio",
         "never": "Nunca",
-        "preserveLimit": "Mantener las últimas {{count}}",
+        "preserveLimit": "Mantener las últimas...",
         "days3": "Después de 3 días",
         "weeks2": "Después de 2 semanas",
         "months3": "Después de 3 meses",
-        "placeholder": "Seleccionar período de retención..."
+        "placeholder": "Seleccionar período de retención...",
+        "entries": "entradas"
       },
       "alwaysOnMicrophone": {
         "label": "Micrófono Siempre Activo",

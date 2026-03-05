@@ -411,20 +411,16 @@
         "title": "Práh korekce slov",
         "description": "Citlivost pro opravy vlastních slov"
       },
-      "historyLimit": {
-        "title": "Limit historie",
-        "description": "Maximální počet záznamů historie k uchování",
-        "entries": "záznamů"
-      },
       "recordingRetention": {
-        "title": "Automatické mazání nahrávek",
-        "description": "Automaticky mazat staré nahrávky pro úsporu místa",
+        "title": "Čištění historie",
+        "description": "Automaticky mazat staré neuložené záznamy pro úsporu místa",
         "never": "Nikdy",
-        "preserveLimit": "Ponechat posledních {{count}}",
+        "preserveLimit": "Ponechat poslední...",
         "days3": "Po 3 dnech",
         "weeks2": "Po 2 týdnech",
         "months3": "Po 3 měsících",
-        "placeholder": "Vyberte dobu uchování..."
+        "placeholder": "Vyberte dobu uchování...",
+        "entries": "záznamů"
       },
       "alwaysOnMicrophone": {
         "label": "Vždy zapnutý mikrofon",

@@ -411,20 +411,16 @@
         "title": "Próg korekty słów",
         "description": "Czułość dla własnych korekt słów"
       },
-      "historyLimit": {
-        "title": "Limit historii",
-        "description": "Maksymalna liczba wpisów w historii",
-        "entries": "wpisy"
-      },
       "recordingRetention": {
-        "title": "Automatyczne usuwanie nagrań",
-        "description": "Automatycznie usuwaj stare nagrania, aby zaoszczędzić miejsce",
+        "title": "Czyszczenie historii",
+        "description": "Automatycznie usuwaj stare niezapisane wpisy, aby zaoszczędzić miejsce",
         "never": "Nigdy",
-        "preserveLimit": "Zachowaj ostatnie {{count}}",
+        "preserveLimit": "Zachowaj ostatnie...",
         "days3": "Po 3 dniach",
         "weeks2": "Po 2 tygodniach",
         "months3": "Po 3 miesiącach",
-        "placeholder": "Wybierz okres retencji..."
+        "placeholder": "Wybierz okres retencji...",
+        "entries": "wpisy"
       },
       "alwaysOnMicrophone": {
         "label": "Mikrofon zawsze aktywny",

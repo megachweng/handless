@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Dropdown } from "../ui/Dropdown";
+import { NumberInput } from "../ui/NumberInput";
 import { SettingContainer } from "../ui/SettingContainer";
 import { useSettings } from "../../hooks/useSettings";
 import { RecordingRetentionPeriod } from "@/bindings";
@@ -26,13 +27,15 @@ export const RecordingRetentionPeriodSelector: React.FC<RecordingRetentionPeriod
       );
     };
 
+    const handleLimitChange = (value: number) => {
+      updateSetting("history_limit", value);
+    };
+
     const retentionOptions = [
       { value: "never", label: t("settings.debug.recordingRetention.never") },
       {
         value: "preserve_limit",
-        label: t("settings.debug.recordingRetention.preserveLimit", {
-          count: Number(historyLimit),
-        }),
+        label: t("settings.debug.recordingRetention.preserveLimit"),
       },
       { value: "days3", label: t("settings.debug.recordingRetention.days3") },
       { value: "weeks2", label: t("settings.debug.recordingRetention.weeks2") },
@@ -49,13 +52,29 @@ export const RecordingRetentionPeriodSelector: React.FC<RecordingRetentionPeriod
         descriptionMode={descriptionMode}
         grouped={grouped}
       >
-        <Dropdown
-          options={retentionOptions}
-          selectedValue={selectedRetentionPeriod}
-          onSelect={handleRetentionPeriodSelect}
-          placeholder={t("settings.debug.recordingRetention.placeholder")}
-          disabled={isUpdating("recording_retention_period")}
-        />
+        <div className="flex items-center gap-2">
+          <Dropdown
+            options={retentionOptions}
+            selectedValue={selectedRetentionPeriod}
+            onSelect={handleRetentionPeriodSelect}
+            placeholder={t("settings.debug.recordingRetention.placeholder")}
+            disabled={isUpdating("recording_retention_period")}
+          />
+          {selectedRetentionPeriod === "preserve_limit" && (
+            <>
+              <NumberInput
+                min={0}
+                max={1000}
+                value={historyLimit}
+                onChange={handleLimitChange}
+                disabled={isUpdating("history_limit")}
+              />
+              <span className="text-sm text-text whitespace-nowrap">
+                {t("settings.debug.recordingRetention.entries")}
+              </span>
+            </>
+          )}
+        </div>
       </SettingContainer>
     );
   });

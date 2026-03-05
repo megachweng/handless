@@ -411,20 +411,16 @@
         "title": "Wortkorrektur-Schwelle",
         "description": "Empfindlichkeit für benutzerdefinierte Wortkorrekturen"
       },
-      "historyLimit": {
-        "title": "Verlaufslimit",
-        "description": "Maximale Anzahl der Verlaufseinträge",
-        "entries": "Einträge"
-      },
       "recordingRetention": {
-        "title": "Aufnahmen automatisch löschen",
-        "description": "Alte Aufnahmen automatisch löschen, um Speicherplatz zu sparen",
+        "title": "Verlauf bereinigen",
+        "description": "Alte nicht gespeicherte Einträge automatisch löschen, um Speicherplatz zu sparen",
         "never": "Nie",
-        "preserveLimit": "Neueste {{count}} behalten",
+        "preserveLimit": "Neueste behalten...",
         "days3": "Nach 3 Tagen",
         "weeks2": "Nach 2 Wochen",
         "months3": "Nach 3 Monaten",
-        "placeholder": "Aufbewahrungszeitraum auswählen..."
+        "placeholder": "Aufbewahrungszeitraum auswählen...",
+        "entries": "Einträge"
       },
       "alwaysOnMicrophone": {
         "label": "Mikrofon immer aktiv",

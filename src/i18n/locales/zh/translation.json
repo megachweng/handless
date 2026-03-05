@@ -411,20 +411,16 @@
         "title": "词汇修正阈值",
         "description": "自定义词汇修正的灵敏度"
       },
-      "historyLimit": {
-        "title": "历史记录上限",
-        "description": "保留的最大历史条目数",
-        "entries": "条"
-      },
       "recordingRetention": {
-        "title": "自动删除录音",
-        "description": "自动删除旧录音以节省空间",
+        "title": "历史记录清理",
+        "description": "自动删除未保存的旧条目以节省空间",
         "never": "从不",
-        "preserveLimit": "保留最新 {{count}} 条",
+        "preserveLimit": "保留最新...",
         "days3": "3 天后",
         "weeks2": "2 周后",
         "months3": "3 个月后",
-        "placeholder": "选择保留期限..."
+        "placeholder": "选择保留期限...",
+        "entries": "条"
       },
       "alwaysOnMicrophone": {
         "label": "麦克风常开",

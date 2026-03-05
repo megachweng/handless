@@ -411,20 +411,16 @@
         "title": "Seuil de correction des mots",
         "description": "Sensibilité pour les corrections de mots personnalisés"
       },
-      "historyLimit": {
-        "title": "Limite d'historique",
-        "description": "Nombre maximum d'entrées d'historique à conserver",
-        "entries": "entrées"
-      },
       "recordingRetention": {
-        "title": "Suppression automatique des enregistrements",
-        "description": "Supprimer automatiquement les anciens enregistrements pour économiser de l'espace",
+        "title": "Nettoyage de l'historique",
+        "description": "Supprimer automatiquement les anciennes entrées non sauvegardées pour économiser de l'espace",
         "never": "Jamais",
-        "preserveLimit": "Conserver les {{count}} plus récents",
+        "preserveLimit": "Conserver les plus récents...",
         "days3": "Après 3 jours",
         "weeks2": "Après 2 semaines",
         "months3": "Après 3 mois",
-        "placeholder": "Sélectionner la période de conservation..."
+        "placeholder": "Sélectionner la période de conservation...",
+        "entries": "entrées"
       },
       "alwaysOnMicrophone": {
         "label": "Microphone toujours actif",

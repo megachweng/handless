@@ -411,20 +411,16 @@
         "title": "단어 수정 임계값",
         "description": "사용자 정의 단어 수정의 민감도"
       },
-      "historyLimit": {
-        "title": "히스토리 제한",
-        "description": "보관할 최대 히스토리 항목 수",
-        "entries": "항목"
-      },
       "recordingRetention": {
-        "title": "녹음 자동 삭제",
-        "description": "공간을 절약하기 위해 오래된 녹음을 자동으로 삭제합니다",
+        "title": "기록 정리",
+        "description": "공간을 절약하기 위해 저장되지 않은 오래된 항목을 자동으로 삭제합니다",
         "never": "안 함",
-        "preserveLimit": "최근 {{count}}개 유지",
+        "preserveLimit": "최근 항목 유지...",
         "days3": "3일 후",
         "weeks2": "2주 후",
         "months3": "3개월 후",
-        "placeholder": "보관 기간 선택..."
+        "placeholder": "보관 기간 선택...",
+        "entries": "항목"
       },
       "alwaysOnMicrophone": {
         "label": "항상 켜진 마이크",
