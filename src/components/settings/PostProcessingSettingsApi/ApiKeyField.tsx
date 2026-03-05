@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check } from "@phosphor-icons/react";
 import { Input } from "../../ui/Input";
 import { SimpleTooltip } from "../../ui/Tooltip";
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { AlertCircle, AlertTriangle, Info, CheckCircle } from "lucide-react";
+import { WarningCircle, Warning, Info, CheckCircle } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 const alertVariants = cva(
@@ -26,8 +26,8 @@ const alertVariants = cva(
 
 const variantIcons: Record<string, React.ElementType> = {
   default: Info,
-  destructive: AlertCircle,
-  warning: AlertTriangle,
+  destructive: WarningCircle,
+  warning: Warning,
   info: Info,
   success: CheckCircle,
 };

@@ -3,15 +3,15 @@ import { useTranslation } from "react-i18next";
 import { motion, LayoutGroup } from "motion/react";
 import { DragRegion } from "./ui/DragRegion";
 import {
-  Cog,
-  FlaskConical,
-  History,
+  House,
+  Command,
+  Cube,
+  PencilSimple,
+  ClockCounterClockwise,
+  Bug,
+  Sliders,
   Info,
-  Keyboard,
-  Sparkles,
-  Cpu,
-  Home,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { useSettings } from "../hooks/useSettings";
 import {
   GeneralSettings,
@@ -29,9 +29,8 @@ import { SimpleTooltip } from "./ui/Tooltip";
 export type SidebarSection = keyof typeof SECTIONS_CONFIG;
 
 interface IconProps {
-  width?: number | string;
-  height?: number | string;
   size?: number | string;
+  weight?: "thin" | "light" | "regular" | "bold" | "fill" | "duotone";
   className?: string;
   [key: string]: any;
 }
@@ -46,43 +45,43 @@ interface SectionConfig {
 export const SECTIONS_CONFIG = {
   general: {
     labelKey: "sidebar.general",
-    icon: Home,
+    icon: House,
     component: GeneralSettings,
     enabled: () => true,
   },
   shortcuts: {
     labelKey: "sidebar.shortcuts",
-    icon: Keyboard,
+    icon: Command,
     component: ShortcutsSettings,
     enabled: () => true,
   },
   models: {
     labelKey: "sidebar.models",
-    icon: Cpu,
+    icon: Cube,
     component: ModelsSettings,
     enabled: () => true,
   },
   postprocessing: {
     labelKey: "sidebar.postProcessing",
-    icon: Sparkles,
+    icon: PencilSimple,
     component: PostProcessingSettings,
     enabled: () => true,
   },
   history: {
     labelKey: "sidebar.history",
-    icon: History,
+    icon: ClockCounterClockwise,
     component: HistorySettings,
     enabled: () => true,
   },
   debug: {
     labelKey: "sidebar.debug",
-    icon: FlaskConical,
+    icon: Bug,
     component: DebugSettings,
     enabled: (settings) => settings?.debug_mode ?? false,
   },
   advanced: {
     labelKey: "sidebar.advanced",
-    icon: Cog,
+    icon: Sliders,
     component: AdvancedSettings,
     enabled: () => true,
   },
@@ -136,8 +135,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     />
                   )}
                   <Icon
-                    width={18}
-                    height={18}
+                    size={18}
+                    weight="light"
                     className={`shrink-0 relative z-10 ${!isActive ? "opacity-85" : ""}`}
                   />
                   <p

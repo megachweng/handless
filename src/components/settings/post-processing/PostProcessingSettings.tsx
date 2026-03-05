@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, RefreshCcw, X } from "lucide-react";
+import { Check, ArrowsClockwise, X } from "@phosphor-icons/react";
 import { commands } from "@/bindings";
 
 import { Alert } from "../../ui/Alert";
@@ -172,7 +172,7 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
               disabled={state.isFetchingModels}
               ariaLabel={t("settings.postProcessing.api.model.refreshModels")}
             >
-              <RefreshCcw
+              <ArrowsClockwise
                 className={`h-4 w-4 ${state.isFetchingModels ? "animate-spin" : ""}`}
               />
             </ResetButton>

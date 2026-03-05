@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Cloud } from "lucide-react";
+import { Cloud } from "@phosphor-icons/react";
 import type { SttProviderInfo } from "@/bindings";
 import {
   getTranslatedModelName,

@@ -6,11 +6,11 @@ import {
   Copy,
   Star,
   Check,
-  Trash2,
+  Trash,
   FolderOpen,
-  Mic,
-  Sparkles,
-} from "lucide-react";
+  Microphone,
+  Sparkle,
+} from "@phosphor-icons/react";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { readFile } from "@tauri-apps/plugin-fs";
@@ -181,7 +181,7 @@ export const HistorySettings: React.FC = () => {
           <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded overflow-visible">
             <div className="px-3 py-10 flex flex-col items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
-                <Mic className="w-5 h-5 text-muted/60" />
+                <Microphone className="w-5 h-5 text-muted/60" />
               </div>
               <p className="text-sm text-muted text-center">
                 {t("settings.history.empty")}
@@ -291,9 +291,9 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
               className="p-1 rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
             >
               {showCopied ? (
-                <Check width={12} height={12} />
+                <Check size={12} />
               ) : (
-                <Copy width={12} height={12} />
+                <Copy size={12} />
               )}
             </button>
           </SimpleTooltip>
@@ -311,9 +311,8 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
               }`}
             >
               <Star
-                width={12}
-                height={12}
-                fill={entry.saved ? "currentColor" : "none"}
+                size={12}
+                weight={entry.saved ? "fill" : "light"}
               />
             </button>
           </SimpleTooltip>
@@ -322,7 +321,7 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
               onClick={handleDeleteEntry}
               className="p-1 rounded text-text/50 hover:text-red-400 transition-colors cursor-pointer"
             >
-              <Trash2 width={12} height={12} />
+              <Trash size={12} />
             </button>
           </SimpleTooltip>
         </div>
@@ -337,7 +336,7 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
           onClick={() => setExpanded(!expanded)}
           className="flex items-center gap-1 text-[11px] text-muted/60 hover:text-muted transition-colors cursor-pointer"
         >
-          <Sparkles width={10} height={10} />
+          <Sparkle size={10} />
           <span>{expanded ? "Hide original" : "Show original"}</span>
         </button>
       )}

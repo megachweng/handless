@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, MicOff, X } from "lucide-react";
+import { DotsSixVertical, MicrophoneSlash, X } from "@phosphor-icons/react";
 import { SettingContainer } from "../ui/SettingContainer";
 import { useSettings } from "../../hooks/useSettings";
 
@@ -65,7 +65,7 @@ const SortableItem: React.FC<SortableItemProps> = ({
         {...attributes}
         {...listeners}
       >
-        <GripVertical className="w-3.5 h-3.5" />
+        <DotsSixVertical className="w-3.5 h-3.5" />
       </button>
       <span className="truncate flex-1">{name}</span>
       {isActive && (
@@ -73,7 +73,7 @@ const SortableItem: React.FC<SortableItemProps> = ({
       )}
       {!isAvailable && (
         <>
-          <MicOff className="w-3.5 h-3.5 text-muted shrink-0" />
+          <MicrophoneSlash className="w-3.5 h-3.5 text-muted shrink-0" />
           {onRemove && (
             <button
               type="button"

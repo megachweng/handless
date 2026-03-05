@@ -14,6 +14,7 @@ import { getLanguageDirection } from "@/lib/utils/rtl";
 type OverlayState = "recording" | "transcribing" | "processing";
 
 const DOT_COUNT = 11;
+const THINKING_DOT_COUNT = 6;
 const LERP_SPEED = 0.12;
 const STREAMING_WIDTH = 300;
 const STREAMING_LINE_HEIGHT = 18;
@@ -263,11 +264,11 @@ const RecordingOverlay: React.FC = () => {
               style={{ width: `${progress * 100}%` }}
             />
             <div className="thinking-dots">
-              {Array.from({ length: 6 }, (_, i) => (
+              {Array.from({ length: THINKING_DOT_COUNT }, (_, i) => (
                 <div
                   key={i}
                   className="thinking-dot"
-                  style={{ animationDelay: `${i * 150}ms` }}
+                  style={{ animationDelay: `${i * 100}ms` }}
                 />
               ))}
             </div>

@@ -2,13 +2,13 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Check,
-  ChevronDown,
+  CaretDown,
   Cloud,
-  ExternalLink,
+  ArrowSquareOut,
   Globe,
-  Languages,
-  Loader2,
-} from "lucide-react";
+  Translate,
+  CircleNotch,
+} from "@phosphor-icons/react";
 import ReactSelect from "react-select";
 import type { StylesConfig } from "react-select";
 import { ApiKeyField } from "@/components/settings/PostProcessingSettingsApi/ApiKeyField";
@@ -127,18 +127,18 @@ const compactSelectStyles: StylesConfig<LangOption, boolean> = {
 const CloudOptionControl: React.FC<{
   option: CloudProviderOption;
   value: unknown;
-  supportedLanguages: string[];
+  supportedTranslate: string[];
   onChange: (value: unknown) => void;
-}> = ({ option, value, supportedLanguages, onChange }) => {
+}> = ({ option, value, supportedTranslate, onChange }) => {
   const { t } = useTranslation();
 
   const languageOptions = useMemo(
     () =>
       LANGUAGES.filter(
         (lang) =>
-          lang.value !== "auto" && supportedLanguages.includes(lang.value),
+          lang.value !== "auto" && supportedTranslate.includes(lang.value),
       ).sort((a, b) => a.label.localeCompare(b.label)),
-    [supportedLanguages],
+    [supportedTranslate],
   );
 
   const label = t(option.label);
@@ -184,7 +184,7 @@ const CloudOptionControl: React.FC<{
             onChange={(opts) => onChange([...opts].map((o) => o.value))}
             isClearable
             placeholder={t(
-              "settings.models.cloudProviders.options.selectLanguages",
+              "settings.models.cloudProviders.options.selectTranslate",
             )}
             styles={compactSelectStyles as StylesConfig<LangOption, true>}
             className="max-w-[400px]"
@@ -390,7 +390,7 @@ export const CloudProviderConfigCard: React.FC<
             setExpanded((v) => !v);
           }}
         >
-          <ChevronDown
+          <CaretDown
             className={`w-4 h-4 transition-transform ${expanded ? "rotate-180" : ""}`}
           />
         </button>
@@ -456,7 +456,7 @@ export const CloudProviderConfigCard: React.FC<
               >
                 {isVerifying ? (
                   <>
-                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <CircleNotch className="w-3 h-3 animate-spin" />
                     {t("settings.models.cloudProviders.verifying")}
                   </>
                 ) : (
@@ -478,7 +478,7 @@ export const CloudProviderConfigCard: React.FC<
                     }
                   }}
                 >
-                  <ExternalLink className="w-3 h-3" />
+                  <ArrowSquareOut className="w-3 h-3" />
                   {t("settings.models.cloudProviders.getApiKey")}
                 </button>
               )}
@@ -518,7 +518,7 @@ export const CloudProviderConfigCard: React.FC<
                     key={opt.key}
                     option={opt}
                     value={cloudOptions[opt.key]}
-                    supportedLanguages={provider.supported_languages}
+                    supportedTranslate={provider.supported_languages}
                     onChange={(val) => {
                       const updated = { ...cloudOptions };
                       if (
@@ -567,7 +567,7 @@ export const CloudProviderConfigCard: React.FC<
             <div
               className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded"
             >
-              <Languages className="w-3 h-3" />
+              <Translate className="w-3 h-3" />
               <span>{t("modelSelector.capabilities.translate")}</span>
             </div>
           </SimpleTooltip>

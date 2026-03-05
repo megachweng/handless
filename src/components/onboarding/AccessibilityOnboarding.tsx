@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { motion } from "motion/react";
 import { commands } from "@/bindings";
 import { useSettingsStore } from "@/stores/settingsStore";
-import { Keyboard, Mic, Check, Loader2 } from "lucide-react";
+import { Keyboard, Microphone, Check, CircleNotch } from "@phosphor-icons/react";
 import { staggerContainer, staggerItem, successScale, spring } from "@/lib/motion";
 
 interface AccessibilityOnboardingProps {
@@ -209,7 +209,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
   ) {
     return (
       <div className="h-screen w-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-text/50" />
+        <CircleNotch className="w-8 h-8 animate-spin text-text/50" />
       </div>
     );
   }
@@ -262,7 +262,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
         >
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-full bg-accent/20 shrink-0">
-              <Mic className="w-6 h-6 text-accent" />
+              <Microphone className="w-6 h-6 text-accent" />
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-medium text-text">
@@ -283,7 +283,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
                 </motion.div>
               ) : permissions.microphone === "waiting" ? (
                 <div className="flex items-center gap-2 text-text/50 text-sm">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <CircleNotch className="w-4 h-4 animate-spin" />
                   {t("onboarding.permissions.waiting")}
                 </div>
               ) : (
@@ -326,7 +326,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
                 </motion.div>
               ) : permissions.accessibility === "waiting" ? (
                 <div className="flex items-center gap-2 text-text/50 text-sm">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <CircleNotch className="w-4 h-4 animate-spin" />
                   {t("onboarding.permissions.waiting")}
                 </div>
               ) : (

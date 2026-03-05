@@ -2,12 +2,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import {
   Cloud,
-  Download,
+  DownloadSimple,
   Globe,
-  Languages,
-  Loader2,
-  Trash2,
-} from "lucide-react";
+  Translate,
+  CircleNotch,
+  Trash,
+} from "@phosphor-icons/react";
 import type { SttProviderInfo } from "@/bindings";
 import { formatModelSize } from "../../lib/utils/format";
 import {
@@ -122,7 +122,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
             )}
             {status === "switching" && (
               <Badge variant="secondary">
-                <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                <CircleNotch className="w-3 h-3 mr-1 animate-spin" />
                 {t("modelSelector.switching")}
               </Badge>
             )}
@@ -200,14 +200,14 @@ const ModelCard: React.FC<ModelCardProps> = ({
             <div
               className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded"
             >
-              <Languages className="w-3 h-3" />
+              <Translate className="w-3 h-3" />
               <span>{t("modelSelector.capabilities.translate")}</span>
             </div>
           </SimpleTooltip>
         )}
         {provider.backend.type === "Local" && status === "downloadable" && (
           <span className="flex items-center gap-1.5 ml-auto text-xs text-text/50 bg-muted/10 px-1.5 py-0.5 rounded">
-            <Download className="w-3 h-3" />
+            <DownloadSimple className="w-3 h-3" />
             <span>{formatModelSize(Number(provider.backend.size_mb))}</span>
           </span>
         )}
@@ -223,7 +223,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
                 onClick={handleDelete}
                 className="flex items-center gap-1.5 ml-auto text-accent/85 hover:text-accent hover:bg-accent/10"
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <Trash className="w-3.5 h-3.5" />
                 <span>{t("common.delete")}</span>
               </Button>
             </SimpleTooltip>
