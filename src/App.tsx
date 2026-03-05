@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Toaster } from "sonner";
 import { useTranslation } from "react-i18next";
 import { platform } from "@tauri-apps/plugin-os";
+import { MotionConfig, AnimatePresence, motion } from "motion/react";
 import { DragRegion } from "./components/ui/DragRegion";
 import {
   checkAccessibilityPermission,
@@ -16,6 +17,7 @@ import { useSettings } from "./hooks/useSettings";
 import { useTheme } from "./hooks/useTheme";
 import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
+import { pageVariants, pageTransition } from "@/lib/motion";
 
 type OnboardingStep = "accessibility" | "model" | "done";
 
@@ -144,51 +146,93 @@ function App() {
     return null;
   }
 
-  if (onboardingStep === "accessibility") {
-    return <AccessibilityOnboarding onComplete={handleAccessibilityComplete} />;
-  }
-
-  if (onboardingStep === "model") {
-    return <Onboarding onModelSelected={handleModelSelected} />;
-  }
-
   return (
-    <div
-      dir={direction}
-      className={`h-screen flex flex-col select-none cursor-default ${platform() === "linux" ? "bg-background" : ""}`}
-    >
-      <Toaster
-        theme={resolvedTheme}
-        toastOptions={{
-          unstyled: true,
-          classNames: {
-            toast:
-              "bg-background-translucent backdrop-blur-sm border border-muted/20 rounded shadow-lg px-4 py-3 flex items-center gap-3 text-sm",
-            title: "font-medium",
-            description: "text-muted",
-          },
-        }}
-      />
-      {/* Main content area that takes remaining space */}
-      <div className="flex-1 flex overflow-hidden">
-        <Sidebar
-          activeSection={currentSection}
-          onSectionChange={setCurrentSection}
-        />
-        {/* Scrollable content area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <DragRegion />
-          <div className="flex-1 overflow-y-auto overscroll-contain">
-            <div className="flex flex-col items-center p-4 gap-4">
-              <AccessibilityPermissions />
-              {renderSettingsContent(currentSection)}
+    <MotionConfig reducedMotion="user">
+      <AnimatePresence mode="wait">
+        {onboardingStep === "accessibility" && (
+          <motion.div
+            key="accessibility"
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageTransition}
+          >
+            <AccessibilityOnboarding onComplete={handleAccessibilityComplete} />
+          </motion.div>
+        )}
+
+        {onboardingStep === "model" && (
+          <motion.div
+            key="model"
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageTransition}
+          >
+            <Onboarding onModelSelected={handleModelSelected} />
+          </motion.div>
+        )}
+
+        {onboardingStep === "done" && (
+          <motion.div
+            key="done"
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageTransition}
+            dir={direction}
+            className={`h-screen flex flex-col select-none cursor-default ${platform() === "linux" ? "bg-background" : ""}`}
+          >
+            <Toaster
+              theme={resolvedTheme}
+              toastOptions={{
+                unstyled: true,
+                classNames: {
+                  toast:
+                    "glass-panel rounded-xl px-4 py-3 flex items-center gap-3 text-sm",
+                  title: "font-medium",
+                  description: "text-muted",
+                },
+              }}
+            />
+            {/* Main content area that takes remaining space */}
+            <div className="flex-1 flex overflow-hidden">
+              <Sidebar
+                activeSection={currentSection}
+                onSectionChange={setCurrentSection}
+              />
+              {/* Scrollable content area */}
+              <div className="flex-1 flex flex-col overflow-hidden">
+                <DragRegion />
+                <div className="flex-1 overflow-y-auto overscroll-contain">
+                  <div className="flex flex-col items-center p-4 gap-4">
+                    <AccessibilityPermissions />
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={currentSection}
+                        variants={pageVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        transition={pageTransition}
+                        className="w-full flex flex-col items-center"
+                      >
+                        {renderSettingsContent(currentSection)}
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      {/* Fixed footer at bottom */}
-      <Footer />
-    </div>
+            {/* Fixed footer at bottom */}
+            <Footer />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </MotionConfig>
   );
 }
 

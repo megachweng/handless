@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { motion, LayoutGroup } from "motion/react";
 import { DragRegion } from "./ui/DragRegion";
 import {
   Cog,
@@ -22,6 +23,7 @@ import {
   PostProcessingSettings,
   ModelsSettings,
 } from "./settings";
+import { spring, tapScale } from "@/lib/motion";
 
 export type SidebarSection = keyof typeof SECTIONS_CONFIG;
 
@@ -108,34 +110,46 @@ export const Sidebar: React.FC<SidebarProps> = ({
     .map(([id, config]) => ({ id: id as SidebarSection, ...config }));
 
   return (
-    <div className="flex flex-col w-40 h-full border-e border-muted/20 items-center px-2">
+    <div className="flex flex-col w-40 h-full border-e border-glass-border glass-panel-heavy items-center px-2">
       <DragRegion />
-      <div className="flex flex-col w-full items-center gap-1">
-        {availableSections.map((section) => {
-          const Icon = section.icon;
-          const isActive = activeSection === section.id;
+      <LayoutGroup>
+        <div className="flex flex-col w-full items-center gap-1">
+          {availableSections.map((section) => {
+            const Icon = section.icon;
+            const isActive = activeSection === section.id;
 
-          return (
-            <div
-              key={section.id}
-              className={`flex gap-2 items-center py-1 px-2 w-full rounded cursor-pointer transition-colors ${
-                isActive
-                  ? "bg-accent/80"
-                  : "hover:bg-muted/20 hover:opacity-100 opacity-85"
-              }`}
-              onClick={() => onSectionChange(section.id)}
-            >
-              <Icon width={18} height={18} className="shrink-0" />
-              <p
-                className="text-sm font-medium truncate"
-                title={t(section.labelKey)}
+            return (
+              <motion.div
+                key={section.id}
+                className="relative flex gap-2 items-center py-1 px-2 w-full rounded-lg cursor-pointer"
+                onClick={() => onSectionChange(section.id)}
+                whileHover={{ backgroundColor: isActive ? undefined : "rgba(255,255,255,0.05)" }}
+                whileTap={tapScale}
+                transition={spring.snappy}
               >
-                {t(section.labelKey)}
-              </p>
-            </div>
-          );
-        })}
-      </div>
+                {isActive && (
+                  <motion.div
+                    layoutId="sidebar-active-indicator"
+                    className="absolute inset-0 rounded-lg bg-accent/80"
+                    transition={spring.snappy}
+                  />
+                )}
+                <Icon
+                  width={18}
+                  height={18}
+                  className={`shrink-0 relative z-10 ${!isActive ? "opacity-85" : ""}`}
+                />
+                <p
+                  className={`text-sm font-medium truncate relative z-10 ${!isActive ? "opacity-85" : ""}`}
+                  title={t(section.labelKey)}
+                >
+                  {t(section.labelKey)}
+                </p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </LayoutGroup>
     </div>
   );
 };

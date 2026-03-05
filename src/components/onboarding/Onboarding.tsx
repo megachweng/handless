@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { motion } from "motion/react";
 import type { SttProviderInfo } from "@/bindings";
 import type { ModelCardStatus } from "./ModelCard";
 import ModelCard from "./ModelCard";
 import { useModelStore } from "../../stores/modelStore";
+import { staggerContainer, staggerItem } from "@/lib/motion";
 
 interface OnboardingProps {
   onModelSelected: () => void;
@@ -110,36 +112,43 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
         </p>
       </div>
 
-      <div className="max-w-[600px] w-full mx-auto text-center flex-1 flex flex-col min-h-0">
+      <motion.div
+        className="max-w-[600px] w-full mx-auto text-center flex-1 flex flex-col min-h-0"
+        variants={staggerContainer}
+        initial="initial"
+        animate="animate"
+      >
         <div className="flex flex-col gap-4 pb-6">
           {recommended.map((p: SttProviderInfo) => (
-            <ModelCard
-              key={p.id}
-              provider={p}
-              variant="featured"
-              status={getModelStatus(p.id)}
-              disabled={isDownloading}
-              onSelect={handleDownloadModel}
-              onDownload={handleDownloadModel}
-              downloadProgress={getModelDownloadProgress(p.id)}
-              downloadSpeed={getModelDownloadSpeed(p.id)}
-            />
+            <motion.div key={p.id} variants={staggerItem}>
+              <ModelCard
+                provider={p}
+                variant="featured"
+                status={getModelStatus(p.id)}
+                disabled={isDownloading}
+                onSelect={handleDownloadModel}
+                onDownload={handleDownloadModel}
+                downloadProgress={getModelDownloadProgress(p.id)}
+                downloadSpeed={getModelDownloadSpeed(p.id)}
+              />
+            </motion.div>
           ))}
 
           {other.map((p: SttProviderInfo) => (
-            <ModelCard
-              key={p.id}
-              provider={p}
-              status={getModelStatus(p.id)}
-              disabled={isDownloading}
-              onSelect={handleDownloadModel}
-              onDownload={handleDownloadModel}
-              downloadProgress={getModelDownloadProgress(p.id)}
-              downloadSpeed={getModelDownloadSpeed(p.id)}
-            />
+            <motion.div key={p.id} variants={staggerItem}>
+              <ModelCard
+                provider={p}
+                status={getModelStatus(p.id)}
+                disabled={isDownloading}
+                onSelect={handleDownloadModel}
+                onDownload={handleDownloadModel}
+                downloadProgress={getModelDownloadProgress(p.id)}
+                downloadSpeed={getModelDownloadSpeed(p.id)}
+              />
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

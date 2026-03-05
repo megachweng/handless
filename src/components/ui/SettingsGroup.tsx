@@ -1,4 +1,6 @@
 import React from "react";
+import { motion } from "motion/react";
+import { staggerContainer, staggerItem } from "@/lib/motion";
 
 interface SettingsGroupProps {
   title?: string;
@@ -23,9 +25,16 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
           )}
         </div>
       )}
-      <div className="bg-background-translucent border border-muted/20 rounded overflow-visible">
-        <div className="divide-y divide-muted/20">{children}</div>
-      </div>
+      <motion.div
+        className="glass-panel rounded-xl overflow-visible"
+        variants={staggerContainer}
+        initial="initial"
+        animate="animate"
+      >
+        <div className="divide-y divide-glass-border">{React.Children.map(children, (child, i) => (
+          <motion.div key={i} variants={staggerItem}>{child}</motion.div>
+        ))}</div>
+      </motion.div>
     </div>
   );
 };

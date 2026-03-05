@@ -8,9 +8,11 @@ import {
   requestMicrophonePermission,
 } from "tauri-plugin-macos-permissions-api";
 import { toast } from "sonner";
+import { motion } from "motion/react";
 import { commands } from "@/bindings";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { Keyboard, Mic, Check, Loader2 } from "lucide-react";
+import { staggerContainer, staggerItem, successScale, spring } from "@/lib/motion";
 
 interface AccessibilityOnboardingProps {
   onComplete: () => void;
@@ -216,9 +218,14 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
   if (allGranted) {
     return (
       <div className="h-screen w-screen flex flex-col items-center justify-center gap-4">
-        <div className="p-4 rounded-full bg-emerald-500/20">
+        <motion.div
+          className="p-4 rounded-full bg-emerald-500/20"
+          variants={successScale}
+          initial="initial"
+          animate="animate"
+        >
           <Check className="w-12 h-12 text-emerald-400" />
-        </div>
+        </motion.div>
         <p className="text-lg font-medium text-text">
           {t("onboarding.permissions.allGranted")}
         </p>
@@ -233,18 +240,26 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
         <h1 className="text-3xl font-bold text-text">{t("appName")}</h1>
       </div>
 
-      <div className="max-w-md w-full flex flex-col items-center gap-4">
-        <div className="text-center mb-2">
+      <motion.div
+        className="max-w-md w-full flex flex-col items-center gap-4"
+        variants={staggerContainer}
+        initial="initial"
+        animate="animate"
+      >
+        <motion.div className="text-center mb-2" variants={staggerItem}>
           <h2 className="text-xl font-semibold text-text mb-2">
             {t("onboarding.permissions.title")}
           </h2>
           <p className="text-text/70">
             {t("onboarding.permissions.description")}
           </p>
-        </div>
+        </motion.div>
 
         {/* Microphone Permission Card */}
-        <div className="w-full p-4 rounded bg-white/5 border border-muted/20">
+        <motion.div
+          className="w-full p-4 rounded-xl glass-panel"
+          variants={staggerItem}
+        >
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-full bg-accent/20 shrink-0">
               <Mic className="w-6 h-6 text-accent" />
@@ -257,10 +272,15 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
                 {t("onboarding.permissions.microphone.description")}
               </p>
               {permissions.microphone === "granted" ? (
-                <div className="flex items-center gap-2 text-emerald-400 text-sm">
+                <motion.div
+                  className="flex items-center gap-2 text-emerald-400 text-sm"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={spring.bouncy}
+                >
                   <Check className="w-4 h-4" />
                   {t("onboarding.permissions.granted")}
-                </div>
+                </motion.div>
               ) : permissions.microphone === "waiting" ? (
                 <div className="flex items-center gap-2 text-text/50 text-sm">
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -269,17 +289,20 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
               ) : (
                 <button
                   onClick={handleGrantMicrophone}
-                  className="px-4 py-2 rounded bg-accent hover:bg-accent/90 text-white text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg bg-accent hover:bg-accent/90 text-white text-sm font-medium transition-colors"
                 >
                   {t("onboarding.permissions.grant")}
                 </button>
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Accessibility Permission Card */}
-        <div className="w-full p-4 rounded bg-white/5 border border-muted/20">
+        <motion.div
+          className="w-full p-4 rounded-xl glass-panel"
+          variants={staggerItem}
+        >
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-full bg-accent/20 shrink-0">
               <Keyboard className="w-6 h-6 text-accent" />
@@ -292,10 +315,15 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
                 {t("onboarding.permissions.accessibility.description")}
               </p>
               {permissions.accessibility === "granted" ? (
-                <div className="flex items-center gap-2 text-emerald-400 text-sm">
+                <motion.div
+                  className="flex items-center gap-2 text-emerald-400 text-sm"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={spring.bouncy}
+                >
                   <Check className="w-4 h-4" />
                   {t("onboarding.permissions.granted")}
-                </div>
+                </motion.div>
               ) : permissions.accessibility === "waiting" ? (
                 <div className="flex items-center gap-2 text-text/50 text-sm">
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -304,15 +332,15 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
               ) : (
                 <button
                   onClick={handleGrantAccessibility}
-                  className="px-4 py-2 rounded bg-accent hover:bg-accent/90 text-white text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg bg-accent hover:bg-accent/90 text-white text-sm font-medium transition-colors"
                 >
                   {t("onboarding.permissions.grant")}
                 </button>
               )}
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

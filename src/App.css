@@ -54,7 +54,22 @@
   --color-ring: var(--color-accent);
   --color-input: var(--color-border);
 
-  --radius: 5px;
+  --radius: 12px;
+
+  /* Glass tokens */
+  --color-glass-bg: rgba(255, 255, 255, 0.04);
+  --color-glass-border: rgba(255, 255, 255, 0.08);
+  --color-glass-border-hover: rgba(255, 255, 255, 0.14);
+  --color-glass-highlight: rgba(255, 255, 255, 0.06);
+
+  --shadow-glass: 0 2px 8px rgba(0, 0, 0, 0.2), 0 0 0 0.5px rgba(255, 255, 255, 0.06);
+  --shadow-glass-hover: 0 4px 16px rgba(0, 0, 0, 0.25), 0 0 0 0.5px rgba(255, 255, 255, 0.1);
+  --shadow-glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-accent-glow: 0 0 12px rgba(239, 111, 47, 0.25);
+
+  --glass-blur: 12px;
+  --glass-blur-heavy: 24px;
+  --glass-blur-light: 6px;
 }
 
 html,
@@ -102,8 +117,43 @@ body {
     --color-success: #1a8f2d;
     --color-info: #2563eb;
     /* accent stays #ef6f2f — brand color, used on buttons with white text */
+
+    --color-glass-bg: rgba(0, 0, 0, 0.03);
+    --color-glass-border: rgba(0, 0, 0, 0.08);
+    --color-glass-border-hover: rgba(0, 0, 0, 0.14);
+    --color-glass-highlight: rgba(0, 0, 0, 0.04);
+
+    --shadow-glass: 0 2px 8px rgba(0, 0, 0, 0.06), 0 0 0 0.5px rgba(0, 0, 0, 0.05);
+    --shadow-glass-hover: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(0, 0, 0, 0.08);
+    --shadow-glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    --shadow-accent-glow: 0 0 12px rgba(239, 111, 47, 0.2);
   }
 
+}
+
+/* ── Glass utility classes ─────────────────────────────────────── */
+.glass-panel {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow-glass), var(--shadow-glass-inset);
+}
+
+.glass-panel-heavy {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  backdrop-filter: blur(var(--glass-blur-heavy));
+  -webkit-backdrop-filter: blur(var(--glass-blur-heavy));
+  box-shadow: var(--shadow-glass), var(--shadow-glass-inset);
+}
+
+.glass-panel-light {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  box-shadow: var(--shadow-glass-inset);
 }
 
 .container {

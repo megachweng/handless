@@ -41,12 +41,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
     >
       <SelectPrimitive.Trigger
         className={cn(
-          "px-2 py-1 text-sm font-semibold bg-muted-foreground/10 border border-input rounded",
+          "px-2 py-1 text-sm font-semibold bg-glass-bg border border-glass-border rounded backdrop-blur-sm",
           "min-w-[160px] w-full text-start flex items-center justify-between",
           "transition-all duration-150",
           disabled
             ? "opacity-50 cursor-not-allowed"
-            : "hover:bg-primary/10 cursor-pointer hover:border-primary",
+            : "hover:bg-glass-highlight cursor-pointer hover:border-glass-border-hover",
           "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
           className,
         )}
@@ -74,7 +74,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       <SelectPrimitive.Portal>
         <SelectPrimitive.Content
           className={cn(
-            "overflow-hidden bg-popover border border-input rounded shadow-lg z-50",
+            "overflow-hidden glass-panel rounded-lg shadow-glass-hover z-50",
             "min-w-[var(--radix-select-trigger-width)]",
             "animate-in fade-in-0 zoom-in-95",
             "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",

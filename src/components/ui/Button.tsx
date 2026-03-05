@@ -1,7 +1,9 @@
 import React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { motion, type HTMLMotionProps } from "motion/react";
 import { cn } from "@/lib/utils";
+import { tapScale, spring } from "@/lib/motion";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer",
@@ -13,12 +15,14 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/80",
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border border-glass-border bg-glass-bg backdrop-blur-sm shadow-glass hover:bg-glass-highlight hover:border-glass-border-hover hover:shadow-glass-hover",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm border border-muted-foreground/20 hover:bg-primary/30 hover:border-primary",
+          "bg-glass-bg text-secondary-foreground shadow-glass border border-glass-border backdrop-blur-sm hover:bg-primary/20 hover:border-primary",
         ghost:
           "hover:bg-muted-foreground/10 hover:border-primary border border-transparent",
         link: "text-primary underline-offset-4 hover:underline",
+        glass:
+          "bg-glass-bg border border-glass-border backdrop-blur-sm shadow-glass hover:bg-glass-highlight hover:border-glass-border-hover hover:shadow-glass-hover",
         "primary-soft":
           "text-text bg-primary/20 border border-transparent hover:bg-primary/30",
         "danger-ghost":
@@ -46,12 +50,28 @@ interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
+    if (asChild) {
+      const Comp = Slot;
+      return (
+        <Comp
+          className={cn(buttonVariants({ variant, size, className }))}
+          ref={ref}
+          {...props}
+        />
+      );
+    }
+
+    // Destructure onDrag and onDragStart from React's HTML events
+    // to avoid conflict with motion's drag event types
+    const { onDrag, onDragStart, onAnimationStart, ...motionSafeProps } = props;
+
     return (
-      <Comp
+      <motion.button
+        whileTap={tapScale}
+        transition={spring.snappy}
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        {...props}
+        {...(motionSafeProps as Omit<HTMLMotionProps<"button">, "ref">)}
       />
     );
   },

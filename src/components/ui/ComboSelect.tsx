@@ -39,27 +39,30 @@ type NonCreatableProps = {
 
 export type SelectProps = BaseProps & (CreatableProps | NonCreatableProps);
 
-const baseBackground =
-  "color-mix(in srgb, var(--color-muted) 10%, transparent)";
+const glassBg = "var(--color-glass-bg)";
+const glassBorder = "var(--color-glass-border)";
+const glassBorderHover = "var(--color-glass-border-hover)";
 const hoverBackground =
   "color-mix(in srgb, var(--color-accent) 12%, transparent)";
 const focusBackground =
   "color-mix(in srgb, var(--color-accent) 20%, transparent)";
-const neutralBorder = "color-mix(in srgb, var(--color-muted) 80%, transparent)";
 
 const selectStyles: StylesConfig<SelectOption, false> = {
   control: (base, state) => ({
     ...base,
     minHeight: 30,
-    borderRadius: 4,
-    borderColor: state.isFocused ? "var(--color-accent)" : neutralBorder,
-    boxShadow: state.isFocused ? "0 0 0 1px var(--color-accent)" : "none",
-    backgroundColor: state.isFocused ? focusBackground : baseBackground,
+    borderRadius: 8,
+    borderColor: state.isFocused ? "var(--color-accent)" : glassBorder,
+    boxShadow: state.isFocused
+      ? "0 0 0 1px var(--color-accent), var(--shadow-accent-glow)"
+      : "var(--shadow-glass)",
+    backgroundColor: state.isFocused ? focusBackground : glassBg,
+    backdropFilter: "blur(var(--glass-blur-light))",
     fontSize: "0.875rem",
     color: "var(--color-text)",
     transition: "all 150ms ease",
     ":hover": {
-      borderColor: "var(--color-accent)",
+      borderColor: glassBorderHover,
       backgroundColor: hoverBackground,
     },
   }),
@@ -100,14 +103,16 @@ const selectStyles: StylesConfig<SelectOption, false> = {
   menu: (provided) => ({
     ...provided,
     zIndex: 30,
-    backgroundColor: "var(--color-surface)",
+    backgroundColor: glassBg,
+    backdropFilter: "blur(var(--glass-blur))",
     color: "var(--color-text)",
-    border: "1px solid color-mix(in srgb, var(--color-muted) 30%, transparent)",
-    boxShadow: "0 10px 30px rgba(15, 15, 15, 0.2)",
+    border: `1px solid ${glassBorder}`,
+    borderRadius: 8,
+    boxShadow: "var(--shadow-glass-hover)",
   }),
   menuList: (provided) => ({
     ...provided,
-    backgroundColor: "var(--color-surface)",
+    backgroundColor: "transparent",
   }),
   option: (base, state) => ({
     ...base,
