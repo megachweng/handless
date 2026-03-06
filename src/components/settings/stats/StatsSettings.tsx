@@ -17,7 +17,11 @@ import {
   CalendarBlank,
   type Icon,
 } from "@phosphor-icons/react";
-import { commands, type DailySpeakingStats, type StatsDateRange } from "@/bindings";
+import {
+  commands,
+  type DailySpeakingStats,
+  type StatsDateRange,
+} from "@/bindings";
 import { useSettingsStore } from "@/stores/settingsStore";
 
 function formatDuration(ms: number): string {
@@ -88,7 +92,9 @@ export const StatsSettings: React.FC = () => {
   const [confirmClear, setConfirmClear] = useState(false);
 
   const savedRange = getSetting("stats_date_range") ?? "month";
-  const range: StatsDateRange = RANGE_PRESETS.includes(savedRange as StatsDateRange)
+  const range: StatsDateRange = RANGE_PRESETS.includes(
+    savedRange as StatsDateRange,
+  )
     ? (savedRange as StatsDateRange)
     : "month";
 
@@ -128,9 +134,7 @@ export const StatsSettings: React.FC = () => {
         const fromDate = customFrom
           ? new Date(customFrom + "T00:00:00")
           : new Date(0);
-        const toDate = customTo
-          ? new Date(customTo + "T23:59:59")
-          : new Date();
+        const toDate = customTo ? new Date(customTo + "T23:59:59") : new Date();
         return {
           from: Math.floor(fromDate.getTime() / 1000),
           to: Math.floor(toDate.getTime() / 1000),
@@ -180,8 +184,7 @@ export const StatsSettings: React.FC = () => {
       (sum, s) => sum + s.transcription_count,
       0,
     );
-    const avgWpm =
-      totalDuration > 0 ? (totalWords * 60000) / totalDuration : 0;
+    const avgWpm = totalDuration > 0 ? (totalWords * 60000) / totalDuration : 0;
     return { totalWords, totalDuration, avgWpm, totalTranscriptions };
   }, [stats]);
 
