@@ -139,10 +139,7 @@ pub fn open_settings_file(app: AppHandle) -> Result<(), String> {
 pub fn reload_settings(app: AppHandle) -> Result<(), String> {
     settings::reload_from_disk(&app)?;
 
-    let _ = app.emit(
-        "settings-changed",
-        serde_json::json!({ "setting": "all" }),
-    );
+    let _ = app.emit("settings-changed", serde_json::json!({ "setting": "all" }));
 
     Ok(())
 }
