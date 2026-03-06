@@ -373,7 +373,7 @@
         "promptTip": "Tipp: Der transkribierte Text wird dem Prompt automatisch als Eingabe bereitgestellt.",
         "updatePrompt": "Prompt aktualisieren",
         "deletePrompt": "Prompt löschen",
-        "createPrompt": "Prompt erstellen",
+        "createPrompt": "Erstellen",
         "cancel": "Abbrechen",
         "selectToEdit": "Wähle oben einen Prompt aus, um dessen Details anzuzeigen und zu bearbeiten.",
         "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen."

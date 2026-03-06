@@ -373,7 +373,7 @@
         "promptTip": "İpucu: Transkribe edilen metin otomatik olarak prompt'a giriş olarak sağlanır.",
         "updatePrompt": "Promptu Güncelle",
         "deletePrompt": "Promptu Sil",
-        "createPrompt": "Prompt Oluştur",
+        "createPrompt": "Oluştur",
         "cancel": "İptal",
         "selectToEdit": "Ayrıntılarını görüntülemek ve düzenlemek için yukarıdan bir prompt seçin.",
         "createFirst": "İlk son işlem prompt'unuzu oluşturmak için yukarıdaki “Yeni Prompt Oluştur” seçeneğine tıklayın."

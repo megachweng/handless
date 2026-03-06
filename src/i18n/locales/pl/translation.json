@@ -373,7 +373,7 @@
         "promptTip": "Wskazówka: Transkrybowany tekst jest automatycznie dostarczany jako dane wejściowe do promptu.",
         "updatePrompt": "Zaktualizuj prompt",
         "deletePrompt": "Usuń prompt",
-        "createPrompt": "Utwórz prompt",
+        "createPrompt": "Utwórz",
         "cancel": "Anuluj",
         "selectToEdit": "Wybierz prompt powyżej, aby zobaczyć i edytować jego szczegóły.",
         "createFirst": "Kliknij 'Utwórz nowy prompt' powyżej, aby utworzyć pierwszy prompt postprocessingu."

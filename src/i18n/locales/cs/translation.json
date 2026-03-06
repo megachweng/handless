@@ -373,7 +373,7 @@
         "promptTip": "Tip: Přepsaný text je automaticky poskytnut jako vstup promptu.",
         "updatePrompt": "Aktualizovat prompt",
         "deletePrompt": "Smazat prompt",
-        "createPrompt": "Vytvořit prompt",
+        "createPrompt": "Vytvořit",
         "cancel": "Zrušit",
         "selectToEdit": "Vyberte výše prompt, abyste zobrazili a upravili jeho podrobnosti.",
         "createFirst": "Klikněte nahoře na 'Vytvořit nový prompt' a vytvořte svůj první prompt pro následné zpracování."

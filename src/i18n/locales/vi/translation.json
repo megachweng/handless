@@ -373,7 +373,7 @@
         "promptTip": "Mẹo: Văn bản đã chuyển đổi được tự động cung cấp làm đầu vào cho prompt.",
         "updatePrompt": "Cập nhật Prompt",
         "deletePrompt": "Xóa Prompt",
-        "createPrompt": "Tạo Prompt",
+        "createPrompt": "Tạo",
         "cancel": "Hủy",
         "selectToEdit": "Chọn một prompt ở trên để xem và chỉnh sửa chi tiết.",
         "createFirst": "Nhấn 'Tạo Prompt mới' ở trên để tạo prompt xử lý sau đầu tiên của bạn."

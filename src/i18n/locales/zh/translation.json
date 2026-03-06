@@ -373,7 +373,7 @@
         "promptTip": "提示：转录文本会自动作为输入提供给提示词。",
         "updatePrompt": "更新提示词",
         "deletePrompt": "删除提示词",
-        "createPrompt": "创建提示词",
+        "createPrompt": "创建",
         "cancel": "取消",
         "selectToEdit": "选择上方的提示词以查看和编辑其详细信息。",
         "createFirst": "点击上方的「创建新提示词」来创建您的第一个后处理提示词。"

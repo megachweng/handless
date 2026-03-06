@@ -373,7 +373,7 @@
         "promptTip": "Suggerimento: Il testo trascritto viene fornito automaticamente come input al prompt.",
         "updatePrompt": "Aggiorna Prompt",
         "deletePrompt": "Elimina Prompt",
-        "createPrompt": "Crea Prompt",
+        "createPrompt": "Crea",
         "cancel": "Annulla",
         "selectToEdit": "Scegli un prompt qui sopra per visualizzare o modificare i dettagli.",
         "createFirst": "Clicca 'Crea un nuovo prompt' qui sopra per creare il tuo primo prompt di post-elaborazione."

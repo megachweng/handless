@@ -373,7 +373,7 @@
         "promptTip": "Astuce : Le texte transcrit est automatiquement fourni comme entrée au prompt.",
         "updatePrompt": "Mettre à jour le prompt",
         "deletePrompt": "Supprimer le prompt",
-        "createPrompt": "Créer le prompt",
+        "createPrompt": "Créer",
         "cancel": "Annuler",
         "selectToEdit": "Sélectionnez un prompt ci-dessus pour voir et modifier ses détails.",
         "createFirst": "Cliquez sur 'Créer un nouveau prompt' ci-dessus pour créer votre premier prompt de post-traitement."

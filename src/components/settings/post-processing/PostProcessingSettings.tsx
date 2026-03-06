@@ -21,6 +21,8 @@ import { ModelSelect } from "../PostProcessingSettingsApi/ModelSelect";
 import { usePostProcessProviderState } from "../PostProcessingSettingsApi/usePostProcessProviderState";
 import { useSettings } from "../../../hooks/useSettings";
 import { usePostProcessStats } from "../../../hooks/usePostProcessStats";
+import { CustomWords } from "../CustomWords";
+import { AppendTrailingSpace } from "../AppendTrailingSpace";
 
 const BUILTIN_PROMPT_PREFIX = "default_";
 const FIELD_WIDTH = "w-[260px]";
@@ -449,6 +451,11 @@ export const PostProcessingSettings: React.FC = () => {
 
       <SettingsGroup title={t("settings.postProcessing.prompts.title")}>
         <PostProcessingSettingsPrompts />
+      </SettingsGroup>
+
+      <SettingsGroup title={t("settings.advanced.groups.transcription")}>
+        <CustomWords descriptionMode="tooltip" grouped />
+        <AppendTrailingSpace descriptionMode="tooltip" grouped={true} />
       </SettingsGroup>
     </div>
   );
