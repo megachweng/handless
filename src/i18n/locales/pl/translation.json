@@ -303,7 +303,8 @@
         "output": "Wyjście",
         "transcription": "Transkrypcja",
         "history": "Historia",
-        "data": "Data"
+        "data": "Data",
+        "configuration": "Konfiguracja"
       },
       "startHidden": {
         "label": "Uruchom ukryty",
@@ -427,6 +428,13 @@
           "light": "Light",
           "system": "System"
         }
+      },
+      "configFile": {
+        "title": "Plik konfiguracyjny",
+        "description": "Otwórz plik ustawień JSON w domyślnym edytorze",
+        "open": "Otwórz",
+        "reload": "Przeładuj",
+        "reloadSuccess": "Ustawienia przeładowane"
       }
     },
     "postProcessing": {
@@ -500,7 +508,17 @@
       "noData": "Brak danych. Statystyki pojawią się po pierwszej transkrypcji.",
       "transcriptions": "Transkrypcje",
       "clearStats": "Wyczyść wszystkie dane statystyk",
-      "confirmClear": "Kliknij ponownie, aby potwierdzić"
+      "confirmClear": "Kliknij ponownie, aby potwierdzić",
+      "range": {
+        "today": "Dziś",
+        "3days": "3 dni",
+        "week": "Tydzień",
+        "month": "Miesiąc",
+        "all": "Wszystko",
+        "custom": "Niestandardowy",
+        "from": "Od",
+        "to": "Do"
+      }
     },
     "history": {
       "title": "Historia",

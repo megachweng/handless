@@ -303,7 +303,8 @@
         "output": "輸出",
         "transcription": "轉錄",
         "history": "歷史",
-        "data": "Data"
+        "data": "Data",
+        "configuration": "設定"
       },
       "startHidden": {
         "label": "隱藏啟動",
@@ -427,6 +428,13 @@
           "light": "Light",
           "system": "System"
         }
+      },
+      "configFile": {
+        "title": "設定檔",
+        "description": "使用預設編輯器開啟設定 JSON 檔案",
+        "open": "開啟",
+        "reload": "重新載入",
+        "reloadSuccess": "設定已重新載入"
       }
     },
     "postProcessing": {
@@ -500,7 +508,17 @@
       "noData": "尚無資料。統計資訊將在首次轉錄後顯示。",
       "transcriptions": "轉錄次數",
       "clearStats": "清除所有統計資料",
-      "confirmClear": "再次點擊以確認"
+      "confirmClear": "再次點擊以確認",
+      "range": {
+        "today": "今天",
+        "3days": "3 天",
+        "week": "一週",
+        "month": "一個月",
+        "all": "全部",
+        "custom": "自訂",
+        "from": "從",
+        "to": "到"
+      }
     },
     "history": {
       "title": "歷史紀錄",

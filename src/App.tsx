@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Toaster } from "sonner";
+import { toast, Toaster } from "sonner";
 import { useTranslation } from "react-i18next";
 import { platform } from "@tauri-apps/plugin-os";
 import { MotionConfig, AnimatePresence, motion } from "motion/react";
@@ -37,6 +37,7 @@ function App() {
   const {
     settings,
     updateSetting,
+    refreshSettings,
     refreshAudioDevices,
     refreshOutputDevices,
     setupDeviceWatcher,
@@ -75,30 +76,41 @@ function App() {
     refreshOutputDevices,
   ]);
 
-  // Handle keyboard shortcuts for debug mode toggle
+  // Handle keyboard shortcuts for debug mode toggle and config reload
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Check for Ctrl+Shift+D (Windows/Linux) or Cmd+Shift+D (macOS)
-      const isDebugShortcut =
-        event.shiftKey &&
-        event.key.toLowerCase() === "d" &&
-        (event.ctrlKey || event.metaKey);
+      const hasModifier = event.ctrlKey || event.metaKey;
 
-      if (isDebugShortcut) {
+      // Ctrl+Shift+D / Cmd+Shift+D: Toggle debug mode
+      if (hasModifier && event.shiftKey && event.key.toLowerCase() === "d") {
         event.preventDefault();
         const currentDebugMode = settings?.debug_mode ?? false;
         updateSetting("debug_mode", !currentDebugMode);
+        return;
+      }
+
+      // Ctrl+Shift+, / Cmd+Shift+,: Reload configuration
+      if (hasModifier && event.shiftKey && event.key === ",") {
+        event.preventDefault();
+        commands
+          .reloadSettings()
+          .then((result) => {
+            if (result.status === "error") {
+              toast.error(result.error);
+            } else {
+              refreshSettings();
+            }
+          })
+          .catch(console.error);
+        return;
       }
     };
 
-    // Add event listener when component mounts
     document.addEventListener("keydown", handleKeyDown);
-
-    // Cleanup event listener when component unmounts
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [settings?.debug_mode, updateSetting]);
+  }, [settings?.debug_mode, updateSetting, refreshSettings]);
 
   const checkOnboardingStatus = async () => {
     if (platform() === "macos") {
@@ -155,14 +167,19 @@ function App() {
             className={`h-screen flex flex-col select-none cursor-default ${platform() === "linux" ? "bg-background" : ""}`}
           >
             <Toaster
+              position="top-center"
+              closeButton
               theme={resolvedTheme}
+              style={{ left: "calc(50% + 80px)" }}
               toastOptions={{
                 unstyled: true,
                 classNames: {
                   toast:
-                    "glass-panel rounded-xl px-4 py-3 flex items-center gap-3 text-sm",
+                    "bg-[var(--color-glass-bg-solid)] border border-glass-border shadow-glass-hover rounded-xl px-4 py-3 flex items-center gap-3 text-sm",
                   title: "font-medium",
                   description: "text-muted",
+                  closeButton:
+                    "!bg-[var(--color-glass-bg-solid)] !border-glass-border !text-text !left-auto !right-0 !-translate-x-[35%]",
                 },
               }}
             />

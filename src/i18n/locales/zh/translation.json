@@ -303,7 +303,8 @@
         "output": "输出",
         "transcription": "转录",
         "history": "历史",
-        "data": "Data"
+        "data": "Data",
+        "configuration": "配置"
       },
       "startHidden": {
         "label": "隐藏启动",
@@ -427,6 +428,13 @@
           "light": "Light",
           "system": "System"
         }
+      },
+      "configFile": {
+        "title": "配置文件",
+        "description": "使用默认编辑器打开设置 JSON 文件",
+        "open": "打开",
+        "reload": "重新加载",
+        "reloadSuccess": "设置已重新加载"
       }
     },
     "postProcessing": {
@@ -500,7 +508,17 @@
       "noData": "暂无数据。统计信息将在首次转录后显示。",
       "transcriptions": "转录次数",
       "clearStats": "清除所有统计数据",
-      "confirmClear": "再次点击以确认"
+      "confirmClear": "再次点击以确认",
+      "range": {
+        "today": "今天",
+        "3days": "3 天",
+        "week": "一周",
+        "month": "一个月",
+        "all": "全部",
+        "custom": "自定义",
+        "from": "从",
+        "to": "到"
+      }
     },
     "history": {
       "title": "历史记录",

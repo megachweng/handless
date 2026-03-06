@@ -303,7 +303,8 @@
         "output": "出力",
         "transcription": "文字起こし",
         "history": "履歴",
-        "data": "Data"
+        "data": "Data",
+        "configuration": "設定ファイル"
       },
       "startHidden": {
         "label": "非表示で起動",
@@ -427,6 +428,13 @@
           "light": "Light",
           "system": "System"
         }
+      },
+      "configFile": {
+        "title": "設定ファイル",
+        "description": "設定JSONファイルをデフォルトエディタで開く",
+        "open": "開く",
+        "reload": "再読み込み",
+        "reloadSuccess": "設定を再読み込みしました"
       }
     },
     "postProcessing": {
@@ -500,7 +508,17 @@
       "noData": "まだデータがありません。最初の文字起こし後に統計が表示されます。",
       "transcriptions": "文字起こし",
       "clearStats": "すべての統計データを消去",
-      "confirmClear": "もう一度クリックして確認"
+      "confirmClear": "もう一度クリックして確認",
+      "range": {
+        "today": "今日",
+        "3days": "3日間",
+        "week": "1週間",
+        "month": "1ヶ月",
+        "all": "全期間",
+        "custom": "カスタム",
+        "from": "開始",
+        "to": "終了"
+      }
     },
     "history": {
       "title": "履歴",

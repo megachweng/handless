@@ -303,7 +303,8 @@
         "output": "출력",
         "transcription": "전사",
         "history": "히스토리",
-        "data": "Data"
+        "data": "Data",
+        "configuration": "구성"
       },
       "startHidden": {
         "label": "숨김으로 시작",
@@ -427,6 +428,13 @@
           "light": "Light",
           "system": "System"
         }
+      },
+      "configFile": {
+        "title": "설정 파일",
+        "description": "기본 편집기에서 설정 JSON 파일 열기",
+        "open": "열기",
+        "reload": "다시 불러오기",
+        "reloadSuccess": "설정을 다시 불러왔습니다"
       }
     },
     "postProcessing": {
@@ -500,7 +508,17 @@
       "noData": "아직 데이터가 없습니다. 첫 번째 받아쓰기 후 통계가 표시됩니다.",
       "transcriptions": "받아쓰기",
       "clearStats": "모든 통계 데이터 삭제",
-      "confirmClear": "다시 클릭하여 확인"
+      "confirmClear": "다시 클릭하여 확인",
+      "range": {
+        "today": "오늘",
+        "3days": "3일",
+        "week": "1주일",
+        "month": "1개월",
+        "all": "전체",
+        "custom": "사용자 지정",
+        "from": "시작",
+        "to": "종료"
+      }
     },
     "history": {
       "title": "히스토리",

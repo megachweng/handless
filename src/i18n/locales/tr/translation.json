@@ -303,7 +303,8 @@
         "output": "Çıktı",
         "transcription": "Transkripsiyon",
         "history": "Geçmiş",
-        "data": "Data"
+        "data": "Data",
+        "configuration": "Yapılandırma"
       },
       "startHidden": {
         "label": "Gizli Başlat",
@@ -427,6 +428,13 @@
           "light": "Light",
           "system": "System"
         }
+      },
+      "configFile": {
+        "title": "Yapılandırma dosyası",
+        "description": "Ayarlar JSON dosyasını varsayılan düzenleyicide aç",
+        "open": "Aç",
+        "reload": "Yeniden yükle",
+        "reloadSuccess": "Ayarlar yeniden yüklendi"
       }
     },
     "postProcessing": {
@@ -500,7 +508,17 @@
       "noData": "Henüz veri yok. İstatistikler ilk transkripsiyonunuzdan sonra görünecektir.",
       "transcriptions": "Transkripsiyonlar",
       "clearStats": "Tüm istatistik verilerini temizle",
-      "confirmClear": "Onaylamak için tekrar tıklayın"
+      "confirmClear": "Onaylamak için tekrar tıklayın",
+      "range": {
+        "today": "Bugün",
+        "3days": "3 gün",
+        "week": "Hafta",
+        "month": "Ay",
+        "all": "Tümü",
+        "custom": "Özel",
+        "from": "Başlangıç",
+        "to": "Bitiş"
+      }
     },
     "history": {
       "title": "Geçmiş",

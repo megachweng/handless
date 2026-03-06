@@ -12,6 +12,7 @@ import { ModelSettingsCard } from "./ModelSettingsCard";
 export const GeneralSettings: React.FC = () => {
   const { t } = useTranslation();
   const { audioFeedbackEnabled } = useSettings();
+
   return (
     <div className="max-w-3xl w-full mx-auto space-y-4">
       <ModelSettingsCard />

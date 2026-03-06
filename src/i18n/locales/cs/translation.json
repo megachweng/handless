@@ -303,7 +303,8 @@
         "output": "Výstup",
         "transcription": "Přepis",
         "history": "Historie",
-        "data": "Data"
+        "data": "Data",
+        "configuration": "Konfigurace"
       },
       "startHidden": {
         "label": "Spouštět skrytě",
@@ -427,6 +428,13 @@
           "light": "Light",
           "system": "System"
         }
+      },
+      "configFile": {
+        "title": "Konfigurační soubor",
+        "description": "Otevřít soubor nastavení JSON ve výchozím editoru",
+        "open": "Otevřít",
+        "reload": "Znovu načíst",
+        "reloadSuccess": "Nastavení znovu načtena"
       }
     },
     "postProcessing": {
@@ -500,7 +508,17 @@
       "noData": "Zatím žádná data. Statistiky se zobrazí po první transkripci.",
       "transcriptions": "Transkripce",
       "clearStats": "Vymazat všechna data statistik",
-      "confirmClear": "Klikněte znovu pro potvrzení"
+      "confirmClear": "Klikněte znovu pro potvrzení",
+      "range": {
+        "today": "Dnes",
+        "3days": "3 dny",
+        "week": "Týden",
+        "month": "Měsíc",
+        "all": "Vše",
+        "custom": "Vlastní",
+        "from": "Od",
+        "to": "Do"
+      }
     },
     "history": {
       "title": "Historie",

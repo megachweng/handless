@@ -303,7 +303,8 @@
         "output": "Output",
         "transcription": "Transcription",
         "history": "History",
-        "data": "Data"
+        "data": "Data",
+        "configuration": "Configuration"
       },
       "exportData": {
         "title": "Export Data",
@@ -427,6 +428,13 @@
         "add": "Add",
         "remove": "Remove {{word}}",
         "duplicate": "\"{{word}}\" already exists"
+      },
+      "configFile": {
+        "title": "Configuration File",
+        "description": "Open or reload the settings JSON file",
+        "open": "Open",
+        "reload": "Reload",
+        "reloadSuccess": "Settings reloaded"
       }
     },
     "postProcessing": {
@@ -500,7 +508,17 @@
       "noData": "No data yet. Stats will appear after your first transcription.",
       "transcriptions": "Transcriptions",
       "clearStats": "Clear all stats data",
-      "confirmClear": "Click again to confirm"
+      "confirmClear": "Click again to confirm",
+      "range": {
+        "today": "Today",
+        "3days": "3 Days",
+        "week": "Week",
+        "month": "Month",
+        "all": "All",
+        "custom": "Custom",
+        "from": "From",
+        "to": "To"
+      }
     },
     "history": {
       "title": "History",

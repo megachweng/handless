@@ -303,7 +303,8 @@
         "output": "Ausgabe",
         "transcription": "Transkription",
         "history": "Verlauf",
-        "data": "Data"
+        "data": "Data",
+        "configuration": "Konfiguration"
       },
       "startHidden": {
         "label": "Versteckt starten",
@@ -427,6 +428,13 @@
           "light": "Light",
           "system": "System"
         }
+      },
+      "configFile": {
+        "title": "Konfigurationsdatei",
+        "description": "Einstellungsdatei im Standard-Editor öffnen",
+        "open": "Öffnen",
+        "reload": "Neu laden",
+        "reloadSuccess": "Einstellungen neu geladen"
       }
     },
     "postProcessing": {
@@ -500,7 +508,17 @@
       "noData": "Noch keine Daten vorhanden. Statistiken erscheinen nach der ersten Transkription.",
       "transcriptions": "Transkriptionen",
       "clearStats": "Alle Statistikdaten löschen",
-      "confirmClear": "Zum Bestätigen erneut klicken"
+      "confirmClear": "Zum Bestätigen erneut klicken",
+      "range": {
+        "today": "Heute",
+        "3days": "3 Tage",
+        "week": "Woche",
+        "month": "Monat",
+        "all": "Alle",
+        "custom": "Benutzerdefiniert",
+        "from": "Von",
+        "to": "Bis"
+      }
     },
     "history": {
       "title": "Verlauf",

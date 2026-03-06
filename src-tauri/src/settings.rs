@@ -393,6 +393,8 @@ pub struct AppSettings {
     pub stt_cloud_options: HashMap<String, String>,
     #[serde(default)]
     pub stt_realtime_enabled: HashMap<String, bool>,
+    #[serde(default)]
+    pub stats_date_range: StatsDateRange,
 }
 
 fn default_model() -> String {
@@ -518,6 +520,24 @@ fn default_post_process_selected_prompt_id() -> Option<String> {
 
 fn default_typing_tool() -> TypingTool {
     TypingTool::Auto
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[serde(rename_all = "snake_case")]
+pub enum StatsDateRange {
+    Today,
+    #[serde(rename = "3days")]
+    ThreeDays,
+    Week,
+    Month,
+    All,
+    Custom,
+}
+
+impl Default for StatsDateRange {
+    fn default() -> Self {
+        StatsDateRange::Month
+    }
 }
 
 fn default_stt_provider_id() -> String {
@@ -743,6 +763,7 @@ pub fn get_default_settings() -> AppSettings {
         post_process_verified_providers: HashSet::new(),
         stt_cloud_options: default_stt_cloud_options(),
         stt_realtime_enabled: HashMap::new(),
+        stats_date_range: StatsDateRange::default(),
     }
 }
 
@@ -857,6 +878,24 @@ pub fn load_or_create_app_settings(app: &AppHandle) -> AppSettings {
     }
 
     settings
+}
+
+pub fn reload_from_disk(app: &AppHandle) -> Result<AppSettings, String> {
+    let store = app
+        .store(SETTINGS_STORE_PATH)
+        .map_err(|e| format!("Failed to access settings store: {}", e))?;
+
+    store
+        .reload()
+        .map_err(|e| format!("Failed to reload settings from disk: {}", e))?;
+
+    // Validate that the reloaded JSON can be parsed before applying migrations
+    if let Some(settings_value) = store.get("settings") {
+        serde_json::from_value::<AppSettings>(settings_value)
+            .map_err(|e| format!("Invalid settings in configuration file: {}", e))?;
+    }
+
+    Ok(load_or_create_app_settings(app))
 }
 
 pub fn get_settings(app: &AppHandle) -> AppSettings {

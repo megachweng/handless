@@ -303,7 +303,8 @@
         "output": "Đầu ra",
         "transcription": "Chuyển đổi",
         "history": "Lịch sử",
-        "data": "Data"
+        "data": "Data",
+        "configuration": "Cấu hình"
       },
       "startHidden": {
         "label": "Khởi động ẩn",
@@ -427,6 +428,13 @@
           "light": "Light",
           "system": "System"
         }
+      },
+      "configFile": {
+        "title": "Tệp cấu hình",
+        "description": "Mở tệp cấu hình JSON bằng trình soạn thảo mặc định",
+        "open": "Mở",
+        "reload": "Tải lại",
+        "reloadSuccess": "Đã tải lại cài đặt"
       }
     },
     "postProcessing": {
@@ -500,7 +508,17 @@
       "noData": "Chưa có dữ liệu. Thống kê sẽ xuất hiện sau lần chuyển đổi giọng nói đầu tiên.",
       "transcriptions": "Chuyển đổi",
       "clearStats": "Xóa tất cả dữ liệu thống kê",
-      "confirmClear": "Nhấn lại để xác nhận"
+      "confirmClear": "Nhấn lại để xác nhận",
+      "range": {
+        "today": "Hôm nay",
+        "3days": "3 ngày",
+        "week": "Tuần",
+        "month": "Tháng",
+        "all": "Tất cả",
+        "custom": "Tùy chỉnh",
+        "from": "Từ",
+        "to": "Đến"
+      }
     },
     "history": {
       "title": "Lịch sử",

@@ -4,9 +4,9 @@ pub mod history;
 pub mod models;
 pub mod transcription;
 
-use crate::settings::{get_settings, write_settings, AppSettings, LogLevel};
+use crate::settings::{self, get_settings, write_settings, AppSettings, LogLevel};
 use crate::utils::cancel_current_operation;
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Emitter, Manager};
 use tauri_plugin_opener::OpenerExt;
 
 #[tauri::command]
@@ -113,6 +113,36 @@ pub fn open_app_data_dir(app: AppHandle) -> Result<(), String> {
     app.opener()
         .open_path(path, None::<String>)
         .map_err(|e| format!("Failed to open app data directory: {}", e))?;
+
+    Ok(())
+}
+
+#[specta::specta]
+#[tauri::command]
+pub fn open_settings_file(app: AppHandle) -> Result<(), String> {
+    let app_data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("Failed to get app data directory: {}", e))?;
+
+    let settings_path = app_data_dir.join(settings::SETTINGS_STORE_PATH);
+    let path = settings_path.to_string_lossy().as_ref().to_string();
+    app.opener()
+        .open_path(path, None::<String>)
+        .map_err(|e| format!("Failed to open settings file: {}", e))?;
+
+    Ok(())
+}
+
+#[specta::specta]
+#[tauri::command]
+pub fn reload_settings(app: AppHandle) -> Result<(), String> {
+    settings::reload_from_disk(&app)?;
+
+    let _ = app.emit(
+        "settings-changed",
+        serde_json::json!({ "setting": "all" }),
+    );
 
     Ok(())
 }

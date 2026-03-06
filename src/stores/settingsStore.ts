@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import type { AppSettings as Settings, AudioDevice } from "@/bindings";
+import type {
+  AppSettings as Settings,
+  AudioDevice,
+  StatsDateRange,
+} from "@/bindings";
 import { commands } from "@/bindings";
 import { listen } from "@tauri-apps/api/event";
 
@@ -166,6 +170,8 @@ const settingUpdaters: {
   show_tray_icon: (value) =>
     commands.changeShowTrayIconSetting(value as boolean),
   app_theme: (value) => commands.changeAppThemeSetting(value as string),
+  stats_date_range: (value) =>
+    commands.changeStatsDateRangeSetting(value as StatsDateRange),
 };
 
 export const useSettingsStore = create<SettingsStore>()(

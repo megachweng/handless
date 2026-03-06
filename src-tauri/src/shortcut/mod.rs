@@ -924,6 +924,18 @@ pub fn change_show_tray_icon_setting(app: AppHandle, enabled: bool) -> Result<()
     Ok(())
 }
 
+#[tauri::command]
+#[specta::specta]
+pub fn change_stats_date_range_setting(
+    app: AppHandle,
+    range: settings::StatsDateRange,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.stats_date_range = range;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
 // ============================================================================
 // STT Provider Settings Commands
 // ============================================================================

@@ -303,7 +303,8 @@
         "output": "Output",
         "transcription": "Trascrizione",
         "history": "Cronologia",
-        "data": "Data"
+        "data": "Data",
+        "configuration": "Configurazione"
       },
       "startHidden": {
         "label": "Avvia in Background",
@@ -427,6 +428,13 @@
           "light": "Light",
           "system": "System"
         }
+      },
+      "configFile": {
+        "title": "File di configurazione",
+        "description": "Apri il file di configurazione JSON nell'editor predefinito",
+        "open": "Apri",
+        "reload": "Ricarica",
+        "reloadSuccess": "Impostazioni ricaricate"
       }
     },
     "postProcessing": {
@@ -500,7 +508,17 @@
       "noData": "Nessun dato ancora. Le statistiche appariranno dopo la prima trascrizione.",
       "transcriptions": "Trascrizioni",
       "clearStats": "Cancella tutti i dati delle statistiche",
-      "confirmClear": "Clicca di nuovo per confermare"
+      "confirmClear": "Clicca di nuovo per confermare",
+      "range": {
+        "today": "Oggi",
+        "3days": "3 giorni",
+        "week": "Settimana",
+        "month": "Mese",
+        "all": "Tutto",
+        "custom": "Personalizzato",
+        "from": "Da",
+        "to": "A"
+      }
     },
     "history": {
       "title": "Cronologia",

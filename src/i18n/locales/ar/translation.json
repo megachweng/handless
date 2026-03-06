@@ -225,7 +225,8 @@
         "output": "الإخراج",
         "transcription": "التفريغ الصوتي",
         "history": "السجل",
-        "data": "Data"
+        "data": "Data",
+        "configuration": "الإعدادات"
       },
       "startHidden": {
         "label": "بدء مخفي",
@@ -349,6 +350,13 @@
           "light": "Light",
           "system": "System"
         }
+      },
+      "configFile": {
+        "title": "ملف الإعدادات",
+        "description": "افتح ملف إعدادات JSON في المحرر الافتراضي",
+        "open": "فتح",
+        "reload": "إعادة تحميل",
+        "reloadSuccess": "تم إعادة تحميل الإعدادات"
       }
     },
     "postProcessing": {
@@ -422,7 +430,17 @@
       "noData": "لا توجد بيانات بعد. ستظهر الإحصائيات بعد أول عملية تحويل صوتي.",
       "transcriptions": "التحويلات",
       "clearStats": "مسح جميع بيانات الإحصائيات",
-      "confirmClear": "انقر مرة أخرى للتأكيد"
+      "confirmClear": "انقر مرة أخرى للتأكيد",
+      "range": {
+        "today": "اليوم",
+        "3days": "3 أيام",
+        "week": "أسبوع",
+        "month": "شهر",
+        "all": "الكل",
+        "custom": "مخصص",
+        "from": "من",
+        "to": "إلى"
+      }
     },
     "history": {
       "title": "السجل",
