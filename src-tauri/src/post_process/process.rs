@@ -63,6 +63,11 @@ pub async fn post_process_transcription(
     transcription: &str,
     prompt_id: &str,
 ) -> Option<PostProcessResult> {
+    if transcription.trim().is_empty() {
+        debug!("Post-processing skipped because transcription is empty");
+        return None;
+    }
+
     let provider = match settings.active_post_process_provider().cloned() {
         Some(provider) => provider,
         None => {
