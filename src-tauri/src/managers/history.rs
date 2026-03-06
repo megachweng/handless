@@ -31,6 +31,14 @@ static MIGRATIONS: &[M] = &[
     ),
     M::up("ALTER TABLE transcription_history ADD COLUMN post_processed_text TEXT;"),
     M::up("ALTER TABLE transcription_history ADD COLUMN post_process_prompt TEXT;"),
+    M::up(
+        "CREATE TABLE IF NOT EXISTS daily_speaking_stats (
+            date TEXT PRIMARY KEY,
+            total_word_count INTEGER NOT NULL DEFAULT 0,
+            total_duration_ms INTEGER NOT NULL DEFAULT 0,
+            transcription_count INTEGER NOT NULL DEFAULT 0
+        );",
+    ),
 ];
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type)]
@@ -43,6 +51,15 @@ pub struct HistoryEntry {
     pub transcription_text: String,
     pub post_processed_text: Option<String>,
     pub post_process_prompt: Option<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, Type)]
+pub struct DailySpeakingStats {
+    pub date: String,
+    pub total_word_count: i64,
+    pub total_duration_ms: i64,
+    pub transcription_count: i64,
+    pub avg_wpm: f64,
 }
 
 pub struct HistoryManager {
@@ -183,6 +200,8 @@ impl HistoryManager {
         transcription_text: String,
         post_processed_text: Option<String>,
         post_process_prompt: Option<String>,
+        word_count: i32,
+        speaking_duration_ms: i64,
     ) -> Result<()> {
         let timestamp = Utc::now().timestamp();
         let file_name = format!("handless-{}.wav", timestamp);
@@ -192,15 +211,25 @@ impl HistoryManager {
         let file_path = self.recordings_dir.join(&file_name);
         save_wav_file(file_path, &audio_samples).await?;
 
-        // Save to database
-        self.save_to_database(
-            file_name,
-            timestamp,
-            title,
-            transcription_text,
-            post_processed_text,
-            post_process_prompt,
+        // Save to database and update daily stats in a single connection
+        let conn = self.get_connection()?;
+        conn.execute(
+            "INSERT INTO transcription_history (file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+            params![file_name, timestamp, false, title, transcription_text, post_processed_text, post_process_prompt],
         )?;
+        debug!("Saved transcription to database");
+
+        let today = Local::now().format("%Y-%m-%d").to_string();
+        conn.execute(
+            "INSERT INTO daily_speaking_stats (date, total_word_count, total_duration_ms, transcription_count)
+             VALUES (?1, ?2, ?3, 1)
+             ON CONFLICT(date) DO UPDATE SET
+               total_word_count = total_word_count + excluded.total_word_count,
+               total_duration_ms = total_duration_ms + excluded.total_duration_ms,
+               transcription_count = transcription_count + 1",
+            params![today, word_count, speaking_duration_ms],
+        )?;
+        drop(conn);
 
         // Clean up old entries
         self.cleanup_old_entries()?;
@@ -213,24 +242,6 @@ impl HistoryManager {
         Ok(())
     }
 
-    fn save_to_database(
-        &self,
-        file_name: String,
-        timestamp: i64,
-        title: String,
-        transcription_text: String,
-        post_processed_text: Option<String>,
-        post_process_prompt: Option<String>,
-    ) -> Result<()> {
-        let conn = self.get_connection()?;
-        conn.execute(
-            "INSERT INTO transcription_history (file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
-            params![file_name, timestamp, false, title, transcription_text, post_processed_text, post_process_prompt],
-        )?;
-
-        debug!("Saved transcription to database");
-        Ok(())
-    }
 
     pub fn cleanup_old_entries(&self) -> Result<()> {
         let retention_period = crate::settings::get_recording_retention_period(&self.app_handle);
@@ -494,6 +505,51 @@ impl HistoryManager {
             error!("Failed to emit history-updated event: {}", e);
         }
 
+        Ok(())
+    }
+
+    pub fn get_speaking_stats(
+        &self,
+        from_timestamp: i64,
+        to_timestamp: i64,
+    ) -> Result<Vec<DailySpeakingStats>> {
+        let conn = self.get_connection()?;
+
+        let from_date = DateTime::from_timestamp(from_timestamp, 0)
+            .map(|dt| dt.with_timezone(&Local).format("%Y-%m-%d").to_string())
+            .unwrap_or_default();
+        let to_date = DateTime::from_timestamp(to_timestamp, 0)
+            .map(|dt| dt.with_timezone(&Local).format("%Y-%m-%d").to_string())
+            .unwrap_or_default();
+
+        let mut stmt = conn.prepare(
+            "SELECT date, total_word_count, total_duration_ms, transcription_count,
+                    CASE WHEN total_duration_ms > 0
+                         THEN total_word_count * 60000.0 / total_duration_ms
+                         ELSE 0.0 END AS avg_wpm
+             FROM daily_speaking_stats
+             WHERE date >= ?1 AND date <= ?2
+             ORDER BY date ASC",
+        )?;
+
+        let stats = stmt
+            .query_map(params![from_date, to_date], |row| {
+                Ok(DailySpeakingStats {
+                    date: row.get(0)?,
+                    total_word_count: row.get(1)?,
+                    total_duration_ms: row.get(2)?,
+                    transcription_count: row.get(3)?,
+                    avg_wpm: row.get(4)?,
+                })
+            })?
+            .collect::<rusqlite::Result<Vec<_>>>()?;
+
+        Ok(stats)
+    }
+
+    pub fn clear_speaking_stats(&self) -> Result<()> {
+        let conn = self.get_connection()?;
+        conn.execute("DELETE FROM daily_speaking_stats", [])?;
         Ok(())
     }
 

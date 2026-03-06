@@ -15,6 +15,7 @@
     "advanced": "Avançado",
     "postProcessing": "Pós-Processamento",
     "history": "Histórico",
+    "stats": "Estatísticas",
     "debug": "Depuração",
     "about": "Sobre"
   },
@@ -377,6 +378,18 @@
         "selectToEdit": "Selecione um prompt acima para visualizar e editar seus detalhes.",
         "createFirst": "Clique em 'Criar Novo Prompt' acima para criar seu primeiro prompt de pós-processamento."
       }
+    },
+    "stats": {
+      "title": "Estatísticas de gravação",
+      "today": "Hoje",
+      "wordsSpoken": "Palavras faladas",
+      "recordingTime": "Tempo de gravação",
+      "avgWpm": "Méd. palavras/min",
+      "wpmOverTime": "Velocidade de fala ao longo do tempo",
+      "noData": "Ainda sem dados. As estatísticas aparecerão após sua primeira transcrição.",
+      "transcriptions": "Transcrições",
+      "clearStats": "Limpar todos os dados de estatísticas",
+      "confirmClear": "Clique novamente para confirmar"
     },
     "history": {
       "title": "Histórico",

@@ -15,6 +15,7 @@
     "advanced": "進階",
     "postProcessing": "後處理",
     "history": "歷史紀錄",
+    "stats": "統計",
     "debug": "偵錯",
     "about": "關於"
   },
@@ -377,6 +378,18 @@
         "selectToEdit": "選擇上方的提示詞以檢視和編輯其詳細資訊",
         "createFirst": "點選上方的「建立新提示詞」來建立您的第一個後處理提示詞"
       }
+    },
+    "stats": {
+      "title": "錄音統計",
+      "today": "今天",
+      "wordsSpoken": "說出的字數",
+      "recordingTime": "錄音時長",
+      "avgWpm": "平均 字/分鐘",
+      "wpmOverTime": "語速變化趨勢",
+      "noData": "尚無資料。統計資訊將在首次轉錄後顯示。",
+      "transcriptions": "轉錄次數",
+      "clearStats": "清除所有統計資料",
+      "confirmClear": "再次點擊以確認"
     },
     "history": {
       "title": "歷史紀錄",

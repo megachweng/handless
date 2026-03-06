@@ -15,6 +15,7 @@
     "advanced": "高级",
     "postProcessing": "后处理",
     "history": "历史记录",
+    "stats": "统计",
     "debug": "调试",
     "about": "关于"
   },
@@ -377,6 +378,18 @@
         "selectToEdit": "选择上方的提示词以查看和编辑其详细信息。",
         "createFirst": "点击上方的「创建新提示词」来创建您的第一个后处理提示词。"
       }
+    },
+    "stats": {
+      "title": "录音统计",
+      "today": "今天",
+      "wordsSpoken": "说出的字数",
+      "recordingTime": "录音时长",
+      "avgWpm": "平均 字/分钟",
+      "wpmOverTime": "语速变化趋势",
+      "noData": "暂无数据。统计信息将在首次转录后显示。",
+      "transcriptions": "转录次数",
+      "clearStats": "清除所有统计数据",
+      "confirmClear": "再次点击以确认"
     },
     "history": {
       "title": "历史记录",

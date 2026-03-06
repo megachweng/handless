@@ -1,4 +1,4 @@
-use crate::managers::history::{HistoryEntry, HistoryManager};
+use crate::managers::history::{DailySpeakingStats, HistoryEntry, HistoryManager};
 use std::sync::Arc;
 use tauri::{AppHandle, State};
 
@@ -98,4 +98,28 @@ pub async fn update_recording_retention_period(
         .map_err(|e| e.to_string())?;
 
     Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_speaking_stats(
+    _app: AppHandle,
+    history_manager: State<'_, Arc<HistoryManager>>,
+    from_timestamp: i64,
+    to_timestamp: i64,
+) -> Result<Vec<DailySpeakingStats>, String> {
+    history_manager
+        .get_speaking_stats(from_timestamp, to_timestamp)
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn clear_speaking_stats(
+    _app: AppHandle,
+    history_manager: State<'_, Arc<HistoryManager>>,
+) -> Result<(), String> {
+    history_manager
+        .clear_speaking_stats()
+        .map_err(|e| e.to_string())
 }

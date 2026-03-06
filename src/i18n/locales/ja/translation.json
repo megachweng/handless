@@ -15,6 +15,7 @@
     "advanced": "詳細設定",
     "postProcessing": "後処理",
     "history": "履歴",
+    "stats": "統計",
     "debug": "デバッグ",
     "about": "概要"
   },
@@ -377,6 +378,18 @@
         "selectToEdit": "上からプロンプトを選択して、詳細を表示・編集します。",
         "createFirst": "上の「新しいプロンプトを作成」をクリックして、最初の後処理プロンプトを作成してください。"
       }
+    },
+    "stats": {
+      "title": "録音統計",
+      "today": "今日",
+      "wordsSpoken": "発話単語数",
+      "recordingTime": "録音時間",
+      "avgWpm": "平均 語/分",
+      "wpmOverTime": "発話速度の推移",
+      "noData": "まだデータがありません。最初の文字起こし後に統計が表示されます。",
+      "transcriptions": "文字起こし",
+      "clearStats": "すべての統計データを消去",
+      "confirmClear": "もう一度クリックして確認"
     },
     "history": {
       "title": "履歴",

@@ -788,6 +788,22 @@ async updateRecordingRetentionPeriod(period: string) : Promise<Result<null, stri
     else return { status: "error", error: e  as any };
 }
 },
+async getSpeakingStats(fromTimestamp: number, toTimestamp: number) : Promise<Result<DailySpeakingStats[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_speaking_stats", { fromTimestamp, toTimestamp }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async clearSpeakingStats() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("clear_speaking_stats") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 /**
  * Checks if the Mac is a laptop by detecting battery presence
  * 
@@ -823,6 +839,7 @@ export type ClipboardHandling = "dont_modify" | "copy_to_clipboard"
 export type CloudOptionType = { type: "Text" } | { type: "Number"; min: number; max: number; step: number } | { type: "Boolean" } | { type: "Language" } | { type: "LanguageMulti" }
 export type CloudProviderOption = { key: string; label: string; option_type: CloudOptionType; description: string }
 export type CustomSounds = { start: boolean; stop: boolean }
+export type DailySpeakingStats = { date: string; total_word_count: number; total_duration_ms: number; transcription_count: number; avg_wpm: number }
 export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice"
 export type HistoryEntry = { id: number; file_name: string; timestamp: number; saved: boolean; title: string; transcription_text: string; post_processed_text: string | null; post_process_prompt: string | null }
 /**

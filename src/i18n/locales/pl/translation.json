@@ -15,6 +15,7 @@
     "advanced": "Zaawansowane",
     "postProcessing": "Postproces",
     "history": "Historia",
+    "stats": "Statystyki",
     "debug": "Debugowanie",
     "about": "O programie"
   },
@@ -377,6 +378,18 @@
         "selectToEdit": "Wybierz prompt powyżej, aby zobaczyć i edytować jego szczegóły.",
         "createFirst": "Kliknij 'Utwórz nowy prompt' powyżej, aby utworzyć pierwszy prompt postprocessingu."
       }
+    },
+    "stats": {
+      "title": "Statystyki nagrywania",
+      "today": "Dzisiaj",
+      "wordsSpoken": "Wypowiedziane słowa",
+      "recordingTime": "Czas nagrywania",
+      "avgWpm": "Śr. słów/min",
+      "wpmOverTime": "Prędkość mowy w czasie",
+      "noData": "Brak danych. Statystyki pojawią się po pierwszej transkrypcji.",
+      "transcriptions": "Transkrypcje",
+      "clearStats": "Wyczyść wszystkie dane statystyk",
+      "confirmClear": "Kliknij ponownie, aby potwierdzić"
     },
     "history": {
       "title": "Historia",

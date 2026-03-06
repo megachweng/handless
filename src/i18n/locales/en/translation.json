@@ -15,6 +15,7 @@
     "advanced": "Advanced",
     "postProcessing": "Polish",
     "history": "History",
+    "stats": "Stats",
     "debug": "Debug",
     "about": "About"
   },
@@ -458,6 +459,18 @@
         "selectToEdit": "Select a prompt above to view and edit its details.",
         "createFirst": "Click 'New Prompt' above to create your first post-processing prompt."
       }
+    },
+    "stats": {
+      "title": "Speaking Stats",
+      "today": "Today",
+      "wordsSpoken": "Words Spoken",
+      "recordingTime": "Recording Time",
+      "avgWpm": "Avg. Words/min",
+      "wpmOverTime": "Speaking Speed Over Time",
+      "noData": "No data yet. Stats will appear after your first transcription.",
+      "transcriptions": "Transcriptions",
+      "clearStats": "Clear all stats data",
+      "confirmClear": "Click again to confirm"
     },
     "history": {
       "title": "History",

@@ -8,6 +8,7 @@ import {
   Cube,
   PencilSimple,
   ClockCounterClockwise,
+  ChartLineUp,
   Bug,
   Sliders,
   Info,
@@ -18,6 +19,7 @@ import {
   ShortcutsSettings,
   AdvancedSettings,
   HistorySettings,
+  StatsSettings,
   DebugSettings,
   AboutSettings,
   PostProcessingSettings,
@@ -70,6 +72,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.history",
     icon: ClockCounterClockwise,
     component: HistorySettings,
+    enabled: () => true,
+  },
+  stats: {
+    labelKey: "sidebar.stats",
+    icon: ChartLineUp,
+    component: StatsSettings,
     enabled: () => true,
   },
   debug: {

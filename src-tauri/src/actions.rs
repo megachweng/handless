@@ -24,6 +24,9 @@ use tokio::sync::Mutex as TokioMutex;
 /// Managed state holding the active streaming session (if any).
 pub type ActiveStreamingState = Arc<TokioMutex<Option<RealtimeStreamingSession>>>;
 
+/// Managed state tracking when the user pressed the record key.
+pub type RecordingStartTime = Arc<std::sync::Mutex<Option<Instant>>>;
+
 /// Drop guard that notifies the [`TranscriptionCoordinator`] when the
 /// transcription pipeline finishes — whether it completes normally or panics.
 struct FinishGuard(AppHandle);
@@ -92,6 +95,9 @@ impl ShortcutAction for TranscribeAction {
     fn start(&self, app: &AppHandle, binding_id: &str, _shortcut_str: &str) {
         let start_time = Instant::now();
         debug!("TranscribeAction::start called for binding: {}", binding_id);
+
+        // Record key-press time for speaking duration measurement
+        *app.state::<RecordingStartTime>().lock().unwrap_or_else(|e| e.into_inner()) = Some(start_time);
 
         // Load model in the background
         let tm = app.state::<Arc<TranscriptionManager>>();
@@ -218,6 +224,15 @@ impl ShortcutAction for TranscribeAction {
     fn stop(&self, app: &AppHandle, binding_id: &str, _shortcut_str: &str) {
         // Unregister the cancel shortcut when transcription stops
         shortcut::unregister_cancel_shortcut(app);
+
+        // Capture speaking duration immediately on key release (before async work)
+        let speaking_duration_ms = app
+            .state::<RecordingStartTime>()
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .take()
+            .map(|start| start.elapsed().as_millis() as i64)
+            .unwrap_or(0);
 
         let stop_time = Instant::now();
         debug!("TranscribeAction::stop called for binding: {}", binding_id);
@@ -370,6 +385,29 @@ impl ShortcutAction for TranscribeAction {
                             }
 
                             // Save to history
+                            // Count words: use whitespace splitting (works for most
+                            // languages) plus character count for CJK scripts where
+                            // words are not whitespace-delimited.
+                            let word_count = {
+                                let ws_words = transcription.split_whitespace().count();
+                                let cjk_chars = transcription.chars().filter(|c| {
+                                    matches!(*c,
+                                        '\u{4E00}'..='\u{9FFF}'   // CJK Unified Ideographs
+                                        | '\u{3400}'..='\u{4DBF}' // CJK Extension A
+                                        | '\u{3040}'..='\u{309F}' // Hiragana
+                                        | '\u{30A0}'..='\u{30FF}' // Katakana
+                                        | '\u{AC00}'..='\u{D7AF}' // Hangul Syllables
+                                    )
+                                }).count();
+                                if cjk_chars > 0 {
+                                    // For CJK-heavy text, each character ≈ one word.
+                                    // Whitespace-split tokens that are purely CJK are
+                                    // already counted as one, so add the extra chars.
+                                    ws_words + cjk_chars.saturating_sub(ws_words.min(cjk_chars))
+                                } else {
+                                    ws_words
+                                }
+                            } as i32;
                             let hm_clone = Arc::clone(&hm);
                             let transcription_for_history = transcription.clone();
                             tauri::async_runtime::spawn(async move {
@@ -379,6 +417,8 @@ impl ShortcutAction for TranscribeAction {
                                         transcription_for_history,
                                         post_processed_text,
                                         post_process_prompt,
+                                        word_count,
+                                        speaking_duration_ms,
                                     )
                                     .await
                                 {

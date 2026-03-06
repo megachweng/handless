@@ -15,6 +15,7 @@
     "advanced": "Pokročilé",
     "postProcessing": "Následné zpracování",
     "history": "Historie",
+    "stats": "Statistiky",
     "debug": "Ladění",
     "about": "O aplikaci"
   },
@@ -377,6 +378,18 @@
         "selectToEdit": "Vyberte výše prompt, abyste zobrazili a upravili jeho podrobnosti.",
         "createFirst": "Klikněte nahoře na 'Vytvořit nový prompt' a vytvořte svůj první prompt pro následné zpracování."
       }
+    },
+    "stats": {
+      "title": "Statistiky nahrávání",
+      "today": "Dnes",
+      "wordsSpoken": "Vyslovená slova",
+      "recordingTime": "Doba nahrávání",
+      "avgWpm": "Prům. slov/min",
+      "wpmOverTime": "Rychlost mluvy v čase",
+      "noData": "Zatím žádná data. Statistiky se zobrazí po první transkripci.",
+      "transcriptions": "Transkripce",
+      "clearStats": "Vymazat všechna data statistik",
+      "confirmClear": "Klikněte znovu pro potvrzení"
     },
     "history": {
       "title": "Historie",

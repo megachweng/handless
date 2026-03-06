@@ -15,6 +15,7 @@
     "advanced": "Gelişmiş",
     "postProcessing": "Son İşlem",
     "history": "Geçmiş",
+    "stats": "İstatistikler",
     "debug": "Hata Ayıklama",
     "about": "Hakkında"
   },
@@ -377,6 +378,18 @@
         "selectToEdit": "Ayrıntılarını görüntülemek ve düzenlemek için yukarıdan bir prompt seçin.",
         "createFirst": "İlk son işlem prompt'unuzu oluşturmak için yukarıdaki “Yeni Prompt Oluştur” seçeneğine tıklayın."
       }
+    },
+    "stats": {
+      "title": "Kayıt İstatistikleri",
+      "today": "Bugün",
+      "wordsSpoken": "Söylenen Kelimeler",
+      "recordingTime": "Kayıt Süresi",
+      "avgWpm": "Ort. Kelime/dk",
+      "wpmOverTime": "Zaman İçinde Konuşma Hızı",
+      "noData": "Henüz veri yok. İstatistikler ilk transkripsiyonunuzdan sonra görünecektir.",
+      "transcriptions": "Transkripsiyonlar",
+      "clearStats": "Tüm istatistik verilerini temizle",
+      "confirmClear": "Onaylamak için tekrar tıklayın"
     },
     "history": {
       "title": "Geçmiş",

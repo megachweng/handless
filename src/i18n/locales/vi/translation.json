@@ -15,6 +15,7 @@
     "advanced": "Nâng cao",
     "postProcessing": "Xử lý sau",
     "history": "Lịch sử",
+    "stats": "Thống kê",
     "debug": "Gỡ lỗi",
     "about": "Giới thiệu"
   },
@@ -377,6 +378,18 @@
         "selectToEdit": "Chọn một prompt ở trên để xem và chỉnh sửa chi tiết.",
         "createFirst": "Nhấn 'Tạo Prompt mới' ở trên để tạo prompt xử lý sau đầu tiên của bạn."
       }
+    },
+    "stats": {
+      "title": "Thống kê ghi âm",
+      "today": "Hôm nay",
+      "wordsSpoken": "Từ đã nói",
+      "recordingTime": "Thời gian ghi âm",
+      "avgWpm": "TB từ/phút",
+      "wpmOverTime": "Tốc độ nói theo thời gian",
+      "noData": "Chưa có dữ liệu. Thống kê sẽ xuất hiện sau lần chuyển đổi giọng nói đầu tiên.",
+      "transcriptions": "Chuyển đổi",
+      "clearStats": "Xóa tất cả dữ liệu thống kê",
+      "confirmClear": "Nhấn lại để xác nhận"
     },
     "history": {
       "title": "Lịch sử",

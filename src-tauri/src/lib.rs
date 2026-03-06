@@ -23,6 +23,7 @@ mod tray_i18n;
 mod utils;
 
 pub use cli::CliArgs;
+#[cfg(debug_assertions)]
 use specta_typescript::{BigIntExportBehavior, Typescript};
 use tauri_specta::{collect_commands, Builder};
 
@@ -134,6 +135,9 @@ fn initialize_core_logic(app_handle: &AppHandle) {
 
     // Managed state for active realtime streaming session
     app_handle.manage(actions::ActiveStreamingState::default());
+
+    // Managed state for recording start time (key press → key release duration)
+    app_handle.manage(actions::RecordingStartTime::default());
 
     // Preload the transcription model in the background so it's ready
     // for the first transcription without the 2-5s cold-start delay.
@@ -373,6 +377,8 @@ pub fn run(cli_args: CliArgs) {
         commands::history::delete_history_entry,
         commands::history::update_history_limit,
         commands::history::update_recording_retention_period,
+        commands::history::get_speaking_stats,
+        commands::history::clear_speaking_stats,
         helpers::clamshell::is_laptop,
     ]);
 
