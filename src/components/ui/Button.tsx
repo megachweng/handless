@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils";
 import { tapScale, spring } from "@/lib/motion";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-xs font-normal transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow hover:bg-primary/80",
+          "bg-primary text-primary-foreground hover:bg-primary/80",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/80",
         outline:
@@ -30,7 +30,7 @@ const buttonVariants = cva(
       },
       size: {
         sm: "rounded-md px-2.5 py-1 text-xs",
-        default: "px-3 py-1",
+        default: "px-3 py-1.5",
         lg: "h-9 rounded-md px-6",
         icon: "h-7 w-7",
       },
