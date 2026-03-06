@@ -6,7 +6,7 @@ import { useModelStore } from "@/stores/modelStore";
 import { useSettings } from "@/hooks/useSettings";
 import { useModelActions } from "@/hooks/useModelActions";
 import { getProviderStatus } from "@/lib/utils/providerStatus";
-import type { SttProviderInfo } from "@/bindings";
+import { filterMyProviders } from "@/lib/utils/providerFilters";
 
 const EMPTY_ARRAY: string[] = [];
 
@@ -40,20 +40,17 @@ export const MyModelsTab: React.FC = () => {
   const verifiedProviders = settings?.stt_verified_providers ?? EMPTY_ARRAY;
 
   const myProviders = useMemo(() => {
-    return providers
-      .filter((p: SttProviderInfo) => {
-        if (p.backend.type === "Cloud") {
-          const apiKey = settings?.stt_api_keys?.[p.id];
-          return !!(apiKey && apiKey.trim());
-        }
-        // Local: show if downloaded, custom, downloading, or extracting
-        return (
-          p.backend.is_downloaded ||
-          p.backend.is_custom ||
-          p.id in downloadingModels ||
-          p.id in extractingModels
-        );
-      })
+    return filterMyProviders(providers, settings?.stt_api_keys)
+      .concat(
+        // Also include models currently downloading or extracting
+        providers.filter(
+          (p) =>
+            p.backend.type === "Local" &&
+            !p.backend.is_downloaded &&
+            !p.backend.is_custom &&
+            (p.id in downloadingModels || p.id in extractingModels),
+        ),
+      )
       .sort((a, b) => {
         // Cloud providers first, then local
         if (a.backend.type !== b.backend.type) {

@@ -1,10 +1,13 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { listen } from "@tauri-apps/api/event";
 import { commands } from "@/bindings";
 import { getTranslatedModelName } from "../../lib/utils/modelTranslation";
+import { filterMyProviders } from "../../lib/utils/providerFilters";
 import { useModelStore } from "../../stores/modelStore";
 import { useSettings } from "../../hooks/useSettings";
+
+const EMPTY_ARRAY: string[] = [];
 import ModelStatusButton from "./ModelStatusButton";
 import ModelDropdown from "./ModelDropdown";
 import DownloadProgressDisplay from "./DownloadProgressDisplay";
@@ -171,6 +174,17 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
     }
   };
 
+  const verifiedSttProviders = settings?.stt_verified_providers ?? EMPTY_ARRAY;
+
+  // Only show "My Models" in the dropdown: downloaded local models + cloud providers with an API key
+  const sttApiKeys = settings?.stt_api_keys;
+  const sttApiKeysKey = JSON.stringify(sttApiKeys);
+  const myProviders = useMemo(
+    () => filterMyProviders(providers, sttApiKeys),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- stabilise on serialised value
+    [providers, sttApiKeysKey],
+  );
+
   const getModelDisplayText = (): string => {
     const extractingKeys = Object.keys(extractingModels);
     if (extractingKeys.length > 0) {
@@ -204,43 +218,34 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
       }
     }
 
-    // If using a cloud provider, show its name
+    // If using a cloud provider, show its name only if it's in My Models
     if (sttProviderId !== "local") {
-      const cloudProvider = providers.find((p) => p.id === sttProviderId);
-      if (cloudProvider) return cloudProvider.name;
+      const cloudProvider = myProviders.find((p) => p.id === sttProviderId);
+      return cloudProvider ? cloudProvider.name : t("modelSelector.notAvailable");
     }
 
-    const currentProvider = providers.find((p) => p.id === displayModelId);
+    const currentProvider = myProviders.find((p) => p.id === displayModelId);
+    if (!currentProvider) return t("modelSelector.notAvailable");
 
     switch (modelStatus) {
       case "ready":
-        return currentProvider
-          ? getTranslatedModelName(currentProvider, t)
-          : t("modelSelector.modelReady");
+        return getTranslatedModelName(currentProvider, t);
       case "loading":
-        return currentProvider
-          ? t("modelSelector.loading", {
-              modelName: getTranslatedModelName(currentProvider, t),
-            })
-          : t("modelSelector.loadingGeneric");
+        return t("modelSelector.loading", {
+          modelName: getTranslatedModelName(currentProvider, t),
+        });
       case "extracting":
-        return currentProvider
-          ? t("modelSelector.extracting", {
-              modelName: getTranslatedModelName(currentProvider, t),
-            })
-          : t("modelSelector.extractingGeneric");
+        return t("modelSelector.extracting", {
+          modelName: getTranslatedModelName(currentProvider, t),
+        });
       case "error":
         return modelError || t("modelSelector.modelError");
       case "unloaded":
-        return currentProvider
-          ? getTranslatedModelName(currentProvider, t)
-          : t("modelSelector.modelUnloaded");
+        return getTranslatedModelName(currentProvider, t);
       case "none":
-        return t("modelSelector.noModelDownloadRequired");
+        return t("modelSelector.notAvailable");
       default:
-        return currentProvider
-          ? getTranslatedModelName(currentProvider, t)
-          : t("modelSelector.modelUnloaded");
+        return getTranslatedModelName(currentProvider, t);
     }
   };
 
@@ -248,8 +253,9 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
   const getDisplayStatus = (): ModelStatus => {
     if (Object.keys(extractingModels).length > 0) return "extracting";
     if (Object.keys(downloadProgress).length > 0) return "downloading";
-    // Cloud providers are always "ready" (no local model needed)
-    if (sttProviderId !== "local") return "ready";
+    if (sttProviderId !== "local") {
+      return verifiedSttProviders.includes(sttProviderId) ? "ready" : "unloaded";
+    }
     return modelStatus;
   };
 
@@ -267,7 +273,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
         {/* Model Dropdown */}
         {showModelDropdown && (
           <ModelDropdown
-            providers={providers}
+            providers={myProviders}
             currentModelId={displayModelId}
             sttProviderId={sttProviderId}
             onLocalModelSelect={handleLocalModelSelect}
