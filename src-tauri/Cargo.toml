@@ -79,7 +79,7 @@ specta = "=2.0.0-rc.23"
 specta-typescript = "0.0.10"
 tauri-specta = { version = "=2.0.0-rc.21", features = ["derive", "typescript"] }
 tauri-plugin-dialog = "2"
-window-vibrancy = "0.6"
+window-vibrancy = "0.7"
 
 [target.'cfg(unix)'.dependencies]
 signal-hook = "0.3"
