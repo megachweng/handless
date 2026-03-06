@@ -57,7 +57,7 @@ jobs:
           echo "x86_sha=$X86_SHA" >> "$GITHUB_OUTPUT"
 
       - name: Checkout tap repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ElwinLiu/homebrew-tap
           token: ${{ secrets.TAP_GITHUB_TOKEN }}
