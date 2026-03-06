@@ -32,13 +32,13 @@ function StatCard({ icon: IconComponent, label, value, subLabel }: { icon: Icon;
   return (
     <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded px-3 py-2.5">
       <div className="flex items-center gap-1.5 mb-1">
-        <IconComponent size={12} className="text-muted/60" />
-        <span className="text-[10px] text-muted/60 uppercase tracking-wide">
+        <IconComponent size={12} className="text-muted" />
+        <span className="text-[10px] text-muted uppercase tracking-wide">
           {label}
         </span>
       </div>
       <p className="text-lg font-semibold tabular-nums">{value}</p>
-      <p className="text-[10px] text-muted/50">{subLabel}</p>
+      <p className="text-[10px] text-muted/70">{subLabel}</p>
     </div>
   );
 }
@@ -112,7 +112,7 @@ export const StatsSettings: React.FC = () => {
       <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded">
         <div className="px-3 py-10 flex flex-col items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
-            <Speedometer className="w-5 h-5 text-muted/60" />
+            <Speedometer className="w-5 h-5 text-muted" />
           </div>
           <p className="text-sm text-muted text-center">
             {t("settings.stats.noData")}
@@ -134,7 +134,7 @@ export const StatsSettings: React.FC = () => {
         {/* Chart */}
         <div className="space-y-1.5">
           <div className="px-3">
-            <h3 className="text-[11px] font-medium text-muted/70 uppercase tracking-wide">
+            <h3 className="text-[11px] font-medium text-muted uppercase tracking-wide">
               {t("settings.stats.wpmOverTime")}
             </h3>
           </div>
@@ -143,12 +143,12 @@ export const StatsSettings: React.FC = () => {
               <LineChart data={chartData}>
                 <XAxis
                   dataKey="date"
-                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }}
+                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.55)" }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }}
+                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.55)" }}
                   axisLine={false}
                   tickLine={false}
                   width={30}
@@ -182,7 +182,7 @@ export const StatsSettings: React.FC = () => {
           <button
             onClick={handleClear}
             onBlur={() => setConfirmClear(false)}
-            className="flex items-center gap-1.5 text-[11px] text-muted/50 hover:text-red-400 transition-colors"
+            className="flex items-center gap-1.5 text-[11px] text-muted/70 hover:text-red-400 transition-colors"
           >
             <Trash size={12} />
             {confirmClear ? t("settings.stats.confirmClear") : t("settings.stats.clearStats")}
