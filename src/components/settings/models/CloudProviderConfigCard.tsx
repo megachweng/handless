@@ -9,11 +9,11 @@ import {
   Translate,
   CircleNotch,
 } from "@phosphor-icons/react";
-import ReactSelect from "react-select";
-import type { StylesConfig } from "react-select";
 import { ApiKeyField } from "@/components/settings/PostProcessingSettingsApi/ApiKeyField";
 import { Input } from "@/components/ui/Input";
 import Badge from "@/components/ui/Badge";
+import { Dropdown } from "@/components/ui/Dropdown";
+import { MultiSelectDropdown } from "@/components/ui/MultiSelectDropdown";
 import { SelectableCard } from "@/components/ui/SelectableCard";
 import type { CloudProviderOption, SttProviderInfo } from "@/bindings";
 import type { ModelCardStatus } from "@/components/onboarding/ModelCard";
@@ -21,108 +21,6 @@ import { LANGUAGES } from "@/lib/constants/languages";
 import { getLanguageDisplayText } from "@/lib/utils/modelTranslation";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { SimpleTooltip } from "@/components/ui/Tooltip";
-
-type LangOption = { value: string; label: string };
-
-const compactSelectStyles: StylesConfig<LangOption, boolean> = {
-  control: (base, state) => ({
-    ...base,
-    minHeight: 32,
-    borderRadius: 6,
-    borderColor: state.isFocused
-      ? "var(--color-accent)"
-      : "color-mix(in srgb, var(--color-muted) 80%, transparent)",
-    boxShadow: state.isFocused ? "0 0 0 1px var(--color-accent)" : "none",
-    backgroundColor: state.isFocused
-      ? "color-mix(in srgb, var(--color-accent) 20%, transparent)"
-      : "color-mix(in srgb, var(--color-muted) 10%, transparent)",
-    fontSize: "0.8125rem",
-    color: "var(--color-text)",
-    transition: "all 150ms ease",
-    ":hover": {
-      borderColor: "var(--color-accent)",
-      backgroundColor:
-        "color-mix(in srgb, var(--color-accent) 12%, transparent)",
-    },
-  }),
-  valueContainer: (base) => ({
-    ...base,
-    paddingInline: 8,
-    paddingBlock: 2,
-  }),
-  input: (base) => ({
-    ...base,
-    color: "var(--color-text)",
-    margin: 0,
-    padding: 0,
-  }),
-  singleValue: (base) => ({
-    ...base,
-    color: "var(--color-text)",
-  }),
-  multiValue: (base) => ({
-    ...base,
-    backgroundColor: "color-mix(in srgb, var(--color-accent) 15%, transparent)",
-    borderRadius: 4,
-  }),
-  multiValueLabel: (base) => ({
-    ...base,
-    color: "var(--color-text)",
-    fontSize: "0.75rem",
-    padding: "1px 4px",
-  }),
-  multiValueRemove: (base) => ({
-    ...base,
-    color: "var(--color-text)",
-    ":hover": {
-      backgroundColor:
-        "color-mix(in srgb, var(--color-accent) 30%, transparent)",
-      color: "var(--color-text)",
-    },
-  }),
-  dropdownIndicator: (base, state) => ({
-    ...base,
-    padding: 4,
-    color: state.isFocused
-      ? "var(--color-accent)"
-      : "color-mix(in srgb, var(--color-muted) 80%, transparent)",
-    ":hover": { color: "var(--color-accent)" },
-  }),
-  clearIndicator: (base) => ({
-    ...base,
-    padding: 4,
-    color: "color-mix(in srgb, var(--color-muted) 80%, transparent)",
-    ":hover": { color: "var(--color-accent)" },
-  }),
-  menu: (base) => ({
-    ...base,
-    zIndex: 50,
-    backgroundColor: "var(--color-surface)",
-    color: "var(--color-text)",
-    border: "1px solid color-mix(in srgb, var(--color-muted) 30%, transparent)",
-    boxShadow: "0 10px 30px rgba(15, 15, 15, 0.2)",
-  }),
-  menuList: (base) => ({
-    ...base,
-    backgroundColor: "var(--color-surface)",
-    maxHeight: 200,
-  }),
-  option: (base, state) => ({
-    ...base,
-    backgroundColor: state.isSelected
-      ? "color-mix(in srgb, var(--color-accent) 20%, transparent)"
-      : state.isFocused
-        ? "color-mix(in srgb, var(--color-accent) 12%, transparent)"
-        : "transparent",
-    color: "var(--color-text)",
-    fontSize: "0.8125rem",
-    padding: "6px 10px",
-  }),
-  placeholder: (base) => ({
-    ...base,
-    color: "color-mix(in srgb, var(--color-muted) 65%, transparent)",
-  }),
-};
 
 const CloudOptionControl: React.FC<{
   option: CloudProviderOption;
@@ -145,21 +43,19 @@ const CloudOptionControl: React.FC<{
 
   switch (option.option_type.type) {
     case "Language": {
-      const selected =
-        languageOptions.find((o) => o.value === (value as string)) || null;
       return (
         <div className="flex flex-col gap-1">
           <label className="text-xs text-text/60 font-medium">{label}</label>
           <div className="flex items-center gap-2">
-            <ReactSelect<LangOption, false>
-              value={selected}
+            <Dropdown
+              selectedValue={(value as string) || null}
               options={languageOptions}
-              onChange={(opt) => onChange(opt?.value || "")}
-              isClearable
+              onSelect={(val) => onChange(val)}
               placeholder={t(
                 "settings.models.cloudProviders.options.selectLanguage",
               )}
-              styles={compactSelectStyles as StylesConfig<LangOption, false>}
+              searchable
+              clearable
               className="w-[200px]"
             />
             <span className="text-xs text-text/40">
@@ -171,22 +67,16 @@ const CloudOptionControl: React.FC<{
     }
     case "LanguageMulti": {
       const selectedValues = (value as string[]) || [];
-      const selected = languageOptions.filter((o) =>
-        selectedValues.includes(o.value),
-      );
       return (
         <div className="flex flex-col gap-1">
           <label className="text-xs text-text/60 font-medium">{label}</label>
-          <ReactSelect<LangOption, true>
-            isMulti
-            value={selected}
+          <MultiSelectDropdown
+            selectedValues={selectedValues}
             options={languageOptions}
-            onChange={(opts) => onChange([...opts].map((o) => o.value))}
-            isClearable
+            onSelect={(vals) => onChange(vals)}
             placeholder={t(
               "settings.models.cloudProviders.options.selectTranslate",
             )}
-            styles={compactSelectStyles as StylesConfig<LangOption, true>}
             className="max-w-[400px]"
           />
         </div>

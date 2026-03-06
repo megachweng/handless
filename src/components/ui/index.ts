@@ -1,5 +1,6 @@
 export { Dropdown } from "./Dropdown";
 export type { DropdownOption } from "./Dropdown";
+export { MultiSelectDropdown } from "./MultiSelectDropdown";
 export { SliderSetting } from "./SliderSetting";
 export { Slider } from "./Slider";
 export { ToggleSwitch } from "./ToggleSwitch";

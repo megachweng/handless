@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback, useLayoutEffect } from "react";
+import React, { useMemo, useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { useDropdownPopover } from "./useDropdownPopover";
 
 export interface DropdownOption {
   value: string;
@@ -19,15 +20,16 @@ interface DropdownProps {
   disabled?: boolean;
   searchable?: boolean;
   creatable?: boolean;
+  clearable?: boolean;
   onCreateValue?: (value: string) => void;
   formatCreateLabel?: (input: string) => string;
   searchPlaceholder?: string;
 }
 
-const ChevronIcon: React.FC<{ rotated?: boolean }> = ({ rotated }) => (
+export const ChevronIcon: React.FC<{ rotated?: boolean }> = ({ rotated }) => (
   <svg
     className={cn(
-      "w-4 h-4 ms-2 transition-transform duration-200",
+      "w-4 h-4 ms-2 shrink-0 transition-transform duration-200",
       rotated && "rotate-180",
     )}
     fill="none"
@@ -43,11 +45,6 @@ const ChevronIcon: React.FC<{ rotated?: boolean }> = ({ rotated }) => (
   </svg>
 );
 
-/**
- * Searchable / creatable variant using a popover-style dropdown with a text
- * input for filtering.  Falls back to the simple Radix Select when neither
- * `searchable` nor `creatable` is set.
- */
 const SearchableDropdown: React.FC<DropdownProps> = ({
   options,
   selectedValue,
@@ -56,71 +53,18 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
   placeholder = "Select an option...",
   disabled = false,
   creatable = false,
+  clearable = false,
   onCreateValue,
   formatCreateLabel,
   searchPlaceholder,
 }) => {
   const { t } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const popoverRef = useRef<HTMLDivElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
-
-  // Position the portalled popover below the trigger, updating on scroll/resize
-  useLayoutEffect(() => {
-    if (!isOpen || !triggerRef.current || !popoverRef.current) return;
-    const update = () => {
-      if (!triggerRef.current || !popoverRef.current) return;
-      const rect = triggerRef.current.getBoundingClientRect();
-      Object.assign(popoverRef.current.style, {
-        position: "fixed",
-        top: `${rect.bottom + 4}px`,
-        left: `${rect.left}px`,
-        width: `${rect.width}px`,
-      });
-    };
-    update();
-    window.addEventListener("resize", update);
-    window.addEventListener("scroll", update, true);
-    return () => {
-      window.removeEventListener("resize", update);
-      window.removeEventListener("scroll", update, true);
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (
-        triggerRef.current?.contains(target) ||
-        popoverRef.current?.contains(target)
-      ) {
-        return;
-      }
-      setIsOpen(false);
-      setSearch("");
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isOpen && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, [isOpen]);
-
-  const filteredOptions = useMemo(() => {
-    if (!search) return options;
-    const q = search.toLowerCase();
-    return options.filter((opt) => opt.label.toLowerCase().includes(q));
-  }, [options, search]);
+  const {
+    isOpen, setIsOpen, search, setSearch,
+    highlightedIndex, setHighlightedIndex,
+    triggerRef, popoverRef, searchInputRef, listRef,
+    filteredOptions, handleKeyDown, close,
+  } = useDropdownPopover(options);
 
   const showCreateOption = useMemo(() => {
     if (!creatable) return false;
@@ -132,10 +76,8 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
     );
   }, [creatable, search, options]);
 
-  // Total selectable items: filtered options + optional create option
   const totalItems = filteredOptions.length + (showCreateOption ? 1 : 0);
 
-  // Reset highlight when the list changes
   useEffect(() => {
     setHighlightedIndex(totalItems > 0 ? 0 : -1);
   }, [totalItems]);
@@ -143,7 +85,6 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
   const selectedLabel = useMemo(() => {
     const match = options.find((opt) => opt.value === selectedValue);
     if (match) return match.label;
-    // For creatable: show the raw value when it's not in the options list
     if (selectedValue) return selectedValue;
     return undefined;
   }, [options, selectedValue]);
@@ -151,10 +92,9 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
   const handleSelect = useCallback(
     (value: string) => {
       onSelect(value);
-      setIsOpen(false);
-      setSearch("");
+      close();
     },
-    [onSelect],
+    [onSelect, close],
   );
 
   const handleCreate = useCallback(() => {
@@ -165,43 +105,17 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
     } else {
       onSelect(trimmed);
     }
-    setIsOpen(false);
-    setSearch("");
-  }, [search, onCreateValue, onSelect]);
+    close();
+  }, [search, onCreateValue, onSelect, close]);
 
-  // Scroll highlighted item into view
-  const scrollHighlightedIntoView = useCallback((index: number) => {
-    if (!listRef.current) return;
-    const items = listRef.current.querySelectorAll("[data-option-index]");
-    items[index]?.scrollIntoView({ block: "nearest" });
-  }, []);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      setIsOpen(false);
-      setSearch("");
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setHighlightedIndex((prev) => {
-        const next = prev < totalItems - 1 ? prev + 1 : 0;
-        scrollHighlightedIntoView(next);
-        return next;
-      });
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setHighlightedIndex((prev) => {
-        const next = prev > 0 ? prev - 1 : totalItems - 1;
-        scrollHighlightedIntoView(next);
-        return next;
-      });
-    } else if (e.key === "Enter") {
-      e.preventDefault();
+  const onSearchKeyDown = (e: React.KeyboardEvent) => {
+    handleKeyDown(e, totalItems, () => {
       if (highlightedIndex >= 0 && highlightedIndex < filteredOptions.length) {
         handleSelect(filteredOptions[highlightedIndex].value);
       } else if (showCreateOption && highlightedIndex === filteredOptions.length) {
         handleCreate();
       }
-    }
+    });
   };
 
   return (
@@ -225,7 +139,24 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
         <span className="truncate">
           {selectedLabel || placeholder}
         </span>
-        <ChevronIcon rotated={isOpen} />
+        <span className="flex items-center">
+          {clearable && selectedValue && (
+            <button
+              type="button"
+              className="p-0.5 hover:text-accent transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect("");
+              }}
+              tabIndex={-1}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+          <ChevronIcon rotated={isOpen} />
+        </span>
       </button>
 
       {isOpen &&
@@ -245,7 +176,7 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={handleKeyDown}
+                onKeyDown={onSearchKeyDown}
                 placeholder={searchPlaceholder || t("common.search")}
                 className="w-full px-2 py-1 text-sm bg-glass-bg border border-glass-border rounded focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
               />

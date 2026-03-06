@@ -443,7 +443,7 @@ export const PostProcessingSettings: React.FC = () => {
       <SettingsGroup title={t("settings.postProcessing.api.title")}>
         <PostProcessingSettingsApi />
         {statsLine && (
-          <div className="px-3 pb-2">
+          <div className="px-3 py-2">
             <p className="text-xs text-muted/70">{statsLine}</p>
           </div>
         )}
