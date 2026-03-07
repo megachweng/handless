@@ -74,12 +74,6 @@ brew install --cask handless
 
 **Other platforms:** Download the latest release from the [releases page](https://github.com/ElwinLiu/handless/releases).
 
-### Setup
-
-1. Launch Handless and grant necessary system permissions (microphone, accessibility)
-2. Configure your preferred keyboard shortcuts in Settings
-3. Start transcribing!
-
 To build from source, see [BUILD.md](BUILD.md).
 
 ## CLI Parameters
