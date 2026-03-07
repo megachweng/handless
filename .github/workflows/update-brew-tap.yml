@@ -32,8 +32,8 @@ jobs:
 
             if [ "$ARM_FOUND" = "true" ] && [ "$X86_FOUND" = "true" ]; then
               echo "Both DMGs found."
-              ARM_URL=$(gh api repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets --jq --arg f "$ARM_FILE" '.[] | select(.name==$f) | .browser_download_url')
-              X86_URL=$(gh api repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets --jq --arg f "$X86_FILE" '.[] | select(.name==$f) | .browser_download_url')
+              ARM_URL=$(gh api repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets | jq -r --arg f "$ARM_FILE" '.[] | select(.name==$f) | .browser_download_url')
+              X86_URL=$(gh api repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets | jq -r --arg f "$X86_FILE" '.[] | select(.name==$f) | .browser_download_url')
               echo "arm_url=$ARM_URL" >> "$GITHUB_OUTPUT"
               echo "x86_url=$X86_URL" >> "$GITHUB_OUTPUT"
               exit 0
