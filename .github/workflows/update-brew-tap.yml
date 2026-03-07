@@ -22,7 +22,7 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           ARM_FILE="Handless_${VERSION}_aarch64.dmg"
-          X86_FILE="Handless_${VERSION}_x86_64.dmg"
+          X86_FILE="Handless_${VERSION}_x64.dmg"
 
           for i in $(seq 1 20); do
             echo "Attempt $i/20: checking for DMG assets..."

@@ -7,7 +7,7 @@ cask "handless" do
   end
 
   on_intel do
-    url "https://github.com/ElwinLiu/handless/releases/download/v#{version}/Handless_#{version}_x86_64.dmg"
+    url "https://github.com/ElwinLiu/handless/releases/download/v#{version}/Handless_#{version}_x64.dmg"
     sha256 "PLACEHOLDER_X86_64_SHA256"
   end
 
