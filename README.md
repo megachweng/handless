@@ -63,11 +63,22 @@ Handless isn't trying to be the best speech-to-text app -- it's trying to be the
 
 ## Getting Started
 
-1. Download the latest release from the [releases page](https://github.com/elwin/handless/releases)
-2. Install the application
-3. Launch Handless and grant necessary system permissions (microphone, accessibility)
-4. Configure your preferred keyboard shortcuts in Settings
-5. Start transcribing!
+### Install
+
+**macOS (Homebrew):**
+
+```sh
+brew tap ElwinLiu/tap
+brew install --cask handless
+```
+
+**Other platforms:** Download the latest release from the [releases page](https://github.com/ElwinLiu/handless/releases).
+
+### Setup
+
+1. Launch Handless and grant necessary system permissions (microphone, accessibility)
+2. Configure your preferred keyboard shortcuts in Settings
+3. Start transcribing!
 
 To build from source, see [BUILD.md](BUILD.md).
 
