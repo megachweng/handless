@@ -256,12 +256,22 @@ impl ShortcutAction for TranscribeAction {
 
         let binding_id = binding_id.to_string();
 
-        // Look up the post-processing prompt for this binding
+        // Look up the post-processing prompt for this binding.
+        // If the provider is not verified, treat as no prompt so we skip post-processing entirely.
         let settings_snapshot = get_settings(app);
-        let post_process_prompt_id = settings_snapshot
-            .bindings
-            .get(&binding_id)
-            .and_then(|b| b.post_process_prompt_id.clone());
+        let provider_id = &settings_snapshot.post_process_provider_id;
+        let provider_ready = provider_id == "apple_intelligence"
+            || settings_snapshot
+                .post_process_verified_providers
+                .contains(provider_id);
+        let post_process_prompt_id = if provider_ready {
+            settings_snapshot
+                .bindings
+                .get(&binding_id)
+                .and_then(|b| b.post_process_prompt_id.clone())
+        } else {
+            None
+        };
 
         tauri::async_runtime::spawn(async move {
             let _guard = FinishGuard(ah.clone());
