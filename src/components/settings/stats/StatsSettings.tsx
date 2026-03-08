@@ -82,7 +82,7 @@ const RANGE_PRESETS: StatsDateRange[] = [
   "custom",
 ];
 
-const ACCENT_COLOR = "#ef6f2f";
+const ACCENT_COLOR = "var(--color-accent)";
 
 export const StatsSettings: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -260,26 +260,26 @@ export const StatsSettings: React.FC = () => {
               <LineChart data={chartData}>
                 <XAxis
                   dataKey="date"
-                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.55)" }}
+                  tick={{ fontSize: 10, fill: "var(--color-muted)" }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.55)" }}
+                  tick={{ fontSize: 10, fill: "var(--color-muted)" }}
                   axisLine={false}
                   tickLine={false}
                   width={30}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "rgba(30, 30, 30, 0.85)",
+                    backgroundColor: "var(--color-glass-bg-solid)",
                     backdropFilter: "blur(12px)",
-                    border: "1px solid rgba(255,255,255,0.1)",
+                    border: "1px solid var(--color-glass-border)",
                     borderRadius: "8px",
                     fontSize: "12px",
-                    color: "rgba(255,255,255,0.9)",
+                    color: "var(--color-text)",
                   }}
-                  labelStyle={{ color: "rgba(255,255,255,0.6)" }}
+                  labelStyle={{ color: "var(--color-muted)" }}
                 />
                 <Line
                   type="monotone"
