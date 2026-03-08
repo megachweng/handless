@@ -37,3 +37,7 @@ blob-report/
 
 .direnv
 .envrc
+
+# Claude Code - only track skills
+.claude/*
+!.claude/skills/
