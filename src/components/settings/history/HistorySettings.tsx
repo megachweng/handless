@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { AudioPlayer } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
@@ -160,7 +161,7 @@ export const HistorySettings: React.FC = () => {
               label={t("settings.history.openFolder")}
             />
           </div>
-          <div className="bg-background-translucent border border-muted/20 rounded overflow-visible">
+          <div className="bg-background-translucent border border-glass-border rounded overflow-visible">
             <div className="px-3 py-8 flex flex-col items-center gap-3">
               <div className="w-5 h-5 border-2 border-muted/40 border-t-accent rounded-full animate-spin" />
               <p className="text-sm text-muted">
@@ -190,7 +191,7 @@ export const HistorySettings: React.FC = () => {
               label={t("settings.history.openFolder")}
             />
           </div>
-          <div className="bg-background-translucent border border-muted/20 rounded overflow-visible">
+          <div className="bg-background-translucent border border-glass-border rounded overflow-visible">
             <div className="px-3 py-10 flex flex-col items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
                 <Microphone className="w-5 h-5 text-muted/60" />
@@ -290,47 +291,53 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
   const fullDate = formatDateTime(String(entry.timestamp), i18n.language);
 
   return (
-    <div className="group bg-background-translucent border border-muted/20 rounded hover:border-muted/30 transition-colors px-3 py-2 flex flex-col gap-1.5">
+    <div className="group bg-background-translucent border border-glass-border rounded hover:border-glass-border-hover transition-colors px-3 py-2 flex flex-col gap-1.5">
       {/* Header: timestamp + actions */}
       <div className="flex justify-between items-center">
         <SimpleTooltip content={fullDate}>
           <span className="text-[11px] text-muted">{relativeTime}</span>
         </SimpleTooltip>
-        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
-          <SimpleTooltip content={t("settings.history.copyToClipboard")}>
-            <button
-              onClick={handleCopyText}
-              className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
-            >
-              {showCopied ? <Check size={14} /> : <Copy size={14} />}
-            </button>
-          </SimpleTooltip>
-          <SimpleTooltip
-            content={
-              entry.saved
-                ? t("settings.history.unsave")
-                : t("settings.history.save")
-            }
-          >
-            <button
-              onClick={onToggleSaved}
-              className={`p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded transition-colors cursor-pointer ${
-                entry.saved
-                  ? "text-accent hover:text-accent/80"
-                  : "text-text/50 hover:text-accent"
-              }`}
-            >
-              <Star size={14} weight={entry.saved ? "fill" : "light"} />
-            </button>
-          </SimpleTooltip>
-          <SimpleTooltip content={t("settings.history.delete")}>
-            <button
-              onClick={handleDeleteEntry}
-              className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-red-400 transition-colors cursor-pointer"
-            >
-              <Trash size={14} />
-            </button>
-          </SimpleTooltip>
+        <div className="flex items-center gap-0.5">
+          {/* Saved star - always visible when saved */}
+          {entry.saved && (
+            <SimpleTooltip content={t("settings.history.unsave")}>
+              <button
+                onClick={onToggleSaved}
+                className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-accent hover:text-accent/80 transition-colors cursor-pointer"
+              >
+                <Star size={14} weight="fill" />
+              </button>
+            </SimpleTooltip>
+          )}
+          {/* Other actions - visible on hover */}
+          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+            <SimpleTooltip content={t("settings.history.copyToClipboard")}>
+              <button
+                onClick={handleCopyText}
+                className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
+              >
+                {showCopied ? <Check size={14} /> : <Copy size={14} />}
+              </button>
+            </SimpleTooltip>
+            {!entry.saved && (
+              <SimpleTooltip content={t("settings.history.save")}>
+                <button
+                  onClick={onToggleSaved}
+                  className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
+                >
+                  <Star size={14} weight="light" />
+                </button>
+              </SimpleTooltip>
+            )}
+            <SimpleTooltip content={t("settings.history.delete")}>
+              <button
+                onClick={handleDeleteEntry}
+                className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-error transition-colors cursor-pointer"
+              >
+                <Trash size={14} />
+              </button>
+            </SimpleTooltip>
+          </div>
         </div>
       </div>
 
@@ -348,9 +355,14 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
         </button>
       )}
       {hasPostProcessed && expanded && (
-        <p className="text-[12px] leading-snug text-muted/70 select-text cursor-text border-l-2 border-muted/20 pl-2">
+        <motion.p
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="text-[12px] leading-snug text-muted/70 select-text cursor-text border-l-2 border-glass-border pl-2"
+        >
           {entry.transcription_text}
-        </p>
+        </motion.p>
       )}
 
       {/* Audio player */}
