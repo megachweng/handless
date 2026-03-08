@@ -293,7 +293,7 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
         <SimpleTooltip content={fullDate}>
           <span className="text-[11px] text-muted">{relativeTime}</span>
         </SimpleTooltip>
-        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
           <SimpleTooltip content={t("settings.history.copyToClipboard")}>
             <button
               onClick={handleCopyText}
