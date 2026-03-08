@@ -69,9 +69,6 @@ export const RecordingRetentionPeriodSelector: React.FC<RecordingRetentionPeriod
                 onChange={handleLimitChange}
                 disabled={isUpdating("history_limit")}
               />
-              <span className="text-sm text-text whitespace-nowrap">
-                {t("settings.debug.recordingRetention.entries")}
-              </span>
             </>
           )}
         </div>

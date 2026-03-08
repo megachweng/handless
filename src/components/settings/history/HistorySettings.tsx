@@ -138,7 +138,7 @@ export const HistorySettings: React.FC = () => {
 
   const retentionSection = (
     <RecordingRetentionPeriodSelector
-      descriptionMode="inline"
+      descriptionMode="tooltip"
       grouped={false}
     />
   );
