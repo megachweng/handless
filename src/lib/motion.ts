@@ -13,13 +13,13 @@ export const hoverLift = { y: -3, transition: spring.gentle };
 
 // ── Page / section transition variants ─────────────────────────────
 export const pageVariants: Variants = {
-  initial: { opacity: 0, y: 10, filter: "blur(3px)" },
-  animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-  exit: { opacity: 0, y: -5, filter: "blur(3px)" },
+  initial: { opacity: 0, y: 6 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -4 },
 };
 
 export const pageTransition: Transition = {
-  duration: 0.3,
+  duration: 0.15,
   ease: [0.16, 1, 0.3, 1], // ease-out-expo
 };
 

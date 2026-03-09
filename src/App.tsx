@@ -22,12 +22,6 @@ import { pageVariants, pageTransition } from "@/lib/motion";
 
 type OnboardingStep = "accessibility" | "done";
 
-const renderSettingsContent = (section: SidebarSection) => {
-  const ActiveComponent =
-    SECTIONS_CONFIG[section]?.component || SECTIONS_CONFIG.general.component;
-  return <ActiveComponent />;
-};
-
 function App() {
   const { i18n } = useTranslation();
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep | null>(
@@ -35,6 +29,9 @@ function App() {
   );
   const [currentSection, setCurrentSection] =
     useState<SidebarSection>("general");
+  const ActiveComponent =
+    SECTIONS_CONFIG[currentSection]?.component ||
+    SECTIONS_CONFIG.general.component;
   const {
     settings,
     updateSetting,
@@ -197,19 +194,9 @@ function App() {
                 <div className="flex-1 overflow-y-auto overscroll-contain">
                   <div className="flex flex-col items-center p-5 gap-5">
                     <AccessibilityPermissions />
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={currentSection}
-                        variants={pageVariants}
-                        initial="initial"
-                        animate="animate"
-                        exit="exit"
-                        transition={pageTransition}
-                        className="w-full flex flex-col items-center"
-                      >
-                        {renderSettingsContent(currentSection)}
-                      </motion.div>
-                    </AnimatePresence>
+                    <div className="w-full flex flex-col items-center">
+                      <ActiveComponent />
+                    </div>
                   </div>
                 </div>
               </div>
