@@ -7,6 +7,11 @@
   font-display: swap;
 }
 
+:root {
+  --color-accent: #ef6f2f;
+  --color-accent-rgb: 239, 111, 47;
+}
+
 .overlay-wrapper {
   width: 100%;
   height: 100%;
@@ -37,11 +42,11 @@
   );
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
-  border: 1px solid rgba(239, 111, 47, 0.07);
+  border: 1px solid rgba(var(--color-accent-rgb), 0.07);
   box-shadow:
     0 4px 24px rgba(0, 0, 0, 0.45),
     0 0 0 0.5px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(239, 111, 47, 0.04);
+    inset 0 1px 0 rgba(var(--color-accent-rgb), 0.04);
   opacity: 0;
   transform: scale(0.85);
   overflow: hidden;
@@ -93,7 +98,7 @@
   width: 2px;
   height: 2px;
   border-radius: 50%;
-  background: #ef6f2f;
+  background: var(--color-accent);
   will-change: height, opacity, box-shadow;
 }
 
@@ -120,12 +125,12 @@
 @keyframes word-appear {
   0% {
     opacity: 0;
-    color: #ef6f2f;
+    color: var(--color-accent);
     filter: blur(4px);
   }
   35% {
     opacity: 1;
-    color: #ef6f2f;
+    color: var(--color-accent);
     filter: blur(0);
   }
   100% {
@@ -142,10 +147,10 @@
   border-radius: inherit;
   background: linear-gradient(
     90deg,
-    rgba(239, 111, 47, 0.08) 0%,
-    rgba(239, 111, 47, 0.14) 70%,
-    rgba(239, 111, 47, 0.28) 95%,
-    rgba(239, 111, 47, 0.45) 100%
+    rgba(var(--color-accent-rgb), 0.08) 0%,
+    rgba(var(--color-accent-rgb), 0.14) 70%,
+    rgba(var(--color-accent-rgb), 0.28) 95%,
+    rgba(var(--color-accent-rgb), 0.45) 100%
   );
   pointer-events: none;
   transition: width 150ms ease-out;
@@ -158,7 +163,7 @@
   right: -1px;
   bottom: 0;
   width: 4px;
-  background: rgba(239, 111, 47, 0.5);
+  background: rgba(var(--color-accent-rgb), 0.5);
   filter: blur(4px);
 }
 
@@ -177,7 +182,7 @@
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: #ef6f2f;
+  background: var(--color-accent);
   opacity: 0.35;
   animation: thinking-wave 1.4s ease-in-out infinite;
   will-change: transform, opacity;

@@ -17,7 +17,6 @@ const DOT_COUNT = 11;
 const THINKING_DOT_COUNT = 6;
 const ATTACK_SPEED = 0.22;
 const DECAY_SPEED = 0.07;
-const ACCENT_RGB = "239, 111, 47";
 const STREAMING_WIDTH = 300;
 const STREAMING_LINE_HEIGHT = 18;
 const MAX_LINES = 5;
@@ -31,6 +30,14 @@ const RecordingOverlay: React.FC = () => {
     "top",
   );
   const [progress, setProgress] = useState(0);
+
+  // Accent RGB resolved from CSS variable for use in inline box-shadow strings
+  const accentRgbRef = useRef("239, 111, 47");
+  useEffect(() => {
+    accentRgbRef.current = getComputedStyle(document.documentElement)
+      .getPropertyValue("--color-accent-rgb")
+      .trim();
+  }, []);
 
   // Dot animation via rAF — bypasses React rendering
   const targetLevelsRef = useRef<number[]>(Array(DOT_COUNT).fill(0));
@@ -142,7 +149,7 @@ const RecordingOverlay: React.FC = () => {
         const glowRadius = 2 + v * 8 + idleStrength * wave1 * 2;
         el.style.boxShadow =
           glow > 0.03
-            ? `0 0 ${glowRadius}px rgba(${ACCENT_RGB}, ${glow})`
+            ? `0 0 ${glowRadius}px rgba(${accentRgbRef.current}, ${glow})`
             : "none";
       }
     }
@@ -159,11 +166,11 @@ const RecordingOverlay: React.FC = () => {
       const glowAlpha = e * 0.3;
       const innerAlpha = 0.03 + e * 0.06;
       overlay.style.boxShadow = [
-        `0 0 ${glowBlur}px ${glowSpread}px rgba(${ACCENT_RGB}, ${glowAlpha})`,
+        `0 0 ${glowBlur}px ${glowSpread}px rgba(${accentRgbRef.current}, ${glowAlpha})`,
         "0 4px 24px rgba(0, 0, 0, 0.45)",
         "0 0 0 0.5px rgba(0, 0, 0, 0.5)",
-        `inset 0 1px 0 rgba(${ACCENT_RGB}, 0.04)`,
-        `inset 0 0 16px rgba(${ACCENT_RGB}, ${innerAlpha})`,
+        `inset 0 1px 0 rgba(${accentRgbRef.current}, 0.04)`,
+        `inset 0 0 16px rgba(${accentRgbRef.current}, ${innerAlpha})`,
       ].join(", ");
     }
 
