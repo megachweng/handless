@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef, memo } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import { toast } from "sonner";
@@ -22,6 +22,8 @@ import { formatRelativeTime, formatDateTime } from "@/utils/dateFormat";
 import { useOsType } from "@/hooks/useOsType";
 import { SimpleTooltip } from "../../ui/Tooltip";
 import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
+
+const PAGE_SIZE = 50;
 
 interface OpenRecordingsButtonProps {
   onClick: () => void;
@@ -48,32 +50,48 @@ export const HistorySettings: React.FC = () => {
   const { t } = useTranslation();
   const osType = useOsType();
   const [historyEntries, setHistoryEntries] = useState<HistoryEntry[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
-  const loadHistoryEntries = useCallback(async () => {
-    try {
-      const result = await commands.getHistoryEntries();
+  const hasMore = historyEntries.length < totalCount;
+
+  const loadPage = useCallback(
+    async (cursor: number | null, replace: boolean) => {
+      const result = await commands.getHistoryEntriesPage(PAGE_SIZE, cursor);
       if (result.status === "ok") {
-        setHistoryEntries(result.data);
+        const { entries, total_count } = result.data;
+        if (replace) {
+          setHistoryEntries(entries);
+        } else {
+          setHistoryEntries((prev) => [...prev, ...entries]);
+        }
+        setTotalCount(total_count);
       }
-    } catch (error) {
-      console.error("Failed to load history entries:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [],
+  );
 
+  // Initial load
   useEffect(() => {
-    loadHistoryEntries();
+    loadPage(null, true).finally(() => setLoading(false));
+  }, [loadPage]);
 
+  // Listen for new transcriptions from the backend
+  useEffect(() => {
     const setupListener = async () => {
-      const unlisten = await listen("history-updated", () => {
-        loadHistoryEntries();
-      });
+      const unlisten = await listen<HistoryEntry>(
+        "history-entry-added",
+        (event) => {
+          setHistoryEntries((prev) => [event.payload, ...prev]);
+          setTotalCount((prev) => prev + 1);
+        },
+      );
       return unlisten;
     };
 
-    let unlistenPromise = setupListener();
+    const unlistenPromise = setupListener();
 
     return () => {
       unlistenPromise.then((unlisten) => {
@@ -82,23 +100,61 @@ export const HistorySettings: React.FC = () => {
         }
       });
     };
-  }, [loadHistoryEntries]);
+  }, []);
 
-  const toggleSaved = async (id: number) => {
+  // Infinite scroll via IntersectionObserver.
+  // Use a ref for mutable state so the observer is created once and doesn't
+  // churn on every page load or real-time event.
+  const scrollStateRef = useRef({ hasMore, loadingMore, lastId: null as number | null });
+  scrollStateRef.current = {
+    hasMore,
+    loadingMore,
+    lastId: historyEntries[historyEntries.length - 1]?.id ?? null,
+  };
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const { hasMore, loadingMore, lastId } = scrollStateRef.current;
+        if (entry.isIntersecting && hasMore && !loadingMore) {
+          setLoadingMore(true);
+          loadPage(lastId, false).finally(() =>
+            setLoadingMore(false),
+          );
+        }
+      },
+      { rootMargin: "200px" },
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [loadPage]);
+
+  const toggleSaved = useCallback(async (id: number) => {
+    setHistoryEntries((prev) =>
+      prev.map((e) => (e.id === id ? { ...e, saved: !e.saved } : e)),
+    );
     try {
       await commands.toggleHistoryEntrySaved(id);
     } catch (error) {
       console.error("Failed to toggle saved status:", error);
+      // Revert on error
+      setHistoryEntries((prev) =>
+        prev.map((e) => (e.id === id ? { ...e, saved: !e.saved } : e)),
+      );
     }
-  };
+  }, []);
 
-  const copyToClipboard = async (text: string) => {
+  const copyToClipboard = useCallback(async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
     } catch (error) {
       console.error("Failed to copy to clipboard:", error);
     }
-  };
+  }, []);
 
   const getAudioUrl = useCallback(
     async (fileName: string) => {
@@ -121,14 +177,17 @@ export const HistorySettings: React.FC = () => {
     [osType],
   );
 
-  const deleteAudioEntry = async (id: number) => {
+  const deleteEntry = useCallback(async (id: number) => {
+    setHistoryEntries((prev) => prev.filter((e) => e.id !== id));
+    setTotalCount((prev) => prev - 1);
     try {
       await commands.deleteHistoryEntry(id);
     } catch (error) {
-      console.error("Failed to delete audio entry:", error);
-      throw error;
+      console.error("Failed to delete entry:", error);
+      // Reload on error to restore correct state
+      loadPage(null, true);
     }
-  };
+  }, [loadPage]);
 
   const openRecordingsFolder = async () => {
     try {
@@ -177,12 +236,17 @@ export const HistorySettings: React.FC = () => {
           <HistoryEntryComponent
             key={entry.id}
             entry={entry}
-            onToggleSaved={() => toggleSaved(entry.id)}
-            onCopyText={(text) => copyToClipboard(text)}
+            onToggleSaved={toggleSaved}
+            onCopy={copyToClipboard}
             getAudioUrl={getAudioUrl}
-            deleteAudio={deleteAudioEntry}
+            onDelete={deleteEntry}
           />
         ))}
+        <div ref={sentinelRef} className="py-4 flex justify-center">
+          {loadingMore && (
+            <div className="w-5 h-5 border-2 border-muted/40 border-t-accent rounded-full animate-spin" />
+          )}
+        </div>
       </div>
     );
   }
@@ -202,9 +266,9 @@ export const HistorySettings: React.FC = () => {
             <h2 className="text-xs font-medium text-muted uppercase tracking-wide">
               {t("settings.history.title")}
             </h2>
-            {!loading && historyEntries.length > 0 && (
+            {!loading && totalCount > 0 && (
               <span className="text-[10px] text-muted/60 tabular-nums">
-                {historyEntries.length}
+                {totalCount}
               </span>
             )}
           </div>
@@ -221,129 +285,122 @@ export const HistorySettings: React.FC = () => {
 
 interface HistoryEntryProps {
   entry: HistoryEntry;
-  onToggleSaved: () => void;
-  onCopyText: (text: string) => void;
+  onToggleSaved: (id: number) => void;
+  onCopy: (text: string) => void;
   getAudioUrl: (fileName: string) => Promise<string | null>;
-  deleteAudio: (id: number) => Promise<void>;
+  onDelete: (id: number) => void;
 }
 
-const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
-  entry,
-  onToggleSaved,
-  onCopyText,
-  getAudioUrl,
-  deleteAudio,
-}) => {
-  const { t, i18n } = useTranslation();
-  const [showCopied, setShowCopied] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
+  ({ entry, onToggleSaved, onCopy, getAudioUrl, onDelete }) => {
+    const { t, i18n } = useTranslation();
+    const [showCopied, setShowCopied] = useState(false);
+    const [expanded, setExpanded] = useState(false);
 
-  const handleLoadAudio = useCallback(
-    () => getAudioUrl(entry.file_name),
-    [getAudioUrl, entry.file_name],
-  );
+    const handleLoadAudio = useCallback(
+      () => getAudioUrl(entry.file_name),
+      [getAudioUrl, entry.file_name],
+    );
 
-  const displayText = entry.post_processed_text || entry.transcription_text;
-  const hasPostProcessed = !!entry.post_processed_text;
+    const displayText = entry.post_processed_text || entry.transcription_text;
+    const hasPostProcessed = !!entry.post_processed_text;
 
-  const handleCopyText = () => {
-    onCopyText(displayText);
-    setShowCopied(true);
-    setTimeout(() => setShowCopied(false), 2000);
-  };
+    const handleCopyText = () => {
+      onCopy(displayText);
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+    };
 
-  const handleDeleteEntry = async () => {
-    try {
-      await deleteAudio(entry.id);
-    } catch (error) {
-      console.error("Failed to delete entry:", error);
-      toast.error(t("settings.history.deleteError"));
-    }
-  };
+    const handleDeleteEntry = () => {
+      onDelete(entry.id);
+    };
 
-  const relativeTime = formatRelativeTime(
-    String(entry.timestamp),
-    i18n.language,
-  );
-  const fullDate = formatDateTime(String(entry.timestamp), i18n.language);
+    const relativeTime = formatRelativeTime(
+      String(entry.timestamp),
+      i18n.language,
+    );
+    const fullDate = formatDateTime(String(entry.timestamp), i18n.language);
 
-  return (
-    <div className="group bg-background-translucent border border-glass-border rounded hover:border-glass-border-hover transition-colors px-3 py-2 flex flex-col gap-1.5">
-      {/* Header: timestamp + actions */}
-      <div className="flex justify-between items-center">
-        <SimpleTooltip content={fullDate}>
-          <span className="text-[11px] text-muted">{relativeTime}</span>
-        </SimpleTooltip>
-        <div className="flex items-center gap-0.5">
-          {/* Saved star - always visible when saved */}
-          {entry.saved && (
-            <SimpleTooltip content={t("settings.history.unsave")}>
-              <button
-                onClick={onToggleSaved}
-                className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-accent hover:text-accent/80 transition-colors cursor-pointer"
-              >
-                <Star size={14} weight="fill" />
-              </button>
-            </SimpleTooltip>
-          )}
-          {/* Other actions - visible on hover */}
-          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
-            <SimpleTooltip content={t("settings.history.copyToClipboard")}>
-              <button
-                onClick={handleCopyText}
-                className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
-              >
-                {showCopied ? <Check size={14} /> : <Copy size={14} />}
-              </button>
-            </SimpleTooltip>
-            {!entry.saved && (
-              <SimpleTooltip content={t("settings.history.save")}>
+    return (
+      <div className="group bg-background-translucent border border-glass-border rounded hover:border-glass-border-hover transition-colors px-3 py-2 flex flex-col gap-1.5">
+        {/* Header: timestamp + actions */}
+        <div className="flex justify-between items-center">
+          <SimpleTooltip content={fullDate}>
+            <span className="text-[11px] text-muted">{relativeTime}</span>
+          </SimpleTooltip>
+          <div className="flex items-center gap-0.5">
+            {/* Saved star - always visible when saved */}
+            {entry.saved && (
+              <SimpleTooltip content={t("settings.history.unsave")}>
                 <button
-                  onClick={onToggleSaved}
-                  className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
+                  onClick={() => onToggleSaved(entry.id)}
+                  className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-accent hover:text-accent/80 transition-colors cursor-pointer"
                 >
-                  <Star size={14} weight="light" />
+                  <Star size={14} weight="fill" />
                 </button>
               </SimpleTooltip>
             )}
-            <SimpleTooltip content={t("settings.history.delete")}>
-              <button
-                onClick={handleDeleteEntry}
-                className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-error transition-colors cursor-pointer"
-              >
-                <Trash size={14} />
-              </button>
-            </SimpleTooltip>
+            {/* Other actions - visible on hover */}
+            <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+              <SimpleTooltip content={t("settings.history.copyToClipboard")}>
+                <button
+                  onClick={handleCopyText}
+                  className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
+                >
+                  {showCopied ? <Check size={14} /> : <Copy size={14} />}
+                </button>
+              </SimpleTooltip>
+              {!entry.saved && (
+                <SimpleTooltip content={t("settings.history.save")}>
+                  <button
+                    onClick={() => onToggleSaved(entry.id)}
+                    className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
+                  >
+                    <Star size={14} weight="light" />
+                  </button>
+                </SimpleTooltip>
+              )}
+              <SimpleTooltip content={t("settings.history.delete")}>
+                <button
+                  onClick={handleDeleteEntry}
+                  className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-error transition-colors cursor-pointer"
+                >
+                  <Trash size={14} />
+                </button>
+              </SimpleTooltip>
+            </div>
           </div>
         </div>
+
+        {/* Text content */}
+        <p className="text-[13px] leading-snug text-text/90 select-text cursor-text">
+          {displayText}
+        </p>
+        {hasPostProcessed && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="flex items-center gap-1 text-[11px] text-muted/60 hover:text-muted transition-colors cursor-pointer"
+          >
+            <Sparkle size={10} />
+            <span>{expanded ? t("settings.history.hideOriginal") : t("settings.history.showOriginal")}</span>
+          </button>
+        )}
+        {hasPostProcessed && expanded && (
+          <motion.p
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="text-[12px] leading-snug text-muted/70 select-text cursor-text border-l-2 border-glass-border pl-2"
+          >
+            {entry.transcription_text}
+          </motion.p>
+        )}
+
+        {/* Audio player */}
+        <AudioPlayer onLoadRequest={handleLoadAudio} className="w-full" />
       </div>
+    );
+  },
+);
 
-      {/* Text content */}
-      <p className="text-[13px] leading-snug text-text/90 select-text cursor-text">
-        {displayText}
-      </p>
-      {hasPostProcessed && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1 text-[11px] text-muted/60 hover:text-muted transition-colors cursor-pointer"
-        >
-          <Sparkle size={10} />
-          <span>{expanded ? t("settings.history.hideOriginal") : t("settings.history.showOriginal")}</span>
-        </button>
-      )}
-      {hasPostProcessed && expanded && (
-        <motion.p
-          initial={{ opacity: 0, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[12px] leading-snug text-muted/70 select-text cursor-text border-l-2 border-glass-border pl-2"
-        >
-          {entry.transcription_text}
-        </motion.p>
-      )}
-
-      {/* Audio player */}
-      <AudioPlayer onLoadRequest={handleLoadAudio} className="w-full" />
-    </div>
-  );
-};
+HistoryEntryComponent.displayName = "HistoryEntryComponent";
