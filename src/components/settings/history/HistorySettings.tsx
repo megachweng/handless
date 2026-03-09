@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { toast } from "sonner";
+import { staggerContainer, staggerItem } from "@/lib/motion";
 import { AudioPlayer } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
 import {
@@ -144,101 +145,77 @@ export const HistorySettings: React.FC = () => {
     />
   );
 
+  let content;
   if (loading) {
-    return (
-      <div className="max-w-3xl w-full mx-auto space-y-8">
-        <h1 className="sr-only">{t("sidebar.history")}</h1>
-        {retentionSection}
-        <div className="space-y-1.5">
-          <div className="px-3 flex items-center justify-between">
-            <div>
-              <h2 className="text-xs font-medium text-muted uppercase tracking-wide">
-                {t("settings.history.title")}
-              </h2>
-            </div>
-            <OpenRecordingsButton
-              onClick={openRecordingsFolder}
-              label={t("settings.history.openFolder")}
-            />
-          </div>
-          <div className="bg-background-translucent border border-glass-border rounded overflow-visible">
-            <div className="px-3 py-8 flex flex-col items-center gap-3">
-              <div className="w-5 h-5 border-2 border-muted/40 border-t-accent rounded-full animate-spin" />
-              <p className="text-sm text-muted">
-                {t("settings.history.loading")}
-              </p>
-            </div>
-          </div>
+    content = (
+      <div className="bg-background-translucent border border-glass-border rounded overflow-visible">
+        <div className="px-3 py-8 flex flex-col items-center gap-3">
+          <div className="w-5 h-5 border-2 border-muted/40 border-t-accent rounded-full animate-spin" />
+          <p className="text-sm text-muted">
+            {t("settings.history.loading")}
+          </p>
         </div>
       </div>
     );
-  }
-
-  if (historyEntries.length === 0) {
-    return (
-      <div className="max-w-3xl w-full mx-auto space-y-8">
-        <h1 className="sr-only">{t("sidebar.history")}</h1>
-        {retentionSection}
-        <div className="space-y-1.5">
-          <div className="px-3 flex items-center justify-between">
-            <div>
-              <h2 className="text-xs font-medium text-muted uppercase tracking-wide">
-                {t("settings.history.title")}
-              </h2>
-            </div>
-            <OpenRecordingsButton
-              onClick={openRecordingsFolder}
-              label={t("settings.history.openFolder")}
-            />
+  } else if (historyEntries.length === 0) {
+    content = (
+      <div className="bg-background-translucent border border-glass-border rounded overflow-visible">
+        <div className="px-3 py-10 flex flex-col items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
+            <Microphone className="w-5 h-5 text-muted/60" />
           </div>
-          <div className="bg-background-translucent border border-glass-border rounded overflow-visible">
-            <div className="px-3 py-10 flex flex-col items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
-                <Microphone className="w-5 h-5 text-muted/60" />
-              </div>
-              <p className="text-sm text-muted text-center">
-                {t("settings.history.empty")}
-              </p>
-            </div>
-          </div>
+          <p className="text-sm text-muted text-center">
+            {t("settings.history.empty")}
+          </p>
         </div>
+      </div>
+    );
+  } else {
+    content = (
+      <div className="flex flex-col gap-2">
+        {historyEntries.map((entry) => (
+          <HistoryEntryComponent
+            key={entry.id}
+            entry={entry}
+            onToggleSaved={() => toggleSaved(entry.id)}
+            onCopyText={(text) => copyToClipboard(text)}
+            getAudioUrl={getAudioUrl}
+            deleteAudio={deleteAudioEntry}
+          />
+        ))}
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-8">
+    <motion.div
+      className="max-w-3xl w-full mx-auto space-y-8"
+      variants={staggerContainer}
+      initial="initial"
+      animate="animate"
+    >
       <h1 className="sr-only">{t("sidebar.history")}</h1>
-      {retentionSection}
-      <div className="space-y-1.5">
+      <motion.div variants={staggerItem}>{retentionSection}</motion.div>
+      <motion.div className="space-y-1.5" variants={staggerItem}>
         <div className="px-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <h2 className="text-xs font-medium text-muted uppercase tracking-wide">
               {t("settings.history.title")}
             </h2>
-            <span className="text-[10px] text-muted/60 tabular-nums">
-              {historyEntries.length}
-            </span>
+            {!loading && historyEntries.length > 0 && (
+              <span className="text-[10px] text-muted/60 tabular-nums">
+                {historyEntries.length}
+              </span>
+            )}
           </div>
           <OpenRecordingsButton
             onClick={openRecordingsFolder}
             label={t("settings.history.openFolder")}
           />
         </div>
-        <div className="flex flex-col gap-2">
-          {historyEntries.map((entry) => (
-            <HistoryEntryComponent
-              key={entry.id}
-              entry={entry}
-              onToggleSaved={() => toggleSaved(entry.id)}
-              onCopyText={(text) => copyToClipboard(text)}
-              getAudioUrl={getAudioUrl}
-              deleteAudio={deleteAudioEntry}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
+        {content}
+      </motion.div>
+    </motion.div>
   );
 };
 
