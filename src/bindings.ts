@@ -759,6 +759,14 @@ async getHistoryEntries() : Promise<Result<HistoryEntry[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async getHistoryEntriesPage(limit: number, cursor: number | null) : Promise<Result<HistoryPage, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_history_entries_page", { limit, cursor }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async toggleHistoryEntrySaved(id: number) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("toggle_history_entry_saved", { id }) };
@@ -877,6 +885,7 @@ export type CustomSounds = { start: boolean; stop: boolean }
 export type DailySpeakingStats = { date: string; total_word_count: number; total_duration_ms: number; transcription_count: number; avg_wpm: number }
 export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice"
 export type HistoryEntry = { id: number; file_name: string; timestamp: number; saved: boolean; title: string; transcription_text: string; post_processed_text: string | null; post_process_prompt: string | null }
+export type HistoryPage = { entries: HistoryEntry[]; total_count: number }
 /**
  * Result of changing keyboard implementation
  */

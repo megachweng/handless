@@ -1,4 +1,4 @@
-use crate::managers::history::{DailySpeakingStats, HistoryEntry, HistoryManager};
+use crate::managers::history::{DailySpeakingStats, HistoryEntry, HistoryManager, HistoryPage};
 use std::sync::Arc;
 use tauri::{AppHandle, State};
 
@@ -11,6 +11,19 @@ pub async fn get_history_entries(
     history_manager
         .get_history_entries()
         .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_history_entries_page(
+    _app: AppHandle,
+    history_manager: State<'_, Arc<HistoryManager>>,
+    limit: i64,
+    cursor: Option<i64>,
+) -> Result<HistoryPage, String> {
+    history_manager
+        .get_history_entries_page(limit, cursor)
         .map_err(|e| e.to_string())
 }
 

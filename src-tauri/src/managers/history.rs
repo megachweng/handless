@@ -54,12 +54,31 @@ pub struct HistoryEntry {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type)]
+pub struct HistoryPage {
+    pub entries: Vec<HistoryEntry>,
+    pub total_count: i64,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, Type)]
 pub struct DailySpeakingStats {
     pub date: String,
     pub total_word_count: i64,
     pub total_duration_ms: i64,
     pub transcription_count: i64,
     pub avg_wpm: f64,
+}
+
+fn row_to_entry(row: &rusqlite::Row) -> rusqlite::Result<HistoryEntry> {
+    Ok(HistoryEntry {
+        id: row.get("id")?,
+        file_name: row.get("file_name")?,
+        timestamp: row.get("timestamp")?,
+        saved: row.get("saved")?,
+        title: row.get("title")?,
+        transcription_text: row.get("transcription_text")?,
+        post_processed_text: row.get("post_processed_text")?,
+        post_process_prompt: row.get("post_process_prompt")?,
+    })
 }
 
 pub struct HistoryManager {
@@ -217,7 +236,8 @@ impl HistoryManager {
             "INSERT INTO transcription_history (file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
             params![file_name, timestamp, false, title, transcription_text, post_processed_text, post_process_prompt],
         )?;
-        debug!("Saved transcription to database");
+        let new_id = conn.last_insert_rowid();
+        debug!("Saved transcription to database with id: {}", new_id);
 
         let today = Local::now().format("%Y-%m-%d").to_string();
         conn.execute(
@@ -234,9 +254,19 @@ impl HistoryManager {
         // Clean up old entries
         self.cleanup_old_entries()?;
 
-        // Emit history updated event
-        if let Err(e) = self.app_handle.emit("history-updated", ()) {
-            error!("Failed to emit history-updated event: {}", e);
+        // Emit the new entry so the frontend can prepend it without a full reload
+        let new_entry = HistoryEntry {
+            id: new_id,
+            file_name,
+            timestamp,
+            saved: false,
+            title,
+            transcription_text,
+            post_processed_text,
+            post_process_prompt,
+        };
+        if let Err(e) = self.app_handle.emit("history-entry-added", &new_entry) {
+            error!("Failed to emit history-entry-added event: {}", e);
         }
 
         Ok(())
@@ -364,18 +394,7 @@ impl HistoryManager {
             "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt FROM transcription_history ORDER BY timestamp DESC"
         )?;
 
-        let rows = stmt.query_map([], |row| {
-            Ok(HistoryEntry {
-                id: row.get("id")?,
-                file_name: row.get("file_name")?,
-                timestamp: row.get("timestamp")?,
-                saved: row.get("saved")?,
-                title: row.get("title")?,
-                transcription_text: row.get("transcription_text")?,
-                post_processed_text: row.get("post_processed_text")?,
-                post_process_prompt: row.get("post_process_prompt")?,
-            })
-        })?;
+        let rows = stmt.query_map([], row_to_entry)?;
 
         let mut entries = Vec::new();
         for row in rows {
@@ -383,6 +402,40 @@ impl HistoryManager {
         }
 
         Ok(entries)
+    }
+
+    pub fn get_history_entries_page(&self, limit: i64, cursor: Option<i64>) -> Result<HistoryPage> {
+        let conn = self.get_connection()?;
+
+        let total_count: i64 = conn.query_row(
+            "SELECT COUNT(*) FROM transcription_history",
+            [],
+            |row| row.get(0),
+        )?;
+
+        let (query, cursor_params): (&str, Vec<Box<dyn rusqlite::types::ToSql>>) = if cursor.is_some() {
+            (
+                "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt
+                 FROM transcription_history WHERE id < ?1 ORDER BY id DESC LIMIT ?2",
+                vec![Box::new(cursor.unwrap()), Box::new(limit)],
+            )
+        } else {
+            (
+                "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt
+                 FROM transcription_history ORDER BY id DESC LIMIT ?1",
+                vec![Box::new(limit)],
+            )
+        };
+
+        let mut stmt = conn.prepare(query)?;
+        let entries = stmt
+            .query_map(rusqlite::params_from_iter(cursor_params), row_to_entry)?
+            .collect::<rusqlite::Result<Vec<_>>>()?;
+
+        Ok(HistoryPage {
+            entries,
+            total_count,
+        })
     }
 
     pub fn get_latest_entry(&self) -> Result<Option<HistoryEntry>> {
@@ -398,20 +451,7 @@ impl HistoryManager {
              LIMIT 1",
         )?;
 
-        let entry = stmt
-            .query_row([], |row| {
-                Ok(HistoryEntry {
-                    id: row.get("id")?,
-                    file_name: row.get("file_name")?,
-                    timestamp: row.get("timestamp")?,
-                    saved: row.get("saved")?,
-                    title: row.get("title")?,
-                    transcription_text: row.get("transcription_text")?,
-                    post_processed_text: row.get("post_processed_text")?,
-                    post_process_prompt: row.get("post_process_prompt")?,
-                })
-            })
-            .optional()?;
+        let entry = stmt.query_row([], row_to_entry).optional()?;
 
         Ok(entry)
     }
@@ -434,11 +474,6 @@ impl HistoryManager {
         )?;
 
         debug!("Toggled saved status for entry {}: {}", id, new_saved);
-
-        // Emit history updated event
-        if let Err(e) = self.app_handle.emit("history-updated", ()) {
-            error!("Failed to emit history-updated event: {}", e);
-        }
 
         Ok(())
     }
@@ -534,20 +569,7 @@ impl HistoryManager {
              FROM transcription_history WHERE id = ?1",
         )?;
 
-        let entry = stmt
-            .query_row([id], |row| {
-                Ok(HistoryEntry {
-                    id: row.get("id")?,
-                    file_name: row.get("file_name")?,
-                    timestamp: row.get("timestamp")?,
-                    saved: row.get("saved")?,
-                    title: row.get("title")?,
-                    transcription_text: row.get("transcription_text")?,
-                    post_processed_text: row.get("post_processed_text")?,
-                    post_process_prompt: row.get("post_process_prompt")?,
-                })
-            })
-            .optional()?;
+        let entry = stmt.query_row([id], row_to_entry).optional()?;
 
         Ok(entry)
     }
@@ -574,11 +596,6 @@ impl HistoryManager {
         )?;
 
         debug!("Deleted history entry with id: {}", id);
-
-        // Emit history updated event
-        if let Err(e) = self.app_handle.emit("history-updated", ()) {
-            error!("Failed to emit history-updated event: {}", e);
-        }
 
         Ok(())
     }
