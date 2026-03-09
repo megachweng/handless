@@ -110,6 +110,30 @@ function App() {
     };
   }, [settings?.debug_mode, updateSetting, refreshSettings]);
 
+  // Cmd+[ / Cmd+]: Navigate sidebar sections
+  useEffect(() => {
+    const handleSectionNav = (event: KeyboardEvent) => {
+      if (!event.metaKey) return;
+      if (event.key !== "[" && event.key !== "]") return;
+      event.preventDefault();
+
+      const delta = event.key === "[" ? -1 : 1;
+      setCurrentSection((prev) => {
+        const availableSections = (
+          Object.keys(SECTIONS_CONFIG) as SidebarSection[]
+        ).filter((id) => SECTIONS_CONFIG[id].enabled(settings));
+        const idx = availableSections.indexOf(prev);
+        if (idx === -1) return prev;
+        return availableSections[
+          (idx + delta + availableSections.length) % availableSections.length
+        ];
+      });
+    };
+
+    document.addEventListener("keydown", handleSectionNav);
+    return () => document.removeEventListener("keydown", handleSectionNav);
+  }, [settings?.debug_mode]);
+
   const checkOnboardingStatus = async () => {
     if (platform() === "macos") {
       try {
