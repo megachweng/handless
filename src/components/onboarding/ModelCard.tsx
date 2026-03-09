@@ -174,7 +174,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
 
       {/* Description */}
       <p
-        className={`text-text/60 text-sm ${compact ? "leading-snug" : "leading-relaxed"}`}
+        className={`text-text/60 text-sm break-words ${compact ? "leading-snug" : "leading-relaxed"}`}
       >
         {isCloud && configuredModel ? configuredModel : displayDescription}
       </p>
