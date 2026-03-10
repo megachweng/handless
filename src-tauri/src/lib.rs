@@ -457,17 +457,24 @@ pub fn run(cli_args: CliArgs) {
         .setup(move |app| {
             // Build the main window during setup so startup window creation follows
             // the same lifecycle as Handy and does not flash the dock icon on macOS.
-            tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
-                .title("Handless")
-                .inner_size(900.0, 587.0)
-                .min_inner_size(900.0, 587.0)
-                .resizable(true)
-                .maximizable(false)
-                .visible(false)
-                .transparent(true)
-                .title_bar_style(tauri::TitleBarStyle::Overlay)
-                .hidden_title(true)
-                .build()?;
+            let mut builder =
+                tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
+                    .title("Handless")
+                    .inner_size(900.0, 587.0)
+                    .min_inner_size(900.0, 587.0)
+                    .resizable(true)
+                    .maximizable(false)
+                    .visible(false)
+                    .transparent(true);
+
+            #[cfg(target_os = "macos")]
+            {
+                builder = builder
+                    .title_bar_style(tauri::TitleBarStyle::Overlay)
+                    .hidden_title(true);
+            }
+
+            builder.build()?;
 
             let mut settings = get_settings(&app.handle());
 
