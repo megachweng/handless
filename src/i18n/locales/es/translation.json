@@ -478,8 +478,6 @@
           "title": "Prompt Seleccionado",
           "description": "Selecciona una plantilla para refinar las transcripciones o crea una nueva. La transcripción capturada se proporciona automáticamente al prompt."
         },
-        "noPrompts": "No hay prompts disponibles",
-        "selectPrompt": "Seleccionar un prompt",
         "createNew": "Crear Nuevo Prompt",
         "promptLabel": "Etiqueta del Prompt",
         "promptLabelPlaceholder": "Ingresa el nombre del prompt",
@@ -490,7 +488,6 @@
         "deletePrompt": "Eliminar Prompt",
         "createPrompt": "Crear",
         "cancel": "Cancelar",
-        "selectToEdit": "Selecciona un prompt arriba para ver y editar sus detalles.",
         "createFirst": "Haz clic en 'Crear Nuevo Prompt' arriba para crear tu primer prompt de post procesamiento."
       }
     },

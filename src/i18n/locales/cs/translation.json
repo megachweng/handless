@@ -478,8 +478,6 @@
           "title": "Vybraný prompt",
           "description": "Vyberte šablonu pro zpřesnění přepisu nebo vytvořte novou. Zachycený přepis je automaticky poskytnut promptu."
         },
-        "noPrompts": "Nejsou k dispozici žádné prompty",
-        "selectPrompt": "Vyberte prompt",
         "createNew": "Vytvořit nový prompt",
         "promptLabel": "Název promptu",
         "promptLabelPlaceholder": "Zadejte název promptu",
@@ -490,7 +488,6 @@
         "deletePrompt": "Smazat prompt",
         "createPrompt": "Vytvořit",
         "cancel": "Zrušit",
-        "selectToEdit": "Vyberte výše prompt, abyste zobrazili a upravili jeho podrobnosti.",
         "createFirst": "Klikněte nahoře na 'Vytvořit nový prompt' a vytvořte svůj první prompt pro následné zpracování."
       }
     },
