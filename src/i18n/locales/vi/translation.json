@@ -488,7 +488,8 @@
         "deletePrompt": "Xóa Prompt",
         "createPrompt": "Tạo",
         "cancel": "Hủy",
-        "createFirst": "Nhấn 'Tạo Prompt mới' ở trên để tạo prompt xử lý sau đầu tiên của bạn."
+        "createFirst": "Nhấn 'Tạo Prompt mới' ở trên để tạo prompt xử lý sau đầu tiên của bạn.",
+        "builtIn": "Built-in"
       }
     },
     "stats": {

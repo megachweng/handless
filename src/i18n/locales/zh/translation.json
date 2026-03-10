@@ -488,7 +488,8 @@
         "deletePrompt": "删除提示词",
         "createPrompt": "创建",
         "cancel": "取消",
-        "createFirst": "点击上方的「创建新提示词」来创建您的第一个后处理提示词。"
+        "createFirst": "点击上方的「创建新提示词」来创建您的第一个后处理提示词。",
+        "builtIn": "Built-in"
       }
     },
     "stats": {

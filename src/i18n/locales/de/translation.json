@@ -488,7 +488,8 @@
         "deletePrompt": "Prompt löschen",
         "createPrompt": "Erstellen",
         "cancel": "Abbrechen",
-        "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen."
+        "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen.",
+        "builtIn": "Built-in"
       }
     },
     "stats": {

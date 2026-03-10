@@ -488,7 +488,8 @@
         "deletePrompt": "Supprimer le prompt",
         "createPrompt": "Créer",
         "cancel": "Annuler",
-        "createFirst": "Cliquez sur 'Créer un nouveau prompt' ci-dessus pour créer votre premier prompt de post-traitement."
+        "createFirst": "Cliquez sur 'Créer un nouveau prompt' ci-dessus pour créer votre premier prompt de post-traitement.",
+        "builtIn": "Built-in"
       }
     },
     "stats": {

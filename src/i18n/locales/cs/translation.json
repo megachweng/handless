@@ -488,7 +488,8 @@
         "deletePrompt": "Smazat prompt",
         "createPrompt": "Vytvořit",
         "cancel": "Zrušit",
-        "createFirst": "Klikněte nahoře na 'Vytvořit nový prompt' a vytvořte svůj první prompt pro následné zpracování."
+        "createFirst": "Klikněte nahoře na 'Vytvořit nový prompt' a vytvořte svůj první prompt pro následné zpracování.",
+        "builtIn": "Built-in"
       }
     },
     "stats": {
