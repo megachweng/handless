@@ -488,7 +488,8 @@
         "deletePrompt": "Excluir Prompt",
         "createPrompt": "Criar",
         "cancel": "Cancelar",
-        "createFirst": "Clique em 'Criar Novo Prompt' acima para criar seu primeiro prompt de pós-processamento."
+        "createFirst": "Clique em 'Criar Novo Prompt' acima para criar seu primeiro prompt de pós-processamento.",
+        "builtIn": "Built-in"
       }
     },
     "stats": {

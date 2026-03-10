@@ -27,3 +27,41 @@ Developers, power users, and general productivity users who want fast, accurate 
 3. **Motion with purpose** — Every animation communicates state change (recording, processing, complete). No gratuitous animation. Spring physics for natural feel.
 4. **Native-quality craft** — Should feel like a macOS-native app, not a web app in a wrapper. Tight spacing, precise typography, glass effects that match system vibrancy.
 5. **Clarity over density** — Prefer generous whitespace and clear hierarchy. Settings and options should be discoverable but never overwhelming.
+
+## Development
+
+### Commands
+```bash
+bun run tauri dev                # Dev mode (prefix CMAKE_POLICY_VERSION_MINIMUM=3.5 if cmake errors on macOS)
+bun run tauri build              # Production build
+bun run lint                     # ESLint check
+bun run lint:fix                 # ESLint auto-fix
+bun run format                   # Prettier + cargo fmt
+bun run format:check             # Check formatting only
+bun run test:playwright          # E2E tests
+bun run check:translations       # Validate translation files
+```
+
+### Code Style
+
+**Rust:**
+- `cargo fmt` + `cargo clippy` before committing
+- Explicit error handling (avoid `unwrap` in production)
+- New Tauri commands in `commands/`, business logic in `managers/`
+- Use specta for type-safe command bindings (auto-generates `bindings.ts`)
+
+**TypeScript/React:**
+- Strict TypeScript, no `any`
+- Functional components with hooks
+- Tailwind CSS for styling, Radix UI for primitives
+- Path alias: `@/` → `./src/`
+- State: Zustand stores in `stores/`
+- New settings components go in the appropriate `settings/` subdirectory
+
+### i18n
+All user-facing strings use i18next (ESLint enforces no hardcoded JSX strings).
+1. Add key to `src/i18n/locales/en/translation.json`
+2. Add the same key to all 16 other locale files (ar, cs, de, es, fr, it, ja, ko, pl, pt, ru, tr, uk, vi, zh, zh-TW) — use English as placeholder
+3. Use in component: `const { t } = useTranslation(); t('key.path')`
+4. Run `bun run check:translations` to verify all locales have matching keys
+Keys are organized by feature area: `tray.*`, `sidebar.*`, `onboarding.*`, `settings.*`, `models.*`, etc.

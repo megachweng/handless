@@ -488,7 +488,8 @@
         "deletePrompt": "Promptu Sil",
         "createPrompt": "Oluştur",
         "cancel": "İptal",
-        "createFirst": "İlk son işlem prompt'unuzu oluşturmak için yukarıdaki “Yeni Prompt Oluştur” seçeneğine tıklayın."
+        "createFirst": "İlk son işlem prompt'unuzu oluşturmak için yukarıdaki “Yeni Prompt Oluştur” seçeneğine tıklayın.",
+        "builtIn": "Built-in"
       }
     },
     "stats": {
