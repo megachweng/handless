@@ -478,8 +478,6 @@
           "title": "Chỉ thị đã chọn",
           "description": "Chọn một mẫu để tinh chỉnh bản ghi hoặc tạo mới. Bản ghi đã chụp được tự động cung cấp cho prompt."
         },
-        "noPrompts": "Không có prompt nào",
-        "selectPrompt": "Chọn một prompt",
         "createNew": "Tạo Prompt mới",
         "promptLabel": "Nhãn Prompt",
         "promptLabelPlaceholder": "Nhập tên prompt",
@@ -490,7 +488,6 @@
         "deletePrompt": "Xóa Prompt",
         "createPrompt": "Tạo",
         "cancel": "Hủy",
-        "selectToEdit": "Chọn một prompt ở trên để xem và chỉnh sửa chi tiết.",
         "createFirst": "Nhấn 'Tạo Prompt mới' ở trên để tạo prompt xử lý sau đầu tiên của bạn."
       }
     },

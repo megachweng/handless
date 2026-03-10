@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, ArrowsClockwise, X } from "@phosphor-icons/react";
+import { Check, ArrowsClockwise, X, CaretDown } from "@phosphor-icons/react";
+import { motion, useReducedMotion } from "motion/react";
 import { commands } from "@/bindings";
+import type { ShortcutBinding } from "@/bindings";
 
 import { Alert } from "../../ui/Alert";
 import {
-  Dropdown,
   SettingContainer,
   SettingsGroup,
   Textarea,
@@ -13,6 +14,8 @@ import {
 import { Button } from "../../ui/Button";
 import { ResetButton } from "../../ui/ResetButton";
 import { Input } from "../../ui/Input";
+import { Badge } from "../../ui/Badge";
+import { SelectableCard } from "../../ui/SelectableCard";
 
 import { ProviderSelect } from "../PostProcessingSettingsApi/ProviderSelect";
 import { BaseUrlField } from "../PostProcessingSettingsApi/BaseUrlField";
@@ -23,9 +26,12 @@ import { useSettings } from "../../../hooks/useSettings";
 import { usePostProcessStats } from "../../../hooks/usePostProcessStats";
 import { CustomWords } from "../CustomWords";
 import { AppendTrailingSpace } from "../AppendTrailingSpace";
+import { spring } from "@/lib/motion";
+import { formatKeyCombination, type OSType } from "@/lib/utils/keyboard";
+import { useOsType } from "@/hooks/useOsType";
 
 const BUILTIN_PROMPT_PREFIX = "default_";
-const NONE_VALUE = "__none__";
+const CREATING_ID = "__creating__";
 const FIELD_WIDTH = "w-[260px]";
 
 /** Trailing slot matching the ResetButton width to keep fields aligned across rows. */
@@ -188,47 +194,64 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
   );
 };
 
+/** Build a map of prompt ID → list of shortcut bindings that reference it */
+function usePromptShortcuts(
+  bindings: Record<string, ShortcutBinding>,
+  osType: OSType,
+) {
+  return useMemo(() => {
+    const map: Record<string, { id: string; shortcut: string }[]> = {};
+    for (const binding of Object.values(bindings)) {
+      if (!binding?.post_process_prompt_id) continue;
+      const pid = binding.post_process_prompt_id;
+      if (!map[pid]) map[pid] = [];
+      const shortcut = formatKeyCombination(binding.current_binding, osType);
+      map[pid].push({ id: binding.id, shortcut });
+    }
+    return map;
+  }, [bindings, osType]);
+}
+
 const PostProcessingSettingsPromptsComponent: React.FC = () => {
   const { t } = useTranslation();
-  const { getSetting, updateSetting, isUpdating, refreshSettings } =
-    useSettings();
-  const [isCreating, setIsCreating] = useState(false);
+  const { getSetting, refreshSettings } = useSettings();
+  const osType = useOsType();
+  const reducedMotion = useReducedMotion();
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const isCreating = expandedId === CREATING_ID;
   const [draftName, setDraftName] = useState("");
   const [draftText, setDraftText] = useState("");
 
   const prompts = getSetting("post_process_prompts") || [];
-  const selectedPromptId = getSetting("post_process_selected_prompt_id") || "";
-  const selectedPrompt =
-    prompts.find((prompt) => prompt.id === selectedPromptId) || null;
+  const bindings = (getSetting("bindings") || {}) as Record<string, ShortcutBinding>;
+  const shortcutMap = usePromptShortcuts(bindings, osType);
 
+  const expandedPrompt = prompts.find((p) => p.id === expandedId) || null;
+
+  // Sync draft fields when selection changes (not on prompt data changes, to avoid overwriting in-progress edits)
   useEffect(() => {
-    if (isCreating) return;
+    if (!expandedPrompt || isCreating) return;
+    setDraftName(expandedPrompt.name);
+    setDraftText(expandedPrompt.prompt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expandedId]);
 
-    if (selectedPrompt) {
-      setDraftName(selectedPrompt.name);
-      setDraftText(selectedPrompt.prompt);
-    } else {
-      setDraftName("");
-      setDraftText("");
-    }
-  }, [
-    isCreating,
-    selectedPromptId,
-    selectedPrompt?.name,
-    selectedPrompt?.prompt,
-  ]);
+  const handleToggle = (promptId: string) => {
+    setExpandedId((prev) => (prev === promptId ? null : promptId));
+  };
 
-  const handlePromptSelect = async (promptId: string | null) => {
-    if (!promptId) return;
-    const value = promptId === NONE_VALUE ? null : promptId;
-    await updateSetting("post_process_selected_prompt_id", value);
-    await refreshSettings();
-    setIsCreating(false);
+  const handleStartCreate = () => {
+    setExpandedId(CREATING_ID);
+    setDraftName("");
+    setDraftText("");
+  };
+
+  const handleCancelCreate = () => {
+    setExpandedId(null);
   };
 
   const handleCreatePrompt = async () => {
     if (!draftName.trim() || !draftText.trim()) return;
-
     try {
       const result = await commands.addPostProcessPrompt(
         draftName.trim(),
@@ -236,8 +259,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
       );
       if (result.status === "ok") {
         await refreshSettings();
-        updateSetting("post_process_selected_prompt_id", result.data.id);
-        setIsCreating(false);
+        setExpandedId(result.data.id);
       }
     } catch (error) {
       console.error("Failed to create prompt:", error);
@@ -245,11 +267,10 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
   };
 
   const handleUpdatePrompt = async () => {
-    if (!selectedPromptId || !draftName.trim() || !draftText.trim()) return;
-
+    if (!expandedId || !draftName.trim() || !draftText.trim()) return;
     try {
       await commands.updatePostProcessPrompt(
-        selectedPromptId,
+        expandedId,
         draftName.trim(),
         draftText.trim(),
       );
@@ -261,62 +282,32 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
 
   const handleDeletePrompt = async (promptId: string) => {
     if (!promptId) return;
-
     try {
       await commands.deletePostProcessPrompt(promptId);
       await refreshSettings();
-      setIsCreating(false);
+      if (expandedId === promptId) setExpandedId(null);
     } catch (error) {
       console.error("Failed to delete prompt:", error);
     }
   };
 
-  const handleCancelCreate = () => {
-    setIsCreating(false);
-    if (selectedPrompt) {
-      setDraftName(selectedPrompt.name);
-      setDraftText(selectedPrompt.prompt);
-    } else {
-      setDraftName("");
-      setDraftText("");
-    }
-  };
-
-  const handleStartCreate = () => {
-    setIsCreating(true);
-    setDraftName("");
-    setDraftText("");
-  };
-
-  const hasPrompts = prompts.length > 0;
-  const isBuiltIn = selectedPromptId.startsWith(BUILTIN_PROMPT_PREFIX);
-  const isDirty =
-    !!selectedPrompt &&
-    (draftName.trim() !== selectedPrompt.name ||
-      draftText.trim() !== selectedPrompt.prompt.trim());
-
-  const fieldsDisabled = !isCreating && isBuiltIn;
-
-  const promptFields = (
+  const promptFields = (options?: { disabled?: boolean; autoFocus?: boolean }) => (
     <>
       <div>
         <Input
           type="text"
           value={draftName}
           onChange={(e) => setDraftName(e.target.value)}
-          placeholder={t(
-            "settings.postProcessing.prompts.promptLabelPlaceholder",
-          )}
-          disabled={fieldsDisabled}
+          placeholder={t("settings.postProcessing.prompts.promptLabelPlaceholder")}
+          disabled={options?.disabled}
           className="rounded-b-none border-b-0 text-sm font-semibold"
+          autoFocus={options?.autoFocus}
         />
         <Textarea
           value={draftText}
           onChange={(e) => setDraftText(e.target.value)}
-          placeholder={t(
-            "settings.postProcessing.prompts.promptInstructionsPlaceholder",
-          )}
-          disabled={fieldsDisabled}
+          placeholder={t("settings.postProcessing.prompts.promptInstructionsPlaceholder")}
+          disabled={options?.disabled}
           className="min-h-[200px] rounded-t-none"
         />
       </div>
@@ -328,97 +319,161 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
 
   return (
     <div className="px-3 py-1.5">
-      <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <Dropdown
-            selectedValue={selectedPromptId || NONE_VALUE}
-            options={[
-              { value: NONE_VALUE, label: t("settings.general.shortcuts.strategyNone") },
-              ...prompts.map((p) => ({
-                value: p.id,
-                label: p.name,
-              })),
-            ]}
-            onSelect={(value) => handlePromptSelect(value)}
-            placeholder={
-              prompts.length === 0
-                ? t("settings.postProcessing.prompts.noPrompts")
-                : t("settings.postProcessing.prompts.selectPrompt")
-            }
-            disabled={
-              isUpdating("post_process_selected_prompt_id") || isCreating
-            }
-            className="flex-1"
-          />
-          <Button
-            onClick={handleStartCreate}
-            variant="default"
-            size="default"
-            disabled={isCreating}
-          >
-            {t("settings.postProcessing.prompts.createNew")}
-          </Button>
-        </div>
+      <div className="space-y-2">
+        {/* Prompt cards */}
+        {prompts.map((prompt) => {
+          const isExpanded = expandedId === prompt.id;
+          const isBuiltIn = prompt.id.startsWith(BUILTIN_PROMPT_PREFIX);
+          const shortcuts = shortcutMap[prompt.id] || [];
+          const isDirty =
+            isExpanded &&
+            expandedPrompt &&
+            (draftName.trim() !== expandedPrompt.name ||
+              draftText.trim() !== expandedPrompt.prompt.trim());
 
-        {!isCreating && hasPrompts && selectedPrompt && (
-          <div className="space-y-3">
-            {promptFields}
+          return (
+            <SelectableCard
+              key={prompt.id}
+              active={isExpanded}
+              clickable={!isExpanded}
+              compact
+              onClick={() => handleToggle(prompt.id)}
+            >
+              {/* Header row — always visible */}
+              <div
+                className={`flex items-center gap-2 ${isExpanded ? "cursor-pointer" : ""}`}
+                onClick={() => {
+                  if (!isExpanded) return;
+                  handleToggle(prompt.id);
+                }}
+              >
+                <motion.div
+                  animate={{ rotate: isExpanded ? 180 : 0 }}
+                  transition={spring.gentle}
+                  className="shrink-0 text-muted/50"
+                >
+                  <CaretDown size={12} weight="bold" />
+                </motion.div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-sm font-semibold truncate block">
+                    {prompt.name}
+                  </span>
+                  {!isExpanded && (
+                    <span className="text-xs text-muted/50 truncate block">
+                      {prompt.prompt.split("\n")[0]}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {isBuiltIn && (
+                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                      {t("settings.postProcessing.prompts.builtIn")}
+                    </Badge>
+                  )}
+                  {shortcuts.map((s) => (
+                    <Badge key={s.id} variant="outline" className="text-[10px] px-1.5 py-0 font-mono">
+                      {s.shortcut}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
 
-            {!isBuiltIn && (
-              <div className="flex gap-2 pt-2">
+              {/* Expanded content */}
+              <div
+                className="grid"
+                aria-hidden={!isExpanded}
+                style={{
+                  gridTemplateRows: isExpanded ? "1fr" : "0fr",
+                  opacity: isExpanded ? 1 : 0,
+                  transition: reducedMotion
+                    ? undefined
+                    : "grid-template-rows 200ms ease-out, opacity 200ms ease-out",
+                }}
+              >
+                <div className="overflow-hidden min-h-0">
+                  <div className="space-y-3 pt-2">
+                    {promptFields({ disabled: isBuiltIn })}
+
+                    {!isBuiltIn && (
+                      <div className="flex gap-2 pt-1">
+                        <Button
+                          onClick={handleUpdatePrompt}
+                          variant="default"
+                          size="default"
+                          disabled={
+                            !draftName.trim() ||
+                            !draftText.trim() ||
+                            !isDirty
+                          }
+                        >
+                          {t(
+                            "settings.postProcessing.prompts.updatePrompt",
+                          )}
+                        </Button>
+                        <Button
+                          onClick={() => handleDeletePrompt(prompt.id)}
+                          variant="secondary"
+                          size="default"
+                          disabled={prompts.length <= 1}
+                        >
+                          {t(
+                            "settings.postProcessing.prompts.deletePrompt",
+                          )}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </SelectableCard>
+          );
+        })}
+
+        {/* Create new prompt form */}
+        {isCreating && (
+          <SelectableCard active compact>
+            <div className="space-y-3">
+              {promptFields({ autoFocus: true })}
+              <div className="flex gap-2 pt-1">
                 <Button
-                  onClick={handleUpdatePrompt}
+                  onClick={handleCreatePrompt}
                   variant="default"
                   size="default"
-                  disabled={!draftName.trim() || !draftText.trim() || !isDirty}
+                  disabled={!draftName.trim() || !draftText.trim()}
                 >
-                  {t("settings.postProcessing.prompts.updatePrompt")}
+                  {t("settings.postProcessing.prompts.createPrompt")}
                 </Button>
                 <Button
-                  onClick={() => handleDeletePrompt(selectedPromptId)}
+                  onClick={handleCancelCreate}
                   variant="secondary"
                   size="default"
-                  disabled={!selectedPromptId || prompts.length <= 1}
                 >
-                  {t("settings.postProcessing.prompts.deletePrompt")}
+                  {t("settings.postProcessing.prompts.cancel")}
                 </Button>
               </div>
-            )}
-          </div>
+            </div>
+          </SelectableCard>
         )}
 
-        {!isCreating && !selectedPrompt && (
+        {/* Empty state */}
+        {prompts.length === 0 && !isCreating && (
           <div className="p-3 bg-muted/5 rounded border border-muted/20">
             <p className="text-sm text-muted">
-              {hasPrompts
-                ? t("settings.postProcessing.prompts.selectToEdit")
-                : t("settings.postProcessing.prompts.createFirst")}
+              {t("settings.postProcessing.prompts.createFirst")}
             </p>
           </div>
         )}
 
-        {isCreating && (
-          <div className="space-y-3">
-            {promptFields}
-
-            <div className="flex gap-2 pt-2">
-              <Button
-                onClick={handleCreatePrompt}
-                variant="default"
-                size="default"
-                disabled={!draftName.trim() || !draftText.trim()}
-              >
-                {t("settings.postProcessing.prompts.createPrompt")}
-              </Button>
-              <Button
-                onClick={handleCancelCreate}
-                variant="secondary"
-                size="default"
-              >
-                {t("settings.postProcessing.prompts.cancel")}
-              </Button>
-            </div>
-          </div>
+        {/* New Prompt button */}
+        {!isCreating && (
+          <Button
+            onClick={handleStartCreate}
+            variant="secondary"
+            size="default"
+            className="w-full"
+          >
+            {t("settings.postProcessing.prompts.createNew")}
+          </Button>
         )}
       </div>
     </div>

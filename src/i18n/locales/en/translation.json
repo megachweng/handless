@@ -478,8 +478,6 @@
           "title": "Selected Prompt",
           "description": "Select a template for refining transcriptions or create a new one. The captured transcript is automatically provided to the prompt."
         },
-        "noPrompts": "No prompts available",
-        "selectPrompt": "Select a prompt",
         "createNew": "New Prompt",
         "promptLabel": "Prompt Label",
         "promptLabelPlaceholder": "Enter prompt name",
@@ -490,8 +488,8 @@
         "deletePrompt": "Delete Prompt",
         "createPrompt": "Create",
         "cancel": "Cancel",
-        "selectToEdit": "Select a prompt above to view and edit its details.",
-        "createFirst": "Click 'New Prompt' above to create your first post-processing prompt."
+        "createFirst": "Click 'New Prompt' above to create your first post-processing prompt.",
+        "builtIn": "Built-in"
       }
     },
     "stats": {

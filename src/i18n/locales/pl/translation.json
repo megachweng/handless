@@ -478,8 +478,6 @@
           "title": "Wybrany prompt",
           "description": "Wybierz szablon do ulepszania transkrypcji lub utwórz nowy. Przechwycona transkrypcja jest automatycznie dostarczana do promptu."
         },
-        "noPrompts": "Brak dostępnych promptów",
-        "selectPrompt": "Wybierz prompt",
         "createNew": "Utwórz nowy prompt",
         "promptLabel": "Etykieta promptu",
         "promptLabelPlaceholder": "Wpisz nazwę promptu",
@@ -490,7 +488,6 @@
         "deletePrompt": "Usuń prompt",
         "createPrompt": "Utwórz",
         "cancel": "Anuluj",
-        "selectToEdit": "Wybierz prompt powyżej, aby zobaczyć i edytować jego szczegóły.",
         "createFirst": "Kliknij 'Utwórz nowy prompt' powyżej, aby utworzyć pierwszy prompt postprocessingu."
       }
     },

@@ -478,8 +478,6 @@
           "title": "Prompt Selezionato",
           "description": "Seleziona un template per migliorare le trascrizioni o creane uno nuovo. La trascrizione catturata viene fornita automaticamente al prompt."
         },
-        "noPrompts": "Nessun prompt disponibile.",
-        "selectPrompt": "Scegli un prompt",
         "createNew": "Crea un nuovo prompt",
         "promptLabel": "Etichetta del Prompt",
         "promptLabelPlaceholder": "Inserisci il nome del prompt",
@@ -490,7 +488,6 @@
         "deletePrompt": "Elimina Prompt",
         "createPrompt": "Crea",
         "cancel": "Annulla",
-        "selectToEdit": "Scegli un prompt qui sopra per visualizzare o modificare i dettagli.",
         "createFirst": "Clicca 'Crea un nuovo prompt' qui sopra per creare il tuo primo prompt di post-elaborazione."
       }
     },

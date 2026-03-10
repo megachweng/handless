@@ -478,8 +478,6 @@
           "title": "已選提示詞",
           "description": "選擇用於最佳化轉錄的範本或建立新範本。擷取的轉錄會自動提供給提示詞。"
         },
-        "noPrompts": "沒有可用的提示詞",
-        "selectPrompt": "選擇提示詞",
         "createNew": "建立新提示詞",
         "promptLabel": "提示詞名稱",
         "promptLabelPlaceholder": "輸入提示詞名稱",
@@ -490,7 +488,6 @@
         "deletePrompt": "刪除提示詞",
         "createPrompt": "建立",
         "cancel": "取消",
-        "selectToEdit": "選擇上方的提示詞以檢視和編輯其詳細資訊",
         "createFirst": "點選上方的「建立新提示詞」來建立您的第一個後處理提示詞"
       }
     },

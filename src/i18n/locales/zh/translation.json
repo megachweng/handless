@@ -478,8 +478,6 @@
           "title": "已选提示词",
           "description": "选择用于优化转录的模板或创建新模板。捕获的转录会自动提供给提示词。"
         },
-        "noPrompts": "没有可用的提示词",
-        "selectPrompt": "选择提示词",
         "createNew": "创建新提示词",
         "promptLabel": "提示词名称",
         "promptLabelPlaceholder": "输入提示词名称",
@@ -490,7 +488,6 @@
         "deletePrompt": "删除提示词",
         "createPrompt": "创建",
         "cancel": "取消",
-        "selectToEdit": "选择上方的提示词以查看和编辑其详细信息。",
         "createFirst": "点击上方的「创建新提示词」来创建您的第一个后处理提示词。"
       }
     },

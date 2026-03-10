@@ -478,8 +478,6 @@
           "title": "Prompt sélectionné",
           "description": "Sélectionnez un modèle pour affiner les transcriptions ou créez-en un nouveau. La transcription capturée est automatiquement fournie au prompt."
         },
-        "noPrompts": "Aucun prompt disponible",
-        "selectPrompt": "Sélectionner un prompt",
         "createNew": "Créer un nouveau prompt",
         "promptLabel": "Libellé du prompt",
         "promptLabelPlaceholder": "Entrez le nom du prompt",
@@ -490,7 +488,6 @@
         "deletePrompt": "Supprimer le prompt",
         "createPrompt": "Créer",
         "cancel": "Annuler",
-        "selectToEdit": "Sélectionnez un prompt ci-dessus pour voir et modifier ses détails.",
         "createFirst": "Cliquez sur 'Créer un nouveau prompt' ci-dessus pour créer votre premier prompt de post-traitement."
       }
     },
