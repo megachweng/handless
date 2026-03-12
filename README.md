@@ -1,9 +1,5 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="svg/logo-5-dark-1024.png" />
-    <source media="(prefers-color-scheme: light)" srcset="svg/logo-5-light-1024.png" />
-    <img src="svg/logo-5-dark-1024.png" alt="Handless logo" width="128" height="128" />
-  </picture>
+  <img src="src-tauri/icons/logo.png" alt="Handless logo" width="128" height="128" />
 </p>
 
 <h1 align="center">Handless</h1>
