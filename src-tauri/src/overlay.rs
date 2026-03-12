@@ -13,7 +13,9 @@ use tauri::WebviewWindowBuilder;
 use tauri::WebviewUrl;
 
 #[cfg(target_os = "macos")]
-use tauri_nspanel::{tauri_panel, CollectionBehavior, PanelBuilder, PanelLevel};
+use tauri_nspanel::{
+    tauri_panel, CollectionBehavior, ManagerExt, PanelBuilder, PanelLevel, StyleMask,
+};
 
 #[cfg(target_os = "linux")]
 use gtk_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
@@ -286,6 +288,9 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
             .build()
         {
             Ok(panel) => {
+                // Prevent showing the overlay from activating Handless, which
+                // would cause macOS to leave a fullscreen space.
+                panel.set_style_mask(StyleMask::empty().nonactivating_panel().into());
                 let _ = panel.hide();
             }
             Err(e) => {
@@ -312,6 +317,19 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
 
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         let _ = overlay_window.show();
+
+        // On macOS, also use the NSPanel's order_front_regardless to ensure
+        // the overlay appears on fullscreen spaces. Must run on the main
+        // thread because it calls AppKit APIs directly via objc2.
+        #[cfg(target_os = "macos")]
+        {
+            let app = app_handle.clone();
+            let _ = overlay_window.run_on_main_thread(move || {
+                if let Ok(panel) = app.get_webview_panel("recording_overlay") {
+                    panel.order_front_regardless();
+                }
+            });
+        }
 
         // On Windows, aggressively re-assert "topmost" in the native Z-order after showing
         #[cfg(target_os = "windows")]
