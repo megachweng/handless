@@ -25,8 +25,8 @@ interface TagListInputProps {
 
 export const TagListInput: React.FC<TagListInputProps> = ({
   settingKey,
-  title,
-  description,
+  title = "",
+  description = "",
   placeholder,
   addLabel,
   removeAriaLabel,
