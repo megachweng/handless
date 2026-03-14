@@ -152,10 +152,15 @@ impl ShortcutAction for TranscribeAction {
                     .get(&settings.stt_provider_id)
                     .cloned()
                     .unwrap_or_default(),
-                options: settings
-                    .stt_cloud_options
-                    .get(&settings.stt_provider_id)
-                    .and_then(|s| serde_json::from_str(s).ok()),
+                options: crate::stt_provider::inject_dictionary(
+                    &settings.stt_provider_id,
+                    settings
+                        .stt_cloud_options
+                        .get(&settings.stt_provider_id)
+                        .and_then(|s| serde_json::from_str(s).ok()),
+                    &settings.dictionary_terms,
+                    &settings.dictionary_context,
+                ),
                 delta_tx: Some(delta_tx),
             };
 

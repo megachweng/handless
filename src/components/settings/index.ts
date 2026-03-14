@@ -5,6 +5,7 @@ export { DebugSettings } from "./debug/DebugSettings";
 export { HistorySettings } from "./history/HistorySettings";
 export { PostProcessingSettings } from "./post-processing/PostProcessingSettings";
 export { ModelsSettings } from "./models/ModelsSettings";
+export { DictionarySettings } from "./dictionary/DictionarySettings";
 
 // Individual setting components
 export { MicrophoneSelector } from "./MicrophoneSelector";
@@ -17,7 +18,6 @@ export { GlobalShortcutInput } from "./GlobalShortcutInput";
 export { HandyKeysShortcutInput } from "./HandyKeysShortcutInput";
 export { ShortcutInput } from "./ShortcutInput";
 export { TranslateToEnglish } from "./TranslateToEnglish";
-export { CustomWords } from "./CustomWords";
 export { PostProcessingSettingsApi } from "./PostProcessingSettingsApi";
 export { PostProcessingSettingsPrompts } from "./PostProcessingSettingsPrompts";
 export { AppDataDirectory } from "./AppDataDirectory";

@@ -6,6 +6,7 @@ import {
   House,
   Command,
   Cube,
+  Book,
   PencilSimple,
   ClockCounterClockwise,
   Bug,
@@ -18,6 +19,7 @@ import {
   DebugSettings,
   PostProcessingSettings,
   ModelsSettings,
+  DictionarySettings,
 } from "./settings";
 import { spring, tapScale } from "@/lib/motion";
 
@@ -54,6 +56,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.models",
     icon: Cube,
     component: ModelsSettings,
+    enabled: () => true,
+  },
+  dictionary: {
+    labelKey: "sidebar.dictionary",
+    icon: Book,
+    component: DictionarySettings,
     enabled: () => true,
   },
   postprocessing: {

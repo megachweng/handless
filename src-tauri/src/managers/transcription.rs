@@ -412,6 +412,12 @@ impl TranscriptionManager {
                 .stt_cloud_options
                 .get(&settings.stt_provider_id)
                 .and_then(|s| serde_json::from_str(s).ok());
+            let cloud_options = crate::stt_provider::inject_dictionary(
+                &settings.stt_provider_id,
+                cloud_options,
+                &settings.dictionary_terms,
+                &settings.dictionary_context,
+            );
 
             let realtime_enabled = settings
                 .stt_realtime_enabled

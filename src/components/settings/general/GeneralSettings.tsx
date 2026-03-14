@@ -24,7 +24,6 @@ import { ExportImportSettings } from "../advanced/ExportImportSettings";
 import { ConfigFileSettings } from "../advanced/ConfigFileSettings";
 import { AppLanguageSelector } from "../AppLanguageSelector";
 import { AppDataDirectory } from "../AppDataDirectory";
-import { CustomWords } from "../CustomWords";
 import { AppendTrailingSpace } from "../AppendTrailingSpace";
 import { LogDirectory } from "../debug";
 
@@ -62,7 +61,6 @@ export const GeneralSettings: React.FC = () => {
         <TypingToolSetting descriptionMode="tooltip" grouped={true} />
         <ClipboardHandlingSetting descriptionMode="tooltip" grouped={true} />
         <AutoSubmit descriptionMode="tooltip" grouped={true} />
-        <CustomWords descriptionMode="tooltip" grouped={true} />
         <AppendTrailingSpace descriptionMode="tooltip" grouped={true} />
       </SettingsGroup>
 

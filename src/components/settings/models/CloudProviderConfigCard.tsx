@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   CaretDown,
@@ -32,7 +32,8 @@ const CloudOptionControl: React.FC<{
   value: unknown;
   supportedTranslate: string[];
   onChange: (value: unknown) => void;
-}> = ({ option, value, supportedTranslate, onChange }) => {
+  dictionaryPreview?: string;
+}> = ({ option, value, supportedTranslate, onChange, dictionaryPreview }) => {
   const { t } = useTranslation();
 
   const languageOptions = useMemo(
@@ -95,6 +96,11 @@ const CloudOptionControl: React.FC<{
             <span className="text-xs text-text/50">
               {t(option.description)}
             </span>
+          )}
+          {dictionaryPreview && (
+            <div className="text-xs text-accent/70 bg-accent/5 border border-accent/10 rounded px-2 py-1 max-w-[400px] truncate">
+              {dictionaryPreview}
+            </div>
           )}
           <Input
             type="text"
@@ -166,6 +172,8 @@ interface CloudProviderConfigCardProps {
   onOptionsChange?: (options: Record<string, unknown>) => void;
   realtimeEnabled?: boolean;
   onRealtimeChange?: (enabled: boolean) => void;
+  dictionaryTerms?: string[];
+  dictionaryContext?: string;
 }
 
 export const CloudProviderConfigCard: React.FC<
@@ -186,6 +194,8 @@ export const CloudProviderConfigCard: React.FC<
   onOptionsChange,
   realtimeEnabled = false,
   onRealtimeChange,
+  dictionaryTerms = [],
+  dictionaryContext = "",
 }) => {
   const { t } = useTranslation();
   const [localApiKey, setLocalApiKey] = useState(apiKey);
@@ -204,6 +214,31 @@ export const CloudProviderConfigCard: React.FC<
   useEffect(() => {
     setVerifyError(null);
   }, [localApiKey, localModel]);
+
+  const getDictionaryPreview = useCallback(
+    (optionKey: string): string | undefined => {
+      const hasTerms = dictionaryTerms.length > 0;
+      const hasContext = dictionaryContext.trim().length > 0;
+      if (!hasTerms && !hasContext) return undefined;
+
+      if (provider.id === "openai_stt" && optionKey === "prompt") {
+        const parts: string[] = [];
+        if (hasTerms) parts.push(`Glossary: ${dictionaryTerms.join(", ")}.`);
+        if (hasContext) parts.push(dictionaryContext);
+        return parts.join(" ") || undefined;
+      }
+      if (provider.id === "soniox") {
+        if (optionKey === "context_terms" && hasTerms) {
+          return dictionaryTerms.join(", ");
+        }
+        if (optionKey === "context_description" && hasContext) {
+          return dictionaryContext;
+        }
+      }
+      return undefined;
+    },
+    [dictionaryTerms, dictionaryContext, provider.id],
+  );
 
   const effectiveStatus =
     !isVerified && status === "active" ? "available" : status;
@@ -412,6 +447,7 @@ export const CloudProviderConfigCard: React.FC<
                     option={opt}
                     value={cloudOptions[opt.key]}
                     supportedTranslate={provider.supported_languages}
+                    dictionaryPreview={getDictionaryPreview(opt.key)}
                     onChange={(val) => {
                       const updated = { ...cloudOptions };
                       if (
