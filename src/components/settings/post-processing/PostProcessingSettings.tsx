@@ -254,7 +254,7 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
               </span>
             )}
           </span>
-          {!expanded && stats?.tokens_per_second != null && (
+          {stats?.tokens_per_second != null && (
             <span className="text-xs text-muted/50 truncate block">
               {t("settings.postProcessing.api.tokensPerSecond", { value: stats.tokens_per_second.toFixed(1) })}
             </span>
@@ -737,16 +737,12 @@ const PostProcessingSettingsPromptsComponent = React.forwardRef<{
                 </>
               }
             >
-              <div className="min-w-0">
+              <div className="min-w-0 leading-tight">
                 <span className="text-sm font-semibold text-text/70 truncate block">
                   {prompt.name}
                 </span>
-                {!isExpanded && (
-                  <span className="text-xs text-muted/50 truncate block">
-                    {prompt.prompt.split("\n")[0]}
-                  </span>
-                )}
-                {!isExpanded && hasPricing && (
+
+                {hasPricing && (
                   <PromptCostEstimate
                     promptText={prompt.prompt}
                     inputPrice={inputPrice}
