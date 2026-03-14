@@ -10,6 +10,8 @@ import React, {
 import "./RecordingOverlay.css";
 import i18n, { syncLanguageFromSettings } from "@/i18n";
 import { getLanguageDirection } from "@/lib/utils/rtl";
+import { commands, type ActivationMode } from "@/bindings";
+import { X, Check } from "@phosphor-icons/react";
 
 type OverlayState = "recording" | "transcribing" | "processing";
 
@@ -21,10 +23,13 @@ const STREAMING_WIDTH = 300;
 const STREAMING_LINE_HEIGHT = 18;
 const MAX_LINES = 5;
 const OVERLAY_PADDING = 12;
+const BUTTON_AREA_WIDTH = 20; // px per side for cancel/confirm buttons
 
 const RecordingOverlay: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [state, setState] = useState<OverlayState>("recording");
+  const [activationMode, setActivationMode] =
+    useState<ActivationMode>("hold_or_toggle");
   const [streamingText, setStreamingText] = useState("");
   const [overlayPosition, setOverlayPosition] = useState<"top" | "bottom">(
     "top",
@@ -65,12 +70,15 @@ const RecordingOverlay: React.FC = () => {
 
   const hasStreamingText = state === "recording" && streamingText.length > 0;
   const isPostProcessing = state === "transcribing" || state === "processing";
+  // Buttons visible & interactive only in toggle mode
+  const showButtons = state === "recording" && activationMode === "toggle";
+  const buttonsExtra = showButtons ? BUTTON_AREA_WIDTH * 2 : 0;
 
   // Compute overlay dimensions
   const overlayWidth = (() => {
     if (!isVisible) return 33;
-    if (hasStreamingText) return STREAMING_WIDTH;
-    return 70;
+    if (hasStreamingText) return STREAMING_WIDTH + buttonsExtra;
+    return 70 + buttonsExtra;
   })();
 
   const overlayHeight = (() => {
@@ -84,6 +92,7 @@ const RecordingOverlay: React.FC = () => {
   })();
 
   const overlayRadius = hasStreamingText ? 14 : 999;
+  const buttonRadius = hasStreamingText ? 8 : 13;
 
   // Track words (runs before paint to avoid flicker)
   useLayoutEffect(() => {
@@ -165,10 +174,14 @@ const RecordingOverlay: React.FC = () => {
       const glowSpread = e * 4;
       const glowAlpha = e * 0.3;
       const innerAlpha = 0.03 + e * 0.06;
+      // Outer shadows via filter (renders after clip-path, follows pill shape).
+      // Inset shadows via box-shadow (inside the clip boundary, unaffected).
+      overlay.style.filter = [
+        `drop-shadow(0 0 ${glowBlur + glowSpread}px rgba(${accentRgbRef.current}, ${glowAlpha}))`,
+        "drop-shadow(0 4px 24px rgba(0, 0, 0, 0.45))",
+        "drop-shadow(0 0 0.5px rgba(0, 0, 0, 0.5))",
+      ].join(" ");
       overlay.style.boxShadow = [
-        `0 0 ${glowBlur}px ${glowSpread}px rgba(${accentRgbRef.current}, ${glowAlpha})`,
-        "0 4px 24px rgba(0, 0, 0, 0.45)",
-        "0 0 0 0.5px rgba(0, 0, 0, 0.5)",
         `inset 0 1px 0 rgba(${accentRgbRef.current}, 0.04)`,
         `inset 0 0 16px rgba(${accentRgbRef.current}, ${innerAlpha})`,
       ].join(", ");
@@ -182,6 +195,7 @@ const RecordingOverlay: React.FC = () => {
     if (isVisible && state === "recording") {
       rafIdRef.current = requestAnimationFrame(animateDots);
     } else if (overlayRef.current) {
+      overlayRef.current.style.filter = "";
       overlayRef.current.style.boxShadow = "";
     }
     return () => cancelAnimationFrame(rafIdRef.current);
@@ -229,11 +243,17 @@ const RecordingOverlay: React.FC = () => {
         await listen<{
           state: OverlayState;
           position: "top" | "bottom";
+          activation_mode: ActivationMode;
         }>("show-overlay", async (event) => {
           await syncLanguageFromSettings();
-          const { state: overlayState, position } = event.payload;
+          const {
+            state: overlayState,
+            position,
+            activation_mode,
+          } = event.payload;
           setState(overlayState);
           setOverlayPosition(position);
+          setActivationMode(activation_mode);
           setStreamingText("");
           setProgress(0);
           // Reset dot levels on new session
@@ -266,6 +286,12 @@ const RecordingOverlay: React.FC = () => {
           setStreamingText(event.payload);
         }),
       );
+
+      unlisteners.push(
+        await listen<ActivationMode>("update-activation-mode", (event) => {
+          setActivationMode(event.payload);
+        }),
+      );
     };
 
     setup();
@@ -276,6 +302,14 @@ const RecordingOverlay: React.FC = () => {
     };
   }, [clearProgressInterval]);
 
+  const handleCancel = useCallback(() => {
+    commands.cancelOperation();
+  }, []);
+
+  const handleConfirm = useCallback(() => {
+    commands.confirmRecording();
+  }, []);
+
   return (
     <div className={`overlay-wrapper position-${overlayPosition}`}>
       <div
@@ -285,40 +319,58 @@ const RecordingOverlay: React.FC = () => {
           width: overlayWidth,
           height: overlayHeight,
           borderRadius: overlayRadius,
+          clipPath: `inset(0 round ${overlayRadius}px)`,
         }}
-        className={`recording-overlay ${isVisible ? "fade-in" : ""}`}
+        className={`recording-overlay ${isVisible ? "fade-in" : ""} ${showButtons ? "has-buttons" : ""}`}
       >
-        {state === "recording" &&
-          (hasStreamingText ? (
-            <div ref={streamingTextRef} className="streaming-text">
-              {words.map((w, i) => (
-                <React.Fragment key={i}>
-                  {i > 0 && " "}
-                  <span className={w.isNew ? "word-appear" : undefined}>
-                    {w.text}
-                  </span>
-                </React.Fragment>
-              ))}
-            </div>
-          ) : (
-            <div className="dots-container">
-              {Array.from({ length: DOT_COUNT }, (_, i) => {
-                const center = (DOT_COUNT - 1) / 2;
-                const dist = Math.abs(i - center) / center;
-                const w = 1.5 + (1 - dist * dist) * 1;
-                return (
-                  <div
-                    key={i}
-                    className="dot"
-                    style={{ width: w }}
-                    ref={(el) => {
-                      dotElementsRef.current[i] = el;
-                    }}
-                  />
-                );
-              })}
-            </div>
-          ))}
+        {state === "recording" && (
+          <>
+            <button
+              className={`overlay-btn overlay-btn-cancel ${showButtons ? "active" : ""}`}
+              style={{ borderRadius: buttonRadius }}
+              onClick={handleCancel}
+            >
+              <X size={12} weight="bold" />
+            </button>
+            {hasStreamingText ? (
+              <div ref={streamingTextRef} className="streaming-text">
+                {words.map((w, i) => (
+                  <React.Fragment key={i}>
+                    {i > 0 && " "}
+                    <span className={w.isNew ? "word-appear" : undefined}>
+                      {w.text}
+                    </span>
+                  </React.Fragment>
+                ))}
+              </div>
+            ) : (
+              <div className="dots-container">
+                {Array.from({ length: DOT_COUNT }, (_, i) => {
+                  const center = (DOT_COUNT - 1) / 2;
+                  const dist = Math.abs(i - center) / center;
+                  const w = 1.5 + (1 - dist * dist) * 1;
+                  return (
+                    <div
+                      key={i}
+                      className="dot"
+                      style={{ width: w }}
+                      ref={(el) => {
+                        dotElementsRef.current[i] = el;
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            )}
+            <button
+              className={`overlay-btn overlay-btn-confirm ${showButtons ? "active" : ""}`}
+              style={{ borderRadius: buttonRadius }}
+              onClick={handleConfirm}
+            >
+              <Check size={12} weight="bold" />
+            </button>
+          </>
+        )}
 
         {isPostProcessing && (
           <>

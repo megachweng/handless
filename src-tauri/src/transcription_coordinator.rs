@@ -1,5 +1,6 @@
 use crate::actions::{ShortcutAction, TranscribeAction};
 use crate::managers::audio::AudioRecordingManager;
+use crate::overlay;
 use crate::settings::ActivationMode;
 use log::{debug, error, warn};
 use once_cell::sync::Lazy;
@@ -28,6 +29,8 @@ enum Command {
     Cancel {
         recording_was_active: bool,
     },
+    /// Stop recording and process (triggered by overlay confirm button).
+    Confirm,
     ProcessingFinished,
 }
 
@@ -146,10 +149,21 @@ impl TranscriptionCoordinator {
                                                 // Quick press: enter toggle state → keep recording.
                                                 toggled = true;
                                                 press_start = None;
+                                                overlay::update_overlay_activation_mode(
+                                                    &app, ActivationMode::Toggle,
+                                                );
                                             }
                                         }
                                     }
                                 }
+                            }
+                        }
+                        Command::Confirm => {
+                            if let Stage::Recording(ref id) = stage {
+                                let bid = id.clone();
+                                stop(&app, &mut stage, &bid, "overlay-confirm");
+                                press_start = None;
+                                toggled = false;
                             }
                         }
                         Command::Cancel {
@@ -200,6 +214,13 @@ impl TranscriptionCoordinator {
             })
             .is_err()
         {
+            warn!("Transcription coordinator channel closed");
+        }
+    }
+
+    /// Confirm (stop + process) the current recording, regardless of binding_id.
+    pub fn confirm_recording(&self) {
+        if self.tx.send(Command::Confirm).is_err() {
             warn!("Transcription coordinator channel closed");
         }
     }

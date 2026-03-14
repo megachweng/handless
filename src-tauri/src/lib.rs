@@ -332,6 +332,7 @@ pub fn run(cli_args: CliArgs) {
         shortcut::handy_keys::stop_handy_keys_recording,
         trigger_update_check,
         commands::cancel_operation,
+        commands::confirm_recording,
         commands::get_app_dir_path,
         commands::get_app_settings,
         commands::get_default_settings,

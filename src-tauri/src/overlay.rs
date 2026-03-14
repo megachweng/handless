@@ -1,6 +1,6 @@
 use crate::input;
 use crate::settings;
-use crate::settings::OverlayPosition;
+use crate::settings::{ActivationMode, OverlayPosition};
 use tauri::{AppHandle, Emitter, Manager};
 
 #[cfg(not(target_os = "macos"))]
@@ -334,6 +334,7 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
 struct OverlayPayload<'a> {
     state: &'a str,
     position: &'a str,
+    activation_mode: &'a str,
 }
 
 fn show_overlay_state(app_handle: &AppHandle, state: &str) {
@@ -348,9 +349,12 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         let _ = overlay_window.show();
 
-        // Make the overlay fully click-through so transparent regions don't block
-        // mouse events on the Dock or underlying windows (see #122).
-        let _ = overlay_window.set_ignore_cursor_events(true);
+        // In toggle mode during recording, the overlay shows clickable
+        // cancel/confirm buttons, so it must accept cursor events.
+        // Otherwise, make it fully click-through (see #122).
+        let needs_interaction =
+            state == "recording" && settings.activation_mode == ActivationMode::Toggle;
+        let _ = overlay_window.set_ignore_cursor_events(!needs_interaction);
 
         // On macOS, also use the NSPanel's order_front_regardless to ensure
         // the overlay appears on fullscreen spaces. Must run on the main
@@ -373,11 +377,16 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
             OverlayPosition::Top => "top",
             _ => "bottom",
         };
+        let activation_mode_str = match settings.activation_mode {
+            ActivationMode::Toggle => "toggle",
+            ActivationMode::Hold | ActivationMode::HoldOrToggle => "hold",
+        };
         let _ = overlay_window.emit(
             "show-overlay",
             OverlayPayload {
                 state,
                 position: position_str,
+                activation_mode: activation_mode_str,
             },
         );
     }
@@ -436,6 +445,21 @@ pub fn emit_levels(app_handle: &AppHandle, levels: &Vec<f32>) {
     // also emit to the recording overlay if it's open
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         let _ = overlay_window.emit("mic-level", levels);
+    }
+}
+
+/// Notify the overlay that the effective activation mode has changed
+/// (e.g. hold_or_toggle transitioned into toggle after a quick press).
+pub fn update_overlay_activation_mode(app_handle: &AppHandle, mode: ActivationMode) {
+    if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        // Toggle mode needs clickable buttons; others are click-through
+        let needs_interaction = mode == ActivationMode::Toggle;
+        let _ = overlay_window.set_ignore_cursor_events(!needs_interaction);
+        let mode_str = match mode {
+            ActivationMode::Toggle => "toggle",
+            ActivationMode::Hold | ActivationMode::HoldOrToggle => "hold",
+        };
+        let _ = overlay_window.emit("update-activation-mode", mode_str);
     }
 }
 

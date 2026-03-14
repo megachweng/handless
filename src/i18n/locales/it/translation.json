@@ -699,6 +699,8 @@
   },
   "overlay": {
     "transcribing": "Trascrizione...",
-    "processing": "Elaborazione..."
+    "processing": "Elaborazione...",
+    "cancel": "Cancel",
+    "finish": "Finish"
   }
 }

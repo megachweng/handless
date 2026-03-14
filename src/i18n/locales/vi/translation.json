@@ -699,6 +699,8 @@
   },
   "overlay": {
     "transcribing": "Đang chuyển đổi...",
-    "processing": "Đang xử lý..."
+    "processing": "Đang xử lý...",
+    "cancel": "Cancel",
+    "finish": "Finish"
   }
 }

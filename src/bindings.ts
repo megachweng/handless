@@ -436,6 +436,12 @@ async triggerUpdateCheck() : Promise<Result<null, string>> {
 async cancelOperation() : Promise<void> {
     await TAURI_INVOKE("cancel_operation");
 },
+/**
+ * Stop recording and process the transcription (overlay confirm button).
+ */
+async confirmRecording() : Promise<void> {
+    await TAURI_INVOKE("confirm_recording");
+},
 async getAppDirPath() : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_app_dir_path") };

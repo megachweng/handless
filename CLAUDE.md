@@ -62,6 +62,7 @@ bun run check:translations       # Validate translation files
 - Strict TypeScript, no `any`
 - Functional components with hooks
 - Tailwind CSS for styling, Radix UI for primitives
+- Icons: `@phosphor-icons/react` — use Phosphor icons instead of inline SVGs
 - Path alias: `@/` → `./src/`
 - State: Zustand stores in `stores/`
 - New settings components go in the appropriate `settings/` subdirectory

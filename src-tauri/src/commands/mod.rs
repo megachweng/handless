@@ -6,6 +6,7 @@ pub mod transcription;
 
 use crate::settings::{self, get_settings, write_settings, AppSettings, LogLevel};
 use crate::utils::cancel_current_operation;
+use crate::TranscriptionCoordinator;
 use tauri::{AppHandle, Emitter, Manager};
 use tauri_plugin_opener::OpenerExt;
 
@@ -13,6 +14,15 @@ use tauri_plugin_opener::OpenerExt;
 #[specta::specta]
 pub fn cancel_operation(app: AppHandle) {
     cancel_current_operation(&app);
+}
+
+/// Stop recording and process the transcription (overlay confirm button).
+#[tauri::command]
+#[specta::specta]
+pub fn confirm_recording(app: AppHandle) {
+    if let Some(coordinator) = app.try_state::<TranscriptionCoordinator>() {
+        coordinator.confirm_recording();
+    }
 }
 
 #[tauri::command]
