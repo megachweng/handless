@@ -181,3 +181,27 @@ pub async fn get_all_stt_providers(
     providers.extend(cloud_provider_registry());
     Ok(providers)
 }
+
+#[tauri::command]
+#[specta::specta]
+pub async fn update_dictionary_terms(
+    app_handle: AppHandle,
+    terms: Vec<String>,
+) -> Result<(), String> {
+    let mut settings = get_settings(&app_handle);
+    settings.dictionary_terms = terms;
+    write_settings(&app_handle, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn update_dictionary_context(
+    app_handle: AppHandle,
+    context: String,
+) -> Result<(), String> {
+    let mut settings = get_settings(&app_handle);
+    settings.dictionary_context = context;
+    write_settings(&app_handle, settings);
+    Ok(())
+}

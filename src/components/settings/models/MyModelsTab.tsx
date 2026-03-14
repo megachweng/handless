@@ -133,6 +133,8 @@ export const MyModelsTab: React.FC = () => {
             onRealtimeChange={(enabled) =>
               updateSttRealtimeEnabled(provider.id, enabled)
             }
+            dictionaryTerms={settings?.dictionary_terms ?? []}
+            dictionaryContext={settings?.dictionary_context ?? ""}
           />
         ) : (
           <ModelCard

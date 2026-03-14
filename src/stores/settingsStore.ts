@@ -177,6 +177,10 @@ const settingUpdaters: {
   app_theme: (value) => commands.changeAppThemeSetting(value as string),
   stats_date_range: (value) =>
     commands.changeStatsDateRangeSetting(value as StatsDateRange),
+  dictionary_terms: (value) =>
+    commands.updateDictionaryTerms(value as string[]),
+  dictionary_context: (value) =>
+    commands.updateDictionaryContext(value as string),
 };
 
 export const useSettingsStore = create<SettingsStore>()(

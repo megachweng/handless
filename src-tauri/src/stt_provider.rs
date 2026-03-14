@@ -1,4 +1,5 @@
 use crate::managers::model::EngineType;
+use log::debug;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 
@@ -55,6 +56,10 @@ pub struct SttProviderInfo {
     pub backend: ProviderBackend,
     #[serde(default)]
     pub available_options: Vec<CloudProviderOption>,
+    #[serde(default)]
+    pub supports_dictionary_terms: bool,
+    #[serde(default)]
+    pub supports_dictionary_context: bool,
 }
 
 pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
@@ -99,6 +104,8 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     description: "settings.models.cloudProviders.options.temperatureDescription".to_string(),
                 },
             ],
+            supports_dictionary_terms: true,
+            supports_dictionary_context: true,
         },
         SttProviderInfo {
             id: "soniox".to_string(),
@@ -158,6 +165,108 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     description: "settings.models.cloudProviders.options.enableLanguageIdentificationDescription".to_string(),
                 },
             ],
+            supports_dictionary_terms: true,
+            supports_dictionary_context: true,
         },
     ]
+}
+
+/// Merge dictionary terms and context into the provider-specific cloud options.
+///
+/// For OpenAI: terms are prepended as `"Glossary: term1, term2. "` to the `prompt` field,
+/// and context is prepended after the glossary. The user's own prompt text is preserved after.
+///
+/// For Soniox: terms are prepended to the `context_terms` field (comma-separated),
+/// and context is prepended to the `context_description` field.
+pub fn inject_dictionary(
+    provider_id: &str,
+    options: Option<serde_json::Value>,
+    dictionary_terms: &[String],
+    dictionary_context: &str,
+) -> Option<serde_json::Value> {
+    if dictionary_terms.is_empty() && dictionary_context.is_empty() {
+        return options;
+    }
+
+    let mut opts = options.unwrap_or_else(|| serde_json::json!({}));
+
+    match provider_id {
+        "openai_stt" => {
+            // Build the dictionary prefix for the prompt field
+            let mut prefix_parts = Vec::new();
+            if !dictionary_terms.is_empty() {
+                prefix_parts.push(format!("Glossary: {}.", dictionary_terms.join(", ")));
+            }
+            if !dictionary_context.is_empty() {
+                prefix_parts.push(dictionary_context.to_string());
+            }
+            let prefix = prefix_parts.join(" ");
+
+            let existing_prompt = opts
+                .get("prompt")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .to_string();
+
+            let merged = if existing_prompt.is_empty() {
+                prefix
+            } else {
+                format!("{} {}", prefix, existing_prompt)
+            };
+            opts["prompt"] = serde_json::json!(merged);
+            debug!(
+                "Injected dictionary into OpenAI prompt ({} terms, {} chars context)",
+                dictionary_terms.len(),
+                dictionary_context.len()
+            );
+        }
+        "soniox" => {
+            // Merge terms into context_terms (comma-separated)
+            if !dictionary_terms.is_empty() {
+                let dict_terms_str = dictionary_terms.join(", ");
+                let existing_terms = opts
+                    .get("context_terms")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_string();
+
+                let merged = if existing_terms.is_empty() {
+                    dict_terms_str
+                } else {
+                    format!("{}, {}", dict_terms_str, existing_terms)
+                };
+                opts["context_terms"] = serde_json::json!(merged);
+            }
+
+            // Merge context into context_description
+            if !dictionary_context.is_empty() {
+                let existing_desc = opts
+                    .get("context_description")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_string();
+
+                let merged = if existing_desc.is_empty() {
+                    dictionary_context.to_string()
+                } else {
+                    format!("{} {}", dictionary_context, existing_desc)
+                };
+                opts["context_description"] = serde_json::json!(merged);
+            }
+            debug!(
+                "Injected dictionary into Soniox options ({} terms, {} chars context)",
+                dictionary_terms.len(),
+                dictionary_context.len()
+            );
+        }
+        _ => {
+            // Unknown provider — no injection
+            debug!(
+                "Dictionary injection skipped for unknown provider: {}",
+                provider_id
+            );
+        }
+    }
+
+    Some(opts)
 }

@@ -457,6 +457,10 @@ pub struct AppSettings {
     pub stt_realtime_enabled: HashMap<String, bool>,
     #[serde(default)]
     pub stats_date_range: StatsDateRange,
+    #[serde(default)]
+    pub dictionary_terms: Vec<String>,
+    #[serde(default)]
+    pub dictionary_context: String,
 }
 
 fn default_model() -> String {
@@ -836,6 +840,8 @@ pub fn get_default_settings() -> AppSettings {
         stt_cloud_options: default_stt_cloud_options(),
         stt_realtime_enabled: HashMap::new(),
         stats_date_range: StatsDateRange::default(),
+        dictionary_terms: Vec::new(),
+        dictionary_context: String::new(),
     }
 }
 

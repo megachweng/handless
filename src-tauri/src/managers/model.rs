@@ -467,6 +467,8 @@ impl ModelManager {
                     is_custom: m.is_custom,
                 },
                 available_options: Vec::new(),
+                supports_dictionary_terms: false,
+                supports_dictionary_context: false,
             })
             .collect()
     }
