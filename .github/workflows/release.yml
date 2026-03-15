@@ -57,8 +57,7 @@ jobs:
               tag_name: `v${{ steps.get-version.outputs.version }}`,
               name: `v${{ steps.get-version.outputs.version }}`,
               draft: true,
-              prerelease: false,
-              generate_release_notes: true
+              prerelease: false
             })
             return data.id
 
