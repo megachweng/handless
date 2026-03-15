@@ -353,4 +353,4 @@ const ModelCard: React.FC<ModelCardProps> = ({
   );
 };
 
-export default ModelCard;
+export default React.memo(ModelCard);

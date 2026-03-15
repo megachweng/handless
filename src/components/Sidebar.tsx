@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, LayoutGroup } from "motion/react";
 import { DragRegion } from "./ui/DragRegion";
@@ -97,9 +97,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { t } = useTranslation();
   const { settings } = useSettings();
 
-  const availableSections = Object.entries(SECTIONS_CONFIG)
-    .filter(([_, config]) => config.enabled(settings))
-    .map(([id, config]) => ({ id: id as SidebarSection, ...config }));
+  const availableSections = useMemo(
+    () =>
+      Object.entries(SECTIONS_CONFIG)
+        .filter(([_, config]) => config.enabled(settings))
+        .map(([id, config]) => ({ id: id as SidebarSection, ...config })),
+    [settings],
+  );
 
   return (
     <div

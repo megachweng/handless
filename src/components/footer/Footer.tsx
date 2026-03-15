@@ -7,7 +7,8 @@ import UpdateChecker from "../update-checker";
 
 const Footer: React.FC = () => {
   const version = useAppVersion();
-  const { downloadProgress, extractingModels } = useModelStore();
+  const downloadProgress = useModelStore((s) => s.downloadProgress);
+  const extractingModels = useModelStore((s) => s.extractingModels);
 
   const overallProgress = useMemo(() => {
     const progressValues = Object.values(downloadProgress);
