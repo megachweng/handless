@@ -385,6 +385,7 @@ pub fn run(cli_args: CliArgs) {
         commands::history::delete_history_entry,
         commands::history::update_history_limit,
         commands::history::update_recording_retention_period,
+        commands::history::preview_retention_cleanup,
         commands::history::get_speaking_stats,
         commands::history::clear_speaking_stats,
         commands::data_transfer::export_app_data,

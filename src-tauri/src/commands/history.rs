@@ -1,6 +1,18 @@
 use crate::managers::history::{DailySpeakingStats, HistoryEntry, HistoryManager, HistoryPage};
+use crate::settings::RecordingRetentionPeriod;
 use std::sync::Arc;
 use tauri::{AppHandle, State};
+
+fn parse_retention_period(period: &str) -> Result<RecordingRetentionPeriod, String> {
+    match period {
+        "never" => Ok(RecordingRetentionPeriod::Never),
+        "preserve_limit" => Ok(RecordingRetentionPeriod::PreserveLimit),
+        "days3" => Ok(RecordingRetentionPeriod::Days3),
+        "weeks2" => Ok(RecordingRetentionPeriod::Weeks2),
+        "months3" => Ok(RecordingRetentionPeriod::Months3),
+        _ => Err(format!("Invalid retention period: {}", period)),
+    }
+}
 
 #[tauri::command]
 #[specta::specta]
@@ -91,16 +103,7 @@ pub async fn update_recording_retention_period(
     history_manager: State<'_, Arc<HistoryManager>>,
     period: String,
 ) -> Result<(), String> {
-    use crate::settings::RecordingRetentionPeriod;
-
-    let retention_period = match period.as_str() {
-        "never" => RecordingRetentionPeriod::Never,
-        "preserve_limit" => RecordingRetentionPeriod::PreserveLimit,
-        "days3" => RecordingRetentionPeriod::Days3,
-        "weeks2" => RecordingRetentionPeriod::Weeks2,
-        "months3" => RecordingRetentionPeriod::Months3,
-        _ => return Err(format!("Invalid retention period: {}", period)),
-    };
+    let retention_period = parse_retention_period(&period)?;
 
     let mut settings = crate::settings::get_settings(&app);
     settings.recording_retention_period = retention_period;
@@ -111,6 +114,33 @@ pub async fn update_recording_retention_period(
         .map_err(|e| e.to_string())?;
 
     Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn preview_retention_cleanup(
+    app: AppHandle,
+    history_manager: State<'_, Arc<HistoryManager>>,
+    period: String,
+    limit: Option<usize>,
+) -> Result<usize, String> {
+    let retention_period = parse_retention_period(&period)?;
+    if retention_period == RecordingRetentionPeriod::Never {
+        return Ok(0);
+    }
+
+    match retention_period {
+        RecordingRetentionPeriod::PreserveLimit => {
+            let count_limit =
+                limit.unwrap_or_else(|| crate::settings::get_history_limit(&app));
+            history_manager
+                .count_entries_affected_by_count(count_limit)
+                .map_err(|e| e.to_string())
+        }
+        _ => history_manager
+            .count_entries_affected_by_time(retention_period)
+            .map_err(|e| e.to_string()),
+    }
 }
 
 #[tauri::command]

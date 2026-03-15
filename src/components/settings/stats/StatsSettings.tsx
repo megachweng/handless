@@ -213,9 +213,16 @@ export const StatsSettings: React.FC = () => {
   } else if (stats.length === 0) {
     content = (
       <div className="bg-background-translucent border border-glass-border rounded">
-        <div className="px-3 py-10 flex flex-col items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
-            <Speedometer className="w-5 h-5 text-muted" />
+        <div className="px-3 py-10 flex flex-col items-center gap-5">
+          <div className="flex items-center gap-3">
+            {[ChatText, Clock, Speedometer, Hash].map((Icon, i) => (
+              <div
+                key={i}
+                className="w-9 h-9 rounded-lg bg-accent/[0.06] flex items-center justify-center"
+              >
+                <Icon className="w-4 h-4 text-accent/30" weight="duotone" />
+              </div>
+            ))}
           </div>
           <div className="flex flex-col items-center gap-1">
             <p className="text-sm text-muted text-center">

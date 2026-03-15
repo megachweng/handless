@@ -32,7 +32,7 @@ export const GeneralSettings: React.FC = () => {
   const version = useAppVersion();
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-8">
+    <div className="max-w-3xl w-full space-y-8">
       <h1 className="sr-only">{t("sidebar.general")}</h1>
 
       <SettingsGroup title={t("settings.sound.title")}>

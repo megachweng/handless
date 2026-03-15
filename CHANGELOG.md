@@ -7,6 +7,175 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Retention period confirmation dialog with affected entry count preview
+- Download progress bar in footer during model downloads
+- Relative timestamps in history entries (with absolute time tooltip)
+
+### Changed
+
+- Settings pages left-aligned instead of centered
+- Stats empty state shows multiple category icons
+
+### Fixed
+
+- Database index on `(saved, timestamp)` for faster retention queries
+
+## [0.1.12] - 2026-03-14
+
+### Added
+
+- Dictionary settings page for STT provider hints (custom terms and word corrections)
+
+### Changed
+
+- Recording overlay uses canvas waveform instead of DOM dots
+
+### Fixed
+
+- Dictionary title/description default to empty string instead of undefined
+- Orphaned overlay i18n keys removed from all locales
+- Post-processing collapsible row height and compact prompt items
+
+## [0.1.11] - 2026-03-13
+
+### Added
+
+- Activation mode selector replacing push-to-talk toggle
+
+### Fixed
+
+- Recording overlay shows in fullscreen mode
+- Overlay window is click-through, no longer blocks Dock
+- Dock height dynamically detected for overlay positioning
+
+## [0.1.10] - 2026-03-12
+
+### Added
+
+- Post-process prompts externalized to editable text files
+- Pricing configuration and cost estimates for post-processing
+
+## [0.1.9] - 2026-03-11
+
+### Changed
+
+- Settings consolidated into fewer sidebar sections
+- Post-processing prompts displayed as expandable card list
+- Structured and legacy post-processing unified into single code path
+- Sidebar section persists across sessions
+
+### Fixed
+
+- App icon sizing for macOS Dock
+- Dock icon flash on startup and overlay creation
+- Sidebar and settings page animation jitter
+- History action buttons discoverable and no text overlap
+- Post-processing prompts UX with error handling and accessibility
+
+## [0.1.8] - 2026-03-09
+
+### Added
+
+- Cursor-based paginated history with infinite scroll
+
+### Changed
+
+- Model descriptions moved to translation files
+- Overlay accent color normalized to CSS custom properties
+- Model card score bars replaced with compact badge pills
+- Animations moved into individual settings pages
+
+### Fixed
+
+- Model verify error text overflow on cloud card
+
+## [0.1.7] - 2026-03-08
+
+### Added
+
+- Checkbox component for settings pages
+
+### Changed
+
+- Audio feedback always enabled (removed toggle)
+- Visual design refined with warm palette and subtler motion
+- NumberInput simplified to native input
+
+### Fixed
+
+- Accessibility: screen reader headings, ARIA tabs, keyboard navigation, color contrast
+- Security: safe text rendering for prompt tips (no dangerouslySetInnerHTML)
+- ModelSelector memoization uses shallow ref comparison instead of JSON.stringify
+
+## [0.1.6] - 2026-03-07
+
+### Fixed
+
+- Post-processing skipped when provider is not verified
+- Cargo.lock restored to avoid window-vibrancy bitcode error
+
+## [0.1.5] - 2026-03-07
+
+### Added
+
+- None option for post-processing prompt selector
+
+### Changed
+
+- Soniox default switched to realtime model
+- History retention default changed to Never, controls moved to History page
+
+### Fixed
+
+- Prompt selection sync between bindings and post-processing page
+
+## [0.1.4] - 2026-03-06
+
+### Changed
+
+- Reduced allocations in transcription pipeline
+
+## [0.1.3] - 2026-03-06
+
+### Added
+
+- Signed auto-updates with Homebrew-aware UX
+
+### Fixed
+
+- Onboarding drag region and window refocus after permissions
+- Onboarding proceeds to main page after permissions granted
+
+## [0.1.2] - 2026-03-06
+
+### Added
+
+- Stats date range selector and config file management
+
+### Changed
+
+- Output device selector moved to general audio settings
+
+## [0.1.1] - 2026-03-06
+
+### Added
+
+- Export/import for settings, history, and recordings
+- Speaking stats dashboard with daily tracking
+
+### Changed
+
+- Onboarding simplified (removed model-selection step)
+- Post-process sidebar label renamed to "Polish"
+
+### Fixed
+
+- VAD only enabled when using local STT provider
+- Overlay streaming text order when overlay is at top
+- Post-processing skipped when transcription is empty
+
 ## [0.1.0]
 
 ### Added

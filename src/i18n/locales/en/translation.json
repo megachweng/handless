@@ -585,7 +585,11 @@
         "weeks2": "After 2 weeks",
         "months3": "After 3 months",
         "placeholder": "Select retention period...",
-        "entries": "entries"
+        "entries": "entries",
+        "confirmDelete": "This will permanently delete {{count}} unsaved recording(s) and their audio files.",
+        "confirmApply": "Delete and Apply",
+        "confirmCancel": "Cancel",
+        "noEntriesAffected": "No entries will be deleted with this setting."
       },
       "alwaysOnMicrophone": {
         "label": "Always-On Microphone",

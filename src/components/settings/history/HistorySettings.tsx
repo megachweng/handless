@@ -27,6 +27,10 @@ import { readFile } from "@tauri-apps/plugin-fs";
 import { commands, type HistoryEntry } from "@/bindings";
 import { useOsType } from "@/hooks/useOsType";
 import { useTranscribeShortcut } from "@/hooks/useTranscribeShortcut";
+import {
+  formatRelativeTime,
+  formatAbsoluteTime,
+} from "@/lib/utils/relativeTime";
 import { SimpleTooltip } from "../../ui/Tooltip";
 import { TabBar, type TabItem } from "../../ui/TabBar";
 import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
@@ -73,7 +77,7 @@ export const HistorySettings: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   const hasMore = historyEntries.length < totalCount;
 
@@ -122,9 +126,9 @@ export const HistorySettings: React.FC = () => {
     };
   }, []);
 
-  // Infinite scroll via IntersectionObserver.
-  // Use a ref for mutable state so the observer is created once and doesn't
-  // churn on every page load or real-time event.
+  // Infinite scroll via IntersectionObserver using a callback ref.
+  // The observer is created when the sentinel mounts (entries loaded)
+  // and disconnected when it unmounts (loading/empty states).
   const scrollStateRef = useRef({
     hasMore,
     loadingMore,
@@ -136,24 +140,28 @@ export const HistorySettings: React.FC = () => {
     lastId: historyEntries[historyEntries.length - 1]?.id ?? null,
   };
 
-  useEffect(() => {
-    const sentinel = sentinelRef.current;
-    if (!sentinel) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const { hasMore, loadingMore, lastId } = scrollStateRef.current;
-        if (entry.isIntersecting && hasMore && !loadingMore) {
-          setLoadingMore(true);
-          loadPage(lastId, false).finally(() => setLoadingMore(false));
-        }
-      },
-      { rootMargin: "200px" },
-    );
-
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [loadPage]);
+  const sentinelRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+      if (node) {
+        observerRef.current = new IntersectionObserver(
+          ([entry]) => {
+            const { hasMore, loadingMore, lastId } = scrollStateRef.current;
+            if (entry.isIntersecting && hasMore && !loadingMore) {
+              setLoadingMore(true);
+              loadPage(lastId, false).finally(() => setLoadingMore(false));
+            }
+          },
+          { rootMargin: "200px" },
+        );
+        observerRef.current.observe(node);
+      }
+    },
+    [loadPage],
+  );
 
   const toggleSaved = useCallback(async (id: number) => {
     setHistoryEntries((prev) =>
@@ -281,7 +289,7 @@ export const HistorySettings: React.FC = () => {
 
   return (
     <motion.div
-      className="max-w-3xl w-full mx-auto space-y-8"
+      className="max-w-3xl w-full space-y-8"
       variants={staggerContainer}
       initial="initial"
       animate="animate"
@@ -349,7 +357,7 @@ interface HistoryEntryProps {
 
 const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
   ({ entry, onToggleSaved, onCopy, getAudioUrl, onDelete }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [showCopied, setShowCopied] = useState(false);
     const [expanded, setExpanded] = useState(false);
 
@@ -371,15 +379,12 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
       onDelete(entry.id);
     };
 
-    const formattedTime = useMemo(() => {
-      const date = new Date(Number(entry.timestamp) * 1000);
-      const y = date.getFullYear();
-      const mo = String(date.getMonth() + 1).padStart(2, "0");
-      const d = String(date.getDate()).padStart(2, "0");
-      const h = String(date.getHours()).padStart(2, "0");
-      const mi = String(date.getMinutes()).padStart(2, "0");
-      return `${y}-${mo}-${d} ${h}:${mi}`;
-    }, [entry.timestamp]);
+    const ts = Number(entry.timestamp);
+    const relativeTime = useMemo(
+      () => formatRelativeTime(ts, i18n.language),
+      [ts, i18n.language],
+    );
+    const absoluteTime = useMemo(() => formatAbsoluteTime(ts), [ts]);
 
     return (
       <div className="group relative bg-background-translucent border border-glass-border rounded hover:border-glass-border-hover transition-colors px-3 py-2 flex flex-col gap-1.5">
@@ -458,9 +463,11 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
         {/* Audio player + timestamp */}
         <div className="flex items-center gap-2">
           <AudioPlayer onLoadRequest={handleLoadAudio} className="flex-1" />
-          <span className="text-xs text-muted/80 whitespace-nowrap shrink-0 tabular-nums">
-            {formattedTime}
-          </span>
+          <SimpleTooltip content={absoluteTime}>
+            <span className="text-xs text-muted/80 whitespace-nowrap shrink-0 tabular-nums cursor-default">
+              {relativeTime}
+            </span>
+          </SimpleTooltip>
         </div>
       </div>
     );

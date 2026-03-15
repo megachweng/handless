@@ -241,9 +241,9 @@ function App() {
               <div className="flex-1 flex flex-col overflow-hidden">
                 <DragRegion />
                 <div className="flex-1 overflow-y-auto overscroll-contain">
-                  <div className="flex flex-col items-center p-5 gap-5">
+                  <div className="flex flex-col ps-10 pe-6 py-6 gap-5">
                     <AccessibilityPermissions />
-                    <div className="w-full flex flex-col items-center">
+                    <div className="w-full">
                       <ActiveComponent />
                     </div>
                   </div>

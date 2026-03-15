@@ -39,6 +39,9 @@ static MIGRATIONS: &[M] = &[
             transcription_count INTEGER NOT NULL DEFAULT 0
         );",
     ),
+    M::up(
+        "CREATE INDEX IF NOT EXISTS idx_history_saved_timestamp ON transcription_history(saved, timestamp);",
+    ),
 ];
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type)]
@@ -322,6 +325,52 @@ impl HistoryManager {
         Ok(deleted_count)
     }
 
+    pub fn count_entries_affected_by_count(&self, limit: usize) -> Result<usize> {
+        let conn = self.get_connection()?;
+        let total_unsaved: i64 = conn.query_row(
+            "SELECT COUNT(*) FROM transcription_history WHERE saved = 0",
+            [],
+            |row| row.get(0),
+        )?;
+        let affected = (total_unsaved as usize).saturating_sub(limit);
+        Ok(affected)
+    }
+
+    pub fn count_entries_affected_by_time(
+        &self,
+        retention_period: crate::settings::RecordingRetentionPeriod,
+    ) -> Result<usize> {
+        let cutoff = match Self::cutoff_timestamp(&retention_period) {
+            Some(ts) => ts,
+            None => return Ok(0),
+        };
+        let conn = self.get_connection()?;
+        let count: i64 = conn.query_row(
+            "SELECT COUNT(*) FROM transcription_history WHERE saved = 0 AND timestamp < ?1",
+            params![cutoff],
+            |row| row.get(0),
+        )?;
+        Ok(count as usize)
+    }
+
+    /// Calculate the cutoff timestamp for a time-based retention period.
+    /// Returns `None` for periods that don't use time-based cleanup.
+    fn cutoff_timestamp(
+        retention_period: &crate::settings::RecordingRetentionPeriod,
+    ) -> Option<i64> {
+        let now = Utc::now().timestamp();
+        match retention_period {
+            crate::settings::RecordingRetentionPeriod::Days3 => Some(now - (3 * 24 * 60 * 60)),
+            crate::settings::RecordingRetentionPeriod::Weeks2 => {
+                Some(now - (2 * 7 * 24 * 60 * 60))
+            }
+            crate::settings::RecordingRetentionPeriod::Months3 => {
+                Some(now - (3 * 30 * 24 * 60 * 60))
+            }
+            _ => None,
+        }
+    }
+
     fn cleanup_by_count(&self, limit: usize) -> Result<()> {
         let conn = self.get_connection()?;
 
@@ -351,16 +400,9 @@ impl HistoryManager {
         &self,
         retention_period: crate::settings::RecordingRetentionPeriod,
     ) -> Result<()> {
+        let cutoff_timestamp = Self::cutoff_timestamp(&retention_period)
+            .expect("cleanup_by_time called with non-time-based retention period");
         let conn = self.get_connection()?;
-
-        // Calculate cutoff timestamp (current time minus retention period)
-        let now = Utc::now().timestamp();
-        let cutoff_timestamp = match retention_period {
-            crate::settings::RecordingRetentionPeriod::Days3 => now - (3 * 24 * 60 * 60), // 3 days in seconds
-            crate::settings::RecordingRetentionPeriod::Weeks2 => now - (2 * 7 * 24 * 60 * 60), // 2 weeks in seconds
-            crate::settings::RecordingRetentionPeriod::Months3 => now - (3 * 30 * 24 * 60 * 60), // 3 months in seconds (approximate)
-            _ => unreachable!("Should not reach here"),
-        };
 
         // Get all unsaved entries older than the cutoff timestamp
         let mut stmt = conn.prepare(

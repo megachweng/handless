@@ -24,7 +24,7 @@ export const ModelsSettings: React.FC = () => {
 
   return (
     <motion.div
-      className="max-w-3xl w-full mx-auto space-y-8"
+      className="max-w-3xl w-full space-y-8"
       variants={staggerContainer}
       initial="initial"
       animate="animate"

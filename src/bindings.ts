@@ -845,6 +845,14 @@ async updateRecordingRetentionPeriod(period: string) : Promise<Result<null, stri
     else return { status: "error", error: e  as any };
 }
 },
+async previewRetentionCleanup(period: string, limit: number | null) : Promise<Result<number, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("preview_retention_cleanup", { period, limit }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getSpeakingStats(fromTimestamp: number, toTimestamp: number) : Promise<Result<DailySpeakingStats[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_speaking_stats", { fromTimestamp, toTimestamp }) };
