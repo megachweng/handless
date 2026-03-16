@@ -642,10 +642,10 @@
         "button": "在 GitHub 上檢視"
       },
       "acknowledgments": {
-        "whisper": {
-          "title": "Whisper.cpp",
-          "description": "針對 OpenAI Whisper 自動語音識別模型的高效能推理引擎",
-          "details": "Handless 使用 Whisper.cpp 進行快速的本機語音轉文字處理。感謝 Georgi Gerganov 和貢獻者們的傑出工作"
+        "handy": {
+          "title": "Handy",
+          "description": "The open-source speech-to-text app that Handless was forked from",
+          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
         }
       }
     }

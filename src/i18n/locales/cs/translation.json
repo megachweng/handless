@@ -642,10 +642,10 @@
         "button": "Zobrazit na GitHubu"
       },
       "acknowledgments": {
-        "whisper": {
-          "title": "Whisper.cpp",
-          "description": "Vysoce výkonné inferenční zpracování modelu automatického rozpoznávání řeči Whisper od OpenAI",
-          "details": "Handless používá Whisper.cpp pro rychlé lokální zpracování řeči na text. Díky skvělé práci Georgiho Gerganova a přispěvatelů."
+        "handy": {
+          "title": "Handy",
+          "description": "The open-source speech-to-text app that Handless was forked from",
+          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
         }
       }
     }

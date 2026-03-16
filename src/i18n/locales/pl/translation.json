@@ -642,10 +642,10 @@
         "button": "Zobacz na GitHub"
       },
       "acknowledgments": {
-        "whisper": {
-          "title": "Whisper.cpp",
-          "description": "Wydajne wykonywanie modelu rozpoznawania mowy Whisper od OpenAI",
-          "details": "Handless używa Whisper.cpp do szybkiego, lokalnego przetwarzania mowy na tekst. Dzięki niesamowitej pracy Georgi Gerganova i współtwórców."
+        "handy": {
+          "title": "Handy",
+          "description": "The open-source speech-to-text app that Handless was forked from",
+          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
         }
       }
     }

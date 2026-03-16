@@ -642,10 +642,10 @@
         "button": "Xem trên GitHub"
       },
       "acknowledgments": {
-        "whisper": {
-          "title": "Whisper.cpp",
-          "description": "Suy luận hiệu suất cao của mô hình nhận dạng giọng nói tự động Whisper của OpenAI",
-          "details": "Handless sử dụng Whisper.cpp để xử lý chuyển đổi giọng nói thành văn bản nhanh, cục bộ. Cảm ơn công việc tuyệt vời của Georgi Gerganov và các cộng tác viên."
+        "handy": {
+          "title": "Handy",
+          "description": "The open-source speech-to-text app that Handless was forked from",
+          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
         }
       }
     }

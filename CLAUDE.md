@@ -71,8 +71,14 @@ bun run check:translations       # Validate translation files
 
 All user-facing strings use i18next (ESLint enforces no hardcoded JSX strings).
 
-1. Add key to `src/i18n/locales/en/translation.json`
-2. Add the same key to all 16 other locale files (ar, cs, de, es, fr, it, ja, ko, pl, pt, ru, tr, uk, vi, zh, zh-TW) — use English as placeholder
-3. Use in component: `const { t } = useTranslation(); t('key.path')`
+**During development:**
+
+1. Add key to `src/i18n/locales/en/translation.json` only
+2. Use in component: `const { t } = useTranslation(); t('key.path')`
+
+**Before committing:**
+
+3. Add the same key to all 16 other locale files (ar, cs, de, es, fr, it, ja, ko, pl, pt, ru, tr, uk, vi, zh, zh-TW) — use English as placeholder
 4. Run `bun run check:translations` to verify all locales have matching keys
-   Keys are organized by feature area: `tray.*`, `sidebar.*`, `onboarding.*`, `settings.*`, `models.*`, etc.
+
+Keys are organized by feature area: `tray.*`, `sidebar.*`, `onboarding.*`, `settings.*`, `models.*`, etc.

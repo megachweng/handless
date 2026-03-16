@@ -38,6 +38,8 @@ blob-report/
 .direnv
 .envrc
 
-# Claude Code - only track skills
+# Claude Code
 .claude/*
 !.claude/skills/
+!.claude/hooks/
+!.claude/settings.json
