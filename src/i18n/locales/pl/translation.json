@@ -107,6 +107,13 @@
         "name": "OpenAI",
         "description": "Chmurowe API zamiany mowy na tekst od OpenAI. Szybkie i dokładne z obsługą ponad 57 języków."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      "groq": {
+        "name": "Groq",
+        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Chmurowa zamiana mowy na tekst Soniox. Wysoka dokładność z transkrypcją w czasie rzeczywistym."
@@ -114,6 +121,15 @@
       "assemblyai": {
         "name": "AssemblyAI",
         "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+      "cartesia": {
+        "name": "Cartesia",
+        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+      "fireworks": {
+        "name": "Fireworks AI",
+        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
       }
     }
   },
@@ -216,7 +232,9 @@
           "enableSpeakerDiarization": "Diaryzacja mówców",
           "enableSpeakerDiarizationDescription": "Identyfikuj i oddzielaj różnych mówców",
           "enableLanguageIdentification": "Identyfikacja języka",
-          "enableLanguageIdentificationDescription": "Wykrywaj język dla każdego segmentu"
+          "enableLanguageIdentificationDescription": "Wykrywaj język dla każdego segmentu",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {

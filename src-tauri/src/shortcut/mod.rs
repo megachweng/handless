@@ -562,10 +562,7 @@ fn initialize_handy_keys_with_rollback(app: &AppHandle) -> Result<bool, String> 
 
 #[tauri::command]
 #[specta::specta]
-pub fn change_activation_mode_setting(
-    app: AppHandle,
-    mode: ActivationMode,
-) -> Result<(), String> {
+pub fn change_activation_mode_setting(app: AppHandle, mode: ActivationMode) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     settings.activation_mode = mode;
     settings::write_settings(&app, settings);

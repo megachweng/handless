@@ -186,7 +186,11 @@ fn get_dock_bottom_inset(b: &LogicalBounds) -> f64 {
     if let Some(screen) = matched {
         // In Cocoa coords, visibleFrame.origin.y > frame.origin.y when Dock is at bottom.
         let inset = screen.visibleFrame().origin.y - screen.frame().origin.y;
-        if inset > 1.0 { inset } else { 0.0 }
+        if inset > 1.0 {
+            inset
+        } else {
+            0.0
+        }
     } else {
         0.0
     }

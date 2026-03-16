@@ -56,10 +56,7 @@ async fn fetch_pricing_data() -> Result<HashMap<String, ModelPricing>, String> {
         .map_err(|e| format!("Failed to fetch models.dev: {e}"))?;
 
     if !response.status().is_success() {
-        return Err(format!(
-            "models.dev returned status {}",
-            response.status()
-        ));
+        return Err(format!("models.dev returned status {}", response.status()));
     }
 
     let providers: HashMap<String, ApiProvider> = response
@@ -73,17 +70,19 @@ async fn fetch_pricing_data() -> Result<HashMap<String, ModelPricing>, String> {
             for model in models.values() {
                 if let (Some(id), Some(cost)) = (&model.id, &model.cost) {
                     if let (Some(input), Some(output)) = (cost.input, cost.output) {
-                        pricing.entry(id.clone()).or_insert(ModelPricing {
-                            input,
-                            output,
-                        });
+                        pricing
+                            .entry(id.clone())
+                            .or_insert(ModelPricing { input, output });
                     }
                 }
             }
         }
     }
 
-    debug!("Loaded pricing for {} models from models.dev", pricing.len());
+    debug!(
+        "Loaded pricing for {} models from models.dev",
+        pricing.len()
+    );
     Ok(pricing)
 }
 
