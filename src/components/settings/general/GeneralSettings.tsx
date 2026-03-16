@@ -94,14 +94,13 @@ export const GeneralSettings: React.FC = () => {
           </Button>
         </SettingContainer>
         <SettingContainer
-          title={t("settings.about.acknowledgments.whisper.title")}
-          description={t("settings.about.acknowledgments.whisper.description")}
+          title={t("settings.about.acknowledgments.handy.title")}
+          description={t("settings.about.acknowledgments.handy.description")}
           grouped={true}
-          layout="stacked"
         >
-          <div className="text-sm text-muted">
-            {t("settings.about.acknowledgments.whisper.details")}
-          </div>
+          <span className="text-sm text-muted">
+            {t("settings.about.acknowledgments.handy.details")}
+          </span>
         </SettingContainer>
       </SettingsGroup>
     </div>
