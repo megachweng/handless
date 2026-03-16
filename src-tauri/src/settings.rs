@@ -627,6 +627,11 @@ fn default_stt_providers() -> Vec<SttProvider> {
             default_model: "gpt-4o-mini-transcribe".to_string(),
         },
         SttProvider {
+            id: "elevenlabs".to_string(),
+            label: "ElevenLabs".to_string(),
+            provider_type: SttProviderType::Cloud,
+            base_url: "https://api.elevenlabs.io/v1".to_string(),
+            default_model: "scribe_v2".to_string(),
             id: "groq".to_string(),
             label: "Groq".to_string(),
             provider_type: SttProviderType::Cloud,

@@ -107,6 +107,9 @@
         "name": "OpenAI",
         "description": "API cloud di riconoscimento vocale di OpenAI. Veloce e precisa con supporto per oltre 57 lingue."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
       "groq": {
         "name": "Groq",
         "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."

@@ -1,3 +1,4 @@
+pub mod elevenlabs;
 pub mod fireworks;
 pub mod groq;
 pub mod openai;
@@ -12,6 +13,7 @@ pub async fn test_api_key(
 ) -> anyhow::Result<()> {
     match provider_id {
         "openai_stt" => openai::test_api_key(api_key, base_url, model).await,
+        "elevenlabs" => elevenlabs::test_api_key(api_key, base_url, model).await,
         "groq" => groq::test_api_key(api_key, base_url, model).await,
         "soniox" => soniox::test_api_key(api_key, base_url, model).await,
         "fireworks" => fireworks::test_api_key(api_key, base_url, model).await,
@@ -32,6 +34,7 @@ pub async fn transcribe(
 ) -> anyhow::Result<String> {
     match provider_id {
         "openai_stt" => openai::transcribe(api_key, base_url, model, audio_wav, options).await,
+        "elevenlabs" => elevenlabs::transcribe(api_key, base_url, model, audio_wav, options).await,
         "groq" => groq::transcribe(api_key, base_url, model, audio_wav, options).await,
         "soniox" => soniox::transcribe(api_key, base_url, model, audio_wav, options).await,
         "fireworks" => fireworks::transcribe(api_key, base_url, model, audio_wav, options).await,

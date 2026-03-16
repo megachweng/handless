@@ -107,6 +107,9 @@
         "name": "OpenAI",
         "description": "OpenAI'nin bulut konuşmadan metne API'si. 57'den fazla dil desteğiyle hızlı ve doğru."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
       "groq": {
         "name": "Groq",
         "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
