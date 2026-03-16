@@ -118,6 +118,9 @@
         "name": "Soniox",
         "description": "Sonioxクラウド音声テキスト変換。リアルタイム文字起こしによる高精度。"
       },
+      "deepgram": {
+        "name": "Deepgram",
+        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
       "assemblyai": {
         "name": "AssemblyAI",
         "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
@@ -229,6 +232,10 @@
           "contextTermsDescription": "認識精度を向上させるためのカンマ区切りの用語",
           "contextDescription": "コンテキスト説明",
           "contextDescriptionDescription": "音声コンテンツの一般的なコンテキストを提供する自由形式のテキスト",
+          "smartFormat": "Smart Format",
+          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
+          "punctuate": "Punctuate",
+          "punctuateDescription": "Add punctuation and capitalization to the transcript",
           "enableSpeakerDiarization": "話者分離",
           "enableSpeakerDiarizationDescription": "異なる話者を識別して分離",
           "enableLanguageIdentification": "言語識別",

@@ -657,6 +657,11 @@ fn default_stt_providers() -> Vec<SttProvider> {
             default_model: "stt-rt-preview".to_string(),
         },
         SttProvider {
+            id: "deepgram".to_string(),
+            label: "Deepgram".to_string(),
+            provider_type: SttProviderType::Cloud,
+            base_url: "https://api.deepgram.com/v1".to_string(),
+            default_model: "nova-3".to_string(),
             id: "assemblyai".to_string(),
             label: "AssemblyAI".to_string(),
             provider_type: SttProviderType::Cloud,

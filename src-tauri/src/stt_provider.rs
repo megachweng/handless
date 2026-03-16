@@ -278,6 +278,14 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             supports_dictionary_context: true,
         },
         SttProviderInfo {
+            id: "deepgram".to_string(),
+            name: "Deepgram".to_string(),
+            description: "onboarding.cloud.deepgram.description".to_string(),
+            supported_languages: vec![
+                "af", "ar", "zh-Hans", "zh-Hant", "hr", "cs", "da", "nl", "en",
+                "fi", "fr", "de", "el", "hi", "hu", "id", "it", "ja", "ko",
+                "ms", "no", "pl", "pt", "ro", "ru", "sk", "es", "sv", "tr",
+                "uk", "vi",
             id: "assemblyai".to_string(),
             name: "AssemblyAI".to_string(),
             description: "onboarding.cloud.assemblyai.description".to_string(),
@@ -300,6 +308,9 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             supports_realtime: false,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
+                base_url: "https://api.deepgram.com/v1".to_string(),
+                default_model: "nova-3".to_string(),
+                console_url: Some("https://console.deepgram.com/api-keys".to_string()),
                 base_url: "https://api.assemblyai.com".to_string(),
                 default_model: "best".to_string(),
                 console_url: Some("https://www.assemblyai.com/dashboard".to_string()),
@@ -319,6 +330,16 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     description: String::new(),
                 },
                 CloudProviderOption {
+                    key: "smart_format".to_string(),
+                    label: "settings.models.cloudProviders.options.smartFormat".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.smartFormatDescription".to_string(),
+                },
+                CloudProviderOption {
+                    key: "punctuate".to_string(),
+                    label: "settings.models.cloudProviders.options.punctuate".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.punctuateDescription".to_string(),
                     key: "speaker_labels".to_string(),
                     key: "prompt".to_string(),
                     label: "settings.models.cloudProviders.options.prompt".to_string(),
@@ -396,6 +417,12 @@ pub fn inject_dictionary(
                 dictionary_context.len()
             );
         }
+        "deepgram" => {
+            // Merge terms into keywords (comma-separated)
+            if !dictionary_terms.is_empty() {
+                let dict_keywords = dictionary_terms.join(", ");
+                let existing_keywords = opts
+                    .get("keywords")
         "assemblyai" => {
             // Merge terms into word_boost (array of strings)
             if !dictionary_terms.is_empty() {
@@ -425,6 +452,15 @@ pub fn inject_dictionary(
                     .unwrap_or("")
                     .to_string();
 
+                let merged = if existing_keywords.is_empty() {
+                    dict_keywords
+                } else {
+                    format!("{}, {}", dict_keywords, existing_keywords)
+                };
+                opts["keywords"] = serde_json::json!(merged);
+            }
+            debug!(
+                "Injected dictionary into Deepgram options ({} terms)",
                 let merged = if existing_bias.is_empty() {
                     dict_terms_str
                 } else {

@@ -118,6 +118,9 @@
         "name": "Soniox",
         "description": "Voz a texto en la nube de Soniox. Alta precisión con transcripción en tiempo real."
       },
+      "deepgram": {
+        "name": "Deepgram",
+        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
       "assemblyai": {
         "name": "AssemblyAI",
         "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
@@ -229,6 +232,10 @@
           "contextTermsDescription": "Términos separados por comas para mejorar la precisión del reconocimiento",
           "contextDescription": "Descripción del Contexto",
           "contextDescriptionDescription": "Texto libre que proporciona contexto general sobre el contenido de audio",
+          "smartFormat": "Smart Format",
+          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
+          "punctuate": "Punctuate",
+          "punctuateDescription": "Add punctuation and capitalization to the transcript",
           "enableSpeakerDiarization": "Diarización de Hablantes",
           "enableSpeakerDiarizationDescription": "Identificar y separar diferentes hablantes",
           "enableLanguageIdentification": "Identificación de Idioma",

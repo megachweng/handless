@@ -118,6 +118,9 @@
         "name": "Soniox",
         "description": "Soniox 雲端語音轉文字。高準確度，支援即時轉錄。"
       },
+      "deepgram": {
+        "name": "Deepgram",
+        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
       "assemblyai": {
         "name": "AssemblyAI",
         "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
@@ -283,6 +286,10 @@
           "contextTermsDescription": "以逗號分隔的術語，用於提高辨識準確度",
           "contextDescription": "上下文描述",
           "contextDescriptionDescription": "自由文字，提供有關音訊內容的一般上下文",
+          "smartFormat": "Smart Format",
+          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
+          "punctuate": "Punctuate",
+          "punctuateDescription": "Add punctuation and capitalization to the transcript",
           "enableSpeakerDiarization": "說話者分離",
           "enableSpeakerDiarizationDescription": "辨識並區分不同的說話者",
           "enableLanguageIdentification": "語言辨識",

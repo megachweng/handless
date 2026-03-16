@@ -118,6 +118,9 @@
         "name": "Soniox",
         "description": "Cloudový převod řeči na text Soniox. Vysoká přesnost s přepisem v reálném čase."
       },
+      "deepgram": {
+        "name": "Deepgram",
+        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
       "assemblyai": {
         "name": "AssemblyAI",
         "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
@@ -229,6 +232,10 @@
           "contextTermsDescription": "Výrazy oddělené čárkami pro zlepšení přesnosti rozpoznávání",
           "contextDescription": "Popis kontextu",
           "contextDescriptionDescription": "Volný text poskytující obecný kontext o obsahu zvuku",
+          "smartFormat": "Smart Format",
+          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
+          "punctuate": "Punctuate",
+          "punctuateDescription": "Add punctuation and capitalization to the transcript",
           "enableSpeakerDiarization": "Diarizace mluvčích",
           "enableSpeakerDiarizationDescription": "Identifikovat a oddělit různé mluvčí",
           "enableLanguageIdentification": "Identifikace jazyka",
