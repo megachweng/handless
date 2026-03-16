@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "OpenAI 雲端語音轉文字 API。快速準確，支援 57 種以上語言。"
       },
+      "groq": {
+        "name": "Groq",
+        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Soniox 雲端語音轉文字。高準確度，支援即時轉錄。"

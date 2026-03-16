@@ -83,6 +83,10 @@
         "name": "OpenAI",
         "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
       },
+      "groq": {
+        "name": "Groq",
+        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Soniox cloud speech-to-text. High accuracy with realtime transcription."
