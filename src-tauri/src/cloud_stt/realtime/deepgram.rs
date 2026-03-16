@@ -4,7 +4,7 @@ use log::debug;
 use std::time::Duration;
 use tokio_tungstenite::{
     connect_async,
-    tungstenite::{http::Request, Message},
+    tungstenite::{client::IntoClientRequest, Message},
 };
 
 const DEEPGRAM_WS_URL: &str = "wss://api.deepgram.com/v1/listen";
@@ -82,12 +82,15 @@ fn build_ws_url(model: &str, encoding: &str, options: Option<&serde_json::Value>
     format!("{}?{}", DEEPGRAM_WS_URL, query)
 }
 
-/// Build an HTTP request with the Authorization header for the Deepgram WebSocket.
-fn build_ws_request(api_key: &str, url: &str) -> Result<Request<()>> {
-    let request = Request::builder()
-        .uri(url)
-        .header("Authorization", format!("Token {}", api_key))
-        .body(())?;
+/// Build a WebSocket request with the Authorization header for the Deepgram WebSocket.
+fn build_ws_request(
+    api_key: &str,
+    url: &str,
+) -> Result<tokio_tungstenite::tungstenite::http::Request<()>> {
+    let mut request = url.into_client_request()?;
+    request
+        .headers_mut()
+        .insert("Authorization", format!("Token {}", api_key).parse()?);
     Ok(request)
 }
 

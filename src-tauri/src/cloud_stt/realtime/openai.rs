@@ -5,7 +5,7 @@ use log::debug;
 use std::time::Duration;
 use tokio_tungstenite::{
     connect_async,
-    tungstenite::{http::Request, Message},
+    tungstenite::{client::IntoClientRequest, Message},
 };
 
 use super::StreamingHandles;
@@ -27,14 +27,16 @@ fn build_ws_url() -> String {
     format!("{}?intent=transcription", OPENAI_WS_URL)
 }
 
-/// Build an HTTP request with the required headers for the OpenAI Realtime WebSocket.
-fn build_ws_request(api_key: &str) -> Result<Request<()>> {
+/// Build a WebSocket request with the required headers for the OpenAI Realtime API.
+fn build_ws_request(api_key: &str) -> Result<tokio_tungstenite::tungstenite::http::Request<()>> {
     let url = build_ws_url();
-    let request = Request::builder()
-        .uri(url)
-        .header("Authorization", format!("Bearer {}", api_key))
-        .header("OpenAI-Beta", "realtime=v1")
-        .body(())?;
+    let mut request = url.into_client_request()?;
+    request
+        .headers_mut()
+        .insert("Authorization", format!("Bearer {}", api_key).parse()?);
+    request
+        .headers_mut()
+        .insert("OpenAI-Beta", "realtime=v1".parse()?);
     Ok(request)
 }
 
