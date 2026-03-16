@@ -113,6 +113,16 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             description: "onboarding.cloud.mistral.description".to_string(),
             supported_languages: vec![
                 "en", "zh-Hans", "hi", "es", "ar", "fr", "pt", "ru", "de", "ja", "ko", "it", "nl",
+            id: "elevenlabs".to_string(),
+            name: "ElevenLabs".to_string(),
+            description: "onboarding.cloud.elevenlabs.description".to_string(),
+            supported_languages: vec![
+                "af", "ar", "hy", "az", "be", "bg", "ca", "zh-Hans", "hr", "cs",
+                "da", "nl", "en", "et", "fi", "fr", "gl", "de", "el", "he",
+                "hi", "hu", "id", "it", "ja", "kn", "kk", "ko", "lv", "lt",
+                "mk", "ms", "mr", "ne", "no", "fa", "pl", "pt", "ro", "ru",
+                "sr", "sk", "sl", "es", "sw", "sv", "tl", "ta", "th", "tr",
+                "uk", "ur", "vi", "cy",
             ].into_iter().map(String::from).collect(),
             supports_translation: false,
             supports_realtime: false,
@@ -121,6 +131,27 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 base_url: "https://api.mistral.ai".to_string(),
                 default_model: "voxtral-mini-latest".to_string(),
                 console_url: Some("https://console.mistral.ai".to_string()),
+                base_url: "https://api.elevenlabs.io/v1".to_string(),
+                default_model: "scribe_v2".to_string(),
+                console_url: Some("https://elevenlabs.io".to_string()),
+            id: "groq".to_string(),
+            name: "Groq".to_string(),
+            description: "onboarding.cloud.groq.description".to_string(),
+            supported_languages: vec![
+                "af", "ar", "hy", "az", "be", "bs", "bg", "ca", "zh-Hans", "zh-Hant", "hr",
+                "cs", "da", "nl", "en", "et", "fi", "fr", "gl", "de", "el",
+                "he", "hi", "hu", "is", "id", "it", "ja", "kn", "kk", "ko",
+                "lv", "lt", "mk", "ms", "mr", "mi", "ne", "no", "fa", "pl",
+                "pt", "ro", "ru", "sr", "sk", "sl", "es", "sw", "sv", "tl",
+                "ta", "th", "tr", "uk", "ur", "vi", "cy",
+            ].into_iter().map(String::from).collect(),
+            supports_translation: true,
+            supports_realtime: false,
+            is_recommended: false,
+            backend: ProviderBackend::Cloud {
+                base_url: "https://api.groq.com/openai/v1".to_string(),
+                default_model: "whisper-large-v3-turbo".to_string(),
+                console_url: Some("https://console.groq.com/keys".to_string()),
             },
             available_options: vec![
                 CloudProviderOption {
@@ -128,6 +159,20 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     label: "settings.models.cloudProviders.options.language".to_string(),
                     option_type: CloudOptionType::Language,
                     description: String::new(),
+                },
+                CloudProviderOption {
+                    key: "enable_speaker_diarization".to_string(),
+                    label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                },
+            ],
+            supports_dictionary_terms: false,
+            supports_dictionary_context: false,
+                    key: "prompt".to_string(),
+                    label: "settings.models.cloudProviders.options.prompt".to_string(),
+                    option_type: CloudOptionType::Text,
+                    description: "settings.models.cloudProviders.options.promptDescription".to_string(),
                 },
                 CloudProviderOption {
                     key: "temperature".to_string(),
@@ -150,6 +195,9 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             ],
             supports_dictionary_terms: true,
             supports_dictionary_context: false,
+            ],
+            supports_dictionary_terms: true,
+            supports_dictionary_context: true,
         },
         SttProviderInfo {
             id: "soniox".to_string(),
@@ -212,6 +260,55 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             supports_dictionary_terms: true,
             supports_dictionary_context: true,
         },
+        SttProviderInfo {
+            id: "fireworks".to_string(),
+            name: "Fireworks AI".to_string(),
+            description: "onboarding.cloud.fireworks.description".to_string(),
+            supported_languages: vec![
+                "af", "ar", "hy", "az", "be", "bs", "bg", "ca", "zh-Hans", "zh-Hant", "hr",
+                "cs", "da", "nl", "en", "et", "fi", "fr", "gl", "de", "el",
+                "he", "hi", "hu", "is", "id", "it", "ja", "kn", "kk", "ko",
+                "lv", "lt", "mk", "ms", "mr", "mi", "ne", "no", "fa", "pl",
+                "pt", "ro", "ru", "sr", "sk", "sl", "es", "sw", "sv", "tl",
+                "ta", "th", "tr", "uk", "ur", "vi", "cy",
+            ].into_iter().map(String::from).collect(),
+            supports_translation: false,
+            supports_realtime: false,
+            is_recommended: false,
+            backend: ProviderBackend::Cloud {
+                base_url: "https://audio-prod.api.fireworks.ai/v1".to_string(),
+                default_model: "whisper-v3".to_string(),
+                console_url: Some("https://fireworks.ai/api-keys".to_string()),
+            },
+            available_options: vec![
+                CloudProviderOption {
+                    key: "language".to_string(),
+                    label: "settings.models.cloudProviders.options.language".to_string(),
+                    option_type: CloudOptionType::Language,
+                    description: String::new(),
+                },
+                CloudProviderOption {
+                    key: "prompt".to_string(),
+                    label: "settings.models.cloudProviders.options.prompt".to_string(),
+                    option_type: CloudOptionType::Text,
+                    description: "settings.models.cloudProviders.options.promptDescription".to_string(),
+                },
+                CloudProviderOption {
+                    key: "temperature".to_string(),
+                    label: "settings.models.cloudProviders.options.temperature".to_string(),
+                    option_type: CloudOptionType::Number { min: 0.0, max: 1.0, step: 0.1 },
+                    description: "settings.models.cloudProviders.options.temperatureDescription".to_string(),
+                },
+                CloudProviderOption {
+                    key: "diarize".to_string(),
+                    label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                },
+            ],
+            supports_dictionary_terms: true,
+            supports_dictionary_context: true,
+        },
     ]
 }
 
@@ -235,7 +332,8 @@ pub fn inject_dictionary(
     let mut opts = options.unwrap_or_else(|| serde_json::json!({}));
 
     match provider_id {
-        "openai_stt" => {
+        "openai_stt" | "fireworks" => {
+        "openai_stt" | "groq" => {
             // Build the dictionary prefix for the prompt field
             let mut prefix_parts = Vec::new();
             if !dictionary_terms.is_empty() {
@@ -259,7 +357,8 @@ pub fn inject_dictionary(
             };
             opts["prompt"] = serde_json::json!(merged);
             debug!(
-                "Injected dictionary into OpenAI prompt ({} terms, {} chars context)",
+                "Injected dictionary into {} prompt ({} terms, {} chars context)",
+                provider_id,
                 dictionary_terms.len(),
                 dictionary_context.len()
             );
