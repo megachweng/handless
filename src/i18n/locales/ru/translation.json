@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Облачное распознавание речи Soniox. Высокая точность с транскрипцией в реальном времени."
+      },
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
       }
     }
   },
@@ -212,7 +216,9 @@
           "enableSpeakerDiarization": "Диаризация спикеров",
           "enableSpeakerDiarizationDescription": "Определять и разделять разных говорящих",
           "enableLanguageIdentification": "Определение языка",
-          "enableLanguageIdentificationDescription": "Определять язык для каждого сегмента"
+          "enableLanguageIdentificationDescription": "Определять язык для каждого сегмента",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {

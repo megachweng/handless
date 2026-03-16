@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Sonioxクラウド音声テキスト変換。リアルタイム文字起こしによる高精度。"
+      },
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
       }
     }
   },
@@ -212,7 +216,9 @@
           "enableSpeakerDiarization": "話者分離",
           "enableSpeakerDiarizationDescription": "異なる話者を識別して分離",
           "enableLanguageIdentification": "言語識別",
-          "enableLanguageIdentificationDescription": "各セグメントの言語を検出"
+          "enableLanguageIdentificationDescription": "各セグメントの言語を検出",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {

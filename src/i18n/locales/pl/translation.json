@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Chmurowa zamiana mowy na tekst Soniox. Wysoka dokładność z transkrypcją w czasie rzeczywistym."
+      },
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
       }
     }
   },
@@ -212,7 +216,9 @@
           "enableSpeakerDiarization": "Diaryzacja mówców",
           "enableSpeakerDiarizationDescription": "Identyfikuj i oddzielaj różnych mówców",
           "enableLanguageIdentification": "Identyfikacja języka",
-          "enableLanguageIdentificationDescription": "Wykrywaj język dla każdego segmentu"
+          "enableLanguageIdentificationDescription": "Wykrywaj język dla każdego segmentu",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {

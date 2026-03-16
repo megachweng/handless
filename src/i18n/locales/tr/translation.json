@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Soniox bulut konuşmadan metne. Gerçek zamanlı transkripsiyon ile yüksek doğruluk."
+      },
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
       }
     }
   },
@@ -212,7 +216,9 @@
           "enableSpeakerDiarization": "Konuşmacı Ayrımı",
           "enableSpeakerDiarizationDescription": "Farklı konuşmacıları tanımlayıp ayırır",
           "enableLanguageIdentification": "Dil Tanımlama",
-          "enableLanguageIdentificationDescription": "Her segment için dili algıla"
+          "enableLanguageIdentificationDescription": "Her segment için dili algıla",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {

@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "تحويل الكلام إلى نص السحابي من Soniox. دقة عالية مع تفريغ في الوقت الفعلي."
+      },
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
       }
     }
   },
@@ -639,7 +643,9 @@
           "enableSpeakerDiarization": "تمييز المتحدثين",
           "enableSpeakerDiarizationDescription": "تحديد وفصل المتحدثين المختلفين",
           "enableLanguageIdentification": "تحديد اللغة",
-          "enableLanguageIdentificationDescription": "اكتشاف اللغة لكل مقطع"
+          "enableLanguageIdentificationDescription": "اكتشاف اللغة لكل مقطع",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {

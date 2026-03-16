@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Cloudový převod řeči na text Soniox. Vysoká přesnost s přepisem v reálném čase."
+      },
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
       }
     }
   },
@@ -212,7 +216,9 @@
           "enableSpeakerDiarization": "Diarizace mluvčích",
           "enableSpeakerDiarizationDescription": "Identifikovat a oddělit různé mluvčí",
           "enableLanguageIdentification": "Identifikace jazyka",
-          "enableLanguageIdentificationDescription": "Detekovat jazyk pro každý segment"
+          "enableLanguageIdentificationDescription": "Detekovat jazyk pro každý segment",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {

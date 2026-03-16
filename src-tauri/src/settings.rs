@@ -627,6 +627,13 @@ fn default_stt_providers() -> Vec<SttProvider> {
             default_model: "gpt-4o-mini-transcribe".to_string(),
         },
         SttProvider {
+            id: "mistral".to_string(),
+            label: "Mistral AI".to_string(),
+            provider_type: SttProviderType::Cloud,
+            base_url: "https://api.mistral.ai".to_string(),
+            default_model: "voxtral-mini-latest".to_string(),
+        },
+        SttProvider {
             id: "soniox".to_string(),
             label: "Soniox".to_string(),
             provider_type: SttProviderType::Cloud,

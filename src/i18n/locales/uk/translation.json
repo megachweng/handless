@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Хмарне розпізнавання мовлення Soniox. Висока точність з транскрипцією в реальному часі."
+      },
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
       }
     }
   },
@@ -266,7 +270,9 @@
           "enableSpeakerDiarization": "Діаризація спікерів",
           "enableSpeakerDiarizationDescription": "Визначати та розділяти різних мовців",
           "enableLanguageIdentification": "Визначення мови",
-          "enableLanguageIdentificationDescription": "Визначати мову для кожного сегмента"
+          "enableLanguageIdentificationDescription": "Визначати мову для кожного сегмента",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {
