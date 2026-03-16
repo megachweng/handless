@@ -118,6 +118,9 @@
         "name": "Soniox",
         "description": "Riconoscimento vocale cloud Soniox. Alta precisione con trascrizione in tempo reale."
       },
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
       "fireworks": {
         "name": "Fireworks AI",
         "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
@@ -223,7 +226,9 @@
           "enableSpeakerDiarization": "Diarizzazione dei parlanti",
           "enableSpeakerDiarizationDescription": "Identifica e separa i diversi parlanti",
           "enableLanguageIdentification": "Identificazione della lingua",
-          "enableLanguageIdentificationDescription": "Rileva la lingua per ogni segmento"
+          "enableLanguageIdentificationDescription": "Rileva la lingua per ogni segmento",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {

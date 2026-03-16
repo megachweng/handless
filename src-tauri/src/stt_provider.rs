@@ -108,6 +108,11 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             supports_dictionary_context: true,
         },
         SttProviderInfo {
+            id: "mistral".to_string(),
+            name: "Mistral AI".to_string(),
+            description: "onboarding.cloud.mistral.description".to_string(),
+            supported_languages: vec![
+                "en", "zh-Hans", "hi", "es", "ar", "fr", "pt", "ru", "de", "ja", "ko", "it", "nl",
             id: "elevenlabs".to_string(),
             name: "ElevenLabs".to_string(),
             description: "onboarding.cloud.elevenlabs.description".to_string(),
@@ -123,6 +128,9 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             supports_realtime: false,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
+                base_url: "https://api.mistral.ai".to_string(),
+                default_model: "voxtral-mini-latest".to_string(),
+                console_url: Some("https://console.mistral.ai".to_string()),
                 base_url: "https://api.elevenlabs.io/v1".to_string(),
                 default_model: "scribe_v2".to_string(),
                 console_url: Some("https://elevenlabs.io".to_string()),
@@ -172,6 +180,21 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     option_type: CloudOptionType::Number { min: 0.0, max: 1.0, step: 0.1 },
                     description: "settings.models.cloudProviders.options.temperatureDescription".to_string(),
                 },
+                CloudProviderOption {
+                    key: "diarize".to_string(),
+                    label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                },
+                CloudProviderOption {
+                    key: "context_bias".to_string(),
+                    label: "settings.models.cloudProviders.options.contextBias".to_string(),
+                    option_type: CloudOptionType::Text,
+                    description: "settings.models.cloudProviders.options.contextBiasDescription".to_string(),
+                },
+            ],
+            supports_dictionary_terms: true,
+            supports_dictionary_context: false,
             ],
             supports_dictionary_terms: true,
             supports_dictionary_context: true,
@@ -338,6 +361,28 @@ pub fn inject_dictionary(
                 provider_id,
                 dictionary_terms.len(),
                 dictionary_context.len()
+            );
+        }
+        "mistral" => {
+            // Merge terms into context_bias (comma-separated)
+            if !dictionary_terms.is_empty() {
+                let dict_terms_str = dictionary_terms.join(",");
+                let existing_bias = opts
+                    .get("context_bias")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_string();
+
+                let merged = if existing_bias.is_empty() {
+                    dict_terms_str
+                } else {
+                    format!("{},{}", dict_terms_str, existing_bias)
+                };
+                opts["context_bias"] = serde_json::json!(merged);
+            }
+            debug!(
+                "Injected dictionary into Mistral context_bias ({} terms)",
+                dictionary_terms.len(),
             );
         }
         "soniox" => {

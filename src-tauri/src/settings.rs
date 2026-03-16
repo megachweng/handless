@@ -352,7 +352,8 @@ impl Default for TypingTool {
 #[derive(Serialize, Deserialize, Debug, Clone, Type)]
 pub struct AppSettings {
     pub bindings: HashMap<String, ShortcutBinding>,
-    #[serde(default, alias = "push_to_talk")] // TODO: remove alias after migration period (see ActivationMode Deserialize impl)
+    #[serde(default, alias = "push_to_talk")]
+    // TODO: remove alias after migration period (see ActivationMode Deserialize impl)
     pub activation_mode: ActivationMode,
     #[serde(default = "default_audio_feedback_volume")]
     pub audio_feedback_volume: f32,
@@ -627,6 +628,11 @@ fn default_stt_providers() -> Vec<SttProvider> {
             default_model: "gpt-4o-mini-transcribe".to_string(),
         },
         SttProvider {
+            id: "mistral".to_string(),
+            label: "Mistral AI".to_string(),
+            provider_type: SttProviderType::Cloud,
+            base_url: "https://api.mistral.ai".to_string(),
+            default_model: "voxtral-mini-latest".to_string(),
             id: "elevenlabs".to_string(),
             label: "ElevenLabs".to_string(),
             provider_type: SttProviderType::Cloud,

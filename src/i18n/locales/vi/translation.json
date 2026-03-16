@@ -118,6 +118,9 @@
         "name": "Soniox",
         "description": "Chuyển đổi giọng nói thành văn bản đám mây Soniox. Độ chính xác cao với chuyển đổi thời gian thực."
       },
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
       "fireworks": {
         "name": "Fireworks AI",
         "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
@@ -223,7 +226,9 @@
           "enableSpeakerDiarization": "Phân biệt người nói",
           "enableSpeakerDiarizationDescription": "Nhận diện và tách biệt các người nói khác nhau",
           "enableLanguageIdentification": "Nhận diện ngôn ngữ",
-          "enableLanguageIdentificationDescription": "Phát hiện ngôn ngữ cho từng đoạn"
+          "enableLanguageIdentificationDescription": "Phát hiện ngôn ngữ cho từng đoạn",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {
