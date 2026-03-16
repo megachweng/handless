@@ -133,7 +133,8 @@ const RecordingOverlay: React.FC = () => {
   // Compute overlay dimensions — pill never changes shape in toggle mode
   const overlayWidth = (() => {
     if (!isVisible) return 33;
-    if (hasStreamingText && !showTextAboveBars) return STREAMING_WIDTH + buttonsExtra;
+    if (hasStreamingText && !showTextAboveBars)
+      return STREAMING_WIDTH + buttonsExtra;
     return 70 + buttonsExtra;
   })();
 

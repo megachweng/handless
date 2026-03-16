@@ -8,6 +8,7 @@ description: Add a new cloud speech-to-text provider to Handless. Use when integ
 This skill walks through every file and code change needed to add a new cloud speech-to-text provider to Handless. Follow every step exactly — skipping any step will cause compilation errors or runtime failures.
 
 Before starting, research the provider's API documentation to understand:
+
 - Authentication method (usually Bearer token)
 - Transcription endpoint(s) and request format
 - Response shape (where the transcribed text lives)
@@ -60,6 +61,7 @@ The following helpers are defined in `src-tauri/src/cloud_stt/mod.rs` — use th
 ### test_api_key
 
 Validates credentials by sending a minimal request. Pattern:
+
 1. Generate a tiny silent WAV: `super::test_silence_wav()?`
 2. Send it to the provider's API with the given `api_key` and `model`
 3. Use `super::check_response(response, "Provider test error").await?` to validate the response
@@ -67,6 +69,7 @@ Validates credentials by sending a minimal request. Pattern:
 ### transcribe
 
 Transcribes real audio. Pattern:
+
 1. `audio_wav` is already WAV-encoded bytes — send directly
 2. Extract provider-specific options from `options: Option<&serde_json::Value>` using `.get("key").and_then(|v| v.as_str())` etc.
 3. Make the API call using `reqwest::Client`
@@ -290,6 +293,7 @@ fn build_ws_request(api_key: &str, url: &str) -> Result<tungstenite::http::Reque
 If a provider requires manually constructed headers (e.g., `Host`, non-standard auth), you may use `Request::builder()` but MUST include `Connection: Upgrade`, `Upgrade: websocket`, `Sec-WebSocket-Version: 13`, and `Sec-WebSocket-Key` (via `tungstenite::handshake::client::generate_key()`). See `realtime/fireworks.rs` or `realtime/mistral.rs` for this pattern.
 
 **Audio format:** Convert f32 frames to i16 LE PCM bytes:
+
 ```rust
 let bytes: Vec<u8> = frame.iter()
     .map(|&s| (s.clamp(-1.0, 1.0) * i16::MAX as f32) as i16)
@@ -298,6 +302,7 @@ let bytes: Vec<u8> = frame.iter()
 ```
 
 **`start_streaming` pattern:** Spawn two tokio tasks returning `StreamingHandles`:
+
 - **Sender task**: reads f32 audio from `audio_rx`, converts to PCM, sends via WebSocket
 - **Reader task**: reads WebSocket messages, accumulates final text, sends live preview via `delta_tx`
 
@@ -312,13 +317,16 @@ let bytes: Vec<u8> = frame.iter()
 ### 7b. Register in realtime dispatch
 
 Edit `src-tauri/src/cloud_stt/realtime/mod.rs`:
+
 - Add `mod <provider_name>;`
 - Add match arms in both `test_api_key()` and `transcribe()`
 
 ### 7c. Register in session dispatch
 
 Edit `src-tauri/src/cloud_stt/realtime/session.rs`:
+
 - Add a match arm in `RealtimeStreamingSession::start()` using the existing macro:
+
 ```rust
 "<provider_id>" => start_provider!(<provider_name>),
 ```
@@ -366,14 +374,14 @@ The following are fully generic and require zero modifications:
 
 ## File checklist
 
-| # | File | Action |
-|---|------|--------|
-| 1 | `src-tauri/src/cloud_stt/<provider>.rs` | Create (or 3-line re-export for OpenAI-compatible) |
-| 2 | `src-tauri/src/cloud_stt/mod.rs` | Edit (module + match arms) |
-| 3 | `src-tauri/src/stt_provider.rs` | Edit (registry entry + optional dictionary injection) |
-| 4 | `src-tauri/src/settings.rs` | Edit (default_stt_providers) |
-| 5 | `src/i18n/locales/en/translation.json` | Edit (provider + option keys) |
-| 6 | `src/i18n/locales/{ar,cs,de,es,fr,it,ja,ko,pl,pt,ru,tr,uk,vi,zh,zh-TW}/translation.json` | Edit (same keys, English placeholder) |
-| 7 | `src-tauri/src/cloud_stt/realtime/<provider>.rs` | Create (only if realtime) |
-| 8 | `src-tauri/src/cloud_stt/realtime/mod.rs` | Edit (only if realtime) |
-| 9 | `src-tauri/src/cloud_stt/realtime/session.rs` | Edit (only if realtime — add match arm) |
+| #   | File                                                                                     | Action                                                |
+| --- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| 1   | `src-tauri/src/cloud_stt/<provider>.rs`                                                  | Create (or 3-line re-export for OpenAI-compatible)    |
+| 2   | `src-tauri/src/cloud_stt/mod.rs`                                                         | Edit (module + match arms)                            |
+| 3   | `src-tauri/src/stt_provider.rs`                                                          | Edit (registry entry + optional dictionary injection) |
+| 4   | `src-tauri/src/settings.rs`                                                              | Edit (default_stt_providers)                          |
+| 5   | `src/i18n/locales/en/translation.json`                                                   | Edit (provider + option keys)                         |
+| 6   | `src/i18n/locales/{ar,cs,de,es,fr,it,ja,ko,pl,pt,ru,tr,uk,vi,zh,zh-TW}/translation.json` | Edit (same keys, English placeholder)                 |
+| 7   | `src-tauri/src/cloud_stt/realtime/<provider>.rs`                                         | Create (only if realtime)                             |
+| 8   | `src-tauri/src/cloud_stt/realtime/mod.rs`                                                | Edit (only if realtime)                               |
+| 9   | `src-tauri/src/cloud_stt/realtime/session.rs`                                            | Edit (only if realtime — add match arm)               |

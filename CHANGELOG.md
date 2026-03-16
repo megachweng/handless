@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.13] - 2026-03-16
+
 ### Added
 
+- Toggle mode: floating transcript bubble above/below the pill instead of replacing waveform bars
+- Draggable overlay pill via native startDragging (position persists within a session)
+- Dynamic overlay window resizing to tightly fit visible content
 - Retention period confirmation dialog with affected entry count preview
 - Download progress bar in footer during model downloads
 - Relative timestamps in history entries (with absolute time tooltip)
@@ -17,10 +22,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Settings pages left-aligned instead of centered
 - Stats empty state shows multiple category icons
+- Overlay position preserved across recording/transcribing/processing transitions
 
 ### Fixed
 
 - Database index on `(saved, timestamp)` for faster retention queries
+- Transparent overlay areas no longer block desktop interaction
+- Streaming text bubble shows exactly 5 lines without partial clipping
 
 ## [0.1.12] - 2026-03-14
 

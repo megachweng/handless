@@ -82,7 +82,10 @@ export const RecordingRetentionPeriodSelector: React.FC<RecordingRetentionPeriod
     const handleLimitChange = (value: number | undefined) => {
       if (value === undefined) return;
 
-      if (pendingPeriod !== "preserve_limit" && currentPeriod === "preserve_limit") {
+      if (
+        pendingPeriod !== "preserve_limit" &&
+        currentPeriod === "preserve_limit"
+      ) {
         setPendingPeriod("preserve_limit");
       }
       setPendingLimit(value);
@@ -164,10 +167,9 @@ export const RecordingRetentionPeriodSelector: React.FC<RecordingRetentionPeriod
                     }`}
                   >
                     {isDestructive
-                      ? t(
-                          "settings.debug.recordingRetention.confirmDelete",
-                          { count: affectedCount },
-                        )
+                      ? t("settings.debug.recordingRetention.confirmDelete", {
+                          count: affectedCount,
+                        })
                       : t(
                           "settings.debug.recordingRetention.noEntriesAffected",
                         )}
@@ -192,9 +194,7 @@ export const RecordingRetentionPeriodSelector: React.FC<RecordingRetentionPeriod
                       }`}
                     >
                       {isDestructive
-                        ? t(
-                            "settings.debug.recordingRetention.confirmApply",
-                          )
+                        ? t("settings.debug.recordingRetention.confirmApply")
                         : t("common.save")}
                     </motion.button>
                   </div>

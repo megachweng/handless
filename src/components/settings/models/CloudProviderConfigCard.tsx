@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import {
   Book,
@@ -284,7 +290,9 @@ export const CloudProviderConfigCard: React.FC<
       active={effectiveStatus === "active"}
       clickable={!expanded}
       compact={compact}
-      className={expanded && effectiveStatus === "active" ? "!bg-accent/[0.04]" : ""}
+      className={
+        expanded && effectiveStatus === "active" ? "!bg-accent/[0.04]" : ""
+      }
       onClick={() => {
         if (isClickable) {
           onSelect?.(provider.id);

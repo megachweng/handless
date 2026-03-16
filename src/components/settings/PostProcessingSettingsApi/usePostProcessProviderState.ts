@@ -1,6 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 import { useSettings } from "../../../hooks/useSettings";
-import { commands, type ModelPricing, type PostProcessProvider } from "@/bindings";
+import {
+  commands,
+  type ModelPricing,
+  type PostProcessProvider,
+} from "@/bindings";
 import type { DropdownOption } from "../../ui/Dropdown";
 import { useModelPricing } from "@/hooks/useModelPricing";
 
