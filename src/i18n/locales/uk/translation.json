@@ -107,6 +107,13 @@
         "name": "OpenAI",
         "description": "Хмарний API розпізнавання мовлення OpenAI. Швидкий і точний з підтримкою 57+ мов."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      "groq": {
+        "name": "Groq",
+        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Хмарне розпізнавання мовлення Soniox. Висока точність з транскрипцією в реальному часі."
@@ -114,6 +121,18 @@
       "deepgram": {
         "name": "Deepgram",
         "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
+      "assemblyai": {
+        "name": "AssemblyAI",
+        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+      "cartesia": {
+        "name": "Cartesia",
+        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+      "fireworks": {
+        "name": "Fireworks AI",
+        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
       }
     }
   },
@@ -274,7 +293,9 @@
           "enableSpeakerDiarization": "Діаризація спікерів",
           "enableSpeakerDiarizationDescription": "Визначати та розділяти різних мовців",
           "enableLanguageIdentification": "Визначення мови",
-          "enableLanguageIdentificationDescription": "Визначати мову для кожного сегмента"
+          "enableLanguageIdentificationDescription": "Визначати мову для кожного сегмента",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {

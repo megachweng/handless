@@ -107,6 +107,13 @@
         "name": "OpenAI",
         "description": "API chuyển đổi giọng nói thành văn bản đám mây của OpenAI. Nhanh và chính xác, hỗ trợ hơn 57 ngôn ngữ."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      "groq": {
+        "name": "Groq",
+        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Chuyển đổi giọng nói thành văn bản đám mây Soniox. Độ chính xác cao với chuyển đổi thời gian thực."
@@ -114,6 +121,18 @@
       "deepgram": {
         "name": "Deepgram",
         "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
+      "assemblyai": {
+        "name": "AssemblyAI",
+        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+      "cartesia": {
+        "name": "Cartesia",
+        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+      "fireworks": {
+        "name": "Fireworks AI",
+        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
       }
     }
   },
@@ -220,7 +239,9 @@
           "enableSpeakerDiarization": "Phân biệt người nói",
           "enableSpeakerDiarizationDescription": "Nhận diện và tách biệt các người nói khác nhau",
           "enableLanguageIdentification": "Nhận diện ngôn ngữ",
-          "enableLanguageIdentificationDescription": "Phát hiện ngôn ngữ cho từng đoạn"
+          "enableLanguageIdentificationDescription": "Phát hiện ngôn ngữ cho từng đoạn",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {
