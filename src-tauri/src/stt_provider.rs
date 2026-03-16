@@ -119,11 +119,27 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "ms", "ne", "nl", "no", "pa", "pl", "pt", "ro", "ru", "sk",
                 "sl", "sq", "sr", "sv", "sw", "ta", "te", "th", "tl", "tr",
                 "uk", "ur", "vi", "zh-Hans",
-            id: "mistral".to_string(),
-            name: "Mistral AI".to_string(),
-            description: "onboarding.cloud.mistral.description".to_string(),
-            supported_languages: vec![
-                "en", "zh-Hans", "hi", "es", "ar", "fr", "pt", "ru", "de", "ja", "ko", "it", "nl",
+            ].into_iter().map(String::from).collect(),
+            supports_translation: false,
+            supports_realtime: false,
+            is_recommended: false,
+            backend: ProviderBackend::Cloud {
+                base_url: "https://api.cartesia.ai".to_string(),
+                default_model: "ink-whisper".to_string(),
+                console_url: Some("https://play.cartesia.ai/keys".to_string()),
+            },
+            available_options: vec![
+                CloudProviderOption {
+                    key: "language".to_string(),
+                    label: "settings.models.cloudProviders.options.language".to_string(),
+                    option_type: CloudOptionType::Language,
+                    description: String::new(),
+                },
+            ],
+            supports_dictionary_terms: false,
+            supports_dictionary_context: false,
+        },
+        SttProviderInfo {
             id: "elevenlabs".to_string(),
             name: "ElevenLabs".to_string(),
             description: "onboarding.cloud.elevenlabs.description".to_string(),
@@ -139,15 +155,28 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             supports_realtime: false,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
-                base_url: "https://api.cartesia.ai".to_string(),
-                default_model: "ink-whisper".to_string(),
-                console_url: Some("https://play.cartesia.ai/keys".to_string()),
-                base_url: "https://api.mistral.ai".to_string(),
-                default_model: "voxtral-mini-latest".to_string(),
-                console_url: Some("https://console.mistral.ai".to_string()),
                 base_url: "https://api.elevenlabs.io/v1".to_string(),
                 default_model: "scribe_v2".to_string(),
                 console_url: Some("https://elevenlabs.io".to_string()),
+            },
+            available_options: vec![
+                CloudProviderOption {
+                    key: "language".to_string(),
+                    label: "settings.models.cloudProviders.options.language".to_string(),
+                    option_type: CloudOptionType::Language,
+                    description: String::new(),
+                },
+                CloudProviderOption {
+                    key: "enable_speaker_diarization".to_string(),
+                    label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                },
+            ],
+            supports_dictionary_terms: false,
+            supports_dictionary_context: false,
+        },
+        SttProviderInfo {
             id: "groq".to_string(),
             name: "Groq".to_string(),
             description: "onboarding.cloud.groq.description".to_string(),
@@ -174,22 +203,43 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     option_type: CloudOptionType::Language,
                     description: String::new(),
                 },
-            ],
-            supports_dictionary_terms: false,
-            supports_dictionary_context: false,
                 CloudProviderOption {
-                    key: "enable_speaker_diarization".to_string(),
-                    label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
-                    option_type: CloudOptionType::Boolean,
-                    description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
-                },
-            ],
-            supports_dictionary_terms: false,
-            supports_dictionary_context: false,
                     key: "prompt".to_string(),
                     label: "settings.models.cloudProviders.options.prompt".to_string(),
                     option_type: CloudOptionType::Text,
                     description: "settings.models.cloudProviders.options.promptDescription".to_string(),
+                },
+                CloudProviderOption {
+                    key: "temperature".to_string(),
+                    label: "settings.models.cloudProviders.options.temperature".to_string(),
+                    option_type: CloudOptionType::Number { min: 0.0, max: 1.0, step: 0.1 },
+                    description: "settings.models.cloudProviders.options.temperatureDescription".to_string(),
+                },
+            ],
+            supports_dictionary_terms: true,
+            supports_dictionary_context: true,
+        },
+        SttProviderInfo {
+            id: "mistral".to_string(),
+            name: "Mistral AI".to_string(),
+            description: "onboarding.cloud.mistral.description".to_string(),
+            supported_languages: vec![
+                "en", "zh-Hans", "hi", "es", "ar", "fr", "pt", "ru", "de", "ja", "ko", "it", "nl",
+            ].into_iter().map(String::from).collect(),
+            supports_translation: false,
+            supports_realtime: false,
+            is_recommended: false,
+            backend: ProviderBackend::Cloud {
+                base_url: "https://api.mistral.ai".to_string(),
+                default_model: "voxtral-mini-latest".to_string(),
+                console_url: Some("https://console.mistral.ai".to_string()),
+            },
+            available_options: vec![
+                CloudProviderOption {
+                    key: "language".to_string(),
+                    label: "settings.models.cloudProviders.options.language".to_string(),
+                    option_type: CloudOptionType::Language,
+                    description: String::new(),
                 },
                 CloudProviderOption {
                     key: "temperature".to_string(),
@@ -212,9 +262,6 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             ],
             supports_dictionary_terms: true,
             supports_dictionary_context: false,
-            ],
-            supports_dictionary_terms: true,
-            supports_dictionary_context: true,
         },
         SttProviderInfo {
             id: "soniox".to_string(),
@@ -286,23 +333,6 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "fi", "fr", "de", "el", "hi", "hu", "id", "it", "ja", "ko",
                 "ms", "no", "pl", "pt", "ro", "ru", "sk", "es", "sv", "tr",
                 "uk", "vi",
-            id: "assemblyai".to_string(),
-            name: "AssemblyAI".to_string(),
-            description: "onboarding.cloud.assemblyai.description".to_string(),
-            supported_languages: vec![
-                "en", "es", "fr", "de", "it", "pt", "nl", "pl", "ru", "tr",
-                "uk", "ja", "ko", "zh", "ar", "hi", "cs", "da", "fi", "el",
-                "hu", "id", "no", "ro", "sk", "sv", "th", "vi",
-            id: "fireworks".to_string(),
-            name: "Fireworks AI".to_string(),
-            description: "onboarding.cloud.fireworks.description".to_string(),
-            supported_languages: vec![
-                "af", "ar", "hy", "az", "be", "bs", "bg", "ca", "zh-Hans", "zh-Hant", "hr",
-                "cs", "da", "nl", "en", "et", "fi", "fr", "gl", "de", "el",
-                "he", "hi", "hu", "is", "id", "it", "ja", "kn", "kk", "ko",
-                "lv", "lt", "mk", "ms", "mr", "mi", "ne", "no", "fa", "pl",
-                "pt", "ro", "ru", "sr", "sk", "sl", "es", "sw", "sv", "tl",
-                "ta", "th", "tr", "uk", "ur", "vi", "cy",
             ].into_iter().map(String::from).collect(),
             supports_translation: false,
             supports_realtime: false,
@@ -311,16 +341,6 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 base_url: "https://api.deepgram.com/v1".to_string(),
                 default_model: "nova-3".to_string(),
                 console_url: Some("https://console.deepgram.com/api-keys".to_string()),
-                base_url: "https://api.assemblyai.com".to_string(),
-                default_model: "best".to_string(),
-                console_url: Some("https://www.assemblyai.com/dashboard".to_string()),
-            },
-            available_options: vec![
-                CloudProviderOption {
-                    key: "language_code".to_string(),
-                base_url: "https://audio-prod.api.fireworks.ai/v1".to_string(),
-                default_model: "whisper-v3".to_string(),
-                console_url: Some("https://fireworks.ai/api-keys".to_string()),
             },
             available_options: vec![
                 CloudProviderOption {
@@ -340,7 +360,79 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     label: "settings.models.cloudProviders.options.punctuate".to_string(),
                     option_type: CloudOptionType::Boolean,
                     description: "settings.models.cloudProviders.options.punctuateDescription".to_string(),
+                },
+                CloudProviderOption {
+                    key: "diarize".to_string(),
+                    label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                },
+            ],
+            supports_dictionary_terms: true,
+            supports_dictionary_context: false,
+        },
+        SttProviderInfo {
+            id: "assemblyai".to_string(),
+            name: "AssemblyAI".to_string(),
+            description: "onboarding.cloud.assemblyai.description".to_string(),
+            supported_languages: vec![
+                "en", "es", "fr", "de", "it", "pt", "nl", "pl", "ru", "tr",
+                "uk", "ja", "ko", "zh", "ar", "hi", "cs", "da", "fi", "el",
+                "hu", "id", "no", "ro", "sk", "sv", "th", "vi",
+            ].into_iter().map(String::from).collect(),
+            supports_translation: false,
+            supports_realtime: false,
+            is_recommended: false,
+            backend: ProviderBackend::Cloud {
+                base_url: "https://api.assemblyai.com".to_string(),
+                default_model: "best".to_string(),
+                console_url: Some("https://www.assemblyai.com/dashboard".to_string()),
+            },
+            available_options: vec![
+                CloudProviderOption {
+                    key: "language_code".to_string(),
+                    label: "settings.models.cloudProviders.options.language".to_string(),
+                    option_type: CloudOptionType::Language,
+                    description: String::new(),
+                },
+                CloudProviderOption {
                     key: "speaker_labels".to_string(),
+                    label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                },
+            ],
+            supports_dictionary_terms: true,
+            supports_dictionary_context: false,
+        },
+        SttProviderInfo {
+            id: "fireworks".to_string(),
+            name: "Fireworks AI".to_string(),
+            description: "onboarding.cloud.fireworks.description".to_string(),
+            supported_languages: vec![
+                "af", "ar", "hy", "az", "be", "bs", "bg", "ca", "zh-Hans", "zh-Hant", "hr",
+                "cs", "da", "nl", "en", "et", "fi", "fr", "gl", "de", "el",
+                "he", "hi", "hu", "is", "id", "it", "ja", "kn", "kk", "ko",
+                "lv", "lt", "mk", "ms", "mr", "mi", "ne", "no", "fa", "pl",
+                "pt", "ro", "ru", "sr", "sk", "sl", "es", "sw", "sv", "tl",
+                "ta", "th", "tr", "uk", "ur", "vi", "cy",
+            ].into_iter().map(String::from).collect(),
+            supports_translation: false,
+            supports_realtime: false,
+            is_recommended: false,
+            backend: ProviderBackend::Cloud {
+                base_url: "https://audio-prod.api.fireworks.ai/v1".to_string(),
+                default_model: "whisper-v3".to_string(),
+                console_url: Some("https://fireworks.ai/api-keys".to_string()),
+            },
+            available_options: vec![
+                CloudProviderOption {
+                    key: "language".to_string(),
+                    label: "settings.models.cloudProviders.options.language".to_string(),
+                    option_type: CloudOptionType::Language,
+                    description: String::new(),
+                },
+                CloudProviderOption {
                     key: "prompt".to_string(),
                     label: "settings.models.cloudProviders.options.prompt".to_string(),
                     option_type: CloudOptionType::Text,
@@ -360,7 +452,6 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 },
             ],
             supports_dictionary_terms: true,
-            supports_dictionary_context: false,
             supports_dictionary_context: true,
         },
     ]
@@ -368,8 +459,15 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
 
 /// Merge dictionary terms and context into the provider-specific cloud options.
 ///
-/// For OpenAI: terms are prepended as `"Glossary: term1, term2. "` to the `prompt` field,
-/// and context is prepended after the glossary. The user's own prompt text is preserved after.
+/// For prompt-based providers (OpenAI, Groq, Fireworks): terms are prepended as
+/// `"Glossary: term1, term2. "` to the `prompt` field, and context is prepended
+/// after the glossary. The user's own prompt text is preserved after.
+///
+/// For Deepgram: terms are merged into the `keywords` field (comma-separated).
+///
+/// For AssemblyAI: terms are merged into the `word_boost` array.
+///
+/// For Mistral: terms are merged into the `context_bias` field (comma-separated).
 ///
 /// For Soniox: terms are prepended to the `context_terms` field (comma-separated),
 /// and context is prepended to the `context_description` field.
@@ -386,8 +484,7 @@ pub fn inject_dictionary(
     let mut opts = options.unwrap_or_else(|| serde_json::json!({}));
 
     match provider_id {
-        "openai_stt" | "fireworks" => {
-        "openai_stt" | "groq" => {
+        "openai_stt" | "groq" | "fireworks" => {
             // Build the dictionary prefix for the prompt field
             let mut prefix_parts = Vec::new();
             if !dictionary_terms.is_empty() {
@@ -423,6 +520,22 @@ pub fn inject_dictionary(
                 let dict_keywords = dictionary_terms.join(", ");
                 let existing_keywords = opts
                     .get("keywords")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_string();
+
+                let merged = if existing_keywords.is_empty() {
+                    dict_keywords
+                } else {
+                    format!("{}, {}", dict_keywords, existing_keywords)
+                };
+                opts["keywords"] = serde_json::json!(merged);
+            }
+            debug!(
+                "Injected dictionary into Deepgram options ({} terms)",
+                dictionary_terms.len(),
+            );
+        }
         "assemblyai" => {
             // Merge terms into word_boost (array of strings)
             if !dictionary_terms.is_empty() {
@@ -442,6 +555,9 @@ pub fn inject_dictionary(
             }
             debug!(
                 "Injected dictionary into AssemblyAI options ({} terms)",
+                dictionary_terms.len(),
+            );
+        }
         "mistral" => {
             // Merge terms into context_bias (comma-separated)
             if !dictionary_terms.is_empty() {
@@ -452,15 +568,6 @@ pub fn inject_dictionary(
                     .unwrap_or("")
                     .to_string();
 
-                let merged = if existing_keywords.is_empty() {
-                    dict_keywords
-                } else {
-                    format!("{}, {}", dict_keywords, existing_keywords)
-                };
-                opts["keywords"] = serde_json::json!(merged);
-            }
-            debug!(
-                "Injected dictionary into Deepgram options ({} terms)",
                 let merged = if existing_bias.is_empty() {
                     dict_terms_str
                 } else {

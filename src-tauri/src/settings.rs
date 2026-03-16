@@ -633,16 +633,22 @@ fn default_stt_providers() -> Vec<SttProvider> {
             provider_type: SttProviderType::Cloud,
             base_url: "https://api.cartesia.ai".to_string(),
             default_model: "ink-whisper".to_string(),
+        },
+        SttProvider {
             id: "mistral".to_string(),
             label: "Mistral AI".to_string(),
             provider_type: SttProviderType::Cloud,
             base_url: "https://api.mistral.ai".to_string(),
             default_model: "voxtral-mini-latest".to_string(),
+        },
+        SttProvider {
             id: "elevenlabs".to_string(),
             label: "ElevenLabs".to_string(),
             provider_type: SttProviderType::Cloud,
             base_url: "https://api.elevenlabs.io/v1".to_string(),
             default_model: "scribe_v2".to_string(),
+        },
+        SttProvider {
             id: "groq".to_string(),
             label: "Groq".to_string(),
             provider_type: SttProviderType::Cloud,
@@ -662,11 +668,15 @@ fn default_stt_providers() -> Vec<SttProvider> {
             provider_type: SttProviderType::Cloud,
             base_url: "https://api.deepgram.com/v1".to_string(),
             default_model: "nova-3".to_string(),
+        },
+        SttProvider {
             id: "assemblyai".to_string(),
             label: "AssemblyAI".to_string(),
             provider_type: SttProviderType::Cloud,
             base_url: "https://api.assemblyai.com".to_string(),
             default_model: "best".to_string(),
+        },
+        SttProvider {
             id: "fireworks".to_string(),
             label: "Fireworks AI".to_string(),
             provider_type: SttProviderType::Cloud,
