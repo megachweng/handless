@@ -16,15 +16,18 @@
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
 }
 
 .overlay-wrapper.position-top {
-  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .overlay-wrapper.position-bottom {
-  align-items: flex-end;
+  justify-content: flex-end;
 }
 
 .recording-overlay {
@@ -35,6 +38,7 @@
   align-items: center;
   justify-content: center;
   padding: 6px;
+  pointer-events: auto;
   background: radial-gradient(
     ellipse at 50% 0%,
     rgb(16, 11, 8) 0%,
@@ -163,14 +167,61 @@
   margin: 0 22px;
 }
 
-/* Streaming text — multi-line, up to 5 lines */
-.streaming-text {
+/* Floating text bubble — separate dialogue above the pill (toggle mode) */
+.streaming-text-bubble {
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgb(16, 11, 8) 0%,
+    rgb(8, 6, 4) 100%
+  );
+  border: 1px solid rgba(var(--color-accent-rgb), 0.07);
+  border-radius: 12px;
+  padding: 8px 12px;
+  width: 280px;
+  /* Use box-shadow instead of filter: drop-shadow to avoid extending the
+     hit-test area in WKWebView (filter regions can capture pointer events). */
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    0 0 0.5px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(var(--color-accent-rgb), 0.04);
+  animation: bubble-enter 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Inner content clips to exactly 5 lines — no padding/border to
+   miscalculate, so max-height is a clean multiple of line-height. */
+.bubble-content {
+  max-height: 90px; /* exactly 5 × 18px */
+  overflow-y: hidden;
+}
+
+/* Position-top: pill first, bubble below */
+.overlay-wrapper.position-top .streaming-text-bubble {
+  order: 1;
+}
+
+@keyframes bubble-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.96);
+  }
+}
+
+/* Shared typography for streaming text (bubble + in-pill) */
+.streaming-text,
+.streaming-text-bubble {
   color: rgba(255, 255, 255, 0.92);
   font-size: 12px;
   font-weight: 450;
   font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
   line-height: 18px;
   overflow-wrap: break-word;
+}
+
+/* In-pill streaming text — multi-line, up to 5 lines */
+.streaming-text {
   overflow-y: hidden;
   max-height: 90px; /* 5 lines × 18px */
   padding: 0 6px;

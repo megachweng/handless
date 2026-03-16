@@ -442,6 +442,12 @@ async cancelOperation() : Promise<void> {
 async confirmRecording() : Promise<void> {
     await TAURI_INVOKE("confirm_recording");
 },
+/**
+ * Resize the overlay window to tightly fit the visible content.
+ */
+async resizeOverlay(width: number, height: number) : Promise<void> {
+    await TAURI_INVOKE("resize_overlay", { width, height });
+},
 async getAppDirPath() : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_app_dir_path") };
