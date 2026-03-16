@@ -627,6 +627,13 @@ fn default_stt_providers() -> Vec<SttProvider> {
             default_model: "gpt-4o-mini-transcribe".to_string(),
         },
         SttProvider {
+            id: "groq".to_string(),
+            label: "Groq".to_string(),
+            provider_type: SttProviderType::Cloud,
+            base_url: "https://api.groq.com/openai/v1".to_string(),
+            default_model: "whisper-large-v3-turbo".to_string(),
+        },
+        SttProvider {
             id: "soniox".to_string(),
             label: "Soniox".to_string(),
             provider_type: SttProviderType::Cloud,

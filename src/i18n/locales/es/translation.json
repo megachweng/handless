@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "API de voz a texto en la nube de OpenAI. Rápida y precisa con soporte para más de 57 idiomas."
       },
+      "groq": {
+        "name": "Groq",
+        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Voz a texto en la nube de Soniox. Alta precisión con transcripción en tiempo real."

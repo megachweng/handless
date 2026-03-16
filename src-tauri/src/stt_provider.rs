@@ -108,6 +108,49 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             supports_dictionary_context: true,
         },
         SttProviderInfo {
+            id: "groq".to_string(),
+            name: "Groq".to_string(),
+            description: "onboarding.cloud.groq.description".to_string(),
+            supported_languages: vec![
+                "af", "ar", "hy", "az", "be", "bs", "bg", "ca", "zh-Hans", "zh-Hant", "hr",
+                "cs", "da", "nl", "en", "et", "fi", "fr", "gl", "de", "el",
+                "he", "hi", "hu", "is", "id", "it", "ja", "kn", "kk", "ko",
+                "lv", "lt", "mk", "ms", "mr", "mi", "ne", "no", "fa", "pl",
+                "pt", "ro", "ru", "sr", "sk", "sl", "es", "sw", "sv", "tl",
+                "ta", "th", "tr", "uk", "ur", "vi", "cy",
+            ].into_iter().map(String::from).collect(),
+            supports_translation: false,
+            supports_realtime: false,
+            is_recommended: false,
+            backend: ProviderBackend::Cloud {
+                base_url: "https://api.groq.com/openai/v1".to_string(),
+                default_model: "whisper-large-v3-turbo".to_string(),
+                console_url: Some("https://console.groq.com/keys".to_string()),
+            },
+            available_options: vec![
+                CloudProviderOption {
+                    key: "language".to_string(),
+                    label: "settings.models.cloudProviders.options.language".to_string(),
+                    option_type: CloudOptionType::Language,
+                    description: String::new(),
+                },
+                CloudProviderOption {
+                    key: "prompt".to_string(),
+                    label: "settings.models.cloudProviders.options.prompt".to_string(),
+                    option_type: CloudOptionType::Text,
+                    description: "settings.models.cloudProviders.options.promptDescription".to_string(),
+                },
+                CloudProviderOption {
+                    key: "temperature".to_string(),
+                    label: "settings.models.cloudProviders.options.temperature".to_string(),
+                    option_type: CloudOptionType::Number { min: 0.0, max: 1.0, step: 0.1 },
+                    description: "settings.models.cloudProviders.options.temperatureDescription".to_string(),
+                },
+            ],
+            supports_dictionary_terms: true,
+            supports_dictionary_context: true,
+        },
+        SttProviderInfo {
             id: "soniox".to_string(),
             name: "Soniox".to_string(),
             description: "onboarding.cloud.soniox.description".to_string(),
@@ -191,7 +234,7 @@ pub fn inject_dictionary(
     let mut opts = options.unwrap_or_else(|| serde_json::json!({}));
 
     match provider_id {
-        "openai_stt" => {
+        "openai_stt" | "groq" => {
             // Build the dictionary prefix for the prompt field
             let mut prefix_parts = Vec::new();
             if !dictionary_terms.is_empty() {
@@ -215,7 +258,8 @@ pub fn inject_dictionary(
             };
             opts["prompt"] = serde_json::json!(merged);
             debug!(
-                "Injected dictionary into OpenAI prompt ({} terms, {} chars context)",
+                "Injected dictionary into {} prompt ({} terms, {} chars context)",
+                provider_id,
                 dictionary_terms.len(),
                 dictionary_context.len()
             );

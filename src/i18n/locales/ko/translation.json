@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "OpenAI 클라우드 음성-텍스트 변환 API. 빠르고 정확하며 57개 이상의 언어를 지원합니다."
       },
+      "groq": {
+        "name": "Groq",
+        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Soniox 클라우드 음성-텍스트 변환. 실시간 전사로 높은 정확도를 제공합니다."
