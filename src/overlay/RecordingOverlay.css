@@ -150,9 +150,9 @@
   padding: 0 30px;
 }
 
-/* Canvas waveform — scrolling audio sticks */
+/* Canvas waveform — vertical audio bars */
 .waveform-canvas {
-  height: 20px;
+  height: 24px;
   display: block;
   flex: 1;
   min-width: 0;
