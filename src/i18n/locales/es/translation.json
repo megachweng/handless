@@ -110,10 +110,17 @@
       "elevenlabs": {
         "name": "ElevenLabs",
         "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      "groq": {
+        "name": "Groq",
+        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
       },
       "soniox": {
         "name": "Soniox",
         "description": "Voz a texto en la nube de Soniox. Alta precisión con transcripción en tiempo real."
+      },
+      "fireworks": {
+        "name": "Fireworks AI",
+        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
       }
     }
   },
