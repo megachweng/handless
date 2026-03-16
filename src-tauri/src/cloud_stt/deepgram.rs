@@ -1,5 +1,6 @@
 use anyhow::Result;
 use log::debug;
+use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -22,11 +23,17 @@ struct DeepgramResponse {
     results: Results,
 }
 
-/// Build a URL with query parameters from key-value pairs.
+/// Build a URL with properly percent-encoded query parameters.
 fn build_url(base: &str, params: &[(&str, &str)]) -> String {
     let query: String = params
         .iter()
-        .map(|(k, v)| format!("{}={}", k, v))
+        .map(|(k, v)| {
+            format!(
+                "{}={}",
+                utf8_percent_encode(k, NON_ALPHANUMERIC),
+                utf8_percent_encode(v, NON_ALPHANUMERIC),
+            )
+        })
         .collect::<Vec<_>>()
         .join("&");
     format!("{}/listen?{}", base.trim_end_matches('/'), query)
