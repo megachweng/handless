@@ -628,6 +628,11 @@ fn default_stt_providers() -> Vec<SttProvider> {
             default_model: "gpt-4o-mini-transcribe".to_string(),
         },
         SttProvider {
+            id: "cartesia".to_string(),
+            label: "Cartesia".to_string(),
+            provider_type: SttProviderType::Cloud,
+            base_url: "https://api.cartesia.ai".to_string(),
+            default_model: "ink-whisper".to_string(),
             id: "mistral".to_string(),
             label: "Mistral AI".to_string(),
             provider_type: SttProviderType::Cloud,

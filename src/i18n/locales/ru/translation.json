@@ -118,6 +118,9 @@
         "name": "Soniox",
         "description": "Облачное распознавание речи Soniox. Высокая точность с транскрипцией в реальном времени."
       },
+      "cartesia": {
+        "name": "Cartesia",
+        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
       "mistral": {
         "name": "Mistral AI",
         "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."

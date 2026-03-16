@@ -118,6 +118,9 @@
         "name": "Soniox",
         "description": "Soniox 云端语音转文字。高准确度，支持实时转录。"
       },
+      "cartesia": {
+        "name": "Cartesia",
+        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
       "mistral": {
         "name": "Mistral AI",
         "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
