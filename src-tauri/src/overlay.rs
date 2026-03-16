@@ -360,11 +360,13 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
         OVERLAY_SHOW_GENERATION.fetch_add(1, Ordering::SeqCst);
         let _ = overlay_window.show();
 
-        // In toggle mode during recording, the overlay shows clickable
-        // cancel/confirm buttons, so it must accept cursor events.
-        // Otherwise, make it fully click-through (see #122).
+        // The overlay needs cursor events when it has interactive controls:
+        // toggle-mode recording (cancel/confirm buttons) or post-processing
+        // (hover-to-dismiss). Otherwise, make it fully click-through (see #122).
         let needs_interaction =
-            state == "recording" && settings.activation_mode == ActivationMode::Toggle;
+            (state == "recording" && settings.activation_mode == ActivationMode::Toggle)
+                || state == "transcribing"
+                || state == "processing";
         let _ = overlay_window.set_ignore_cursor_events(!needs_interaction);
 
         // On macOS, also use the NSPanel's order_front_regardless to ensure
