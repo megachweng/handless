@@ -34,9 +34,9 @@ impl RealtimeStreamingSession {
         config: SessionConfig,
         audio_rx: tokio::sync::mpsc::Receiver<Vec<f32>>,
     ) -> Result<Self> {
-        let handles = match config.provider_id.as_str() {
-            "soniox" => {
-                super::soniox::start_streaming(
+        macro_rules! start_provider {
+            ($module:ident) => {
+                super::$module::start_streaming(
                     &config.api_key,
                     &config.model,
                     audio_rx,
@@ -44,7 +44,17 @@ impl RealtimeStreamingSession {
                     config.delta_tx,
                 )
                 .await?
-            }
+            };
+        }
+
+        let handles = match config.provider_id.as_str() {
+            "assemblyai" => start_provider!(assemblyai),
+            "deepgram" => start_provider!(deepgram),
+            "elevenlabs" => start_provider!(elevenlabs),
+            "fireworks" => start_provider!(fireworks),
+            "mistral" => start_provider!(mistral),
+            "openai_stt" => start_provider!(openai),
+            "soniox" => start_provider!(soniox),
             _ => {
                 return Err(anyhow::anyhow!(
                     "Unknown provider for realtime streaming: {}",

@@ -77,7 +77,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "ta", "th", "tr", "uk", "ur", "vi", "cy",
             ].into_iter().map(String::from).collect(),
             supports_translation: true,
-            supports_realtime: false,
+            supports_realtime: true,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.openai.com/v1".to_string(),
@@ -158,7 +158,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "tl", "tr", "uk", "ur", "uz", "vi", "yo", "yue", "zh-Hans",
             ].into_iter().map(String::from).collect(),
             supports_translation: false,
-            supports_realtime: false,
+            supports_realtime: true,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.elevenlabs.io/v1".to_string(),
@@ -233,7 +233,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "en", "zh-Hans", "hi", "es", "ar", "fr", "pt", "ru", "de", "ja", "ko", "it", "nl",
             ].into_iter().map(String::from).collect(),
             supports_translation: false,
-            supports_realtime: false,
+            supports_realtime: true,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.mistral.ai".to_string(),
@@ -431,7 +431,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "ta", "th", "tr", "uk", "ur", "vi", "cy",
             ].into_iter().map(String::from).collect(),
             supports_translation: true,
-            supports_realtime: false,
+            supports_realtime: true,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
                 base_url: "https://audio-prod.api.fireworks.ai/v1".to_string(),
