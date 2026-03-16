@@ -114,6 +114,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Soniox 云端语音转文字。高准确度，支持实时转录。"
+      },
+      "fireworks": {
+        "name": "Fireworks AI",
+        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
       }
     }
   },

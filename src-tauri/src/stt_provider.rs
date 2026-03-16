@@ -211,6 +211,55 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             supports_dictionary_terms: true,
             supports_dictionary_context: true,
         },
+        SttProviderInfo {
+            id: "fireworks".to_string(),
+            name: "Fireworks AI".to_string(),
+            description: "onboarding.cloud.fireworks.description".to_string(),
+            supported_languages: vec![
+                "af", "ar", "hy", "az", "be", "bs", "bg", "ca", "zh-Hans", "zh-Hant", "hr",
+                "cs", "da", "nl", "en", "et", "fi", "fr", "gl", "de", "el",
+                "he", "hi", "hu", "is", "id", "it", "ja", "kn", "kk", "ko",
+                "lv", "lt", "mk", "ms", "mr", "mi", "ne", "no", "fa", "pl",
+                "pt", "ro", "ru", "sr", "sk", "sl", "es", "sw", "sv", "tl",
+                "ta", "th", "tr", "uk", "ur", "vi", "cy",
+            ].into_iter().map(String::from).collect(),
+            supports_translation: false,
+            supports_realtime: false,
+            is_recommended: false,
+            backend: ProviderBackend::Cloud {
+                base_url: "https://audio-prod.api.fireworks.ai/v1".to_string(),
+                default_model: "whisper-v3".to_string(),
+                console_url: Some("https://fireworks.ai/api-keys".to_string()),
+            },
+            available_options: vec![
+                CloudProviderOption {
+                    key: "language".to_string(),
+                    label: "settings.models.cloudProviders.options.language".to_string(),
+                    option_type: CloudOptionType::Language,
+                    description: String::new(),
+                },
+                CloudProviderOption {
+                    key: "prompt".to_string(),
+                    label: "settings.models.cloudProviders.options.prompt".to_string(),
+                    option_type: CloudOptionType::Text,
+                    description: "settings.models.cloudProviders.options.promptDescription".to_string(),
+                },
+                CloudProviderOption {
+                    key: "temperature".to_string(),
+                    label: "settings.models.cloudProviders.options.temperature".to_string(),
+                    option_type: CloudOptionType::Number { min: 0.0, max: 1.0, step: 0.1 },
+                    description: "settings.models.cloudProviders.options.temperatureDescription".to_string(),
+                },
+                CloudProviderOption {
+                    key: "diarize".to_string(),
+                    label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                },
+            ],
+            supports_dictionary_terms: true,
+            supports_dictionary_context: true,
+        },
     ]
 }
 
@@ -234,6 +283,7 @@ pub fn inject_dictionary(
     let mut opts = options.unwrap_or_else(|| serde_json::json!({}));
 
     match provider_id {
+        "openai_stt" | "fireworks" => {
         "openai_stt" | "groq" => {
             // Build the dictionary prefix for the prompt field
             let mut prefix_parts = Vec::new();

@@ -1,3 +1,4 @@
+pub mod fireworks;
 pub mod groq;
 pub mod openai;
 pub mod realtime;
@@ -13,6 +14,7 @@ pub async fn test_api_key(
         "openai_stt" => openai::test_api_key(api_key, base_url, model).await,
         "groq" => groq::test_api_key(api_key, base_url, model).await,
         "soniox" => soniox::test_api_key(api_key, base_url, model).await,
+        "fireworks" => fireworks::test_api_key(api_key, base_url, model).await,
         _ => Err(anyhow::anyhow!(
             "Unknown cloud STT provider: {}",
             provider_id
@@ -32,6 +34,7 @@ pub async fn transcribe(
         "openai_stt" => openai::transcribe(api_key, base_url, model, audio_wav, options).await,
         "groq" => groq::transcribe(api_key, base_url, model, audio_wav, options).await,
         "soniox" => soniox::transcribe(api_key, base_url, model, audio_wav, options).await,
+        "fireworks" => fireworks::transcribe(api_key, base_url, model, audio_wav, options).await,
         _ => Err(anyhow::anyhow!(
             "Unknown cloud STT provider: {}",
             provider_id

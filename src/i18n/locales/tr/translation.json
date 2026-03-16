@@ -114,6 +114,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Soniox bulut konuşmadan metne. Gerçek zamanlı transkripsiyon ile yüksek doğruluk."
+      },
+      "fireworks": {
+        "name": "Fireworks AI",
+        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
       }
     }
   },

@@ -114,6 +114,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Riconoscimento vocale cloud Soniox. Alta precisione con trascrizione in tempo reale."
+      },
+      "fireworks": {
+        "name": "Fireworks AI",
+        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
       }
     }
   },
