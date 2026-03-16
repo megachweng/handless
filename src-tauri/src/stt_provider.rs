@@ -108,6 +108,38 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             supports_dictionary_context: true,
         },
         SttProviderInfo {
+            id: "cartesia".to_string(),
+            name: "Cartesia".to_string(),
+            description: "onboarding.cloud.cartesia.description".to_string(),
+            supported_languages: vec![
+                "af", "ar", "az", "be", "bg", "bn", "bs", "ca", "cs", "cy",
+                "da", "de", "el", "en", "es", "et", "fa", "fi", "fr", "gl",
+                "gu", "he", "hi", "hr", "hu", "hy", "id", "is", "it", "ja",
+                "ka", "kk", "kn", "ko", "lt", "lv", "mk", "ml", "mn", "mr",
+                "ms", "ne", "nl", "no", "pa", "pl", "pt", "ro", "ru", "sk",
+                "sl", "sq", "sr", "sv", "sw", "ta", "te", "th", "tl", "tr",
+                "uk", "ur", "vi", "zh-Hans",
+            ].into_iter().map(String::from).collect(),
+            supports_translation: false,
+            supports_realtime: false,
+            is_recommended: false,
+            backend: ProviderBackend::Cloud {
+                base_url: "https://api.cartesia.ai".to_string(),
+                default_model: "ink-whisper".to_string(),
+                console_url: Some("https://play.cartesia.ai/keys".to_string()),
+            },
+            available_options: vec![
+                CloudProviderOption {
+                    key: "language".to_string(),
+                    label: "settings.models.cloudProviders.options.language".to_string(),
+                    option_type: CloudOptionType::Language,
+                    description: String::new(),
+                },
+            ],
+            supports_dictionary_terms: false,
+            supports_dictionary_context: false,
+        },
+        SttProviderInfo {
             id: "soniox".to_string(),
             name: "Soniox".to_string(),
             description: "onboarding.cloud.soniox.description".to_string(),

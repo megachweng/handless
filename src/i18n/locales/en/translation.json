@@ -86,6 +86,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Soniox cloud speech-to-text. High accuracy with realtime transcription."
+      },
+      "cartesia": {
+        "name": "Cartesia",
+        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
       }
     },
     "errors": {
