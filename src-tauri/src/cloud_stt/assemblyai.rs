@@ -161,7 +161,8 @@ pub async fn transcribe(
 
     // 3. Poll until the transcript completes
     let poll_url = format!("{}/v2/transcript/{}", base, transcript.id);
-    loop {
+    let max_polls = 600; // 600 * 500ms = 5 minutes
+    for _ in 0..max_polls {
         tokio::time::sleep(std::time::Duration::from_millis(500)).await;
 
         let response = client
@@ -196,4 +197,9 @@ pub async fn transcribe(
             _ => continue, // "queued" or "processing"
         }
     }
+
+    // If we exhausted all polls without completing
+    Err(anyhow::anyhow!(
+        "AssemblyAI transcription timed out after 5 minutes"
+    ))
 }
