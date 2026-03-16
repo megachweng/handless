@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Хмарне розпізнавання мовлення Soniox. Висока точність з транскрипцією в реальному часі."
+      },
+      "assemblyai": {
+        "name": "AssemblyAI",
+        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
       }
     }
   },

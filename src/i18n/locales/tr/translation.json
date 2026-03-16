@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Soniox bulut konuşmadan metne. Gerçek zamanlı transkripsiyon ile yüksek doğruluk."
+      },
+      "assemblyai": {
+        "name": "AssemblyAI",
+        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
       }
     }
   },

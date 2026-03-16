@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Chuyển đổi giọng nói thành văn bản đám mây Soniox. Độ chính xác cao với chuyển đổi thời gian thực."
+      },
+      "assemblyai": {
+        "name": "AssemblyAI",
+        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
       }
     }
   },

@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Voz a texto en la nube de Soniox. Alta precisión con transcripción en tiempo real."
+      },
+      "assemblyai": {
+        "name": "AssemblyAI",
+        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
       }
     }
   },

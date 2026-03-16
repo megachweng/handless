@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Reconnaissance vocale cloud Soniox. Haute précision avec transcription en temps réel."
+      },
+      "assemblyai": {
+        "name": "AssemblyAI",
+        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
       }
     }
   },

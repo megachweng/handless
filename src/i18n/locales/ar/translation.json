@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "تحويل الكلام إلى نص السحابي من Soniox. دقة عالية مع تفريغ في الوقت الفعلي."
+      },
+      "assemblyai": {
+        "name": "AssemblyAI",
+        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
       }
     }
   },

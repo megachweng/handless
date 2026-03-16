@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Chmurowa zamiana mowy na tekst Soniox. Wysoka dokładność z transkrypcją w czasie rzeczywistym."
+      },
+      "assemblyai": {
+        "name": "AssemblyAI",
+        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
       }
     }
   },

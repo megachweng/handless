@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Soniox 云端语音转文字。高准确度，支持实时转录。"
+      },
+      "assemblyai": {
+        "name": "AssemblyAI",
+        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
       }
     }
   },

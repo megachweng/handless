@@ -633,6 +633,13 @@ fn default_stt_providers() -> Vec<SttProvider> {
             base_url: "https://api.soniox.com/v1".to_string(),
             default_model: "stt-rt-preview".to_string(),
         },
+        SttProvider {
+            id: "assemblyai".to_string(),
+            label: "AssemblyAI".to_string(),
+            provider_type: SttProviderType::Cloud,
+            base_url: "https://api.assemblyai.com".to_string(),
+            default_model: "best".to_string(),
+        },
     ]
 }
 

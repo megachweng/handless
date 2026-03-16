@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Soniox 클라우드 음성-텍스트 변환. 실시간 전사로 높은 정확도를 제공합니다."
+      },
+      "assemblyai": {
+        "name": "AssemblyAI",
+        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
       }
     }
   },
