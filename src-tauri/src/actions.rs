@@ -27,6 +27,11 @@ pub type ActiveStreamingState = Arc<TokioMutex<Option<RealtimeStreamingSession>>
 /// Managed state tracking when the user pressed the record key.
 pub type RecordingStartTime = Arc<std::sync::Mutex<Option<Instant>>>;
 
+/// Abort handle for the in-flight transcription pipeline task.
+/// Calling `.abort()` cancels the spawned async task so a stale cloud
+/// connection does not block the next recording or paste stale text.
+pub type PipelineAbortHandle = Arc<TokioMutex<Option<tauri::async_runtime::JoinHandle<()>>>>;
+
 /// Drop guard that notifies the [`TranscriptionCoordinator`] when the
 /// transcription pipeline finishes — whether it completes normally or panics.
 struct FinishGuard(AppHandle);
@@ -249,6 +254,7 @@ impl ShortcutAction for TranscribeAction {
         let tm = Arc::clone(&app.state::<Arc<TranscriptionManager>>());
         let hm = Arc::clone(&app.state::<Arc<HistoryManager>>());
         let streaming_state = Arc::clone(&app.state::<ActiveStreamingState>());
+        let pipeline_handle = Arc::clone(&app.state::<PipelineAbortHandle>());
 
         change_tray_icon(app, TrayIconState::Transcribing);
         show_transcribing_overlay(app);
@@ -278,7 +284,7 @@ impl ShortcutAction for TranscribeAction {
             None
         };
 
-        tauri::async_runtime::spawn(async move {
+        let handle = tauri::async_runtime::spawn(async move {
             let _guard = FinishGuard(ah.clone());
             let binding_id = binding_id.clone();
             debug!(
@@ -486,6 +492,12 @@ impl ShortcutAction for TranscribeAction {
                 utils::hide_recording_overlay(&ah);
                 change_tray_icon(&ah, TrayIconState::Idle);
             }
+        });
+
+        // Store the handle so cancel_current_operation can abort this task
+        // if the user dismisses the overlay while processing is in-flight.
+        tauri::async_runtime::spawn(async move {
+            *pipeline_handle.lock().await = Some(handle);
         });
 
         debug!(

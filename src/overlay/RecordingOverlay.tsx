@@ -457,6 +457,9 @@ const RecordingOverlay: React.FC = () => {
                 />
               ))}
             </div>
+            <button className="postprocess-dismiss" onClick={handleCancel}>
+              <X size={10} weight="bold" />
+            </button>
           </>
         )}
       </div>

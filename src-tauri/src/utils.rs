@@ -1,4 +1,4 @@
-use crate::actions::ActiveStreamingState;
+use crate::actions::{ActiveStreamingState, PipelineAbortHandle};
 use crate::managers::audio::AudioRecordingManager;
 use crate::managers::transcription::TranscriptionManager;
 use crate::shortcut;
@@ -20,6 +20,17 @@ pub fn cancel_current_operation(app: &AppHandle) {
 
     // Unregister the cancel shortcut asynchronously
     shortcut::unregister_cancel_shortcut(app);
+
+    // Abort the in-flight transcription/post-processing pipeline task so a
+    // stale cloud connection doesn't block the next recording or paste stale text.
+    if let Some(handle_state) = app.try_state::<PipelineAbortHandle>() {
+        if let Ok(mut guard) = handle_state.try_lock() {
+            if let Some(handle) = guard.take() {
+                info!("Aborting in-flight pipeline task during cancellation");
+                handle.abort();
+            }
+        }
+    }
 
     // Drop any active streaming session so the WS tasks shut down
     if let Some(state) = app.try_state::<ActiveStreamingState>() {

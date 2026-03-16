@@ -139,6 +139,9 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     // Managed state for recording start time (key press → key release duration)
     app_handle.manage(actions::RecordingStartTime::default());
 
+    // Abort handle for the transcription pipeline task
+    app_handle.manage(actions::PipelineAbortHandle::default());
+
     // Preload the transcription model in the background so it's ready
     // for the first transcription without the 2-5s cold-start delay.
     {
