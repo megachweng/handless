@@ -37,6 +37,8 @@ blob-report/
 
 .direnv
 .envrc
+.env
+.env.*
 
 # Claude Code
 .claude/*

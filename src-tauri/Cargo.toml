@@ -117,6 +117,8 @@ tauri-utils = { git = "https://github.com/cjpais/tauri.git", branch = "handy-2.9
 
 [dev-dependencies]
 tempfile = "3"
+dotenvy = "0.15"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 
 [profile.release]
 lto = true

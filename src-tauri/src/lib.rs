@@ -5,7 +5,7 @@ mod audio_feedback;
 pub mod audio_toolkit;
 pub mod cli;
 mod clipboard;
-mod cloud_stt;
+pub mod cloud_stt;
 mod commands;
 mod device_watcher;
 mod helpers;
