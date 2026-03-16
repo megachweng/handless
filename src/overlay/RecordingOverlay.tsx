@@ -15,24 +15,57 @@ import { X, Check } from "@phosphor-icons/react";
 
 type OverlayState = "recording" | "transcribing" | "processing";
 
-const CHANNEL_COUNT =11;
+const CHANNEL_COUNT = 11;
 const THINKING_DOT_COUNT = 6;
-const ATTACK_SPEED = 0.22;
-const DECAY_SPEED = 0.07;
+const ATTACK_SPEED = 0.4;
+const DECAY_SPEED = 0.3;
 const STREAMING_WIDTH = 300;
 const STREAMING_LINE_HEIGHT = 18;
 const MAX_LINES = 5;
 const OVERLAY_PADDING = 12;
 const BUTTON_AREA_WIDTH = 20; // px per side for cancel/confirm buttons
 
-// Scrolling waveform: sticks move right-to-left, height follows audio energy
-const STICK_WIDTH = 1.5;
-const STICK_GAP = 1;
-const STICK_SPACING = STICK_WIDTH + STICK_GAP;
-const SCROLL_SPEED = 30; // px per second
-const MAX_STICKS = 80;
-const MIN_STICK_HALF = 1;
-const MAX_STICK_HALF = 10;
+// Apple-style waveform: thick rounded bars that stretch vertically
+const BAR_WIDTH = 2.5;
+const BAR_GAP = 2;
+const BAR_MIN_HEIGHT = 3;
+const BAR_MAX_HEIGHT = 20;
+const BAR_RADIUS = BAR_WIDTH / 2;
+
+// Per-bar vertical wobble for organic misalignment
+const BAR_WOBBLE = [
+  { phase: 0, freq: 0.7, amp: 1.2 },
+  { phase: 1.3, freq: 1.0, amp: 0.8 },
+  { phase: 0.6, freq: 0.85, amp: 1.0 },
+  { phase: 2.1, freq: 1.2, amp: 0.9 },
+  { phase: 1.5, freq: 0.95, amp: 1.1 },
+  { phase: 0.9, freq: 1.15, amp: 0.85 },
+  { phase: 1.8, freq: 0.75, amp: 1.0 },
+];
+
+// Which smoothed audio channels drive each bar
+const BAR_CHANNELS = [
+  [0, 1],
+  [1, 2, 3],
+  [3, 4],
+  [4, 5, 6],
+  [6, 7],
+  [7, 8, 9],
+  [9, 10],
+];
+
+// Per-bar amplitude envelope — gently center-weighted
+const BAR_ENVELOPE = [0.45, 0.7, 0.85, 1.0, 0.85, 0.7, 0.45];
+const BAR_COUNT = BAR_WOBBLE.length;
+
+// Layered sine noise — irrational frequency ratios create non-repeating organic motion
+function organicNoise(t: number, seed: number): number {
+  return (
+    Math.sin(t * 1.0 + seed) * 0.5 +
+    Math.sin(t * 2.31 + seed * 1.73) * 0.3 +
+    Math.sin(t * 3.67 + seed * 2.19) * 0.2
+  );
+}
 
 // Non-harmonic durations & staggered delays so dots never sync
 const THINKING_DURATIONS = [1.3, 1.7, 1.1, 1.5, 1.9, 1.25];
@@ -62,8 +95,7 @@ const RecordingOverlay: React.FC = () => {
   const currentLevelsRef = useRef<number[]>(Array(CHANNEL_COUNT).fill(0));
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
-  const sampleBufferRef = useRef<number[]>([]);
-  const scrollOffsetRef = useRef(0);
+  const peakEnergyRef = useRef(0.01); // adaptive ceiling for relative scaling
   const lastFrameTimeRef = useRef(0);
   const rafIdRef = useRef<number>(0);
   const frameCountRef = useRef(0);
@@ -130,8 +162,7 @@ const RecordingOverlay: React.FC = () => {
     }
   }, [streamingText]);
 
-  // rAF loop: canvas-based scrolling waveform, height driven by
-  // smoothed audio energy with right-to-left scroll
+  // rAF loop: canvas-based vertical bars driven by smoothed audio energy
   const animateWaveform = useCallback((timestamp: number) => {
     const lastTime = lastFrameTimeRef.current;
     const dt =
@@ -143,15 +174,29 @@ const RecordingOverlay: React.FC = () => {
     const frame = frameCountRef.current++;
 
     // Asymmetric LERP: snappy attack, slow lingering decay
+    // Normalize to 60fps so behavior is consistent across refresh rates
+    const steps = dt * 60;
     for (let i = 0; i < CHANNEL_COUNT; i++) {
-      const speed = target[i] > current[i] ? ATTACK_SPEED : DECAY_SPEED;
+      const base = target[i] > current[i] ? ATTACK_SPEED : DECAY_SPEED;
+      const speed = 1 - Math.pow(1 - base, steps);
       current[i] += (target[i] - current[i]) * speed;
     }
+
+    // Adaptive peak: rise instantly to new max, decay slowly so quiet
+    // speakers still get full-height bars relative to their own volume
+    const maxChannel = Math.max(...current);
+    if (maxChannel > peakEnergyRef.current) {
+      peakEnergyRef.current = maxChannel;
+    } else {
+      peakEnergyRef.current *= Math.pow(0.5, dt); // halves in 1s
+      peakEnergyRef.current = Math.max(peakEnergyRef.current, 0.01);
+    }
+    const peak = peakEnergyRef.current;
 
     const avgEnergy = current.reduce((a, b) => a + b, 0) / current.length;
     const rgb = accentRgbRef.current;
 
-    // Draw layered waveform on canvas
+    // Draw Apple-style vertical bars
     const canvas = canvasRef.current;
     if (canvas) {
       if (!canvasCtxRef.current) {
@@ -168,7 +213,6 @@ const RecordingOverlay: React.FC = () => {
           return;
         }
 
-        // Resize canvas buffer for Retina sharpness
         const bufW = Math.round(cssW * dpr);
         const bufH = Math.round(cssH * dpr);
         if (canvas.width !== bufW || canvas.height !== bufH) {
@@ -180,60 +224,48 @@ const RecordingOverlay: React.FC = () => {
         ctx.clearRect(0, 0, cssW, cssH);
 
         const centerY = cssH / 2;
+        const totalW = BAR_COUNT * BAR_WIDTH + (BAR_COUNT - 1) * BAR_GAP;
+        const startX = (cssW - totalW) / 2;
 
-        // Advance scroll, push new sample when crossing a stick boundary
-        scrollOffsetRef.current += SCROLL_SPEED * dt;
-        if (scrollOffsetRef.current >= STICK_SPACING) {
-          scrollOffsetRef.current -= STICK_SPACING;
-          sampleBufferRef.current.push(Math.min(1, avgEnergy * 2));
-          if (sampleBufferRef.current.length > MAX_STICKS) {
-            sampleBufferRef.current.shift();
-          }
-        }
+        for (let i = 0; i < BAR_COUNT; i++) {
+          const chs = BAR_CHANNELS[i];
+          const raw =
+            chs.reduce((sum, ch) => sum + current[ch], 0) / chs.length;
+          const energy = raw / peak; // normalize to recent peak
 
-        const samples = sampleBufferRef.current;
-        const scrollOff = scrollOffsetRef.current;
+          // Organic height modulation via layered incommensurate sines
+          const activity = Math.min(energy * 2.5, 1.0);
+          const heightMod =
+            1.0 + organicNoise(timestamp * 0.0012, i * 1.7) * 0.3 * activity;
 
-        // Glow pass: batch all sticks into one path so shadow
-        // is computed once instead of per-rect
-        const glowIntensity = 0.08 + avgEnergy * 0.3;
-        if (glowIntensity > 0.05) {
-          ctx.shadowBlur = 3 + avgEnergy * 12;
-          ctx.shadowColor = `rgba(${rgb}, ${glowIntensity})`;
-          ctx.fillStyle = `rgba(${rgb}, 0.06)`;
-          ctx.beginPath();
-          for (let i = 0; i < samples.length; i++) {
-            const x = cssW - STICK_WIDTH - i * STICK_SPACING - scrollOff;
-            if (x + STICK_WIDTH < 0) break;
-            const energy = samples[samples.length - 1 - i];
-            const halfH =
-              MIN_STICK_HALF +
-              Math.pow(energy, 0.8) * (MAX_STICK_HALF - MIN_STICK_HALF);
-            ctx.rect(x, centerY - halfH, STICK_WIDTH, halfH * 2);
-          }
-          ctx.fill();
-          ctx.shadowBlur = 0;
-          ctx.shadowColor = "transparent";
-        }
+          const scaled = energy * BAR_ENVELOPE[i] * heightMod;
+          const boosted = Math.min(1, scaled * 1.3);
+          const barH =
+            BAR_MIN_HEIGHT +
+            Math.pow(boosted, 0.8) * (BAR_MAX_HEIGHT - BAR_MIN_HEIGHT);
 
-        // Sharp sticks with per-stick alpha
-        for (let i = 0; i < samples.length; i++) {
-          const x = cssW - STICK_WIDTH - i * STICK_SPACING - scrollOff;
-          if (x + STICK_WIDTH < 0) break;
+          // Vertical wobble scales with energy for organic movement
+          const w = BAR_WOBBLE[i];
+          const wobbleAmt = Math.min(energy * 2.5, 1.0);
+          const yOff =
+            Math.sin(timestamp * 0.001 * w.freq + w.phase) * w.amp * wobbleAmt;
 
-          const energy = samples[samples.length - 1 - i];
-          const halfH =
-            MIN_STICK_HALF +
-            Math.pow(energy, 0.8) * (MAX_STICK_HALF - MIN_STICK_HALF);
-          const stickH = halfH * 2;
-          const y = centerY - halfH;
+          const x = startX + i * (BAR_WIDTH + BAR_GAP);
+          const y = centerY - barH / 2 + yOff;
 
-          const fade = Math.min(1, Math.max(0, (x + STICK_WIDTH) / 8));
-          const alpha = (0.45 + Math.min(0.45, energy * 1.2)) * fade;
+          // Per-bar glow
+          ctx.shadowBlur = 3 + energy * 10;
+          ctx.shadowColor = `rgba(${rgb}, ${0.15 + energy * 0.5})`;
 
+          const alpha = 0.5 + energy * 0.45;
           ctx.fillStyle = `rgba(${rgb}, ${alpha})`;
-          ctx.fillRect(x, y, STICK_WIDTH, stickH);
+          ctx.beginPath();
+          ctx.roundRect(x, y, BAR_WIDTH, barH, BAR_RADIUS);
+          ctx.fill();
         }
+
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = "transparent";
       }
     }
 
@@ -336,8 +368,7 @@ const RecordingOverlay: React.FC = () => {
           // Reset dot levels on new session
           targetLevelsRef.current = Array(CHANNEL_COUNT).fill(0);
           currentLevelsRef.current = Array(CHANNEL_COUNT).fill(0);
-          sampleBufferRef.current = [];
-          scrollOffsetRef.current = 0;
+          peakEnergyRef.current = 0.01;
           lastFrameTimeRef.current = 0;
           canvasCtxRef.current = null;
           setIsVisible(true);
