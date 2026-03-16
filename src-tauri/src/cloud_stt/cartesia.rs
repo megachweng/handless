@@ -26,6 +26,7 @@ pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<
     let response = client
         .post(&url)
         .bearer_auth(api_key)
+        .header("Cartesia-Version", "2025-04-16")
         .multipart(form)
         .send()
         .await?;
@@ -79,6 +80,7 @@ pub async fn transcribe(
     let response = client
         .post(&url)
         .bearer_auth(api_key)
+        .header("Cartesia-Version", "2025-04-16")
         .multipart(form)
         .send()
         .await?;
