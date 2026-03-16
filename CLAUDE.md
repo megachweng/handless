@@ -82,3 +82,15 @@ All user-facing strings use i18next (ESLint enforces no hardcoded JSX strings).
 4. Run `bun run check:translations` to verify all locales have matching keys
 
 Keys are organized by feature area: `tray.*`, `sidebar.*`, `onboarding.*`, `settings.*`, `models.*`, etc.
+
+### Cloud STT Testing
+
+Integration tests for cloud STT providers live in `src-tauri/tests/cloud_stt.rs`, gated behind the `cloud-stt-tests` cargo feature. When changing a cloud provider's default model name or base URL in `src-tauri/src/stt_provider.rs`, also update the corresponding constants in `src-tauri/tests/cloud_stt.rs` so tests run against the correct model.
+
+```bash
+cargo test --features cloud-stt-tests --test cloud_stt              # All providers
+cargo test --features cloud-stt-tests --test cloud_stt -- openai    # Single provider
+cargo test --features cloud-stt-tests --test cloud_stt -- realtime  # Only realtime tests
+```
+
+API keys are loaded from `.env` at the repo root (gitignored). Tests skip gracefully if a provider's key is missing.

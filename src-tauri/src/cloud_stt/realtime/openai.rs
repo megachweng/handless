@@ -81,8 +81,9 @@ fn build_session_update(
         "session": {
             "input_audio_format": input_format,
             "input_audio_transcription": transcription,
-            // Disable turn detection so we control when audio is committed.
-            "turn_detection": null,
+            "turn_detection": {
+                "type": "server_vad",
+            },
         }
     })
 }
