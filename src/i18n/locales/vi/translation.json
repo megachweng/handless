@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "API chuyển đổi giọng nói thành văn bản đám mây của OpenAI. Nhanh và chính xác, hỗ trợ hơn 57 ngôn ngữ."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Chuyển đổi giọng nói thành văn bản đám mây Soniox. Độ chính xác cao với chuyển đổi thời gian thực."

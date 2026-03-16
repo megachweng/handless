@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "API cloud di riconoscimento vocale di OpenAI. Veloce e precisa con supporto per oltre 57 lingue."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Riconoscimento vocale cloud Soniox. Alta precisione con trascrizione in tempo reale."

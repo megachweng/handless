@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "OpenAI 雲端語音轉文字 API。快速準確，支援 57 種以上語言。"
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Soniox 雲端語音轉文字。高準確度，支援即時轉錄。"

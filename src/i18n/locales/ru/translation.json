@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "Облачный API распознавания речи OpenAI. Быстрый и точный с поддержкой 57+ языков."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Облачное распознавание речи Soniox. Высокая точность с транскрипцией в реальном времени."

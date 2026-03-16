@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "Хмарний API розпізнавання мовлення OpenAI. Швидкий і точний з підтримкою 57+ мов."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Хмарне розпізнавання мовлення Soniox. Висока точність з транскрипцією в реальному часі."

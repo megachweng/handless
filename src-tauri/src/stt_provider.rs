@@ -108,6 +108,43 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             supports_dictionary_context: true,
         },
         SttProviderInfo {
+            id: "elevenlabs".to_string(),
+            name: "ElevenLabs".to_string(),
+            description: "onboarding.cloud.elevenlabs.description".to_string(),
+            supported_languages: vec![
+                "af", "ar", "hy", "az", "be", "bg", "ca", "zh-Hans", "hr", "cs",
+                "da", "nl", "en", "et", "fi", "fr", "gl", "de", "el", "he",
+                "hi", "hu", "id", "it", "ja", "kn", "kk", "ko", "lv", "lt",
+                "mk", "ms", "mr", "ne", "no", "fa", "pl", "pt", "ro", "ru",
+                "sr", "sk", "sl", "es", "sw", "sv", "tl", "ta", "th", "tr",
+                "uk", "ur", "vi", "cy",
+            ].into_iter().map(String::from).collect(),
+            supports_translation: false,
+            supports_realtime: false,
+            is_recommended: false,
+            backend: ProviderBackend::Cloud {
+                base_url: "https://api.elevenlabs.io/v1".to_string(),
+                default_model: "scribe_v2".to_string(),
+                console_url: Some("https://elevenlabs.io".to_string()),
+            },
+            available_options: vec![
+                CloudProviderOption {
+                    key: "language".to_string(),
+                    label: "settings.models.cloudProviders.options.language".to_string(),
+                    option_type: CloudOptionType::Language,
+                    description: String::new(),
+                },
+                CloudProviderOption {
+                    key: "enable_speaker_diarization".to_string(),
+                    label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                },
+            ],
+            supports_dictionary_terms: false,
+            supports_dictionary_context: false,
+        },
+        SttProviderInfo {
             id: "soniox".to_string(),
             name: "Soniox".to_string(),
             description: "onboarding.cloud.soniox.description".to_string(),

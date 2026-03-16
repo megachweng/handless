@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "OpenAI'nin bulut konuşmadan metne API'si. 57'den fazla dil desteğiyle hızlı ve doğru."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Soniox bulut konuşmadan metne. Gerçek zamanlı transkripsiyon ile yüksek doğruluk."

@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "واجهة برمجة تطبيقات تحويل الكلام إلى نص السحابية من OpenAI. سريعة ودقيقة مع دعم لأكثر من 57 لغة."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "تحويل الكلام إلى نص السحابي من Soniox. دقة عالية مع تفريغ في الوقت الفعلي."

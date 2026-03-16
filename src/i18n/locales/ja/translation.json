@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "OpenAIのクラウド音声テキスト変換API。高速・高精度で57以上の言語に対応。"
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Sonioxクラウド音声テキスト変換。リアルタイム文字起こしによる高精度。"

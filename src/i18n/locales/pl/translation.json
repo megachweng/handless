@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "Chmurowe API zamiany mowy na tekst od OpenAI. Szybkie i dokładne z obsługą ponad 57 języków."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Chmurowa zamiana mowy na tekst Soniox. Wysoka dokładność z transkrypcją w czasie rzeczywistym."

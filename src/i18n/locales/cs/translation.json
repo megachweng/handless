@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "Cloudové API pro převod řeči na text od OpenAI. Rychlé a přesné s podporou více než 57 jazyků."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Cloudový převod řeči na text Soniox. Vysoká přesnost s přepisem v reálném čase."

@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "OpenAIs Cloud-Sprache-zu-Text-API. Schnell und genau mit Unterstützung für über 57 Sprachen."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Soniox Cloud-Sprache-zu-Text. Hohe Genauigkeit mit Echtzeit-Transkription."

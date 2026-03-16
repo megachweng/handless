@@ -107,6 +107,10 @@
         "name": "OpenAI",
         "description": "API de voz para texto na nuvem da OpenAI. Rápida e precisa com suporte para mais de 57 idiomas."
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Voz para texto na nuvem da Soniox. Alta precisão com transcrição em tempo real."
