@@ -27,7 +27,7 @@ struct TranscriptResponse {
 pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<()> {
     let base = base_url.trim_end_matches('/');
     let client = reqwest::Client::new();
-    let wav_bytes = crate::audio_toolkit::audio::encode_wav_bytes(&vec![0.0f32; 1600])?;
+    let wav_bytes = super::test_silence_wav()?;
 
     // 1. Upload file (validates API key)
     let file_part = multipart::Part::bytes(wav_bytes)
@@ -42,11 +42,7 @@ pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<
         .send()
         .await?;
 
-    if !response.status().is_success() {
-        let status = response.status();
-        let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!("API test failed ({}): {}", status, body));
-    }
+    let response = super::check_response(response, "API test failed").await?;
 
     let file: FileUploadResponse = response.json().await?;
 
@@ -63,18 +59,14 @@ pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<
         .send()
         .await?;
 
-    if !response.status().is_success() {
-        let status = response.status();
-        let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!("API test failed ({}): {}", status, body));
-    }
+    super::check_response(response, "API test failed").await?;
 
     Ok(())
 }
 
 /// Transcribe audio using the Soniox async file transcription API.
 ///
-/// Flow: upload file → create transcription → poll until complete → fetch transcript.
+/// Flow: upload file -> create transcription -> poll until complete -> fetch transcript.
 pub async fn transcribe(
     api_key: &str,
     base_url: &str,
@@ -105,15 +97,7 @@ pub async fn transcribe(
         .send()
         .await?;
 
-    if !response.status().is_success() {
-        let status = response.status();
-        let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!(
-            "Soniox file upload error ({}): {}",
-            status,
-            body
-        ));
-    }
+    let response = super::check_response(response, "Soniox file upload error").await?;
 
     let file: FileUploadResponse = response.json().await?;
     debug!("Soniox file uploaded: id={}", file.id);
@@ -129,14 +113,14 @@ pub async fn transcribe(
             let codes: Vec<String> = hints
                 .iter()
                 .filter_map(|v| v.as_str())
-                .map(|lang| lang.split('-').next().unwrap_or(lang).to_string())
+                .map(|lang| super::strip_lang_subtag(lang).to_string())
                 .collect();
             if !codes.is_empty() {
                 body["language_hints"] = serde_json::json!(codes);
             }
         }
-        // context_terms: comma/newline separated terms → {"context": {"terms": [...]}}
-        // context_description: freeform text → {"context": {"text": "..."}}
+        // context_terms: comma/newline separated terms -> {"context": {"terms": [...]}}
+        // context_description: freeform text -> {"context": {"text": "..."}}
         let terms: Vec<&str> = opts
             .get("context_terms")
             .and_then(|v| v.as_str())
@@ -180,22 +164,16 @@ pub async fn transcribe(
         .send()
         .await?;
 
-    if !response.status().is_success() {
-        let status = response.status();
-        let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!(
-            "Soniox transcription create error ({}): {}",
-            status,
-            body
-        ));
-    }
+    let response = super::check_response(response, "Soniox transcription create error").await?;
 
     let transcription: TranscriptionCreateResponse = response.json().await?;
     debug!("Soniox transcription created: id={}", transcription.id);
 
     // 3. Poll until the transcription completes
     let transcription_url = format!("{}/transcriptions/{}", base, transcription.id);
-    loop {
+    let mut completed = false;
+    let max_polls = 600; // 600 * 500ms = 5 minutes
+    for _ in 0..max_polls {
         tokio::time::sleep(std::time::Duration::from_millis(500)).await;
 
         let response = client
@@ -204,21 +182,16 @@ pub async fn transcribe(
             .send()
             .await?;
 
-        if !response.status().is_success() {
-            let status = response.status();
-            let body = response.text().await.unwrap_or_default();
-            return Err(anyhow::anyhow!(
-                "Soniox transcription poll error ({}): {}",
-                status,
-                body
-            ));
-        }
+        let response = super::check_response(response, "Soniox transcription poll error").await?;
 
         let status_resp: TranscriptionStatusResponse = response.json().await?;
         debug!("Soniox transcription status: {}", status_resp.status);
 
         match status_resp.status.as_str() {
-            "completed" => break,
+            "completed" => {
+                completed = true;
+                break;
+            }
             "error" => {
                 return Err(anyhow::anyhow!(
                     "Soniox transcription failed (server reported error)"
@@ -228,6 +201,12 @@ pub async fn transcribe(
         }
     }
 
+    if !completed {
+        return Err(anyhow::anyhow!(
+            "Soniox transcription timed out after 5 minutes"
+        ));
+    }
+
     // 4. Fetch the transcript text
     let response = client
         .get(format!("{}/transcript", transcription_url))
@@ -235,15 +214,7 @@ pub async fn transcribe(
         .send()
         .await?;
 
-    if !response.status().is_success() {
-        let status = response.status();
-        let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!(
-            "Soniox transcript fetch error ({}): {}",
-            status,
-            body
-        ));
-    }
+    let response = super::check_response(response, "Soniox transcript fetch error").await?;
 
     let result: TranscriptResponse = response.json().await?;
     debug!("Soniox STT result: '{}'", result.text);

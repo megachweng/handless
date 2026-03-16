@@ -1,13 +1,42 @@
-pub mod deepgram;
+use serde::Deserialize;
+
 pub mod assemblyai;
 pub mod cartesia;
-pub mod mistral;
+pub mod deepgram;
 pub mod elevenlabs;
 pub mod fireworks;
 pub mod groq;
+pub mod mistral;
 pub mod openai;
 pub mod realtime;
 pub mod soniox;
+
+#[derive(Deserialize)]
+pub(crate) struct TranscriptionResponse {
+    pub text: String,
+}
+
+pub(crate) async fn check_response(
+    response: reqwest::Response,
+    context: &str,
+) -> anyhow::Result<reqwest::Response> {
+    if !response.status().is_success() {
+        let status = response.status();
+        let body = response.text().await.unwrap_or_default();
+        return Err(anyhow::anyhow!("{} ({}): {}", context, status, body));
+    }
+    Ok(response)
+}
+
+/// Generate a minimal silent WAV clip for API key validation.
+pub(crate) fn test_silence_wav() -> anyhow::Result<Vec<u8>> {
+    crate::audio_toolkit::audio::encode_wav_bytes(&vec![0.0f32; 1600])
+}
+
+/// Strip language subtags (e.g. "zh-Hans" -> "zh") for APIs that expect ISO 639-1 codes.
+pub(crate) fn strip_lang_subtag(lang: &str) -> &str {
+    lang.split('-').next().unwrap_or(lang)
+}
 
 pub async fn test_api_key(
     provider_id: &str,

@@ -23,7 +23,7 @@ struct TranscriptPollResponse {
 pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<()> {
     let base = base_url.trim_end_matches('/');
     let client = reqwest::Client::new();
-    let wav_bytes = crate::audio_toolkit::audio::encode_wav_bytes(&vec![0.0f32; 1600])?;
+    let wav_bytes = super::test_silence_wav()?;
 
     // 1. Upload file (validates API key)
     let response = client
@@ -34,15 +34,7 @@ pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<
         .send()
         .await?;
 
-    if !response.status().is_success() {
-        let status = response.status();
-        let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!(
-            "AssemblyAI upload error ({}): {}",
-            status,
-            body
-        ));
-    }
+    let response = super::check_response(response, "AssemblyAI upload error").await?;
 
     let upload: UploadResponse = response.json().await?;
 
@@ -59,22 +51,14 @@ pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<
         .send()
         .await?;
 
-    if !response.status().is_success() {
-        let status = response.status();
-        let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!(
-            "AssemblyAI transcript create error ({}): {}",
-            status,
-            body
-        ));
-    }
+    super::check_response(response, "AssemblyAI transcript create error").await?;
 
     Ok(())
 }
 
 /// Transcribe audio using the AssemblyAI API.
 ///
-/// Flow: upload audio → create transcript → poll until complete → return text.
+/// Flow: upload audio -> create transcript -> poll until complete -> return text.
 pub async fn transcribe(
     api_key: &str,
     base_url: &str,
@@ -101,15 +85,7 @@ pub async fn transcribe(
         .send()
         .await?;
 
-    if !response.status().is_success() {
-        let status = response.status();
-        let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!(
-            "AssemblyAI upload error ({}): {}",
-            status,
-            body
-        ));
-    }
+    let response = super::check_response(response, "AssemblyAI upload error").await?;
 
     let upload: UploadResponse = response.json().await?;
     debug!("AssemblyAI file uploaded: url={}", upload.upload_url);
@@ -146,15 +122,7 @@ pub async fn transcribe(
         .send()
         .await?;
 
-    if !response.status().is_success() {
-        let status = response.status();
-        let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!(
-            "AssemblyAI transcript create error ({}): {}",
-            status,
-            body
-        ));
-    }
+    let response = super::check_response(response, "AssemblyAI transcript create error").await?;
 
     let transcript: TranscriptCreateResponse = response.json().await?;
     debug!("AssemblyAI transcript created: id={}", transcript.id);
@@ -171,15 +139,7 @@ pub async fn transcribe(
             .send()
             .await?;
 
-        if !response.status().is_success() {
-            let status = response.status();
-            let body = response.text().await.unwrap_or_default();
-            return Err(anyhow::anyhow!(
-                "AssemblyAI transcript poll error ({}): {}",
-                status,
-                body
-            ));
-        }
+        let response = super::check_response(response, "AssemblyAI transcript poll error").await?;
 
         let poll: TranscriptPollResponse = response.json().await?;
         debug!("AssemblyAI transcript status: {}", poll.status);

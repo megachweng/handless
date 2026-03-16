@@ -1,16 +1,10 @@
 use anyhow::Result;
 use log::debug;
 use reqwest::multipart;
-use serde::Deserialize;
-
-#[derive(Deserialize)]
-struct TranscriptionResponse {
-    text: String,
-}
 
 /// Test API key and model by sending a minimal silent audio clip.
 pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<()> {
-    let wav_bytes = crate::audio_toolkit::audio::encode_wav_bytes(&vec![0.0f32; 1600])?;
+    let wav_bytes = super::test_silence_wav()?;
 
     let url = format!("{}/v1/audio/transcriptions", base_url.trim_end_matches('/'));
 
@@ -30,11 +24,7 @@ pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<
         .send()
         .await?;
 
-    if !response.status().is_success() {
-        let status = response.status();
-        let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!("API test failed ({}): {}", status, body));
-    }
+    super::check_response(response, "API test failed").await?;
 
     Ok(())
 }
@@ -101,17 +91,9 @@ pub async fn transcribe(
         .send()
         .await?;
 
-    if !response.status().is_success() {
-        let status = response.status();
-        let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!(
-            "Mistral STT API error ({}): {}",
-            status,
-            body
-        ));
-    }
+    let response = super::check_response(response, "Mistral STT API error").await?;
 
-    let result: TranscriptionResponse = response.json().await?;
+    let result: super::TranscriptionResponse = response.json().await?;
     debug!("Mistral STT result: '{}'", result.text);
     Ok(result.text)
 }
