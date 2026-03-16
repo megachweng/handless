@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Reconnaissance vocale cloud Soniox. Haute précision avec transcription en temps réel."
+      },
+      "deepgram": {
+        "name": "Deepgram",
+        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
       }
     }
   },
@@ -209,6 +213,10 @@
           "contextTermsDescription": "Termes séparés par des virgules pour améliorer la précision de la reconnaissance",
           "contextDescription": "Description du contexte",
           "contextDescriptionDescription": "Texte libre fournissant un contexte général sur le contenu audio",
+          "smartFormat": "Smart Format",
+          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
+          "punctuate": "Punctuate",
+          "punctuateDescription": "Add punctuation and capitalization to the transcript",
           "enableSpeakerDiarization": "Diarisation des locuteurs",
           "enableSpeakerDiarizationDescription": "Identifier et séparer les différents locuteurs",
           "enableLanguageIdentification": "Identification de la langue",

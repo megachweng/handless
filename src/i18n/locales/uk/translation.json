@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Хмарне розпізнавання мовлення Soniox. Висока точність з транскрипцією в реальному часі."
+      },
+      "deepgram": {
+        "name": "Deepgram",
+        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
       }
     }
   },
@@ -263,6 +267,10 @@
           "contextTermsDescription": "Терміни через кому для покращення точності розпізнавання",
           "contextDescription": "Опис контексту",
           "contextDescriptionDescription": "Довільний текст із загальним контекстом про аудіовміст",
+          "smartFormat": "Smart Format",
+          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
+          "punctuate": "Punctuate",
+          "punctuateDescription": "Add punctuation and capitalization to the transcript",
           "enableSpeakerDiarization": "Діаризація спікерів",
           "enableSpeakerDiarizationDescription": "Визначати та розділяти різних мовців",
           "enableLanguageIdentification": "Визначення мови",

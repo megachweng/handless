@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Soniox 클라우드 음성-텍스트 변환. 실시간 전사로 높은 정확도를 제공합니다."
+      },
+      "deepgram": {
+        "name": "Deepgram",
+        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
       }
     }
   },
@@ -282,6 +286,10 @@
           "contextTermsDescription": "인식 정확도를 향상시키기 위한 쉼표로 구분된 용어",
           "contextDescription": "컨텍스트 설명",
           "contextDescriptionDescription": "오디오 콘텐츠에 대한 일반적인 컨텍스트를 제공하는 자유 형식 텍스트",
+          "smartFormat": "Smart Format",
+          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
+          "punctuate": "Punctuate",
+          "punctuateDescription": "Add punctuation and capitalization to the transcript",
           "enableSpeakerDiarization": "화자 분리",
           "enableSpeakerDiarizationDescription": "서로 다른 화자를 식별하고 분리",
           "enableLanguageIdentification": "언어 식별",

@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Soniox bulut konuşmadan metne. Gerçek zamanlı transkripsiyon ile yüksek doğruluk."
+      },
+      "deepgram": {
+        "name": "Deepgram",
+        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
       }
     }
   },
@@ -209,6 +213,10 @@
           "contextTermsDescription": "Tanıma doğruluğunu artırmak için virgülle ayrılmış terimler",
           "contextDescription": "Bağlam Açıklaması",
           "contextDescriptionDescription": "Ses içeriği hakkında genel bağlam sağlayan serbest metin",
+          "smartFormat": "Smart Format",
+          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
+          "punctuate": "Punctuate",
+          "punctuateDescription": "Add punctuation and capitalization to the transcript",
           "enableSpeakerDiarization": "Konuşmacı Ayrımı",
           "enableSpeakerDiarizationDescription": "Farklı konuşmacıları tanımlayıp ayırır",
           "enableLanguageIdentification": "Dil Tanımlama",

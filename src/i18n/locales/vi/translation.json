@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Chuyển đổi giọng nói thành văn bản đám mây Soniox. Độ chính xác cao với chuyển đổi thời gian thực."
+      },
+      "deepgram": {
+        "name": "Deepgram",
+        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
       }
     }
   },
@@ -209,6 +213,10 @@
           "contextTermsDescription": "Các thuật ngữ phân cách bằng dấu phẩy để cải thiện độ chính xác nhận dạng",
           "contextDescription": "Mô tả ngữ cảnh",
           "contextDescriptionDescription": "Văn bản tự do cung cấp ngữ cảnh chung về nội dung âm thanh",
+          "smartFormat": "Smart Format",
+          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
+          "punctuate": "Punctuate",
+          "punctuateDescription": "Add punctuation and capitalization to the transcript",
           "enableSpeakerDiarization": "Phân biệt người nói",
           "enableSpeakerDiarizationDescription": "Nhận diện và tách biệt các người nói khác nhau",
           "enableLanguageIdentification": "Nhận diện ngôn ngữ",

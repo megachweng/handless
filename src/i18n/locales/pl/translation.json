@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Chmurowa zamiana mowy na tekst Soniox. Wysoka dokładność z transkrypcją w czasie rzeczywistym."
+      },
+      "deepgram": {
+        "name": "Deepgram",
+        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
       }
     }
   },
@@ -209,6 +213,10 @@
           "contextTermsDescription": "Terminy oddzielone przecinkami w celu poprawy dokładności rozpoznawania",
           "contextDescription": "Opis kontekstu",
           "contextDescriptionDescription": "Dowolny tekst opisujący ogólny kontekst treści audio",
+          "smartFormat": "Smart Format",
+          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
+          "punctuate": "Punctuate",
+          "punctuateDescription": "Add punctuation and capitalization to the transcript",
           "enableSpeakerDiarization": "Diaryzacja mówców",
           "enableSpeakerDiarizationDescription": "Identyfikuj i oddzielaj różnych mówców",
           "enableLanguageIdentification": "Identyfikacja języka",

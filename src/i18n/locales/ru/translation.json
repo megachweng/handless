@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Облачное распознавание речи Soniox. Высокая точность с транскрипцией в реальном времени."
+      },
+      "deepgram": {
+        "name": "Deepgram",
+        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
       }
     }
   },
@@ -209,6 +213,10 @@
           "contextTermsDescription": "Термины через запятую для повышения точности распознавания",
           "contextDescription": "Описание контекста",
           "contextDescriptionDescription": "Произвольный текст с общим контекстом об аудиоконтенте",
+          "smartFormat": "Smart Format",
+          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
+          "punctuate": "Punctuate",
+          "punctuateDescription": "Add punctuation and capitalization to the transcript",
           "enableSpeakerDiarization": "Диаризация спикеров",
           "enableSpeakerDiarizationDescription": "Определять и разделять разных говорящих",
           "enableLanguageIdentification": "Определение языка",

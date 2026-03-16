@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "تحويل الكلام إلى نص السحابي من Soniox. دقة عالية مع تفريغ في الوقت الفعلي."
+      },
+      "deepgram": {
+        "name": "Deepgram",
+        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
       }
     }
   },
@@ -636,6 +640,10 @@
           "contextTermsDescription": "مصطلحات مفصولة بفواصل لتحسين دقة التعرف",
           "contextDescription": "وصف السياق",
           "contextDescriptionDescription": "نص حر يوفر سياقاً عاماً حول محتوى الصوت",
+          "smartFormat": "Smart Format",
+          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
+          "punctuate": "Punctuate",
+          "punctuateDescription": "Add punctuation and capitalization to the transcript",
           "enableSpeakerDiarization": "تمييز المتحدثين",
           "enableSpeakerDiarizationDescription": "تحديد وفصل المتحدثين المختلفين",
           "enableLanguageIdentification": "تحديد اللغة",
