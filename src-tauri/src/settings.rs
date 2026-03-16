@@ -352,7 +352,8 @@ impl Default for TypingTool {
 #[derive(Serialize, Deserialize, Debug, Clone, Type)]
 pub struct AppSettings {
     pub bindings: HashMap<String, ShortcutBinding>,
-    #[serde(default, alias = "push_to_talk")] // TODO: remove alias after migration period (see ActivationMode Deserialize impl)
+    #[serde(default, alias = "push_to_talk")]
+    // TODO: remove alias after migration period (see ActivationMode Deserialize impl)
     pub activation_mode: ActivationMode,
     #[serde(default = "default_audio_feedback_volume")]
     pub audio_feedback_volume: f32,

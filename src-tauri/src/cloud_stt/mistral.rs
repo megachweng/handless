@@ -82,7 +82,13 @@ pub async fn transcribe(
         }
         if let Some(bias) = opts.get("context_bias").and_then(|v| v.as_str()) {
             if !bias.is_empty() {
-                form = form.text("context_bias", bias.to_string());
+                let terms: Vec<&str> = bias
+                    .split(',')
+                    .map(|s| s.trim())
+                    .filter(|s| !s.is_empty())
+                    .collect();
+                let json_array = serde_json::to_string(&terms).unwrap_or_default();
+                form = form.text("context_bias", json_array);
             }
         }
     }

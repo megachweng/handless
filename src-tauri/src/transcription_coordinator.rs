@@ -105,12 +105,7 @@ impl TranscriptionCoordinator {
                                                 );
                                             }
                                             Stage::Recording(id) if id == &binding_id => {
-                                                stop(
-                                                    &app,
-                                                    &mut stage,
-                                                    &binding_id,
-                                                    &hotkey_string,
-                                                );
+                                                stop(&app, &mut stage, &binding_id, &hotkey_string);
                                             }
                                             _ => {
                                                 debug!("Ignoring press for '{binding_id}': pipeline busy")
@@ -138,19 +133,15 @@ impl TranscriptionCoordinator {
                                         if let Some(t) = press_start {
                                             if t.elapsed() >= HOLD_THRESHOLD {
                                                 // Held long enough: treat as hold → stop.
-                                                stop(
-                                                    &app,
-                                                    &mut stage,
-                                                    &binding_id,
-                                                    &hotkey_string,
-                                                );
+                                                stop(&app, &mut stage, &binding_id, &hotkey_string);
                                                 press_start = None;
                                             } else {
                                                 // Quick press: enter toggle state → keep recording.
                                                 toggled = true;
                                                 press_start = None;
                                                 overlay::update_overlay_activation_mode(
-                                                    &app, ActivationMode::Toggle,
+                                                    &app,
+                                                    ActivationMode::Toggle,
                                                 );
                                             }
                                         }
