@@ -361,9 +361,7 @@ impl HistoryManager {
         let now = Utc::now().timestamp();
         match retention_period {
             crate::settings::RecordingRetentionPeriod::Days3 => Some(now - (3 * 24 * 60 * 60)),
-            crate::settings::RecordingRetentionPeriod::Weeks2 => {
-                Some(now - (2 * 7 * 24 * 60 * 60))
-            }
+            crate::settings::RecordingRetentionPeriod::Weeks2 => Some(now - (2 * 7 * 24 * 60 * 60)),
             crate::settings::RecordingRetentionPeriod::Months3 => {
                 Some(now - (3 * 30 * 24 * 60 * 60))
             }

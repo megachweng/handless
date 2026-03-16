@@ -131,8 +131,7 @@ pub async fn preview_retention_cleanup(
 
     match retention_period {
         RecordingRetentionPeriod::PreserveLimit => {
-            let count_limit =
-                limit.unwrap_or_else(|| crate::settings::get_history_limit(&app));
+            let count_limit = limit.unwrap_or_else(|| crate::settings::get_history_limit(&app));
             history_manager
                 .count_entries_affected_by_count(count_limit)
                 .map_err(|e| e.to_string())

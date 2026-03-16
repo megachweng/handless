@@ -107,6 +107,13 @@
         "name": "OpenAI",
         "description": "OpenAIのクラウド音声テキスト変換API。高速・高精度で57以上の言語に対応。"
       },
+      "elevenlabs": {
+        "name": "ElevenLabs",
+        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+      "groq": {
+        "name": "Groq",
+        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+      },
       "soniox": {
         "name": "Soniox",
         "description": "Sonioxクラウド音声テキスト変換。リアルタイム文字起こしによる高精度。"
@@ -114,6 +121,12 @@
       "cartesia": {
         "name": "Cartesia",
         "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+      "mistral": {
+        "name": "Mistral AI",
+        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+      "fireworks": {
+        "name": "Fireworks AI",
+        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
       }
     }
   },
@@ -216,7 +229,9 @@
           "enableSpeakerDiarization": "話者分離",
           "enableSpeakerDiarizationDescription": "異なる話者を識別して分離",
           "enableLanguageIdentification": "言語識別",
-          "enableLanguageIdentificationDescription": "各セグメントの言語を検出"
+          "enableLanguageIdentificationDescription": "各セグメントの言語を検出",
+          "contextBias": "Context Bias",
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
         }
       },
       "localModels": {
