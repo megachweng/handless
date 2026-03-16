@@ -119,7 +119,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "pt", "ro", "ru", "sr", "sk", "sl", "es", "sw", "sv", "tl",
                 "ta", "th", "tr", "uk", "ur", "vi", "cy",
             ].into_iter().map(String::from).collect(),
-            supports_translation: false,
+            supports_translation: true,
             supports_realtime: false,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
