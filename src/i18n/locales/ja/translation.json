@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Sonioxクラウド音声テキスト変換。リアルタイム文字起こしによる高精度。"
+      },
+      "fireworks": {
+        "name": "Fireworks AI",
+        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
       }
     }
   },

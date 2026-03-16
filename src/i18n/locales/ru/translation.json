@@ -110,6 +110,10 @@
       "soniox": {
         "name": "Soniox",
         "description": "Облачное распознавание речи Soniox. Высокая точность с транскрипцией в реальном времени."
+      },
+      "fireworks": {
+        "name": "Fireworks AI",
+        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
       }
     }
   },
