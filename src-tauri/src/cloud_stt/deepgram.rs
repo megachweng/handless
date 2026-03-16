@@ -96,14 +96,14 @@ pub async fn transcribe(
         {
             params.push(("diarize", "true".to_string()));
         }
-        if let Some(keywords) = opts.get("keywords").and_then(|v| v.as_str()) {
-            if !keywords.is_empty() {
-                for kw in keywords
+        if let Some(keyterm) = opts.get("keyterm").and_then(|v| v.as_str()) {
+            if !keyterm.is_empty() {
+                for kw in keyterm
                     .split(',')
                     .map(|s| s.trim())
                     .filter(|s| !s.is_empty())
                 {
-                    params.push(("keywords", kw.to_string()));
+                    params.push(("keyterm", kw.to_string()));
                 }
             }
         }

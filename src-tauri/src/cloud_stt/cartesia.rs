@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use reqwest::multipart;
 
-const CARTESIA_API_VERSION: &str = "2025-04-16";
+const CARTESIA_API_VERSION: &str = "2026-03-01";
 
 /// Test API key and model by sending a minimal silent audio clip.
 pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<()> {

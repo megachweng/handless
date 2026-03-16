@@ -67,6 +67,12 @@ pub async fn transcribe(
         {
             form = form.text("diarize", "true");
         }
+        if let Some(keyterms) = opts.get("keyterms").and_then(|v| v.as_array()) {
+            let terms_json = serde_json::to_string(keyterms).unwrap_or_default();
+            if !terms_json.is_empty() {
+                form = form.text("keyterms", terms_json);
+            }
+        }
     }
 
     let client = reqwest::Client::new();

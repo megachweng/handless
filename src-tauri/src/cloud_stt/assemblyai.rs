@@ -41,7 +41,7 @@ pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<
     // 2. Create transcript (validates model)
     let body = serde_json::json!({
         "audio_url": upload.upload_url,
-        "speech_model": model,
+        "speech_models": [model],
     });
 
     let response = client
@@ -93,7 +93,7 @@ pub async fn transcribe(
     // 2. Create a transcript
     let mut body = serde_json::json!({
         "audio_url": upload.upload_url,
-        "speech_model": model,
+        "speech_models": [model],
     });
     if let Some(opts) = options {
         if let Some(lang) = opts.get("language_code").and_then(|v| v.as_str()) {
@@ -108,9 +108,9 @@ pub async fn transcribe(
         {
             body["speaker_labels"] = serde_json::json!(true);
         }
-        if let Some(word_boost) = opts.get("word_boost").and_then(|v| v.as_array()) {
-            if !word_boost.is_empty() {
-                body["word_boost"] = serde_json::json!(word_boost);
+        if let Some(keyterms_prompt) = opts.get("keyterms_prompt").and_then(|v| v.as_array()) {
+            if !keyterms_prompt.is_empty() {
+                body["keyterms_prompt"] = serde_json::json!(keyterms_prompt);
             }
         }
     }

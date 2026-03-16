@@ -112,13 +112,16 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             name: "Cartesia".to_string(),
             description: "onboarding.cloud.cartesia.description".to_string(),
             supported_languages: vec![
-                "af", "ar", "az", "be", "bg", "bn", "bs", "ca", "cs", "cy",
-                "da", "de", "el", "en", "es", "et", "fa", "fi", "fr", "gl",
-                "gu", "he", "hi", "hr", "hu", "hy", "id", "is", "it", "ja",
-                "ka", "kk", "kn", "ko", "lt", "lv", "mk", "ml", "mn", "mr",
-                "ms", "ne", "nl", "no", "pa", "pl", "pt", "ro", "ru", "sk",
-                "sl", "sq", "sr", "sv", "sw", "ta", "te", "th", "tl", "tr",
-                "uk", "ur", "vi", "zh-Hans",
+                "af", "am", "ar", "az", "ba", "be", "bg", "bn", "bo", "br",
+                "bs", "ca", "cs", "cy", "da", "de", "el", "en", "es", "et",
+                "eu", "fa", "fi", "fo", "fr", "gl", "gu", "ha", "haw", "he",
+                "hi", "hr", "ht", "hu", "hy", "id", "is", "it", "ja", "jw",
+                "ka", "kk", "km", "kn", "ko", "la", "lb", "ln", "lo", "lt",
+                "lv", "mg", "mi", "mk", "ml", "mn", "mr", "ms", "mt", "my",
+                "ne", "nl", "nn", "no", "oc", "pa", "pl", "ps", "pt", "ro",
+                "ru", "sa", "sd", "si", "sk", "sl", "sn", "so", "sq", "sr",
+                "su", "sv", "sw", "ta", "te", "tg", "th", "tk", "tl", "tr",
+                "tt", "uk", "ur", "uz", "vi", "yi", "yo", "yue", "zh-Hans",
             ].into_iter().map(String::from).collect(),
             supports_translation: false,
             supports_realtime: false,
@@ -144,12 +147,15 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             name: "ElevenLabs".to_string(),
             description: "onboarding.cloud.elevenlabs.description".to_string(),
             supported_languages: vec![
-                "af", "ar", "hy", "az", "be", "bg", "ca", "zh-Hans", "hr", "cs",
-                "da", "nl", "en", "et", "fi", "fr", "gl", "de", "el", "he",
-                "hi", "hu", "id", "it", "ja", "kn", "kk", "ko", "lv", "lt",
-                "mk", "ms", "mr", "ne", "no", "fa", "pl", "pt", "ro", "ru",
-                "sr", "sk", "sl", "es", "sw", "sv", "tl", "ta", "th", "tr",
-                "uk", "ur", "vi", "cy",
+                "af", "am", "ar", "az", "be", "bg", "bn", "bs", "ca", "ceb",
+                "cs", "cy", "da", "de", "el", "en", "es", "et", "fa", "ff",
+                "fi", "fil", "fr", "ga", "gl", "gu", "ha", "he", "hi", "hr",
+                "hu", "hy", "id", "ig", "is", "it", "ja", "jv", "ka", "kk",
+                "km", "kn", "ko", "ku", "ky", "lb", "ln", "lo", "lt", "lv",
+                "mi", "mk", "ml", "mn", "mr", "ms", "mt", "my", "ne", "nl",
+                "no", "oc", "pa", "pl", "ps", "pt", "ro", "ru", "sd", "sk",
+                "sl", "sn", "so", "sr", "sv", "sw", "ta", "te", "tg", "th",
+                "tl", "tr", "uk", "ur", "uz", "vi", "yo", "yue", "zh-Hans",
             ].into_iter().map(String::from).collect(),
             supports_translation: false,
             supports_realtime: false,
@@ -157,7 +163,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.elevenlabs.io/v1".to_string(),
                 default_model: "scribe_v2".to_string(),
-                console_url: Some("https://elevenlabs.io".to_string()),
+                console_url: Some("https://elevenlabs.io/app/developers/api-keys".to_string()),
             },
             available_options: vec![
                 CloudProviderOption {
@@ -173,7 +179,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
                 },
             ],
-            supports_dictionary_terms: false,
+            supports_dictionary_terms: true,
             supports_dictionary_context: false,
         },
         SttProviderInfo {
@@ -188,7 +194,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "pt", "ro", "ru", "sr", "sk", "sl", "es", "sw", "sv", "tl",
                 "ta", "th", "tr", "uk", "ur", "vi", "cy",
             ].into_iter().map(String::from).collect(),
-            supports_translation: true,
+            supports_translation: false,
             supports_realtime: false,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
@@ -275,12 +281,12 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "fa", "pl", "pt", "pa", "ro", "ru", "sr", "sk", "sl", "es",
                 "sw", "sv", "tl", "ta", "te", "th", "tr", "uk", "ur", "vi", "cy",
             ].into_iter().map(String::from).collect(),
-            supports_translation: false,
+            supports_translation: true,
             supports_realtime: true,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.soniox.com/v1".to_string(),
-                default_model: "stt-rt-preview".to_string(),
+                default_model: "stt-rt-v4".to_string(),
                 console_url: Some("https://console.soniox.com".to_string()),
             },
             available_options: vec![
@@ -329,13 +335,14 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             name: "Deepgram".to_string(),
             description: "onboarding.cloud.deepgram.description".to_string(),
             supported_languages: vec![
-                "af", "ar", "zh-Hans", "zh-Hant", "hr", "cs", "da", "nl", "en",
-                "fi", "fr", "de", "el", "hi", "hu", "id", "it", "ja", "ko",
-                "ms", "no", "pl", "pt", "ro", "ru", "sk", "es", "sv", "tr",
-                "uk", "vi",
+                "ar", "be", "bn", "bs", "bg", "ca", "hr", "cs", "da", "nl",
+                "en", "et", "fa", "fi", "fr", "de", "el", "he", "hi", "hu",
+                "id", "it", "ja", "kn", "ko", "lv", "lt", "mk", "ms", "mr",
+                "no", "pl", "pt", "ro", "ru", "sr", "sk", "sl", "es", "sv",
+                "tl", "ta", "te", "tr", "uk", "ur", "vi",
             ].into_iter().map(String::from).collect(),
             supports_translation: false,
-            supports_realtime: false,
+            supports_realtime: true,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.deepgram.com/v1".to_string(),
@@ -376,16 +383,22 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             name: "AssemblyAI".to_string(),
             description: "onboarding.cloud.assemblyai.description".to_string(),
             supported_languages: vec![
-                "en", "es", "fr", "de", "it", "pt", "nl", "pl", "ru", "tr",
-                "uk", "ja", "ko", "zh", "ar", "hi", "cs", "da", "fi", "el",
-                "hu", "id", "no", "ro", "sk", "sv", "th", "vi",
+                "af", "am", "ar", "az", "be", "bg", "bn", "bs", "ca", "cs",
+                "cy", "da", "de", "el", "en", "es", "et", "eu", "fa", "fi",
+                "fr", "gl", "gu", "ha", "he", "hi", "hr", "hu", "hy", "id",
+                "is", "it", "ja", "jv", "ka", "kk", "km", "kn", "ko", "ku",
+                "ky", "la", "lb", "lo", "lt", "lv", "mi", "mk", "ml", "mn",
+                "mr", "ms", "mt", "my", "ne", "nl", "no", "pa", "pl", "ps",
+                "pt", "ro", "ru", "sa", "sd", "si", "sk", "sl", "sn", "so",
+                "sr", "sv", "sw", "ta", "te", "tg", "th", "tk", "tl", "tr",
+                "uk", "ur", "uz", "vi", "yo", "zh",
             ].into_iter().map(String::from).collect(),
             supports_translation: false,
-            supports_realtime: false,
+            supports_realtime: true,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.assemblyai.com".to_string(),
-                default_model: "best".to_string(),
+                default_model: "universal-3-pro".to_string(),
                 console_url: Some("https://www.assemblyai.com/dashboard".to_string()),
             },
             available_options: vec![
@@ -417,7 +430,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "pt", "ro", "ru", "sr", "sk", "sl", "es", "sw", "sv", "tl",
                 "ta", "th", "tr", "uk", "ur", "vi", "cy",
             ].into_iter().map(String::from).collect(),
-            supports_translation: false,
+            supports_translation: true,
             supports_realtime: false,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
@@ -463,9 +476,9 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
 /// `"Glossary: term1, term2. "` to the `prompt` field, and context is prepended
 /// after the glossary. The user's own prompt text is preserved after.
 ///
-/// For Deepgram: terms are merged into the `keywords` field (comma-separated).
+/// For Deepgram: terms are merged into the `keyterm` field (comma-separated).
 ///
-/// For AssemblyAI: terms are merged into the `word_boost` array.
+/// For AssemblyAI: terms are merged into the `keyterms_prompt` array.
 ///
 /// For Mistral: terms are merged into the `context_bias` field (comma-separated).
 ///
@@ -515,21 +528,21 @@ pub fn inject_dictionary(
             );
         }
         "deepgram" => {
-            // Merge terms into keywords (comma-separated)
+            // Merge terms into keyterm (comma-separated)
             if !dictionary_terms.is_empty() {
-                let dict_keywords = dictionary_terms.join(", ");
-                let existing_keywords = opts
-                    .get("keywords")
+                let dict_keyterm = dictionary_terms.join(", ");
+                let existing_keyterm = opts
+                    .get("keyterm")
                     .and_then(|v| v.as_str())
                     .unwrap_or("")
                     .to_string();
 
-                let merged = if existing_keywords.is_empty() {
-                    dict_keywords
+                let merged = if existing_keyterm.is_empty() {
+                    dict_keyterm
                 } else {
-                    format!("{}, {}", dict_keywords, existing_keywords)
+                    format!("{}, {}", dict_keyterm, existing_keyterm)
                 };
-                opts["keywords"] = serde_json::json!(merged);
+                opts["keyterm"] = serde_json::json!(merged);
             }
             debug!(
                 "Injected dictionary into Deepgram options ({} terms)",
@@ -537,10 +550,10 @@ pub fn inject_dictionary(
             );
         }
         "assemblyai" => {
-            // Merge terms into word_boost (array of strings)
+            // Merge terms into keyterms_prompt (array of strings)
             if !dictionary_terms.is_empty() {
                 let existing: Vec<String> = opts
-                    .get("word_boost")
+                    .get("keyterms_prompt")
                     .and_then(|v| v.as_array())
                     .map(|arr| {
                         arr.iter()
@@ -551,7 +564,7 @@ pub fn inject_dictionary(
 
                 let mut merged = dictionary_terms.to_vec();
                 merged.extend(existing);
-                opts["word_boost"] = serde_json::json!(merged);
+                opts["keyterms_prompt"] = serde_json::json!(merged);
             }
             debug!(
                 "Injected dictionary into AssemblyAI options ({} terms)",
@@ -577,6 +590,27 @@ pub fn inject_dictionary(
             }
             debug!(
                 "Injected dictionary into Mistral context_bias ({} terms)",
+                dictionary_terms.len(),
+            );
+        }
+        "elevenlabs" => {
+            // Merge terms into keyterms (JSON array of strings)
+            if !dictionary_terms.is_empty() {
+                let existing: Vec<String> = opts
+                    .get("keyterms")
+                    .and_then(|v| v.as_array())
+                    .map(|arr| {
+                        arr.iter()
+                            .filter_map(|v| v.as_str().map(String::from))
+                            .collect()
+                    })
+                    .unwrap_or_default();
+                let mut merged = dictionary_terms.to_vec();
+                merged.extend(existing);
+                opts["keyterms"] = serde_json::json!(merged);
+            }
+            debug!(
+                "Injected dictionary into ElevenLabs options ({} terms)",
                 dictionary_terms.len(),
             );
         }
