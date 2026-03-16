@@ -11,6 +11,7 @@ import "./RecordingOverlay.css";
 import i18n, { syncLanguageFromSettings } from "@/i18n";
 import { getLanguageDirection } from "@/lib/utils/rtl";
 import { commands, type ActivationMode } from "@/bindings";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { X, Check } from "@phosphor-icons/react";
 
 type OverlayState = "recording" | "transcribing" | "processing";
@@ -24,6 +25,10 @@ const STREAMING_LINE_HEIGHT = 18;
 const MAX_LINES = 5;
 const OVERLAY_PADDING = 12;
 const BUTTON_AREA_WIDTH = 20; // px per side for cancel/confirm buttons
+const BUBBLE_CSS_WIDTH = 280; // must match .streaming-text-bubble { width }
+const BUBBLE_CHROME = 18; // 8+8 padding + 1+1 border on .streaming-text-bubble
+const BUBBLE_GAP = 6; // must match .overlay-wrapper { gap }
+const BUBBLE_MARGIN = 10; // window margin around bubble for shadows
 
 // Apple-style waveform: thick rounded bars that stretch vertically
 const BAR_WIDTH = 2.5;
@@ -122,17 +127,19 @@ const RecordingOverlay: React.FC = () => {
   // Buttons visible & interactive only in toggle mode
   const showButtons = state === "recording" && activationMode === "toggle";
   const buttonsExtra = showButtons ? BUTTON_AREA_WIDTH * 2 : 0;
+  // Toggle mode: text floats above waveform bars instead of replacing them
+  const showTextAboveBars = hasStreamingText && activationMode === "toggle";
 
-  // Compute overlay dimensions
+  // Compute overlay dimensions — pill never changes shape in toggle mode
   const overlayWidth = (() => {
     if (!isVisible) return 33;
-    if (hasStreamingText) return STREAMING_WIDTH + buttonsExtra;
+    if (hasStreamingText && !showTextAboveBars) return STREAMING_WIDTH + buttonsExtra;
     return 70 + buttonsExtra;
   })();
 
   const overlayHeight = (() => {
     if (!isVisible) return 33;
-    if (hasStreamingText && contentHeight > 0) {
+    if (hasStreamingText && !showTextAboveBars && contentHeight > 0) {
       const maxTextHeight = STREAMING_LINE_HEIGHT * MAX_LINES;
       const clampedHeight = Math.min(contentHeight, maxTextHeight);
       return Math.max(33, clampedHeight + OVERLAY_PADDING);
@@ -140,8 +147,8 @@ const RecordingOverlay: React.FC = () => {
     return 33;
   })();
 
-  const overlayRadius = hasStreamingText ? 14 : 999;
-  const buttonRadius = hasStreamingText ? 8 : 13;
+  const overlayRadius = hasStreamingText && !showTextAboveBars ? 14 : 999;
+  const buttonRadius = hasStreamingText && !showTextAboveBars ? 8 : 13;
 
   // Track words (runs before paint to avoid flicker)
   useLayoutEffect(() => {
@@ -338,6 +345,19 @@ const RecordingOverlay: React.FC = () => {
     }
   }, [words, hasStreamingText]);
 
+  // Resize overlay window when the text bubble appears/grows so the
+  // window tightly fits the visible content. Skip initial show (Rust
+  // handles that) to avoid position jumps on quick taps.
+  useEffect(() => {
+    if (!isVisible || !showTextAboveBars || contentHeight <= 0) return;
+
+    const maxText = STREAMING_LINE_HEIGHT * MAX_LINES;
+    const bubbleH = Math.min(contentHeight, maxText) + BUBBLE_CHROME;
+    const winW = BUBBLE_CSS_WIDTH + BUBBLE_MARGIN * 2;
+    const winH = overlayHeight + bubbleH + BUBBLE_GAP + BUBBLE_MARGIN * 2;
+    commands.resizeOverlay(winW, winH);
+  }, [isVisible, showTextAboveBars, contentHeight, overlayHeight]);
+
   useEffect(() => {
     const unlisteners: Array<() => void> = [];
 
@@ -424,11 +444,32 @@ const RecordingOverlay: React.FC = () => {
     commands.confirmRecording();
   }, []);
 
+  const handleDrag = useCallback((e: React.MouseEvent) => {
+    // Don't drag when clicking on buttons
+    if ((e.target as HTMLElement).closest("button")) return;
+    getCurrentWindow().startDragging();
+  }, []);
+
+  const streamingWords = words.map((w, i) => (
+    <React.Fragment key={i}>
+      {i > 0 && " "}
+      <span className={w.isNew ? "word-appear" : undefined}>{w.text}</span>
+    </React.Fragment>
+  ));
+
   return (
     <div className={`overlay-wrapper position-${overlayPosition}`}>
+      {showTextAboveBars && (
+        <div dir={direction} className="streaming-text-bubble">
+          <div ref={streamingTextRef} className="bubble-content">
+            {streamingWords}
+          </div>
+        </div>
+      )}
       <div
         ref={overlayRef}
         dir={direction}
+        onMouseDown={handleDrag}
         style={{
           width: overlayWidth,
           height: overlayHeight,
@@ -446,18 +487,12 @@ const RecordingOverlay: React.FC = () => {
             >
               <X size={12} weight="bold" />
             </button>
-            {hasStreamingText ? (
+            {hasStreamingText && !showTextAboveBars && (
               <div ref={streamingTextRef} className="streaming-text">
-                {words.map((w, i) => (
-                  <React.Fragment key={i}>
-                    {i > 0 && " "}
-                    <span className={w.isNew ? "word-appear" : undefined}>
-                      {w.text}
-                    </span>
-                  </React.Fragment>
-                ))}
+                {streamingWords}
               </div>
-            ) : (
+            )}
+            {(!hasStreamingText || showTextAboveBars) && (
               <canvas ref={canvasRef} className="waveform-canvas" />
             )}
             <button

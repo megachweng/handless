@@ -16,6 +16,13 @@ pub fn cancel_operation(app: AppHandle) {
     cancel_current_operation(&app);
 }
 
+/// Resize the overlay window to tightly fit the visible content.
+#[tauri::command]
+#[specta::specta]
+pub fn resize_overlay(app: AppHandle, width: f64, height: f64) {
+    crate::overlay::resize_overlay_window(&app, width, height);
+}
+
 /// Stop recording and process the transcription (overlay confirm button).
 #[tauri::command]
 #[specta::specta]

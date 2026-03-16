@@ -353,7 +353,18 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
         return;
     }
 
-    update_overlay_position(app_handle);
+    // Only reset position and size at the start of a new session (recording).
+    // Transitions within a session (recording → transcribing → processing)
+    // should keep the current position so a user-dragged overlay stays put.
+    if state == "recording" {
+        if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+            let _ = overlay_window.set_size(tauri::Size::Logical(tauri::LogicalSize {
+                width: OVERLAY_WIDTH,
+                height: OVERLAY_HEIGHT,
+            }));
+        }
+        update_overlay_position(app_handle);
+    }
 
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         // Bump generation so any pending hide thread becomes a no-op
@@ -478,6 +489,38 @@ pub fn update_overlay_activation_mode(app_handle: &AppHandle, mode: ActivationMo
             ActivationMode::Hold | ActivationMode::HoldOrToggle => "hold",
         };
         let _ = overlay_window.emit("update-activation-mode", mode_str);
+    }
+}
+
+/// Resize the overlay window height. X position is never changed (stays where
+/// show_overlay_state placed it). For bottom position, Y is adjusted to keep
+/// the bottom edge anchored.
+pub fn resize_overlay_window(app_handle: &AppHandle, width: f64, height: f64) {
+    if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        let settings = settings::get_settings(app_handle);
+
+        // For bottom position, keep the bottom edge anchored by adjusting Y
+        // before resizing (setSize keeps top-left fixed).
+        if matches!(
+            settings.overlay_position,
+            OverlayPosition::Bottom | OverlayPosition::None
+        ) {
+            if let (Ok(old_size), Ok(old_pos)) =
+                (overlay_window.outer_size(), overlay_window.outer_position())
+            {
+                let scale = overlay_window.scale_factor().unwrap_or(1.0);
+                let old_h = old_size.height as f64 / scale;
+                let old_x = old_pos.x as f64 / scale;
+                let old_y = old_pos.y as f64 / scale;
+                let new_y = old_y + (old_h - height);
+                let _ = overlay_window.set_position(tauri::Position::Logical(
+                    tauri::LogicalPosition { x: old_x, y: new_y },
+                ));
+            }
+        }
+
+        let _ =
+            overlay_window.set_size(tauri::Size::Logical(tauri::LogicalSize { width, height }));
     }
 }
 
