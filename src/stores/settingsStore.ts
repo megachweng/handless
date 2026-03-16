@@ -651,7 +651,11 @@ export const useSettingsStore = create<SettingsStore>()(
       setUpdating(updateKey, true);
 
       try {
-        await commands.setPostProcessPricing(providerId, inputPrice, outputPrice);
+        await commands.setPostProcessPricing(
+          providerId,
+          inputPrice,
+          outputPrice,
+        );
         await refreshSettings();
       } catch (error) {
         console.error("Failed to update post-process pricing:", error);

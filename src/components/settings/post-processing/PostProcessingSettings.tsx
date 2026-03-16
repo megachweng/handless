@@ -1,6 +1,13 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, ArrowsClockwise, X, CaretDown, Plus, Info } from "@phosphor-icons/react";
+import {
+  Check,
+  ArrowsClockwise,
+  X,
+  CaretDown,
+  Plus,
+  Info,
+} from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { commands } from "@/bindings";
 import type { ShortcutBinding } from "@/bindings";
@@ -32,8 +39,7 @@ const BUILTIN_PROMPT_PREFIX = "default_";
 const CREATING_ID = "__creating__";
 
 /** Rough token estimate: ~4 characters per token (works for English text). */
-const estimateTokens = (text: string): number =>
-  Math.ceil(text.length / 4);
+const estimateTokens = (text: string): number => Math.ceil(text.length / 4);
 
 /** Average transcript assumptions (100-word dictation). */
 const AVG_TRANSCRIPT_INPUT_TOKENS = 140;
@@ -206,7 +212,12 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
     if (!state.selectedProvider) return;
     const configured = state.isAppleProvider || state.apiKey.trim() !== "";
     setUserExpanded(!configured);
-  }, [userExpanded, state.selectedProvider, state.isAppleProvider, state.apiKey]);
+  }, [
+    userExpanded,
+    state.selectedProvider,
+    state.isAppleProvider,
+    state.apiKey,
+  ]);
 
   const expanded = userExpanded ?? true;
   const toggle = () => setUserExpanded(!expanded);
@@ -256,7 +267,9 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
           </span>
           {stats?.tokens_per_second != null && (
             <span className="text-xs text-muted/50 truncate block">
-              {t("settings.postProcessing.api.tokensPerSecond", { value: stats.tokens_per_second.toFixed(1) })}
+              {t("settings.postProcessing.api.tokensPerSecond", {
+                value: stats.tokens_per_second.toFixed(1),
+              })}
             </span>
           )}
         </div>
@@ -285,9 +298,7 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
           {state.isAppleProvider ? (
             state.appleIntelligenceUnavailable ? (
               <Alert variant="destructive" contained>
-                {t(
-                  "settings.postProcessing.api.appleIntelligence.unavailable",
-                )}
+                {t("settings.postProcessing.api.appleIntelligence.unavailable")}
               </Alert>
             ) : null
           ) : (
@@ -816,9 +827,7 @@ const PostProcessingSettingsPromptsComponent = React.forwardRef<{
               onClick={handleCreatePrompt}
               variant="default"
               size="default"
-              disabled={
-                isSubmitting || !draftName.trim() || !draftText.trim()
-              }
+              disabled={isSubmitting || !draftName.trim() || !draftText.trim()}
             >
               {t("settings.postProcessing.prompts.createPrompt")}
             </Button>

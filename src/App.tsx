@@ -13,7 +13,12 @@ import "./App.css";
 import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import Footer from "./components/footer";
 import { AccessibilityOnboarding } from "./components/onboarding";
-import { Sidebar, SidebarSection, SECTIONS_CONFIG, NAVIGATE_SECTION_EVENT } from "./components/Sidebar";
+import {
+  Sidebar,
+  SidebarSection,
+  SECTIONS_CONFIG,
+  NAVIGATE_SECTION_EVENT,
+} from "./components/Sidebar";
 import { useSettings } from "./hooks/useSettings";
 import { useTheme } from "./hooks/useTheme";
 import { commands } from "@/bindings";
@@ -31,7 +36,9 @@ function App() {
   );
   const [currentSection, setCurrentSection] = useState<SidebarSection>(() => {
     const saved = localStorage.getItem(LAST_SECTION_KEY);
-    return saved && saved in SECTIONS_CONFIG ? (saved as SidebarSection) : "general";
+    return saved && saved in SECTIONS_CONFIG
+      ? (saved as SidebarSection)
+      : "general";
   });
   const handleSectionChange = useCallback((section: SidebarSection) => {
     setCurrentSection(section);

@@ -374,10 +374,10 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
         // The overlay needs cursor events when it has interactive controls:
         // toggle-mode recording (cancel/confirm buttons) or post-processing
         // (hover-to-dismiss). Otherwise, make it fully click-through (see #122).
-        let needs_interaction =
-            (state == "recording" && settings.activation_mode == ActivationMode::Toggle)
-                || state == "transcribing"
-                || state == "processing";
+        let needs_interaction = (state == "recording"
+            && settings.activation_mode == ActivationMode::Toggle)
+            || state == "transcribing"
+            || state == "processing";
         let _ = overlay_window.set_ignore_cursor_events(!needs_interaction);
 
         // On macOS, also use the NSPanel's order_front_regardless to ensure
@@ -513,14 +513,15 @@ pub fn resize_overlay_window(app_handle: &AppHandle, width: f64, height: f64) {
                 let old_x = old_pos.x as f64 / scale;
                 let old_y = old_pos.y as f64 / scale;
                 let new_y = old_y + (old_h - height);
-                let _ = overlay_window.set_position(tauri::Position::Logical(
-                    tauri::LogicalPosition { x: old_x, y: new_y },
-                ));
+                let _ =
+                    overlay_window.set_position(tauri::Position::Logical(tauri::LogicalPosition {
+                        x: old_x,
+                        y: new_y,
+                    }));
             }
         }
 
-        let _ =
-            overlay_window.set_size(tauri::Size::Logical(tauri::LogicalSize { width, height }));
+        let _ = overlay_window.set_size(tauri::Size::Logical(tauri::LogicalSize { width, height }));
     }
 }
 

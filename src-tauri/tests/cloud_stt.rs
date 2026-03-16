@@ -141,10 +141,9 @@ mod openai {
         let key = require_key!("OPENAI_STT_API_KEY");
         let audio = require_audio!();
         let opts = serde_json::json!({ "language": "en" });
-        let result =
-            cloud_stt::transcribe("openai_stt", &key, BASE_URL, MODEL, audio, Some(&opts))
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("openai_stt", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -157,10 +156,9 @@ mod openai {
             "prompt": "This is a test recording.",
             "temperature": "0.0"
         });
-        let result =
-            cloud_stt::transcribe("openai_stt", &key, BASE_URL, MODEL, audio, Some(&opts))
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("openai_stt", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -210,10 +208,9 @@ mod openai {
     async fn realtime_default() {
         let key = require_key!("OPENAI_STT_API_KEY");
         let audio = require_audio!();
-        let result =
-            cloud_stt::realtime::transcribe("openai_stt", &key, MODEL, audio, None)
-                .await
-                .unwrap();
+        let result = cloud_stt::realtime::transcribe("openai_stt", &key, MODEL, audio, None)
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -225,10 +222,9 @@ mod openai {
             "language": "en",
             "temperature": "0.0"
         });
-        let result =
-            cloud_stt::realtime::transcribe("openai_stt", &key, MODEL, audio, Some(&opts))
-                .await
-                .unwrap();
+        let result = cloud_stt::realtime::transcribe("openai_stt", &key, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -279,10 +275,9 @@ mod deepgram {
             "punctuate": "true",
             "diarize": "false"
         });
-        let result =
-            cloud_stt::transcribe("deepgram", &key, BASE_URL, MODEL, audio, Some(&opts))
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("deepgram", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -297,10 +292,9 @@ mod deepgram {
             &["Handless".to_string(), "Tauri".to_string()],
             "",
         );
-        let result =
-            cloud_stt::transcribe("deepgram", &key, BASE_URL, MODEL, audio, opts.as_ref())
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("deepgram", &key, BASE_URL, MODEL, audio, opts.as_ref())
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -312,10 +306,9 @@ mod deepgram {
             "language": "en",
             "diarize": "true"
         });
-        let result =
-            cloud_stt::transcribe("deepgram", &key, BASE_URL, MODEL, audio, Some(&opts))
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("deepgram", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -367,10 +360,9 @@ mod groq {
             "prompt": "Technical speech recognition test",
             "temperature": "0.0"
         });
-        let result =
-            cloud_stt::transcribe("groq", &key, BASE_URL, MODEL, audio, Some(&opts))
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("groq", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -384,10 +376,9 @@ mod groq {
             &["Handless".to_string(), "Tauri".to_string()],
             "Desktop speech-to-text app",
         );
-        let result =
-            cloud_stt::transcribe("groq", &key, BASE_URL, MODEL, audio, opts.as_ref())
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("groq", &key, BASE_URL, MODEL, audio, opts.as_ref())
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -425,10 +416,9 @@ mod elevenlabs {
         let key = require_key!("ELEVENLABS_API_KEY");
         let audio = require_audio!();
         let opts = serde_json::json!({ "language": "en" });
-        let result =
-            cloud_stt::transcribe("elevenlabs", &key, BASE_URL, MODEL, audio, Some(&opts))
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("elevenlabs", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -440,10 +430,9 @@ mod elevenlabs {
             "language": "en",
             "enable_speaker_diarization": "true"
         });
-        let result =
-            cloud_stt::transcribe("elevenlabs", &key, BASE_URL, MODEL, audio, Some(&opts))
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("elevenlabs", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -451,10 +440,9 @@ mod elevenlabs {
     async fn realtime_default() {
         let key = require_key!("ELEVENLABS_API_KEY");
         let audio = require_audio!();
-        let result =
-            cloud_stt::realtime::transcribe("elevenlabs", &key, MODEL, audio, None)
-                .await
-                .unwrap();
+        let result = cloud_stt::realtime::transcribe("elevenlabs", &key, MODEL, audio, None)
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -496,10 +484,9 @@ mod mistral {
             "temperature": "0.0",
             "diarize": "true"
         });
-        let result =
-            cloud_stt::transcribe("mistral", &key, BASE_URL, MODEL, audio, Some(&opts))
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("mistral", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -513,10 +500,9 @@ mod mistral {
             &["Handless".to_string(), "Tauri".to_string()],
             "",
         );
-        let result =
-            cloud_stt::transcribe("mistral", &key, BASE_URL, MODEL, audio, opts.as_ref())
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("mistral", &key, BASE_URL, MODEL, audio, opts.as_ref())
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -524,10 +510,9 @@ mod mistral {
     async fn realtime_default() {
         let key = require_key!("MISTRAL_API_KEY");
         let audio = require_audio!();
-        let result =
-            cloud_stt::realtime::transcribe("mistral", &key, MODEL, audio, None)
-                .await
-                .unwrap();
+        let result = cloud_stt::realtime::transcribe("mistral", &key, MODEL, audio, None)
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -565,10 +550,9 @@ mod cartesia {
         let key = require_key!("CARTESIA_API_KEY");
         let audio = require_audio!();
         let opts = serde_json::json!({ "language": "en" });
-        let result =
-            cloud_stt::transcribe("cartesia", &key, BASE_URL, MODEL, audio, Some(&opts))
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("cartesia", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -640,10 +624,9 @@ mod soniox {
     async fn realtime_default() {
         let key = require_key!("SONIOX_API_KEY");
         let audio = require_audio!();
-        let result =
-            cloud_stt::realtime::transcribe("soniox", &key, REALTIME_MODEL, audio, None)
-                .await
-                .unwrap();
+        let result = cloud_stt::realtime::transcribe("soniox", &key, REALTIME_MODEL, audio, None)
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -684,10 +667,9 @@ mod assemblyai {
             "language_code": "en",
             "speaker_labels": "true"
         });
-        let result =
-            cloud_stt::transcribe("assemblyai", &key, BASE_URL, MODEL, audio, Some(&opts))
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("assemblyai", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -712,10 +694,9 @@ mod assemblyai {
     async fn realtime_default() {
         let key = require_key!("ASSEMBLYAI_API_KEY");
         let audio = require_audio!();
-        let result =
-            cloud_stt::realtime::transcribe("assemblyai", &key, MODEL, audio, None)
-                .await
-                .unwrap();
+        let result = cloud_stt::realtime::transcribe("assemblyai", &key, MODEL, audio, None)
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -758,10 +739,9 @@ mod fireworks {
             "temperature": "0.0",
             "diarize": "true"
         });
-        let result =
-            cloud_stt::transcribe("fireworks", &key, BASE_URL, MODEL, audio, Some(&opts))
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("fireworks", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -786,10 +766,9 @@ mod fireworks {
     async fn realtime_default() {
         let key = require_key!("FIREWORKS_API_KEY");
         let audio = require_audio!();
-        let result =
-            cloud_stt::realtime::transcribe("fireworks", &key, MODEL, audio, None)
-                .await
-                .unwrap();
+        let result = cloud_stt::realtime::transcribe("fireworks", &key, MODEL, audio, None)
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
@@ -827,14 +806,68 @@ mod silence {
     #[tokio::test]
     async fn all_providers_handle_silence() {
         init();
-        silence_does_not_crash("openai_stt", "OPENAI_STT_API_KEY", "https://api.openai.com/v1", "gpt-4o-mini-transcribe").await;
-        silence_does_not_crash("deepgram", "DEEPGRAM_API_KEY", "https://api.deepgram.com/v1", "nova-3").await;
-        silence_does_not_crash("groq", "GROQ_API_KEY", "https://api.groq.com/openai/v1", "whisper-large-v3-turbo").await;
-        silence_does_not_crash("elevenlabs", "ELEVENLABS_API_KEY", "https://api.elevenlabs.io/v1", "scribe_v2").await;
-        silence_does_not_crash("mistral", "MISTRAL_API_KEY", "https://api.mistral.ai", "voxtral-mini-latest").await;
-        silence_does_not_crash("cartesia", "CARTESIA_API_KEY", "https://api.cartesia.ai", "ink-whisper").await;
-        silence_does_not_crash("soniox", "SONIOX_API_KEY", "https://api.soniox.com/v1", "stt-async-v4").await;
-        silence_does_not_crash("assemblyai", "ASSEMBLYAI_API_KEY", "https://api.assemblyai.com", "universal-3-pro").await;
-        silence_does_not_crash("fireworks", "FIREWORKS_API_KEY", "https://audio-prod.api.fireworks.ai/v1", "whisper-v3").await;
+        silence_does_not_crash(
+            "openai_stt",
+            "OPENAI_STT_API_KEY",
+            "https://api.openai.com/v1",
+            "gpt-4o-mini-transcribe",
+        )
+        .await;
+        silence_does_not_crash(
+            "deepgram",
+            "DEEPGRAM_API_KEY",
+            "https://api.deepgram.com/v1",
+            "nova-3",
+        )
+        .await;
+        silence_does_not_crash(
+            "groq",
+            "GROQ_API_KEY",
+            "https://api.groq.com/openai/v1",
+            "whisper-large-v3-turbo",
+        )
+        .await;
+        silence_does_not_crash(
+            "elevenlabs",
+            "ELEVENLABS_API_KEY",
+            "https://api.elevenlabs.io/v1",
+            "scribe_v2",
+        )
+        .await;
+        silence_does_not_crash(
+            "mistral",
+            "MISTRAL_API_KEY",
+            "https://api.mistral.ai",
+            "voxtral-mini-latest",
+        )
+        .await;
+        silence_does_not_crash(
+            "cartesia",
+            "CARTESIA_API_KEY",
+            "https://api.cartesia.ai",
+            "ink-whisper",
+        )
+        .await;
+        silence_does_not_crash(
+            "soniox",
+            "SONIOX_API_KEY",
+            "https://api.soniox.com/v1",
+            "stt-async-v4",
+        )
+        .await;
+        silence_does_not_crash(
+            "assemblyai",
+            "ASSEMBLYAI_API_KEY",
+            "https://api.assemblyai.com",
+            "universal-3-pro",
+        )
+        .await;
+        silence_does_not_crash(
+            "fireworks",
+            "FIREWORKS_API_KEY",
+            "https://audio-prod.api.fireworks.ai/v1",
+            "whisper-v3",
+        )
+        .await;
     }
 }

@@ -10,7 +10,10 @@ function getRelativeFormatter(locale: string): Intl.RelativeTimeFormat {
   return fmt;
 }
 
-function getDateFormatter(locale: string, withYear: boolean): Intl.DateTimeFormat {
+function getDateFormatter(
+  locale: string,
+  withYear: boolean,
+): Intl.DateTimeFormat {
   const key = `${locale}:${withYear ? "y" : "n"}`;
   let fmt = dtfCache.get(key);
   if (!fmt) {
