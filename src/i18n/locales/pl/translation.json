@@ -118,6 +118,9 @@
         "name": "Soniox",
         "description": "Chmurowa zamiana mowy na tekst Soniox. Wysoka dokładność z transkrypcją w czasie rzeczywistym."
       },
+      "assemblyai": {
+        "name": "AssemblyAI",
+        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
       "cartesia": {
         "name": "Cartesia",
         "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."

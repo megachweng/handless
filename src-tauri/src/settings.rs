@@ -657,6 +657,11 @@ fn default_stt_providers() -> Vec<SttProvider> {
             default_model: "stt-rt-preview".to_string(),
         },
         SttProvider {
+            id: "assemblyai".to_string(),
+            label: "AssemblyAI".to_string(),
+            provider_type: SttProviderType::Cloud,
+            base_url: "https://api.assemblyai.com".to_string(),
+            default_model: "best".to_string(),
             id: "fireworks".to_string(),
             label: "Fireworks AI".to_string(),
             provider_type: SttProviderType::Cloud,

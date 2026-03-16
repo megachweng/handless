@@ -278,6 +278,13 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             supports_dictionary_context: true,
         },
         SttProviderInfo {
+            id: "assemblyai".to_string(),
+            name: "AssemblyAI".to_string(),
+            description: "onboarding.cloud.assemblyai.description".to_string(),
+            supported_languages: vec![
+                "en", "es", "fr", "de", "it", "pt", "nl", "pl", "ru", "tr",
+                "uk", "ja", "ko", "zh", "ar", "hi", "cs", "da", "fi", "el",
+                "hu", "id", "no", "ro", "sk", "sv", "th", "vi",
             id: "fireworks".to_string(),
             name: "Fireworks AI".to_string(),
             description: "onboarding.cloud.fireworks.description".to_string(),
@@ -293,6 +300,13 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             supports_realtime: false,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
+                base_url: "https://api.assemblyai.com".to_string(),
+                default_model: "best".to_string(),
+                console_url: Some("https://www.assemblyai.com/dashboard".to_string()),
+            },
+            available_options: vec![
+                CloudProviderOption {
+                    key: "language_code".to_string(),
                 base_url: "https://audio-prod.api.fireworks.ai/v1".to_string(),
                 default_model: "whisper-v3".to_string(),
                 console_url: Some("https://fireworks.ai/api-keys".to_string()),
@@ -305,6 +319,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     description: String::new(),
                 },
                 CloudProviderOption {
+                    key: "speaker_labels".to_string(),
                     key: "prompt".to_string(),
                     label: "settings.models.cloudProviders.options.prompt".to_string(),
                     option_type: CloudOptionType::Text,
@@ -324,6 +339,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 },
             ],
             supports_dictionary_terms: true,
+            supports_dictionary_context: false,
             supports_dictionary_context: true,
         },
     ]
@@ -380,6 +396,25 @@ pub fn inject_dictionary(
                 dictionary_context.len()
             );
         }
+        "assemblyai" => {
+            // Merge terms into word_boost (array of strings)
+            if !dictionary_terms.is_empty() {
+                let existing: Vec<String> = opts
+                    .get("word_boost")
+                    .and_then(|v| v.as_array())
+                    .map(|arr| {
+                        arr.iter()
+                            .filter_map(|v| v.as_str().map(String::from))
+                            .collect()
+                    })
+                    .unwrap_or_default();
+
+                let mut merged = dictionary_terms.to_vec();
+                merged.extend(existing);
+                opts["word_boost"] = serde_json::json!(merged);
+            }
+            debug!(
+                "Injected dictionary into AssemblyAI options ({} terms)",
         "mistral" => {
             // Merge terms into context_bias (comma-separated)
             if !dictionary_terms.is_empty() {

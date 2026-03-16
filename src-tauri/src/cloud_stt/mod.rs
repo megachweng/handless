@@ -1,3 +1,4 @@
+pub mod assemblyai;
 pub mod cartesia;
 pub mod mistral;
 pub mod elevenlabs;
@@ -20,6 +21,7 @@ pub async fn test_api_key(
         "elevenlabs" => elevenlabs::test_api_key(api_key, base_url, model).await,
         "groq" => groq::test_api_key(api_key, base_url, model).await,
         "soniox" => soniox::test_api_key(api_key, base_url, model).await,
+        "assemblyai" => assemblyai::test_api_key(api_key, base_url, model).await,
         "fireworks" => fireworks::test_api_key(api_key, base_url, model).await,
         _ => Err(anyhow::anyhow!(
             "Unknown cloud STT provider: {}",
@@ -43,6 +45,7 @@ pub async fn transcribe(
         "elevenlabs" => elevenlabs::transcribe(api_key, base_url, model, audio_wav, options).await,
         "groq" => groq::transcribe(api_key, base_url, model, audio_wav, options).await,
         "soniox" => soniox::transcribe(api_key, base_url, model, audio_wav, options).await,
+        "assemblyai" => assemblyai::transcribe(api_key, base_url, model, audio_wav, options).await,
         "fireworks" => fireworks::transcribe(api_key, base_url, model, audio_wav, options).await,
         _ => Err(anyhow::anyhow!(
             "Unknown cloud STT provider: {}",
