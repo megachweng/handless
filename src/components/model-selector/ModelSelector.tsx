@@ -282,7 +282,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
   return (
     <>
       {/* Model Status and Switcher */}
-      <div className="relative" ref={dropdownRef}>
+      <div className="relative" ref={dropdownRef} aria-live="polite">
         <ModelStatusButton
           status={getDisplayStatus()}
           displayText={getModelDisplayText()}

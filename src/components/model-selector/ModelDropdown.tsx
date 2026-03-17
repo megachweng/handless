@@ -18,7 +18,7 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
   return (
     <button
       onClick={onClick}
-      className={`w-full text-start px-3 py-2 rounded-md transition-colors cursor-pointer focus:outline-none ${
+      className={`w-full text-start px-3 py-2 rounded-md transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ring ${
         active
           ? "bg-accent/10 text-text"
           : "text-text/70 hover:bg-glass-highlight hover:text-text"
@@ -85,7 +85,7 @@ const ModelDropdown: React.FC<ModelDropdownProps> = ({
     downloadedLocalProviders.length > 0 && cloudProviders.length > 0;
 
   return (
-    <div className="absolute bottom-full -start-4 mb-2 w-56 max-h-[60vh] overflow-y-auto bg-[var(--color-glass-bg-solid)] border border-glass-border rounded-xl shadow-glass-hover animate-in fade-in-0 slide-in-from-bottom-1 zoom-in-[0.97] duration-150 origin-bottom-left z-50">
+    <div className="absolute bottom-full -start-4 mb-2 w-56 max-h-[60vh] overflow-y-auto overscroll-contain bg-[var(--color-glass-bg-solid)] border border-glass-border rounded-xl shadow-glass-hover animate-in fade-in-0 slide-in-from-bottom-1 zoom-in-[0.97] duration-150 origin-bottom-left z-50">
       {hasAny ? (
         <div className="p-1.5">
           {downloadedLocalProviders.length > 0 && (

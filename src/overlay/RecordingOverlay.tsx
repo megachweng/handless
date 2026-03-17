@@ -485,8 +485,9 @@ const RecordingOverlay: React.FC = () => {
               className={`overlay-btn overlay-btn-cancel ${showButtons ? "active" : ""}`}
               style={{ borderRadius: buttonRadius }}
               onClick={handleCancel}
+              aria-label="Cancel"
             >
-              <X size={12} weight="bold" />
+              <X size={12} weight="bold" aria-hidden="true" />
             </button>
             {hasStreamingText && !showTextAboveBars && (
               <div ref={streamingTextRef} className="streaming-text">
@@ -500,8 +501,9 @@ const RecordingOverlay: React.FC = () => {
               className={`overlay-btn overlay-btn-confirm ${showButtons ? "active" : ""}`}
               style={{ borderRadius: buttonRadius }}
               onClick={handleConfirm}
+              aria-label="Confirm"
             >
-              <Check size={12} weight="bold" />
+              <Check size={12} weight="bold" aria-hidden="true" />
             </button>
           </>
         )}
@@ -524,8 +526,12 @@ const RecordingOverlay: React.FC = () => {
                 />
               ))}
             </div>
-            <button className="postprocess-dismiss" onClick={handleCancel}>
-              <X size={10} weight="bold" />
+            <button
+              className="postprocess-dismiss"
+              onClick={handleCancel}
+              aria-label="Dismiss"
+            >
+              <X size={10} weight="bold" aria-hidden="true" />
             </button>
           </>
         )}

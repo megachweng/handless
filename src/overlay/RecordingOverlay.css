@@ -373,3 +373,27 @@
     box-shadow: 0 0 5px rgba(var(--color-accent-rgb), 0.7);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .recording-overlay,
+  .recording-overlay.fade-in {
+    transition: none;
+  }
+
+  .recording-overlay > *:not(.overlay-btn):not(.postprocess-dismiss) {
+    animation: none;
+  }
+
+  .streaming-text-bubble {
+    animation: none;
+  }
+
+  .word-appear {
+    animation: none;
+  }
+
+  .thinking-dot {
+    animation: none;
+    opacity: 0.7;
+  }
+}

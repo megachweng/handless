@@ -48,15 +48,19 @@ const ModelStatusButton: React.FC<ModelStatusButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 hover:text-text/80 transition-colors ${className}`}
+      className={`flex items-center gap-2 hover:text-text/80 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-md ${className}`}
     >
-      <div className={`w-2 h-2 rounded-full ${getStatusColor(status)}`} />
+      <div
+        className={`w-2 h-2 rounded-full ${getStatusColor(status)}`}
+        aria-hidden="true"
+      />
       <span className="max-w-28 truncate">{displayText}</span>
       <svg
         className={`w-3 h-3 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
+        aria-hidden="true"
       >
         <path
           strokeLinecap="round"
