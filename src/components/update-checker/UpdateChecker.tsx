@@ -185,7 +185,7 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
       (!isChecking && !showUpToDate && !updateAvailable));
 
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
+    <div className={`flex items-center gap-3 ${className}`} aria-live="polite">
       {isUpdateClickable ? (
         <button
           onClick={getUpdateStatusAction()}

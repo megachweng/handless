@@ -21,6 +21,7 @@ const CancelIcon: React.FC<CancelIconProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      aria-hidden="true"
     >
       <g fill={color}>
         <path d="m14.293 8.29297c.3905-.39052 1.0235-.39052 1.414 0s.3905 1.02354 0 1.41406l-5.99998 5.99997c-.39053.3906-1.02354.3906-1.41407 0-.39052-.3905-.39052-1.0235 0-1.414z" />

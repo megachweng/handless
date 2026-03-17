@@ -20,6 +20,7 @@ const ResetIcon: React.FC<ResetIconProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      aria-hidden="true"
     >
       <g
         stroke={"currentColor"}

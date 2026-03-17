@@ -90,7 +90,7 @@ export const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
         className={cn(
           "px-2 py-1 text-sm font-semibold bg-glass-bg border border-glass-border rounded",
           "min-w-[160px] text-start flex items-center justify-between gap-1",
-          "transition-all duration-150",
+          "transition-colors duration-150",
           disabled
             ? "opacity-50 cursor-not-allowed"
             : "hover:bg-glass-highlight cursor-pointer hover:border-glass-border-hover",
@@ -111,12 +111,14 @@ export const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                   className="ml-0.5 hover:text-accent transition-colors"
                   onClick={(e) => removeValue(opt.value, e)}
                   tabIndex={-1}
+                  aria-label={`Remove ${opt.label}`}
                 >
                   <svg
                     className="w-3 h-3"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -153,8 +155,9 @@ export const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={onSearchKeyDown}
+                aria-label={searchPlaceholder || t("common.search")}
                 placeholder={searchPlaceholder || t("common.search")}
-                className="w-full px-2 py-1 text-sm bg-glass-bg border border-glass-border rounded focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
+                className="w-full px-2 py-1 text-sm bg-glass-bg border border-glass-border rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-accent focus-visible:border-accent"
               />
             </div>
             <div ref={listRef} className="max-h-48 overflow-y-auto">
@@ -190,6 +193,7 @@ export const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                             ? "bg-primary/60 border-primary/80"
                             : "border-glass-border",
                         )}
+                        aria-hidden="true"
                       >
                         {isSelected && (
                           <svg

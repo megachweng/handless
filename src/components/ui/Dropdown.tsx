@@ -35,6 +35,7 @@ export const ChevronIcon: React.FC<{ rotated?: boolean }> = ({ rotated }) => (
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
+    aria-hidden="true"
   >
     <path
       strokeLinecap="round"
@@ -140,7 +141,7 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
         className={cn(
           "px-2 py-1 text-sm font-semibold bg-glass-bg border border-glass-border rounded-md",
           "min-w-[160px] text-start flex items-center justify-between",
-          "transition-all duration-150",
+          "transition-colors duration-150",
           disabled
             ? "opacity-50 cursor-not-allowed"
             : "hover:bg-glass-highlight cursor-pointer hover:border-glass-border-hover",
@@ -159,12 +160,14 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
                 onSelect("");
               }}
               tabIndex={-1}
+              aria-label="Clear selection"
             >
               <svg
                 className="w-3.5 h-3.5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -199,7 +202,7 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
                 onKeyDown={onSearchKeyDown}
                 aria-label={searchPlaceholder || t("common.search")}
                 placeholder={searchPlaceholder || t("common.search")}
-                className="w-full px-2 py-1 text-sm bg-glass-bg border border-glass-border rounded focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
+                className="w-full px-2 py-1 text-sm bg-glass-bg border border-glass-border rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-accent focus-visible:border-accent"
               />
             </div>
             <div ref={listRef} className="max-h-48 overflow-y-auto">
@@ -281,7 +284,7 @@ const SimpleDropdown: React.FC<DropdownProps> = ({
         className={cn(
           "px-2 py-1 text-sm font-semibold bg-glass-bg border border-glass-border rounded-md",
           "min-w-[160px] text-start flex items-center justify-between",
-          "transition-all duration-150",
+          "transition-colors duration-150",
           disabled
             ? "opacity-50 cursor-not-allowed"
             : "hover:bg-glass-highlight cursor-pointer hover:border-glass-border-hover",
