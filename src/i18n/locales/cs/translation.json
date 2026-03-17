@@ -12,7 +12,7 @@
     "general": "Obecné",
     "shortcuts": "Zkratky",
     "models": "Modely",
-    "dictionary": "Dictionary",
+    "dictionary": "Slovník",
     "postProcessing": "Následné zpracování",
     "history": "Historie",
     "debug": "Ladění"
@@ -109,11 +109,11 @@
       },
       "elevenlabs": {
         "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+        "description": "ElevenLabs Scribe převod řeči na text. Vysoká přesnost s podporou 90+ jazyků."
       },
       "groq": {
         "name": "Groq",
-        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+        "description": "Ultra-rychlý přepis Whisper od Groq. Velmi rychlé zpracování s podporou 99+ jazyků."
       },
       "soniox": {
         "name": "Soniox",
@@ -121,23 +121,23 @@
       },
       "deepgram": {
         "name": "Deepgram",
-        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
+        "description": "API pro převod řeči na text Deepgram Nova. Rychlé a přesné s podporou 50+ jazyků."
       },
       "assemblyai": {
         "name": "AssemblyAI",
-        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+        "description": "Převod řeči na text AssemblyAI. Přesnost na úrovni podniku s identifikací mluvčích a 40+ jazyky."
       },
       "cartesia": {
         "name": "Cartesia",
-        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+        "description": "API pro převod řeči na text Cartesia Ink. Přepis v reálném čase s podporou 99+ jazyků."
       },
       "mistral": {
         "name": "Mistral AI",
-        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+        "description": "Voxtral převod řeči na text od Mistral AI. Vysoká přesnost s podporou kontextové bias."
       },
       "fireworks": {
         "name": "Fireworks AI",
-        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
+        "description": "Převod řeči na text Fireworks AI. Ultra-rychlý přepis Whisper s podporou 95+ jazyků."
       }
     }
   },
@@ -237,16 +237,16 @@
           "contextTermsDescription": "Výrazy oddělené čárkami pro zlepšení přesnosti rozpoznávání",
           "contextDescription": "Popis kontextu",
           "contextDescriptionDescription": "Volný text poskytující obecný kontext o obsahu zvuku",
-          "smartFormat": "Smart Format",
-          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
-          "punctuate": "Punctuate",
-          "punctuateDescription": "Add punctuation and capitalization to the transcript",
+          "smartFormat": "Chytré formátování",
+          "smartFormatDescription": "Aplikovat formátování pro zlepšenou čitelnost včetně interpunkce, velkých písmen a dalšího",
+          "punctuate": "Interpunkce",
+          "punctuateDescription": "Přidat interpunkci a velkými písmeny k přepisu",
           "enableSpeakerDiarization": "Diarizace mluvčích",
           "enableSpeakerDiarizationDescription": "Identifikovat a oddělit různé mluvčí",
           "enableLanguageIdentification": "Identifikace jazyka",
           "enableLanguageIdentificationDescription": "Detekovat jazyk pro každý segment",
-          "contextBias": "Context Bias",
-          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
+          "contextBias": "Kontextová zkreslení",
+          "contextBiasDescription": "Výrazy oddělené čárkami pro navádění modelu k správnému psaní"
         }
       },
       "localModels": {
@@ -258,6 +258,13 @@
     },
     "general": {
       "title": "Obecné",
+      "shortcuts": {
+        "title": "Zkratky",
+        "strategyNone": "Žádné",
+        "addNew": "Přidat zkratku",
+        "remove": "Odebrat zkratku",
+        "postProcessNotReady": "Nejprve nastavte poskytovatele následného zpracování"
+      },
       "shortcut": {
         "title": "Zkratky Handless",
         "description": "Nastavte klávesové zkratky pro spuštění nahrávání řeči na text",
@@ -294,12 +301,12 @@
         "auto": "Automaticky"
       },
       "activationMode": {
-        "label": "Activation Mode",
-        "description": "How the shortcut key controls recording",
+        "label": "Režim aktivace",
+        "description": "Jak klávesa zkratky ovládá nahrávání",
         "options": {
-          "toggle": "Toggle",
-          "hold": "Hold",
-          "holdOrToggle": "Hold or Toggle"
+          "toggle": "Přepínaní",
+          "hold": "Držení",
+          "holdOrToggle": "Držení nebo přepínání"
         }
       },
       "shortcuts": {
@@ -314,13 +321,13 @@
       "title": "Zvuk",
       "microphone": {
         "title": "Mikrofon",
-        "description": "Vyberte preferované zařízení mikrofonu",
+        "description": "Pořadí preferencí - když je mikrofon nedostupný, bude jako náhrada použit další.",
         "placeholder": "Vyberte mikrofon...",
         "loading": "Načítání..."
       },
       "outputDevice": {
         "title": "Výstupní zařízení",
-        "description": "Vyberte preferované výstupní zařízení pro zvuky odezvy",
+        "description": "Vyberte preferované zvukové výstupní zařízení pro zvuky odezvy",
         "placeholder": "Vyberte výstupní zařízení...",
         "loading": "Načítání..."
       },
@@ -464,7 +471,7 @@
       },
       "configFile": {
         "title": "Konfigurační soubor",
-        "description": "Otevřít soubor nastavení JSON ve výchozím editoru",
+        "description": "Otevřít nebo znovu načíst soubor nastavení JSON",
         "open": "Otevřít",
         "reload": "Znovu načíst",
         "reloadSuccess": "Nastavení znovu načtena"
@@ -509,13 +516,13 @@
         },
         "tokensPerSecond": "{{value}} tok/s",
         "pricing": {
-          "title": "Pricing",
-          "description": "Enter your provider's pricing to see cost estimates.",
-          "inputPrice": "Input $/M",
-          "outputPrice": "Output $/M",
-          "inputPlaceholder": "e.g. 0.15",
-          "outputPlaceholder": "e.g. 0.60",
-          "autoFetched": "Auto-fetched from models.dev"
+          "title": "Ceny",
+          "description": "Zadejte ceny od svého poskytovatele, abyste viděli odhady nákladů.",
+          "inputPrice": "Vstup $/M",
+          "outputPrice": "Výstup $/M",
+          "inputPlaceholder": "např. 0,15",
+          "outputPlaceholder": "např. 0,60",
+          "autoFetched": "Automaticky načteno z models.dev"
         },
         "verified": "Ověřeno"
       },
@@ -530,20 +537,20 @@
         "promptLabelPlaceholder": "Zadejte název promptu",
         "promptInstructions": "Instrukce promptu",
         "promptInstructionsPlaceholder": "Napište instrukce, které se mají spustit po přepisu. Přepis je automaticky připojen.",
-        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
+        "promptTip": "Tip: Zaměřte se na formátování a styl opravy. Přepis je vždy automaticky připojen.",
         "updatePrompt": "Aktualizovat prompt",
         "deletePrompt": "Smazat prompt",
         "createPrompt": "Vytvořit",
         "cancel": "Zrušit",
-        "createFirst": "Prompts transform your transcriptions — fix grammar, format text, or translate.",
-        "createFirstHint": "Create your first one below.",
-        "builtIn": "Built-in",
-        "builtInReadOnly": "Built-in prompts are read-only.",
-        "costEstimate": "~{{requests}} requests per $1",
-        "costTooltip": "System prompt: ~{{systemTokens}} tokens. Assumes avg 100-word transcript (~140 input tokens, ~120 output tokens). Total per request: ~{{totalInputTokens}} input + ~{{totalOutputTokens}} output tokens.",
-        "errorCreate": "Failed to create prompt. Please try again.",
-        "errorUpdate": "Failed to update prompt. Please try again.",
-        "errorDelete": "Failed to delete prompt. Please try again."
+        "createFirst": "Prompty transformují vaše přepisy - opravují gramatiku, formátují text nebo překládají.",
+        "createFirstHint": "Vytvořte svůj první níže.",
+        "builtIn": "Vestavěné",
+        "builtInReadOnly": "Vestavěné prompty jsou pouze pro čtení.",
+        "costEstimate": "~{{requests}} požadavků za $1",
+        "costTooltip": "Systémový prompt: ~{{systemTokens}} tokenů. Předpokládá průměrný 100slov přepis (~140 vstupních tokenů, ~120 výstupních tokenů). Celkem na požadavek: ~{{totalInputTokens}} vstup + ~{{totalOutputTokens}} výstup tokenů.",
+        "errorCreate": "Nepodařilo se vytvořit prompt. Zkuste to prosím znovu.",
+        "errorUpdate": "Nepodařilo se aktualizovat prompt. Zkuste to prosím znovu.",
+        "errorDelete": "Nepodařilo se smazat prompt. Zkuste to prosím znovu."
       }
     },
     "stats": {
@@ -553,8 +560,8 @@
       "recordingTime": "Doba nahrávání",
       "avgWpm": "Prům. slov/min",
       "wpmOverTime": "Rychlost mluvy v čase",
-      "noData": "Press {{shortcut}} to start dictating",
-      "noDataHint": "Your speaking analytics will appear here.",
+      "noData": "Stisknutím {{shortcut}} spusťte diktování",
+      "noDataHint": "Vaše analytika mluvení se zde zobrazí.",
       "transcriptions": "Transkripce",
       "clearStats": "Vymazat všechna data statistik",
       "confirmClear": "Klikněte znovu pro potvrzení",
@@ -577,8 +584,8 @@
       },
       "openFolder": "Otevřít složku nahrávek",
       "loading": "Načítám historii...",
-      "empty": "Press {{shortcut}} to start recording",
-      "emptyHint": "Your transcriptions will appear here.",
+      "empty": "Stisknutím {{shortcut}} spusťte nahrávání",
+      "emptyHint": "Vaše přepisy se zde zobrazí.",
       "copyToClipboard": "Kopírovat přepis do schránky",
       "save": "Uložit přepis",
       "unsave": "Odebrat z uložených",
@@ -620,10 +627,10 @@
         "months3": "Po 3 měsících",
         "placeholder": "Vyberte dobu uchování...",
         "entries": "záznamů",
-        "confirmDelete": "This will permanently delete {{count}} unsaved recording(s) and their audio files.",
-        "confirmApply": "Delete and Apply",
-        "confirmCancel": "Cancel",
-        "noEntriesAffected": "No entries will be deleted with this setting."
+        "confirmDelete": "Tím se trvale smažou {{count}} neuložené nahrávky a jejich zvukové soubory.",
+        "confirmApply": "Smazat a použít",
+        "confirmCancel": "Zrušit",
+        "noEntriesAffected": "S tímto nastavením nebudou odstraněny žádné záznamy."
       },
       "alwaysOnMicrophone": {
         "label": "Vždy zapnutý mikrofon",
@@ -678,38 +685,38 @@
       "acknowledgments": {
         "handy": {
           "title": "Handy",
-          "description": "The open-source speech-to-text app that Handless was forked from",
-          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
+          "description": "Aplikace s otevřeným zdrojovým kódem pro převod řeči na text, ze které byl Handless vytvořen",
+          "details": "Vytvořeno na základě Handy od CJ Paise. Děkujeme za základ."
         }
       }
     }
   },
   "dictionary": {
-    "title": "Dictionary",
+    "title": "Slovník",
     "hints": {
-      "title": "Recognition Hints",
-      "description": "API providers only"
+      "title": "Nápovědy k rozpoznávání",
+      "description": "Pouze poskytovatelé API"
     },
     "terms": {
-      "title": "Terms",
-      "description": "Words and phrases the speech engine should recognize accurately. These are sent to the provider before transcription to improve recognition of domain-specific vocabulary.",
-      "placeholder": "Add a term…",
-      "add": "Add",
-      "remove": "Remove {{term}}",
-      "duplicate": "\"{{term}}\" already exists",
-      "empty": "No terms added. Type a term and press Enter."
+      "title": "Výrazy",
+      "description": "Slova a fráze, které by měl hlasový stroj rozpoznat přesně. Jsou odeslány poskytovateli před přepisem, aby zlepšily rozpoznávání slovní zásoby specifické pro danou doménu.",
+      "placeholder": "Přidat výraz…",
+      "add": "Přidat",
+      "remove": "Odebrat {{term}}",
+      "duplicate": "\"{{term}}\" již existuje",
+      "empty": "Nebyly přidány žádné výrazy. Zadejte výraz a stiskněte Enter."
     },
     "context": {
-      "title": "Context Description",
-      "description": "Freeform text that gives the speech engine background context about what you're dictating. Helps improve accuracy for domain-specific content.",
-      "placeholder": "e.g. Technical discussion about React components and TypeScript interfaces"
+      "title": "Popis kontextu",
+      "description": "Volný text, který dá hlasovému stroji pozadí kontextu o tom, co diktujete. Pomáhá zlepšit přesnost obsahu specifického pro doménu.",
+      "placeholder": "např. Technická diskuse o komponentách React a rozhraních TypeScript"
     },
-    "autoInjectedHint": "Auto-filled from Dictionary. Click to edit.",
+    "autoInjectedHint": "Automaticky vyplněno ze Slovníku. Kliknutím upravte.",
     "customWords": {
-      "title": "Word Corrections",
-      "subtitle": "Rule-based post-processing · All providers",
-      "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription.",
-      "empty": "No corrections added. Type a word and press Enter."
+      "title": "Opravy slov",
+      "subtitle": "Zpracování na základě pravidel · Všichni poskytovatelé",
+      "description": "Slova, která jsou často špatně slyšena nebo chybně napsána po přepisu. Systém automaticky opraví podobně znějící slova na výstupu tak, aby odpovídala vašemu seznamu. To je aplikováno po přepisu, na rozdíl od výrazů, které vedou stroj před přepisem.",
+      "empty": "Nebyly přidány žádné opravy. Zadejte slovo a stiskněte Enter."
     }
   },
   "footer": {
@@ -725,7 +732,7 @@
     "installing": "Instalace...",
     "preparing": "Příprava...",
     "checkForUpdates": "Zkontrolovat aktualizace",
-    "updateViaBrew": "Update via: brew upgrade --cask handless"
+    "updateViaBrew": "Aktualizovat pomocí: brew upgrade --cask handless"
   },
   "common": {
     "loading": "Načítání...",

@@ -11,7 +11,7 @@
   "sidebar": {
     "general": "عام",
     "shortcuts": "اختصارات",
-    "dictionary": "Dictionary",
+    "dictionary": "القاموس",
     "postProcessing": "معالجة لاحقة",
     "history": "السجل",
     "debug": "تصحيح الأخطاء",
@@ -98,7 +98,7 @@
       "waiting": "...في الانتظار",
       "allGranted": "كل شيء جاهز!",
       "errors": {
-        "checkFailed": "فشل التحقق من الأذونات. يرجير المحاولة مرة أخرى.",
+        "checkFailed": "فشل التحقق من الأذونات. يرجى المحاولة مرة أخرى.",
         "requestFailed": "فشل طلب الإذن. يرجى المحاولة مرة أخرى."
       }
     },
@@ -109,11 +109,11 @@
       },
       "elevenlabs": {
         "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+        "description": "تحويل الكلام إلى نص Scribe من ElevenLabs. دقة عالية مع دعم 90+ لغة."
       },
       "groq": {
         "name": "Groq",
-        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+        "description": "نسخ Whisper فائق السرعة من Groq. استدلال سريع برق مع دعم 99+ لغة."
       },
       "soniox": {
         "name": "Soniox",
@@ -121,23 +121,23 @@
       },
       "deepgram": {
         "name": "Deepgram",
-        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
+        "description": "واجهة برمجة تطبيقات Nova لتحويل الكلام إلى نص من Deepgram. سريعة ودقيقة مع دعم 50+ لغة."
       },
       "assemblyai": {
         "name": "AssemblyAI",
-        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+        "description": "تحويل الكلام إلى نص من AssemblyAI. دقة بمستوى المؤسسات مع تمييز المتحدثين و40+ لغة."
       },
       "cartesia": {
         "name": "Cartesia",
-        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+        "description": "واجهة برمجة تطبيقات Ink لتحويل الكلام إلى نص من Cartesia. نسخ متدفق في الوقت الفعلي مع دعم 99+ لغة."
       },
       "mistral": {
         "name": "Mistral AI",
-        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+        "description": "تحويل الكلام إلى نص Voxtral من Mistral AI. دقة عالية مع دعم الانحياز السياقي."
       },
       "fireworks": {
         "name": "Fireworks AI",
-        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
+        "description": "تحويل الكلام إلى نص من Fireworks AI. نسخ Whisper فائق السرعة مع دعم 95+ لغة."
       }
     }
   },
@@ -172,15 +172,26 @@
     "notAvailable": "غير متاح"
   },
   "settings": {
+    "modelSettings": {
+      "title": "إعدادات {{model}}",
+      "noSettingsNeeded": "هذا النموذج يعمل تلقائياً بدون الحاجة إلى أي إعدادات."
+    },
     "general": {
       "title": "عام",
+      "shortcuts": {
+        "title": "الاختصارات",
+        "strategyNone": "بلا",
+        "addNew": "إضافة اختصار",
+        "remove": "إزالة الاختصار",
+        "postProcessNotReady": "قم بتكوين مزود المعالجة اللاحقة أولاً"
+      },
       "shortcut": {
         "title": "اختصارات Handless",
         "description": "إعداد اختصارات لوحة المفاتيح لبدء تسجيل التفريغ الصوتي",
         "loading": "...جاري تحميل الاختصارات",
         "none": "لا توجد اختصارات مجهزة",
         "notFound": "الاختصار غير موجود",
-        "pressKeys": "...اضغط على المفاتيح",
+        "pressKeys": "...جاري التسجيل",
         "bindings": {
           "transcribe": {
             "name": "اختصار التفريغ الصوتي",
@@ -210,27 +221,100 @@
         "auto": "تلقائي"
       },
       "activationMode": {
-        "label": "Activation Mode",
-        "description": "How the shortcut key controls recording",
+        "label": "طريقة التنشيط",
+        "description": "كيف يتحكم مفتاح الاختصار في التسجيل",
         "options": {
-          "toggle": "Toggle",
-          "hold": "Hold",
-          "holdOrToggle": "Hold or Toggle"
+          "toggle": "تبديل",
+          "hold": "الضغط",
+          "holdOrToggle": "الضغط أو التبديل"
+        }
+      }
+    },
+    "models": {
+      "title": "نماذج النسخ",
+      "description": "اختر نموذج نسخ أو قم بتنزيل نماذج إضافية. تقدم النماذج المختلفة مستويات متفاوتة من الدقة والسرعة.",
+      "yourModels": "النماذج المحمّلة",
+      "availableModels": "متاح للتنزيل",
+      "downloaded": "تم التنزيل",
+      "available": "متاح للتنزيل",
+      "deleteConfirm": "هل أنت متأكد أنك تريد حذف {{modelName}}؟ ستحتاج إلى تنزيله مرة أخرى لاستخدامه.",
+      "deleteActiveConfirm": "{{modelName}} هو النموذج النشط حاليًا. حذفه سيوقف النسخ حتى تختار نموذجًا جديدًا. هل أنت متأكد؟",
+      "deleteTitle": "حذف النموذج",
+      "filters": {
+        "all": "الكل",
+        "multiLanguage": "متعدد اللغات",
+        "translation": "ترجمة",
+        "allLanguages": "جميع اللغات"
+      },
+      "noModelsMatch": "لا توجد نماذج مطابقة لهذا الفلتر.",
+      "tabs": {
+        "myModels": "نماذجي",
+        "library": "المكتبة"
+      },
+      "cloudProviders": {
+        "title": "مزودو الخدمات السحابية",
+        "badge": "سحابي",
+        "notConfigured": "غير مُكوَّن",
+        "verify": "تحقق",
+        "verifying": "...جاري التحقق",
+        "verified": "تم التحقق",
+        "verifyFailed": "فشل التحقق",
+        "verifyFirst": "تحقق من مفتاح API الخاص بك أولاً",
+        "apiKey": {
+          "title": "مفتاح API",
+          "placeholder": "sk-..."
+        },
+        "model": {
+          "title": "النموذج",
+          "placeholder": "أدخل اسم النموذج"
+        },
+        "baseUrl": {
+          "title": "عنوان URL الأساسي"
+        },
+        "getApiKey": "الحصول على مفتاح API",
+        "realtimeTranscription": "التفريغ الفوري",
+        "realtimeDescription": "يستخدم اتصال WebSocket بدلاً من رفع الملفات لتقليل زمن الاستجابة",
+        "options": {
+          "language": "اللغة",
+          "selectLanguage": "كشف تلقائي",
+          "selectLanguageHint": "اتركه فارغاً للكشف التلقائي",
+          "selectLanguages": "...اختر اللغات",
+          "selectTranslate": "...اختر اللغات",
+          "prompt": "المطالبة",
+          "promptDescription": "نص اختياري لتوجيه أسلوب النموذج أو متابعة مقطع سابق. غير مدعوم بواسطة gpt-4o-transcribe-diarize.",
+          "temperature": "درجة الحرارة",
+          "temperatureDescription": "القيم الأعلى تنتج نتائج أكثر عشوائية (0-1). مدعوم فقط بواسطة whisper-1.",
+          "languageHints": "تلميحات اللغة",
+          "languageHintsStrict": "تلميحات لغة صارمة",
+          "languageHintsStrictDescription": "التفريغ فقط باللغات المحددة",
+          "contextTerms": "مصطلحات السياق",
+          "contextTermsDescription": "مصطلحات مفصولة بفواصل لتحسين دقة التعرف",
+          "contextDescription": "وصف السياق",
+          "contextDescriptionDescription": "نص حر يوفر سياقاً عاماً حول محتوى الصوت",
+          "smartFormat": "صيغة ذكية",
+          "smartFormatDescription": "تطبيق التنسيق لتحسين المقروئية بما في ذلك علامات الترقيم والأحرف الكبيرة والمزيد",
+          "punctuate": "إضافة علامات ترقيم",
+          "punctuateDescription": "إضافة علامات ترقيم وأحرف كبيرة إلى النص المفرغ",
+          "enableSpeakerDiarization": "تمييز المتحدثين",
+          "enableSpeakerDiarizationDescription": "تحديد وفصل المتحدثين المختلفين",
+          "enableLanguageIdentification": "تحديد اللغة",
+          "enableLanguageIdentificationDescription": "اكتشاف اللغة لكل مقطع",
+          "contextBias": "الانحياز السياقي",
+          "contextBiasDescription": "مصطلحات مفصولة بفواصل لتوجيه النموذج نحو الإملاء الصحيح"
         }
       },
-      "shortcuts": {
-        "title": "الاختصارات",
-        "strategyNone": "بلا",
-        "addNew": "إضافة اختصار",
-        "remove": "إزالة الاختصار",
-        "postProcessNotReady": "قم بتكوين مزود المعالجة اللاحقة أولاً"
+      "localModels": {
+        "title": "النماذج المحلية"
+      },
+      "myModels": {
+        "noModelsConfigured": "لم يتم تكوين أي نماذج. قم بزيارة المكتبة لتنزيل النماذج أو إعداد مزودي الخدمات السحابية."
       }
     },
     "sound": {
       "title": "الصوت",
       "microphone": {
         "title": "الميكروفون",
-        "description": "اختر جهاز الميكروفون المفضل لديك",
+        "description": "ترتيب التفضيل - عندما لا يتوفر ميكروفون، سيتم استخدام الميكروفون التالي كبديل.",
         "placeholder": "...اختر الميكروفون",
         "loading": "...جاري التحميل"
       },
@@ -254,6 +338,42 @@
         "history": "السجل",
         "data": "البيانات",
         "configuration": "الإعدادات"
+      },
+      "exportData": {
+        "title": "تصدير البيانات",
+        "description": "تصدير إعداداتك وسجلك وتسجيلاتك إلى ملف",
+        "button": "...تصدير",
+        "includeSettings": "الإعدادات",
+        "includeHistory": "سجل التفريغ الصوتي",
+        "includeRecordings": "التسجيلات الصوتية",
+        "success": "تم تصدير البيانات بنجاح",
+        "error": "فشل تصدير البيانات"
+      },
+      "importData": {
+        "title": "استيراد البيانات",
+        "description": "استيراد الإعدادات والبيانات من ملف تم تصديره مسبقاً",
+        "button": "...استيراد",
+        "previewTitle": "معاينة الاستيراد",
+        "exportDate": "تم التصدير في {{date}}",
+        "appVersion": "إصدار التطبيق: {{version}}",
+        "historyCount": "{{count}} إدخالات في السجل",
+        "recordingsCount": "{{count}} تسجيلات",
+        "statsCount": "{{count}} إحصائيات التحدث",
+        "importSettings": "الإعدادات",
+        "importRecordings": "التسجيلات",
+        "warning": "سيؤدي استيراد الإعدادات إلى الكتابة فوق التكوين الحالي. قد يحتوي ملف التصدير على مفاتيح API.",
+        "success": "تم استيراد البيانات بنجاح",
+        "error": "فشل استيراد البيانات",
+        "invalidFile": "الملف المحدد ليس ملف تصدير Handless صالحاً"
+      },
+      "theme": {
+        "title": "السمة",
+        "description": "اختر سمة ألوان التطبيق",
+        "options": {
+          "dark": "داكن",
+          "light": "فاتح",
+          "system": "النظام"
+        }
       },
       "startHidden": {
         "label": "بدء مخفي",
@@ -342,45 +462,9 @@
         "remove": "إزالة {{word}}",
         "duplicate": "\"{{word}}\" موجود بالفعل"
       },
-      "exportData": {
-        "title": "تصدير البيانات",
-        "description": "تصدير إعداداتك وسجلك وتسجيلاتك إلى ملف",
-        "button": "...تصدير",
-        "includeSettings": "الإعدادات",
-        "includeHistory": "سجل التفريغ الصوتي",
-        "includeRecordings": "التسجيلات الصوتية",
-        "success": "تم تصدير البيانات بنجاح",
-        "error": "فشل تصدير البيانات"
-      },
-      "importData": {
-        "title": "استيراد البيانات",
-        "description": "استيراد الإعدادات والبيانات من ملف تم تصديره مسبقاً",
-        "button": "...استيراد",
-        "previewTitle": "معاينة الاستيراد",
-        "exportDate": "تم التصدير في {{date}}",
-        "appVersion": "إصدار التطبيق: {{version}}",
-        "historyCount": "{{count}} إدخالات في السجل",
-        "recordingsCount": "{{count}} تسجيلات",
-        "statsCount": "{{count}} إحصائيات التحدث",
-        "importSettings": "الإعدادات",
-        "importRecordings": "التسجيلات",
-        "warning": "سيؤدي استيراد الإعدادات إلى الكتابة فوق التكوين الحالي. قد يحتوي ملف التصدير على مفاتيح API.",
-        "success": "تم استيراد البيانات بنجاح",
-        "error": "فشل استيراد البيانات",
-        "invalidFile": "الملف المحدد ليس ملف تصدير Handless صالحاً"
-      },
-      "theme": {
-        "title": "السمة",
-        "description": "اختر سمة ألوان التطبيق",
-        "options": {
-          "dark": "داكن",
-          "light": "فاتح",
-          "system": "النظام"
-        }
-      },
       "configFile": {
         "title": "ملف الإعدادات",
-        "description": "افتح ملف إعدادات JSON في المحرر الافتراضي",
+        "description": "فتح ملف إعدادات JSON أو إعادة تحميله",
         "open": "فتح",
         "reload": "إعادة تحميل",
         "reloadSuccess": "تم إعادة تحميل الإعدادات"
@@ -408,6 +492,7 @@
           "description": "URL الأساسي لـ API للمزود المختار. يمكن تعديل المزود المخصص فقط.",
           "placeholder": "https://api.openai.com/v1"
         },
+        "verified": "تم التحقق",
         "apiKey": {
           "title": "مفتاح API",
           "description": "مفتاح API للمزود المختار.",
@@ -425,15 +510,14 @@
         },
         "tokensPerSecond": "{{value}} tok/s",
         "pricing": {
-          "title": "Pricing",
-          "description": "Enter your provider's pricing to see cost estimates.",
-          "inputPrice": "Input $/M",
-          "outputPrice": "Output $/M",
-          "inputPlaceholder": "e.g. 0.15",
-          "outputPlaceholder": "e.g. 0.60",
-          "autoFetched": "Auto-fetched from models.dev"
-        },
-        "verified": "تم التحقق"
+          "title": "التسعير",
+          "description": "أدخل تسعير مزودك لرؤية تقديرات التكاليف.",
+          "inputPrice": "إدخال $/M",
+          "outputPrice": "إخراج $/M",
+          "inputPlaceholder": "مثال 0.15",
+          "outputPlaceholder": "مثال 0.60",
+          "autoFetched": "تم الحصول عليها تلقائياً من models.dev"
+        }
       },
       "prompts": {
         "title": "المطالبة",
@@ -441,25 +525,25 @@
           "title": "المطالبة المختارة",
           "description": ".اختر قالباً لتحسين التفريغ الصوتي أو أنشئ قالباً جديداً. يتم توفير النص المفرغ تلقائياً للمطالبة"
         },
-        "createNew": "إنشاء مطالبة جديدة",
+        "createNew": "مطالبة جديدة",
         "promptLabel": "تسمية المطالبة",
         "promptLabelPlaceholder": "أدخل اسم المطالبة",
         "promptInstructions": "تعليمات المطالبة",
         "promptInstructionsPlaceholder": ".اكتب التعليمات المراد تشغيلها بعد التفريغ الصوتي. يتم إلحاق النص المفرغ تلقائياً",
-        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
+        "promptTip": "نصيحة: ركز على أسلوب التنسيق والتصحيح. يتم إلحاق النص المفرغ دائماً تلقائياً.",
         "updatePrompt": "تحديث المطالبة",
         "deletePrompt": "حذف المطالبة",
         "createPrompt": "إنشاء",
         "cancel": "إلغاء",
-        "createFirst": "Prompts transform your transcriptions — fix grammar, format text, or translate.",
-        "createFirstHint": "Create your first one below.",
-        "builtIn": "Built-in",
-        "builtInReadOnly": "Built-in prompts are read-only.",
-        "costEstimate": "~{{requests}} requests per $1",
-        "costTooltip": "System prompt: ~{{systemTokens}} tokens. Assumes avg 100-word transcript (~140 input tokens, ~120 output tokens). Total per request: ~{{totalInputTokens}} input + ~{{totalOutputTokens}} output tokens.",
-        "errorCreate": "Failed to create prompt. Please try again.",
-        "errorUpdate": "Failed to update prompt. Please try again.",
-        "errorDelete": "Failed to delete prompt. Please try again."
+        "createFirst": "المطالبات تحول التفريغ الصوتي - صحح القواعد، صيغة النص، أو ترجم.",
+        "createFirstHint": "أنشئ واحدة أدناه.",
+        "builtIn": "مدمج",
+        "builtInReadOnly": "المطالبات المدمجة للقراءة فقط.",
+        "costEstimate": "~{{requests}} طلبات لكل $1",
+        "costTooltip": "مطالبة النظام: ~{{systemTokens}} رموز. يفترض متوسط 100 كلمة (~140 رمز إدخال، ~120 رمز إخراج). إجمالي لكل طلب: ~{{totalInputTokens}} إدخال + ~{{totalOutputTokens}} رموز إخراج.",
+        "errorCreate": "فشل في إنشاء المطالبة. يرجى المحاولة مرة أخرى.",
+        "errorUpdate": "فشل في تحديث المطالبة. يرجى المحاولة مرة أخرى.",
+        "errorDelete": "فشل في حذف المطالبة. يرجى المحاولة مرة أخرى."
       }
     },
     "stats": {
@@ -469,9 +553,9 @@
       "recordingTime": "مدة التسجيل",
       "avgWpm": "متوسط الكلمات/دقيقة",
       "wpmOverTime": "سرعة التحدث عبر الزمن",
-      "noData": "Press {{shortcut}} to start dictating",
-      "noDataHint": "Your speaking analytics will appear here.",
-      "transcriptions": "التحويلات",
+      "noData": "اضغط على {{shortcut}} لبدء الإملاء",
+      "noDataHint": "ستظهر تحليلات التحدث الخاصة بك هنا.",
+      "transcriptions": "التفريغات",
       "clearStats": "مسح جميع بيانات الإحصائيات",
       "confirmClear": "انقر مرة أخرى للتأكيد",
       "range": {
@@ -493,8 +577,8 @@
       },
       "openFolder": "فتح مجلد التسجيلات",
       "loading": "...جاري تحميل السجل",
-      "empty": "Press {{shortcut}} to start recording",
-      "emptyHint": "Your transcriptions will appear here.",
+      "empty": "اضغط على {{shortcut}} لبدء التسجيل",
+      "emptyHint": "ستظهر التفريغات الخاصة بك هنا.",
       "copyToClipboard": "نسخ التفريغ إلى الحافظة",
       "save": "حفظ التفريغ",
       "unsave": "إزالة من المحفوظات",
@@ -536,10 +620,10 @@
         "months3": "بعد 3 أشهر",
         "placeholder": "اختر فترة الاحتفاظ...",
         "entries": "إدخالات",
-        "confirmDelete": "This will permanently delete {{count}} unsaved recording(s) and their audio files.",
-        "confirmApply": "Delete and Apply",
-        "confirmCancel": "Cancel",
-        "noEntriesAffected": "No entries will be deleted with this setting."
+        "confirmDelete": "سيؤدي هذا إلى حذف {{count}} تسجيل(ات) غير محفوظة وملفات الصوت الخاصة بها بشكل دائم.",
+        "confirmApply": "حذف وتطبيق",
+        "confirmCancel": "إلغاء",
+        "noEntriesAffected": "لن يتم حذف أي إدخالات مع هذا الإعداد."
       },
       "alwaysOnMicrophone": {
         "label": "ميكروفون يعمل دائماً",
@@ -594,122 +678,38 @@
       "acknowledgments": {
         "handy": {
           "title": "Handy",
-          "description": "The open-source speech-to-text app that Handless was forked from",
-          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
+          "description": "تطبيق التفريغ الصوتي مفتوح المصدر الذي تم استنساخ Handless منه",
+          "details": "تم بناؤه على Handy بواسطة CJ Pais. شكراً على الأساس."
         }
-      }
-    },
-    "modelSettings": {
-      "title": "إعدادات النموذج",
-      "noSettingsNeeded": "لا توجد إعدادات مطلوبة لهذا النموذج"
-    },
-    "models": {
-      "title": "نماذج النسخ",
-      "description": "اختر نموذج نسخ أو قم بتنزيل نماذج إضافية. تقدم النماذج المختلفة مستويات متفاوتة من الدقة والسرعة.",
-      "yourModels": "النماذج المحمّلة",
-      "availableModels": "متاح للتنزيل",
-      "downloaded": "تم التنزيل",
-      "available": "متاح للتنزيل",
-      "deleteConfirm": "هل أنت متأكد أنك تريد حذف {{modelName}}؟ ستحتاج إلى تنزيله مرة أخرى لاستخدامه.",
-      "deleteActiveConfirm": "{{modelName}} هو النموذج النشط حاليًا. حذفه سيوقف النسخ حتى تختار نموذجًا جديدًا. هل أنت متأكد؟",
-      "deleteTitle": "حذف النموذج",
-      "filters": {
-        "all": "الكل",
-        "multiLanguage": "متعدد اللغات",
-        "translation": "ترجمة",
-        "allLanguages": "جميع اللغات"
-      },
-      "noModelsMatch": "لا توجد نماذج مطابقة لهذا الفلتر.",
-      "tabs": {
-        "myModels": "نماذجي",
-        "library": "المكتبة"
-      },
-      "cloudProviders": {
-        "title": "مزودو الخدمات السحابية",
-        "badge": "سحابي",
-        "notConfigured": "غير مُكوَّن",
-        "verify": "تحقق",
-        "verifying": "...جاري التحقق",
-        "verified": "تم التحقق",
-        "verifyFailed": "فشل التحقق",
-        "verifyFirst": "تحقق من مفتاح API الخاص بك أولاً",
-        "apiKey": {
-          "title": "مفتاح API",
-          "placeholder": "sk-..."
-        },
-        "model": {
-          "title": "النموذج",
-          "placeholder": "أدخل اسم النموذج"
-        },
-        "baseUrl": {
-          "title": "عنوان URL الأساسي"
-        },
-        "getApiKey": "الحصول على مفتاح API",
-        "realtimeTranscription": "التفريغ الفوري",
-        "realtimeDescription": "يستخدم اتصال WebSocket بدلاً من رفع الملفات لتقليل زمن الاستجابة",
-        "options": {
-          "language": "اللغة",
-          "selectLanguage": "كشف تلقائي",
-          "selectLanguageHint": "اتركه فارغاً للكشف التلقائي",
-          "selectLanguages": "...اختر اللغات",
-          "selectTranslate": "...اختر اللغات",
-          "prompt": "المطالبة",
-          "promptDescription": "نص اختياري لتوجيه أسلوب النموذج أو متابعة مقطع سابق. غير مدعوم بواسطة gpt-4o-transcribe-diarize.",
-          "temperature": "درجة الحرارة",
-          "temperatureDescription": "القيم الأعلى تنتج نتائج أكثر عشوائية (0-1). مدعوم فقط بواسطة whisper-1.",
-          "languageHints": "تلميحات اللغة",
-          "languageHintsStrict": "تلميحات لغة صارمة",
-          "languageHintsStrictDescription": "التفريغ فقط باللغات المحددة",
-          "contextTerms": "مصطلحات السياق",
-          "contextTermsDescription": "مصطلحات مفصولة بفواصل لتحسين دقة التعرف",
-          "contextDescription": "وصف السياق",
-          "contextDescriptionDescription": "نص حر يوفر سياقاً عاماً حول محتوى الصوت",
-          "smartFormat": "Smart Format",
-          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
-          "punctuate": "Punctuate",
-          "punctuateDescription": "Add punctuation and capitalization to the transcript",
-          "enableSpeakerDiarization": "تمييز المتحدثين",
-          "enableSpeakerDiarizationDescription": "تحديد وفصل المتحدثين المختلفين",
-          "enableLanguageIdentification": "تحديد اللغة",
-          "enableLanguageIdentificationDescription": "اكتشاف اللغة لكل مقطع",
-          "contextBias": "Context Bias",
-          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
-        }
-      },
-      "localModels": {
-        "title": "النماذج المحلية"
-      },
-      "myModels": {
-        "noModelsConfigured": "لم يتم تكوين أي نماذج. قم بزيارة المكتبة لتنزيل النماذج أو إعداد مزودي الخدمات السحابية."
       }
     }
   },
   "dictionary": {
-    "title": "Dictionary",
+    "title": "القاموس",
     "hints": {
-      "title": "Recognition Hints",
-      "description": "API providers only"
+      "title": "تلميحات التعرف",
+      "description": "مزودو API فقط"
     },
     "terms": {
-      "title": "Terms",
-      "description": "Words and phrases the speech engine should recognize accurately. These are sent to the provider before transcription to improve recognition of domain-specific vocabulary.",
-      "placeholder": "Add a term…",
-      "add": "Add",
-      "remove": "Remove {{term}}",
-      "duplicate": "\"{{term}}\" already exists",
-      "empty": "No terms added. Type a term and press Enter."
+      "title": "المصطلحات",
+      "description": "الكلمات والعبارات التي يجب أن يتعرف عليها محرك التفريغ الصوتي بدقة. يتم إرسال هذه إلى المزود قبل التفريغ لتحسين التعرف على المفردات الخاصة بالمجال.",
+      "placeholder": "أضف مصطلحاً…",
+      "add": "إضافة",
+      "remove": "إزالة {{term}}",
+      "duplicate": "\"{{term}}\" موجود بالفعل",
+      "empty": "لم تتم إضافة مصطلحات. اكتب مصطلحاً واضغط على Enter."
     },
     "context": {
-      "title": "Context Description",
-      "description": "Freeform text that gives the speech engine background context about what you're dictating. Helps improve accuracy for domain-specific content.",
-      "placeholder": "e.g. Technical discussion about React components and TypeScript interfaces"
+      "title": "وصف السياق",
+      "description": "نص حر يعطي محرك التفريغ سياقاً خلفياً عما تملي. يساعد على تحسين الدقة للمحتوى الخاص بالمجال.",
+      "placeholder": "مثال: نقاش تقني حول مكونات React وواجهات TypeScript"
     },
-    "autoInjectedHint": "Auto-filled from Dictionary. Click to edit.",
+    "autoInjectedHint": "ملء تلقائي من القاموس. انقر للتحرير.",
     "customWords": {
-      "title": "Word Corrections",
-      "subtitle": "Rule-based post-processing · All providers",
-      "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription.",
-      "empty": "No corrections added. Type a word and press Enter."
+      "title": "تصحيحات الكلمات",
+      "subtitle": "معالجة لاحقة قائمة على القواعد · جميع المزودين",
+      "description": "الكلمات التي غالباً ما يتم فهمها بشكل خاطئ أو كتابتها بشكل خاطئ بعد التفريغ. سيقوم النظام تلقائياً بتصحيح الكلمات ذات الصوت المماثل في الإخراج لتطابق قائمتك. يتم تطبيق هذا بعد التفريغ، بخلاف المصطلحات التي توجه المحرك قبل التفريغ.",
+      "empty": "لم تتم إضافة تصحيحات. اكتب كلمة واضغط على Enter."
     }
   },
   "footer": {
@@ -725,7 +725,7 @@
     "installing": "...جاري التثبيت",
     "preparing": "...جاري التحضير",
     "checkForUpdates": "التحقق من وجود تحديثات",
-    "updateViaBrew": "Update via: brew upgrade --cask handless"
+    "updateViaBrew": "التحديث عبر: brew upgrade --cask handless"
   },
   "common": {
     "loading": "...جاري التحميل",

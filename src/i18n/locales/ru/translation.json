@@ -12,7 +12,7 @@
     "general": "Общие",
     "shortcuts": "Горячие клавиши",
     "models": "Модели",
-    "dictionary": "Dictionary",
+    "dictionary": "Словарь",
     "postProcessing": "Постобработка",
     "history": "История",
     "debug": "Отладка"
@@ -109,11 +109,11 @@
       },
       "elevenlabs": {
         "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+        "description": "ElevenLabs Scribe распознавание речи. Высокая точность с поддержкой 90+ языков."
       },
       "groq": {
         "name": "Groq",
-        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+        "description": "Сверхбыстрая транскрипция Whisper от Groq. Молниеносное выполнение с поддержкой 99+ языков."
       },
       "soniox": {
         "name": "Soniox",
@@ -121,23 +121,23 @@
       },
       "deepgram": {
         "name": "Deepgram",
-        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
+        "description": "API распознавания речи Nova от Deepgram. Быстрый и точный с поддержкой 50+ языков."
       },
       "assemblyai": {
         "name": "AssemblyAI",
-        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+        "description": "Распознавание речи AssemblyAI. Корпоративная точность с разделением говорящих и поддержкой 40+ языков."
       },
       "cartesia": {
         "name": "Cartesia",
-        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+        "description": "API распознавания речи Ink от Cartesia. Потоковая транскрипция в реальном времени с поддержкой 99+ языков."
       },
       "mistral": {
         "name": "Mistral AI",
-        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+        "description": "Voxtral распознавание речи от Mistral AI. Высокая точность с поддержкой смещения контекста."
       },
       "fireworks": {
         "name": "Fireworks AI",
-        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
+        "description": "Распознавание речи Fireworks AI. Сверхбыстрая транскрипция Whisper с поддержкой 95+ языков."
       }
     }
   },
@@ -237,16 +237,16 @@
           "contextTermsDescription": "Термины через запятую для повышения точности распознавания",
           "contextDescription": "Описание контекста",
           "contextDescriptionDescription": "Произвольный текст с общим контекстом об аудиоконтенте",
-          "smartFormat": "Smart Format",
-          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
-          "punctuate": "Punctuate",
-          "punctuateDescription": "Add punctuation and capitalization to the transcript",
+          "smartFormat": "Интеллектуальное форматирование",
+          "smartFormatDescription": "Применить форматирование для улучшения читаемости, включая пунктуацию, заглавные буквы и многое другое.",
+          "punctuate": "Пунктуация",
+          "punctuateDescription": "Добавить пунктуацию и заглавные буквы к стенограмме",
           "enableSpeakerDiarization": "Диаризация спикеров",
           "enableSpeakerDiarizationDescription": "Определять и разделять разных говорящих",
           "enableLanguageIdentification": "Определение языка",
           "enableLanguageIdentificationDescription": "Определять язык для каждого сегмента",
-          "contextBias": "Context Bias",
-          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
+          "contextBias": "Смещение контекста",
+          "contextBiasDescription": "Термины через запятую для направления модели к правильному написанию"
         }
       },
       "localModels": {
@@ -294,12 +294,12 @@
         "auto": "Авто"
       },
       "activationMode": {
-        "label": "Activation Mode",
-        "description": "How the shortcut key controls recording",
+        "label": "Режим активации",
+        "description": "Как управлять записью с помощью клавиши быстрого запуска",
         "options": {
-          "toggle": "Toggle",
-          "hold": "Hold",
-          "holdOrToggle": "Hold or Toggle"
+          "toggle": "Переключение",
+          "hold": "Удержание",
+          "holdOrToggle": "Удержание или переключение"
         }
       },
       "shortcuts": {
@@ -314,7 +314,7 @@
       "title": "Звук",
       "microphone": {
         "title": "Микрофон",
-        "description": "Выберите предпочитаемое микрофонное устройство",
+        "description": "Порядок предпочтений — когда микрофон недоступен, в качестве резервного варианта будет использован следующий.",
         "placeholder": "Выбрать микрофон...",
         "loading": "Загрузка..."
       },
@@ -377,7 +377,7 @@
         "title": "Инструмент ввода",
         "description": "Выберите, какой инструмент ввода в Linux использовать для метода прямой вставки. Auto автоматически определит и использует лучший доступный инструмент для вашей системы.",
         "options": {
-          "auto": "Auto (Рекомендуется)"
+          "auto": "Автоматический (рекомендуется)"
         }
       },
       "clipboardHandling": {
@@ -464,7 +464,7 @@
       },
       "configFile": {
         "title": "Файл конфигурации",
-        "description": "Открыть файл настроек JSON в редакторе по умолчанию",
+        "description": "Открыть или перезагрузить файл настроек JSON",
         "open": "Открыть",
         "reload": "Перезагрузить",
         "reloadSuccess": "Настройки перезагружены"
@@ -509,41 +509,41 @@
         },
         "tokensPerSecond": "{{value}} tok/s",
         "pricing": {
-          "title": "Pricing",
-          "description": "Enter your provider's pricing to see cost estimates.",
-          "inputPrice": "Input $/M",
-          "outputPrice": "Output $/M",
-          "inputPlaceholder": "e.g. 0.15",
-          "outputPlaceholder": "e.g. 0.60",
-          "autoFetched": "Auto-fetched from models.dev"
+          "title": "Цены",
+          "description": "Введите цены вашего провайдера, чтобы увидеть смету расходов.",
+          "inputPrice": "Ввод $/млн",
+          "outputPrice": "Вывод $/млн",
+          "inputPlaceholder": "например 0.15",
+          "outputPlaceholder": "например 0.60",
+          "autoFetched": "Автоматически получено с models.dev"
         },
         "verified": "Подтверждено"
       },
       "prompts": {
-        "title": "Быстрый",
+        "title": "Подсказка",
         "selectedPrompt": {
           "title": "Выбранная подсказка",
           "description": "Выберите шаблон для уточнения транскрипции или создайте новый. Записанная стенограмма автоматически предоставляется в промпт."
         },
-        "createNew": "Создать новую подсказку",
-        "promptLabel": "Подскажите этикетку",
-        "promptLabelPlaceholder": "Введите имя подсказки",
-        "promptInstructions": "Оперативная инструкция",
+        "createNew": "Новая подсказка",
+        "promptLabel": "Название подсказки",
+        "promptLabelPlaceholder": "Введите название подсказки",
+        "promptInstructions": "Инструкция подсказки",
         "promptInstructionsPlaceholder": "Напишите инструкции для запуска после транскрипции. Стенограмма добавляется автоматически.",
-        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
-        "updatePrompt": "Обновить запрос",
+        "promptTip": "Совет: сосредоточьтесь на стиле форматирования и исправления. Стенограмма всегда добавляется автоматически.",
+        "updatePrompt": "Обновить подсказку",
         "deletePrompt": "Удалить подсказку",
         "createPrompt": "Создать",
         "cancel": "Отмена",
-        "createFirst": "Prompts transform your transcriptions — fix grammar, format text, or translate.",
-        "createFirstHint": "Create your first one below.",
-        "builtIn": "Built-in",
-        "builtInReadOnly": "Built-in prompts are read-only.",
-        "costEstimate": "~{{requests}} requests per $1",
-        "costTooltip": "System prompt: ~{{systemTokens}} tokens. Assumes avg 100-word transcript (~140 input tokens, ~120 output tokens). Total per request: ~{{totalInputTokens}} input + ~{{totalOutputTokens}} output tokens.",
-        "errorCreate": "Failed to create prompt. Please try again.",
-        "errorUpdate": "Failed to update prompt. Please try again.",
-        "errorDelete": "Failed to delete prompt. Please try again."
+        "createFirst": "Подсказки преобразуют ваши транскрипции — исправляйте грамматику, форматируйте текст или переводите.",
+        "createFirstHint": "Создайте первую ниже.",
+        "builtIn": "Встроенная",
+        "builtInReadOnly": "Встроенные подсказки доступны только для чтения.",
+        "costEstimate": "~{{requests}} запросов за $1",
+        "costTooltip": "Системная подсказка: ~{{systemTokens}} токенов. Предполагает среднюю стенограмму в 100 слов (~140 входных токенов, ~120 выходных токенов). Всего на запрос: ~{{totalInputTokens}} входных + ~{{totalOutputTokens}} выходных токенов.",
+        "errorCreate": "Не удалось создать подсказку. Пожалуйста, попробуйте снова.",
+        "errorUpdate": "Не удалось обновить подсказку. Пожалуйста, попробуйте снова.",
+        "errorDelete": "Не удалось удалить подсказку. Пожалуйста, попробуйте снова."
       }
     },
     "stats": {
@@ -553,8 +553,8 @@
       "recordingTime": "Время записи",
       "avgWpm": "Сред. слов/мин",
       "wpmOverTime": "Скорость речи во времени",
-      "noData": "Press {{shortcut}} to start dictating",
-      "noDataHint": "Your speaking analytics will appear here.",
+      "noData": "Нажмите {{shortcut}}, чтобы начать диктовать",
+      "noDataHint": "Ваша аналитика речи будет отображаться здесь.",
       "transcriptions": "Транскрипции",
       "clearStats": "Очистить все данные статистики",
       "confirmClear": "Нажмите ещё раз для подтверждения",
@@ -577,8 +577,8 @@
       },
       "openFolder": "Открыть папку с записями",
       "loading": "Загрузка истории...",
-      "empty": "Press {{shortcut}} to start recording",
-      "emptyHint": "Your transcriptions will appear here.",
+      "empty": "Нажмите {{shortcut}}, чтобы начать запись",
+      "emptyHint": "Ваши транскрипции будут отображаться здесь.",
       "copyToClipboard": "Скопировать транскрипцию в буфер обмена",
       "save": "Сохранить транскрипцию",
       "unsave": "Удалить из сохраненных",
@@ -620,10 +620,10 @@
         "months3": "Через 3 месяца",
         "placeholder": "Выберите срок хранения...",
         "entries": "записи",
-        "confirmDelete": "This will permanently delete {{count}} unsaved recording(s) and their audio files.",
-        "confirmApply": "Delete and Apply",
-        "confirmCancel": "Cancel",
-        "noEntriesAffected": "No entries will be deleted with this setting."
+        "confirmDelete": "Это навсегда удалит {{count}} несохраненные записи и их аудиофайлы.",
+        "confirmApply": "Удалить и применить",
+        "confirmCancel": "Отмена",
+        "noEntriesAffected": "Ни одна запись не будет удалена с этим параметром."
       },
       "alwaysOnMicrophone": {
         "label": "Всегда включенный микрофон",
@@ -678,38 +678,38 @@
       "acknowledgments": {
         "handy": {
           "title": "Handy",
-          "description": "The open-source speech-to-text app that Handless was forked from",
-          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
+          "description": "Приложение для распознавания речи с открытым исходным кодом, от которого был создан форк Handless",
+          "details": "Создано на основе Handy от CJ Pais. Спасибо за основу."
         }
       }
     }
   },
   "dictionary": {
-    "title": "Dictionary",
+    "title": "Словарь",
     "hints": {
-      "title": "Recognition Hints",
-      "description": "API providers only"
+      "title": "Подсказки распознавания",
+      "description": "Только для провайдеров API"
     },
     "terms": {
-      "title": "Terms",
-      "description": "Words and phrases the speech engine should recognize accurately. These are sent to the provider before transcription to improve recognition of domain-specific vocabulary.",
-      "placeholder": "Add a term…",
-      "add": "Add",
-      "remove": "Remove {{term}}",
-      "duplicate": "\"{{term}}\" already exists",
-      "empty": "No terms added. Type a term and press Enter."
+      "title": "Термины",
+      "description": "Слова и фразы, которые программа распознавания речи должна узнавать точно. Они отправляются провайдеру перед транскрипцией для улучшения распознавания специализированной лексики.",
+      "placeholder": "Добавить термин…",
+      "add": "Добавить",
+      "remove": "Удалить {{term}}",
+      "duplicate": "\"{{term}}\" уже существует",
+      "empty": "Условия не добавлены. Введите условие и нажмите Enter."
     },
     "context": {
-      "title": "Context Description",
-      "description": "Freeform text that gives the speech engine background context about what you're dictating. Helps improve accuracy for domain-specific content.",
-      "placeholder": "e.g. Technical discussion about React components and TypeScript interfaces"
+      "title": "Описание контекста",
+      "description": "Произвольный текст, который дает программе распознавания речи фоновый контекст о том, что вы диктуете. Помогает улучшить точность для специализированного контента.",
+      "placeholder": "например Техническое обсуждение компонентов React и интерфейсов TypeScript"
     },
-    "autoInjectedHint": "Auto-filled from Dictionary. Click to edit.",
+    "autoInjectedHint": "Автоматически заполнено из словаря. Нажмите, чтобы редактировать.",
     "customWords": {
-      "title": "Word Corrections",
-      "subtitle": "Rule-based post-processing · All providers",
-      "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription.",
-      "empty": "No corrections added. Type a word and press Enter."
+      "title": "Исправления слов",
+      "subtitle": "Постобработка на основе правил · Все провайдеры",
+      "description": "Слова, которые часто неправильно слышатся или пишутся с ошибками после транскрипции. Система автоматически исправит похожие по звучанию слова в выходном тексте, чтобы они соответствовали вашему списку. Это применяется после транскрипции, в отличие от термов, которые направляют программу перед транскрипцией.",
+      "empty": "Исправления не добавлены. Введите слово и нажмите Enter."
     }
   },
   "footer": {
@@ -725,7 +725,7 @@
     "installing": "Установка...",
     "preparing": "Подготовка...",
     "checkForUpdates": "Проверьте наличие обновлений",
-    "updateViaBrew": "Update via: brew upgrade --cask handless"
+    "updateViaBrew": "Обновить через: brew upgrade --cask handless"
   },
   "common": {
     "loading": "Загрузка...",
@@ -742,9 +742,9 @@
     "open": "Открыть",
     "default": "По умолчанию",
     "enabled": "Включено",
-    "disabled": "Неполноценный",
-    "on": "На",
-    "off": "Выключенный",
+    "disabled": "Отключено",
+    "on": "Включено",
+    "off": "Отключено",
     "yes": "Да",
     "no": "Нет",
     "noOptionsFound": "Вариантов не найдено",
@@ -755,7 +755,7 @@
     "permissionsRequired": "Требуются разрешения на доступ",
     "permissionsDescription": "Handless необходимы разрешения на доступ для ввода расшифрованного текста.",
     "openSettings": "Открыть настройки системы",
-    "dismiss": "Увольнять"
+    "dismiss": "Отклонить"
   },
   "errors": {
     "loadDirectory": "Ошибка загрузки каталога: {{error}}."
