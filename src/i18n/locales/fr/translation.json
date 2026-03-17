@@ -12,7 +12,7 @@
     "general": "Général",
     "shortcuts": "Raccourcis",
     "models": "Modèles",
-    "dictionary": "Dictionary",
+    "dictionary": "Dictionnaire",
     "postProcessing": "Post-traitement",
     "history": "Historique",
     "debug": "Débogage"
@@ -109,11 +109,11 @@
       },
       "elevenlabs": {
         "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+        "description": "ElevenLabs Scribe reconnaissance vocale. Haute précision avec support de plus de 90 langues."
       },
       "groq": {
         "name": "Groq",
-        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+        "description": "Transcription Whisper ultra-rapide de Groq. Inférence ultra-rapide avec support de plus de 99 langues."
       },
       "soniox": {
         "name": "Soniox",
@@ -121,23 +121,23 @@
       },
       "deepgram": {
         "name": "Deepgram",
-        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
+        "description": "API Nova reconnaissance vocale de Deepgram. Rapide et précise avec support de plus de 50 langues."
       },
       "assemblyai": {
         "name": "AssemblyAI",
-        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+        "description": "AssemblyAI reconnaissance vocale. Précision de niveau entreprise avec diarisation des locuteurs et plus de 40 langues."
       },
       "cartesia": {
         "name": "Cartesia",
-        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+        "description": "API Ink reconnaissance vocale de Cartesia. Transcription en continu en temps réel avec support de plus de 99 langues."
       },
       "mistral": {
         "name": "Mistral AI",
-        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+        "description": "Voxtral reconnaissance vocale de Mistral AI. Haute précision avec support de biais contextuel."
       },
       "fireworks": {
         "name": "Fireworks AI",
-        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
+        "description": "Reconnaissance vocale Fireworks AI. Transcription Whisper ultra-rapide avec support de plus de 95 langues."
       }
     }
   },
@@ -237,16 +237,16 @@
           "contextTermsDescription": "Termes séparés par des virgules pour améliorer la précision de la reconnaissance",
           "contextDescription": "Description du contexte",
           "contextDescriptionDescription": "Texte libre fournissant un contexte général sur le contenu audio",
-          "smartFormat": "Smart Format",
-          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
-          "punctuate": "Punctuate",
-          "punctuateDescription": "Add punctuation and capitalization to the transcript",
+          "smartFormat": "Format intelligent",
+          "smartFormatDescription": "Appliquer le formatage pour améliorer la lisibilité, y compris la ponctuation, la capitalisation, etc.",
+          "punctuate": "Ponctuer",
+          "punctuateDescription": "Ajouter la ponctuation et la capitalisation à la transcription",
           "enableSpeakerDiarization": "Diarisation des locuteurs",
           "enableSpeakerDiarizationDescription": "Identifier et séparer les différents locuteurs",
           "enableLanguageIdentification": "Identification de la langue",
           "enableLanguageIdentificationDescription": "Détecter la langue pour chaque segment",
-          "contextBias": "Context Bias",
-          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
+          "contextBias": "Biais contextuel",
+          "contextBiasDescription": "Termes séparés par des virgules pour guider le modèle vers les orthographes correctes"
         }
       },
       "localModels": {
@@ -264,19 +264,19 @@
         "loading": "Chargement des raccourcis...",
         "none": "Aucun raccourci configuré",
         "notFound": "Raccourci non trouvé",
-        "pressKeys": "Appuyez sur les touches...",
+        "pressKeys": "Enregistrement...",
         "bindings": {
           "transcribe": {
-            "name": "Raccourci de Transcription",
+            "name": "Raccourci de transcription",
             "description": "Le raccourci clavier pour enregistrer et transcrire votre voix."
           },
           "cancel": {
-            "name": "Raccourci d'Annulation",
+            "name": "Raccourci d'annulation",
             "description": "Le raccourci clavier pour annuler l'enregistrement en cours."
           },
           "transcribe_with_post_process": {
-            "name": "Raccourci de post-traitement",
-            "description": "Facultatif : Un raccourci dédié qui applique toujours le post-traitement IA à votre transcription."
+            "name": "Touche de post-traitement",
+            "description": "Optionnelle : Une touche dédiée qui applique toujours le post-traitement par IA à votre transcription."
           }
         },
         "errors": {
@@ -294,12 +294,12 @@
         "auto": "Automatique"
       },
       "activationMode": {
-        "label": "Activation Mode",
-        "description": "How the shortcut key controls recording",
+        "label": "Mode d'activation",
+        "description": "Comment la touche de raccourci contrôle l'enregistrement",
         "options": {
-          "toggle": "Toggle",
-          "hold": "Hold",
-          "holdOrToggle": "Hold or Toggle"
+          "toggle": "Basculer",
+          "hold": "Maintenir",
+          "holdOrToggle": "Maintenir ou basculer"
         }
       },
       "shortcuts": {
@@ -314,19 +314,19 @@
       "title": "Son",
       "microphone": {
         "title": "Microphone",
-        "description": "Sélectionnez votre périphérique d'entrée audio",
+        "description": "Ordre de préférence — lorsqu'un microphone n'est pas disponible, le suivant sera utilisé comme alternative.",
         "placeholder": "Sélectionner un microphone...",
         "loading": "Chargement..."
       },
       "outputDevice": {
         "title": "Périphérique de sortie",
-        "description": "Sélectionnez votre périphérique de sortie audio pour le signal sonore",
+        "description": "Sélectionnez votre périphérique de sortie audio pour les sons de rétroaction",
         "placeholder": "Sélectionner un périphérique de sortie...",
         "loading": "Chargement..."
       },
       "volume": {
         "title": "Volume",
-        "description": "Ajuster le volume du signal sonore"
+        "description": "Ajuster le volume des sons de rétroaction"
       }
     },
     "advanced": {
@@ -338,6 +338,33 @@
         "history": "Historique",
         "data": "Données",
         "configuration": "Configuration"
+      },
+      "exportData": {
+        "title": "Exporter les données",
+        "description": "Exportez vos paramètres, votre historique et vos enregistrements dans un fichier",
+        "button": "Exporter...",
+        "includeSettings": "Paramètres",
+        "includeHistory": "Historique de transcription",
+        "includeRecordings": "Enregistrements audio",
+        "success": "Données exportées avec succès",
+        "error": "Échec de l'exportation des données"
+      },
+      "importData": {
+        "title": "Importer les données",
+        "description": "Importez des paramètres et des données à partir d'un fichier précédemment exporté",
+        "button": "Importer...",
+        "previewTitle": "Aperçu de l'importation",
+        "exportDate": "Exporté le {{date}}",
+        "appVersion": "Version de l'application : {{version}}",
+        "historyCount": "{{count}} entrées d'historique",
+        "recordingsCount": "{{count}} enregistrements",
+        "statsCount": "{{count}} statistiques de parole",
+        "importSettings": "Paramètres",
+        "importRecordings": "Enregistrements",
+        "warning": "L'importation des paramètres écrasera votre configuration actuelle. Le fichier d'exportation peut contenir des clés API.",
+        "success": "Données importées avec succès",
+        "error": "Échec de l'importation des données",
+        "invalidFile": "Le fichier sélectionné n'est pas une exportation Handless valide"
       },
       "startHidden": {
         "label": "Démarrer masqué",
@@ -426,33 +453,6 @@
         "remove": "Supprimer {{word}}",
         "duplicate": "\"{{word}}\" existe déjà"
       },
-      "exportData": {
-        "title": "Exporter les données",
-        "description": "Exportez vos paramètres, votre historique et vos enregistrements dans un fichier",
-        "button": "Exporter...",
-        "includeSettings": "Paramètres",
-        "includeHistory": "Historique de transcription",
-        "includeRecordings": "Enregistrements audio",
-        "success": "Données exportées avec succès",
-        "error": "Échec de l'exportation des données"
-      },
-      "importData": {
-        "title": "Importer les données",
-        "description": "Importez des paramètres et des données à partir d'un fichier précédemment exporté",
-        "button": "Importer...",
-        "previewTitle": "Aperçu de l'importation",
-        "exportDate": "Exporté le {{date}}",
-        "appVersion": "Version de l'application : {{version}}",
-        "historyCount": "{{count}} entrées d'historique",
-        "recordingsCount": "{{count}} enregistrements",
-        "statsCount": "{{count}} statistiques de parole",
-        "importSettings": "Paramètres",
-        "importRecordings": "Enregistrements",
-        "warning": "L'importation des paramètres écrasera votre configuration actuelle. Le fichier d'exportation peut contenir des clés API.",
-        "success": "Données importées avec succès",
-        "error": "Échec de l'importation des données",
-        "invalidFile": "Le fichier sélectionné n'est pas une exportation Handless valide"
-      },
       "theme": {
         "title": "Thème",
         "description": "Choisissez le thème de couleur de l'application",
@@ -509,13 +509,13 @@
         },
         "tokensPerSecond": "{{value}} tok/s",
         "pricing": {
-          "title": "Pricing",
-          "description": "Enter your provider's pricing to see cost estimates.",
-          "inputPrice": "Input $/M",
-          "outputPrice": "Output $/M",
-          "inputPlaceholder": "e.g. 0.15",
-          "outputPlaceholder": "e.g. 0.60",
-          "autoFetched": "Auto-fetched from models.dev"
+          "title": "Tarification",
+          "description": "Entrez les tarifs de votre fournisseur pour voir les estimations de coût.",
+          "inputPrice": "Entrée $/M",
+          "outputPrice": "Sortie $/M",
+          "inputPlaceholder": "ex. 0.15",
+          "outputPlaceholder": "ex. 0.60",
+          "autoFetched": "Récupération automatique depuis models.dev"
         },
         "verified": "Vérifié"
       },
@@ -530,31 +530,31 @@
         "promptLabelPlaceholder": "Entrez le nom du prompt",
         "promptInstructions": "Instructions du prompt",
         "promptInstructionsPlaceholder": "Écrivez les instructions à exécuter après la transcription. La transcription est automatiquement ajoutée.",
-        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
+        "promptTip": "Conseil : Concentrez-vous sur le style de formatage et correction. La transcription est toujours ajoutée automatiquement.",
         "updatePrompt": "Mettre à jour le prompt",
         "deletePrompt": "Supprimer le prompt",
         "createPrompt": "Créer",
         "cancel": "Annuler",
-        "createFirst": "Prompts transform your transcriptions — fix grammar, format text, or translate.",
-        "createFirstHint": "Create your first one below.",
-        "builtIn": "Built-in",
-        "builtInReadOnly": "Built-in prompts are read-only.",
-        "costEstimate": "~{{requests}} requests per $1",
-        "costTooltip": "System prompt: ~{{systemTokens}} tokens. Assumes avg 100-word transcript (~140 input tokens, ~120 output tokens). Total per request: ~{{totalInputTokens}} input + ~{{totalOutputTokens}} output tokens.",
-        "errorCreate": "Failed to create prompt. Please try again.",
-        "errorUpdate": "Failed to update prompt. Please try again.",
-        "errorDelete": "Failed to delete prompt. Please try again."
+        "createFirst": "Les prompts transforment vos transcriptions — corrigez la grammaire, formatez le texte ou traduisez.",
+        "createFirstHint": "Créez le vôtre ci-dessous.",
+        "builtIn": "Intégré",
+        "builtInReadOnly": "Les prompts intégrés sont en lecture seule.",
+        "costEstimate": "~{{requests}} requêtes pour 1 $",
+        "costTooltip": "Prompt système : ~{{systemTokens}} tokens. Suppose une transcription moyenne de 100 mots (~140 tokens d'entrée, ~120 tokens de sortie). Total par requête : ~{{totalInputTokens}} entrée + ~{{totalOutputTokens}} tokens de sortie.",
+        "errorCreate": "Échec de la création du prompt. Veuillez réessayer.",
+        "errorUpdate": "Échec de la mise à jour du prompt. Veuillez réessayer.",
+        "errorDelete": "Échec de la suppression du prompt. Veuillez réessayer."
       }
     },
     "stats": {
-      "title": "Statistiques d'enregistrement",
+      "title": "Statistiques de parole",
       "today": "Aujourd'hui",
       "wordsSpoken": "Mots prononcés",
       "recordingTime": "Durée d'enregistrement",
       "avgWpm": "Moy. mots/min",
       "wpmOverTime": "Vitesse de parole au fil du temps",
-      "noData": "Press {{shortcut}} to start dictating",
-      "noDataHint": "Your speaking analytics will appear here.",
+      "noData": "Appuyez sur {{shortcut}} pour commencer à dicter",
+      "noDataHint": "Vos statistiques de parole apparaîtront ici.",
       "transcriptions": "Transcriptions",
       "clearStats": "Effacer toutes les données de statistiques",
       "confirmClear": "Cliquez à nouveau pour confirmer",
@@ -577,8 +577,8 @@
       },
       "openFolder": "Ouvrir le dossier des enregistrements",
       "loading": "Chargement de l'historique...",
-      "empty": "Press {{shortcut}} to start recording",
-      "emptyHint": "Your transcriptions will appear here.",
+      "empty": "Appuyez sur {{shortcut}} pour commencer l'enregistrement",
+      "emptyHint": "Vos transcriptions apparaîtront ici.",
       "copyToClipboard": "Copier la transcription dans le presse-papiers",
       "save": "Enregistrer la transcription",
       "unsave": "Retirer des favoris",
@@ -620,10 +620,10 @@
         "months3": "Après 3 mois",
         "placeholder": "Sélectionner la période de conservation...",
         "entries": "entrées",
-        "confirmDelete": "This will permanently delete {{count}} unsaved recording(s) and their audio files.",
-        "confirmApply": "Delete and Apply",
-        "confirmCancel": "Cancel",
-        "noEntriesAffected": "No entries will be deleted with this setting."
+        "confirmDelete": "Ceci supprimera définitivement {{count}} enregistrement(s) non sauvegardé(s) et leurs fichiers audio.",
+        "confirmApply": "Supprimer et appliquer",
+        "confirmCancel": "Annuler",
+        "noEntriesAffected": "Aucune entrée ne sera supprimée avec ce paramètre."
       },
       "alwaysOnMicrophone": {
         "label": "Microphone toujours actif",
@@ -678,38 +678,38 @@
       "acknowledgments": {
         "handy": {
           "title": "Handy",
-          "description": "The open-source speech-to-text app that Handless was forked from",
-          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
+          "description": "L'application open-source de reconnaissance vocale dont Handless a été forké",
+          "details": "Basé sur Handy de CJ Pais. Merci pour la base."
         }
       }
     }
   },
   "dictionary": {
-    "title": "Dictionary",
+    "title": "Dictionnaire",
     "hints": {
-      "title": "Recognition Hints",
-      "description": "API providers only"
+      "title": "Indices de reconnaissance",
+      "description": "Fournisseurs API uniquement"
     },
     "terms": {
-      "title": "Terms",
-      "description": "Words and phrases the speech engine should recognize accurately. These are sent to the provider before transcription to improve recognition of domain-specific vocabulary.",
-      "placeholder": "Add a term…",
-      "add": "Add",
-      "remove": "Remove {{term}}",
-      "duplicate": "\"{{term}}\" already exists",
-      "empty": "No terms added. Type a term and press Enter."
+      "title": "Termes",
+      "description": "Mots et phrases que le moteur de reconnaissance vocale doit reconnaître avec précision. Ceux-ci sont envoyés au fournisseur avant la transcription pour améliorer la reconnaissance du vocabulaire spécialisé au domaine.",
+      "placeholder": "Ajouter un terme…",
+      "add": "Ajouter",
+      "remove": "Supprimer {{term}}",
+      "duplicate": "\"{{term}}\" existe déjà",
+      "empty": "Aucun terme ajouté. Tapez un terme et appuyez sur Entrée."
     },
     "context": {
-      "title": "Context Description",
-      "description": "Freeform text that gives the speech engine background context about what you're dictating. Helps improve accuracy for domain-specific content.",
-      "placeholder": "e.g. Technical discussion about React components and TypeScript interfaces"
+      "title": "Description du contexte",
+      "description": "Texte libre qui donne au moteur de reconnaissance vocale un contexte de base sur ce que vous dictez. Aide à améliorer la précision du contenu spécialisé au domaine.",
+      "placeholder": "ex. Discussion technique sur les composants React et les interfaces TypeScript"
     },
-    "autoInjectedHint": "Auto-filled from Dictionary. Click to edit.",
+    "autoInjectedHint": "Remplissage automatique à partir du Dictionnaire. Cliquez pour modifier.",
     "customWords": {
-      "title": "Word Corrections",
-      "subtitle": "Rule-based post-processing · All providers",
-      "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription.",
-      "empty": "No corrections added. Type a word and press Enter."
+      "title": "Corrections de mots",
+      "subtitle": "Post-traitement basé sur les règles · Tous les fournisseurs",
+      "description": "Mots souvent mal entendus ou mal orthographiés après la transcription. Le système corrigera automatiquement les mots ressemblant dans la sortie pour correspondre à votre liste. Ceci s'applique après la transcription, contrairement aux termes qui guident le moteur avant la transcription.",
+      "empty": "Aucune correction ajoutée. Tapez un mot et appuyez sur Entrée."
     }
   },
   "footer": {
@@ -725,7 +725,7 @@
     "installing": "Installation...",
     "preparing": "Préparation...",
     "checkForUpdates": "Rechercher des mises à jour",
-    "updateViaBrew": "Update via: brew upgrade --cask handless"
+    "updateViaBrew": "Mise à jour via : brew upgrade --cask handless"
   },
   "common": {
     "loading": "Chargement...",

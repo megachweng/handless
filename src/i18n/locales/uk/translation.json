@@ -109,11 +109,11 @@
       },
       "elevenlabs": {
         "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+        "description": "ElevenLabs Scribe розпізнавання мовлення. Висока точність з підтримкою 90+ мов."
       },
       "groq": {
         "name": "Groq",
-        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+        "description": "Надшвидка транскрипція Whisper від Groq. Блискавична обробка з підтримкою 99+ мов."
       },
       "soniox": {
         "name": "Soniox",
@@ -121,23 +121,23 @@
       },
       "deepgram": {
         "name": "Deepgram",
-        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
+        "description": "API розпізнавання мовлення Nova від Deepgram. Швидкий і точний з підтримкою 50+ мов."
       },
       "assemblyai": {
         "name": "AssemblyAI",
-        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+        "description": "Розпізнавання мовлення AssemblyAI. Точність рівня корпоративу з діаризацією спікерів та 40+ мовами."
       },
       "cartesia": {
         "name": "Cartesia",
-        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+        "description": "API розпізнавання мовлення Ink від Cartesia. Потоковіння транскрипції в реальному часі з підтримкою 99+ мов."
       },
       "mistral": {
         "name": "Mistral AI",
-        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+        "description": "Розпізнавання мовлення Voxtral від Mistral AI. Висока точність з підтримкою контекстного зміщення."
       },
       "fireworks": {
         "name": "Fireworks AI",
-        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
+        "description": "Розпізнавання мовлення Fireworks AI. Надшвидка транскрипція Whisper з підтримкою 95+ мов."
       }
     }
   },
@@ -214,12 +214,12 @@
         "auto": "Авто"
       },
       "activationMode": {
-        "label": "Activation Mode",
-        "description": "How the shortcut key controls recording",
+        "label": "Режим активації",
+        "description": "Як гаряча клавіша керує записом",
         "options": {
-          "toggle": "Toggle",
-          "hold": "Hold",
-          "holdOrToggle": "Hold or Toggle"
+          "toggle": "Перемикання",
+          "hold": "Утримання",
+          "holdOrToggle": "Утримання чи перемикання"
         }
       },
       "shortcuts": {
@@ -291,16 +291,16 @@
           "contextTermsDescription": "Терміни через кому для покращення точності розпізнавання",
           "contextDescription": "Опис контексту",
           "contextDescriptionDescription": "Довільний текст із загальним контекстом про аудіовміст",
-          "smartFormat": "Smart Format",
-          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
-          "punctuate": "Punctuate",
-          "punctuateDescription": "Add punctuation and capitalization to the transcript",
+          "smartFormat": "Розумне форматування",
+          "smartFormatDescription": "Застосувати форматування для покращеної читабельності, включаючи пунктуацію, велику літеру та інше",
+          "punctuate": "Пунктуація",
+          "punctuateDescription": "Додати пунктуацію та велику літеру до транскрипції",
           "enableSpeakerDiarization": "Діаризація спікерів",
           "enableSpeakerDiarizationDescription": "Визначати та розділяти різних мовців",
           "enableLanguageIdentification": "Визначення мови",
           "enableLanguageIdentificationDescription": "Визначати мову для кожного сегмента",
-          "contextBias": "Context Bias",
-          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
+          "contextBias": "Контекстне зміщення",
+          "contextBiasDescription": "Терміни через кому для керування моделлю до правильної орфографії"
         }
       },
       "localModels": {
@@ -314,7 +314,7 @@
       "title": "Звук",
       "microphone": {
         "title": "Мікрофон",
-        "description": "Оберіть бажаний мікрофон",
+        "description": "Порядок переваги — коли мікрофон недоступний, буде використаний наступний як запасний.",
         "placeholder": "Оберіть мікрофон...",
         "loading": "Завантаження..."
       },
@@ -509,13 +509,13 @@
         },
         "tokensPerSecond": "{{value}} tok/s",
         "pricing": {
-          "title": "Pricing",
-          "description": "Enter your provider's pricing to see cost estimates.",
-          "inputPrice": "Input $/M",
-          "outputPrice": "Output $/M",
-          "inputPlaceholder": "e.g. 0.15",
-          "outputPlaceholder": "e.g. 0.60",
-          "autoFetched": "Auto-fetched from models.dev"
+          "title": "Ціноутворення",
+          "description": "Введіть ціноутворення вашого провайдера, щоб побачити кошторис витрат.",
+          "inputPrice": "Введення $/М",
+          "outputPrice": "Вивід $/М",
+          "inputPlaceholder": "напр. 0.15",
+          "outputPlaceholder": "напр. 0.60",
+          "autoFetched": "Автоматично отримано з models.dev"
         },
         "verified": "Перевірено"
       },
@@ -530,20 +530,20 @@
         "promptLabelPlaceholder": "Введіть назву промпта",
         "promptInstructions": "Інструкції промпта",
         "promptInstructionsPlaceholder": "Напишіть інструкції для виконання після транскрипції. Транскрипція додається автоматично.",
-        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
+        "promptTip": "Порада: Зосередьтесь на стилі форматування та корекції. Транскрипція завжди додається автоматично.",
         "updatePrompt": "Оновити промпт",
         "deletePrompt": "Видалити промпт",
         "createPrompt": "Створити",
         "cancel": "Скасувати",
-        "createFirst": "Prompts transform your transcriptions — fix grammar, format text, or translate.",
-        "createFirstHint": "Create your first one below.",
-        "builtIn": "Built-in",
-        "builtInReadOnly": "Built-in prompts are read-only.",
+        "createFirst": "Промпти перетворюють ваші транскрипції — виправляють граматику, форматують текст або перекладають.",
+        "createFirstHint": "Створіть свій перший промпт нижче.",
+        "builtIn": "Вбудовані",
+        "builtInReadOnly": "Вбудовані промпти доступні лише для читання.",
         "costEstimate": "~{{requests}} requests per $1",
         "costTooltip": "System prompt: ~{{systemTokens}} tokens. Assumes avg 100-word transcript (~140 input tokens, ~120 output tokens). Total per request: ~{{totalInputTokens}} input + ~{{totalOutputTokens}} output tokens.",
-        "errorCreate": "Failed to create prompt. Please try again.",
-        "errorUpdate": "Failed to update prompt. Please try again.",
-        "errorDelete": "Failed to delete prompt. Please try again."
+        "errorCreate": "Не вдалося створити промпт. Спробуйте ще раз.",
+        "errorUpdate": "Не вдалося оновити промпт. Спробуйте ще раз.",
+        "errorDelete": "Не вдалося видалити промпт. Спробуйте ще раз."
       }
     },
     "stats": {
@@ -553,8 +553,8 @@
       "recordingTime": "Час запису",
       "avgWpm": "Сер. слів/хв",
       "wpmOverTime": "Швидкість мовлення з часом",
-      "noData": "Press {{shortcut}} to start dictating",
-      "noDataHint": "Your speaking analytics will appear here.",
+      "noData": "Натисніть {{shortcut}} щоб почати диктування",
+      "noDataHint": "Ваша аналітика мовлення з'явиться тут.",
       "transcriptions": "Транскрипції",
       "clearStats": "Очистити всі дані статистики",
       "confirmClear": "Натисніть ще раз для підтвердження",
@@ -577,8 +577,8 @@
       },
       "openFolder": "Відкрити папку записів",
       "loading": "Завантаження історії...",
-      "empty": "Press {{shortcut}} to start recording",
-      "emptyHint": "Your transcriptions will appear here.",
+      "empty": "Натисніть {{shortcut}} щоб почати запис",
+      "emptyHint": "Ваші транскрипції з'являться тут.",
       "copyToClipboard": "Копіювати транскрипцію в буфер обміну",
       "save": "Зберегти транскрипцію",
       "unsave": "Видалити зі збережених",
@@ -620,10 +620,10 @@
         "months3": "Через 3 місяці",
         "placeholder": "Оберіть період зберігання...",
         "entries": "записів",
-        "confirmDelete": "This will permanently delete {{count}} unsaved recording(s) and their audio files.",
-        "confirmApply": "Delete and Apply",
-        "confirmCancel": "Cancel",
-        "noEntriesAffected": "No entries will be deleted with this setting."
+        "confirmDelete": "Це остаточно видалить {{count}} незбережений запис(и) та їхні аудіофайли.",
+        "confirmApply": "Видалити та застосувати",
+        "confirmCancel": "Скасувати",
+        "noEntriesAffected": "Із цим налаштуванням жодні записи не будуть видалені."
       },
       "alwaysOnMicrophone": {
         "label": "Постійно активний мікрофон",
@@ -678,38 +678,38 @@
       "acknowledgments": {
         "handy": {
           "title": "Handy",
-          "description": "The open-source speech-to-text app that Handless was forked from",
-          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
+          "description": "Додаток розпізнавання мовлення з відкритим кодом, від якого був здійснений форк Handless",
+          "details": "Побудовано на базі Handy від CJ Pais. Дякуємо за основу."
         }
       }
     }
   },
   "dictionary": {
-    "title": "Dictionary",
+    "title": "Словник",
     "hints": {
-      "title": "Recognition Hints",
-      "description": "API providers only"
+      "title": "Підказки розпізнавання",
+      "description": "Лише для API провайдерів"
     },
     "terms": {
-      "title": "Terms",
-      "description": "Words and phrases the speech engine should recognize accurately. These are sent to the provider before transcription to improve recognition of domain-specific vocabulary.",
-      "placeholder": "Add a term…",
-      "add": "Add",
-      "remove": "Remove {{term}}",
-      "duplicate": "\"{{term}}\" already exists",
-      "empty": "No terms added. Type a term and press Enter."
+      "title": "Терміни",
+      "description": "Слова та фрази, які механізм розпізнавання повинен розпізнавати точно. Вони надсилаються провайдеру перед транскрипцією для покращення розпізнавання термінів специфічної галузі.",
+      "placeholder": "Додайте термін…",
+      "add": "Додати",
+      "remove": "Видалити {{term}}",
+      "duplicate": "\"{{term}}\" вже існує",
+      "empty": "Терміни не додані. Введіть термін та натисніть Enter."
     },
     "context": {
-      "title": "Context Description",
-      "description": "Freeform text that gives the speech engine background context about what you're dictating. Helps improve accuracy for domain-specific content.",
-      "placeholder": "e.g. Technical discussion about React components and TypeScript interfaces"
+      "title": "Опис контексту",
+      "description": "Довільний текст, який надає механізму розпізнавання контекст про те, що ви диктуєте. Допомагає покращити точність для вмісту, специфічного для галузі.",
+      "placeholder": "напр. Технічна дискусія про компоненти React та інтерфейси TypeScript"
     },
-    "autoInjectedHint": "Auto-filled from Dictionary. Click to edit.",
+    "autoInjectedHint": "Автоматично заповнено зі словника. Натисніть для редагування.",
     "customWords": {
-      "title": "Word Corrections",
-      "subtitle": "Rule-based post-processing · All providers",
-      "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription.",
-      "empty": "No corrections added. Type a word and press Enter."
+      "title": "Корекція слів",
+      "subtitle": "Постобробка на основі правил · Усі провайдери",
+      "description": "Слова, які часто неправильно розпізнаються або піддаються орфографічним помилкам після транскрипції. Система автоматично виправлятиме схожі за звучанням слова у виході, щоб відповідати вашому списку. Це застосовується після транскрипції, на відміну від термінів, які керують механізмом перед транскрипцією.",
+      "empty": "Корекції не додані. Введіть слово та натисніть Enter."
     }
   },
   "footer": {
@@ -725,7 +725,7 @@
     "installing": "Встановлення...",
     "preparing": "Підготовка...",
     "checkForUpdates": "Перевірити оновлення",
-    "updateViaBrew": "Update via: brew upgrade --cask handless"
+    "updateViaBrew": "Оновіти через: brew upgrade --cask handless"
   },
   "common": {
     "loading": "Завантаження...",

@@ -12,7 +12,7 @@
     "general": "Chung",
     "shortcuts": "Phím tắt",
     "models": "Mô hình",
-    "dictionary": "Dictionary",
+    "dictionary": "Từ điển",
     "postProcessing": "Xử lý sau",
     "history": "Lịch sử",
     "debug": "Gỡ lỗi"
@@ -109,11 +109,11 @@
       },
       "elevenlabs": {
         "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+        "description": "ElevenLabs Scribe chuyển đổi giọng nói thành văn bản. Độ chính xác cao với hỗ trợ 90+ ngôn ngữ."
       },
       "groq": {
         "name": "Groq",
-        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+        "description": "Phiên âm Whisper siêu nhanh của Groq. Suy luận cực nhanh với hỗ trợ 99+ ngôn ngữ."
       },
       "soniox": {
         "name": "Soniox",
@@ -121,23 +121,23 @@
       },
       "deepgram": {
         "name": "Deepgram",
-        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
+        "description": "API chuyển đổi giọng nói thành văn bản Nova của Deepgram. Nhanh và chính xác với hỗ trợ 50+ ngôn ngữ."
       },
       "assemblyai": {
         "name": "AssemblyAI",
-        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+        "description": "AssemblyAI chuyển đổi giọng nói thành văn bản. Độ chính xác cấp doanh nghiệp với phân biệt người nói và 40+ ngôn ngữ."
       },
       "cartesia": {
         "name": "Cartesia",
-        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+        "description": "API chuyển đổi giọng nói thành văn bản Ink của Cartesia. Phiên âm trực tuyến thời gian thực với hỗ trợ 99+ ngôn ngữ."
       },
       "mistral": {
         "name": "Mistral AI",
-        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+        "description": "Chuyển đổi giọng nói thành văn bản Voxtral của Mistral AI. Độ chính xác cao với hỗ trợ sai lệch ngữ cảnh."
       },
       "fireworks": {
         "name": "Fireworks AI",
-        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
+        "description": "Chuyển đổi giọng nói thành văn bản của Fireworks AI. Phiên âm Whisper siêu nhanh với hỗ trợ 95+ ngôn ngữ."
       }
     }
   },
@@ -156,29 +156,85 @@
     "loadingGeneric": "Đang tải...",
     "modelError": "Lỗi Mô Hình",
     "modelUnloaded": "Mô Hình Đã Gỡ",
+    "notAvailable": "Không khả dụng",
     "noModelDownloadRequired": "Chưa Có Mô Hình - Cần Tải Xuống",
     "deleteModel": "Xóa {{modelName}}",
     "downloadSpeed": "{{speed}} MB/s",
-    "capabilities": {
-      "languageSelection": "Hỗ trợ nhiều ngôn ngữ đầu vào",
-      "multiLanguage": "Đa ngôn ngữ",
-      "translation": "Có thể dịch sang tiếng Anh",
-      "translate": "Dịch sang tiếng Anh",
-      "singleLanguage": "Chỉ hỗ trợ ngôn ngữ này",
-      "languageOnly": "Chỉ {{language}}"
-    },
     "cancel": "Hủy",
     "cancelDownload": "Hủy tải xuống",
-    "notAvailable": "Không khả dụng"
+    "capabilities": {
+      "languageSelection": "Hỗ trợ nhiều ngôn ngữ đầu vào",
+      "singleLanguage": "Chỉ hỗ trợ ngôn ngữ này",
+      "multiLanguage": "Đa ngôn ngữ",
+      "languageOnly": "Chỉ {{language}}",
+      "translation": "Có thể dịch sang tiếng Anh",
+      "translate": "Dịch sang tiếng Anh"
+    }
   },
   "settings": {
     "modelSettings": {
       "title": "Cài đặt {{model}}",
       "noSettingsNeeded": "Mô hình này hoạt động tự động mà không cần cấu hình."
     },
+    "general": {
+      "title": "Chung",
+      "shortcuts": {
+        "title": "Phím tắt",
+        "strategyNone": "Không có",
+        "addNew": "Thêm phím tắt",
+        "remove": "Xóa phím tắt",
+        "postProcessNotReady": "Vui lòng cấu hình nhà cung cấp xử lý sau trước"
+      },
+      "shortcut": {
+        "title": "Phím tắt Handless",
+        "description": "Cấu hình phím tắt để kích hoạt ghi âm chuyển đổi giọng nói thành văn bản",
+        "loading": "Đang tải phím tắt...",
+        "none": "Chưa cấu hình phím tắt",
+        "notFound": "Không tìm thấy phím tắt",
+        "pressKeys": "Đang ghi âm...",
+        "bindings": {
+          "transcribe": {
+            "name": "Phím tắt chuyển đổi",
+            "description": "Phím tắt để ghi âm và chuyển đổi giọng nói của bạn."
+          },
+          "cancel": {
+            "name": "Phím tắt hủy",
+            "description": "Phím tắt để hủy bản ghi hiện tại."
+          },
+          "transcribe_with_post_process": {
+            "name": "Phím tắt xử lý sau",
+            "description": "Tùy chọn: Phím tắt chuyên dụng luôn áp dụng xử lý sau bằng AI cho bản chuyển đổi của bạn."
+          }
+        },
+        "errors": {
+          "restore": "Không thể khôi phục phím tắt gốc",
+          "set": "Không thể đặt phím tắt: {{error}}",
+          "reset": "Không thể đặt lại phím tắt về giá trị gốc"
+        }
+      },
+      "language": {
+        "title": "Ngôn ngữ",
+        "description": "Chọn ngôn ngữ để nhận dạng giọng nói. Tự động sẽ tự động xác định ngôn ngữ, trong khi chọn một ngôn ngữ cụ thể có thể cải thiện độ chính xác cho ngôn ngữ đó.",
+        "descriptionUnsupported": "Mô hình Parakeet tự động phát hiện ngôn ngữ. Không cần chọn thủ công.",
+        "searchPlaceholder": "Tìm kiếm ngôn ngữ...",
+        "noResults": "Không tìm thấy ngôn ngữ",
+        "auto": "Tự động"
+      },
+      "activationMode": {
+        "label": "Chế độ kích hoạt",
+        "description": "Cách phím tắt điều khiển việc ghi âm",
+        "options": {
+          "toggle": "Bật/Tắt",
+          "hold": "Giữ",
+          "holdOrToggle": "Giữ hoặc Bật/Tắt"
+        }
+      }
+    },
     "models": {
       "title": "Mô hình chuyển đổi",
       "description": "Chọn mô hình chuyển đổi hoặc tải thêm mô hình. Các mô hình khác nhau có mức độ chính xác và tốc độ khác nhau.",
+      "yourModels": "Mô hình đã tải",
+      "availableModels": "Có sẵn để tải xuống",
       "downloaded": "Đã tải xuống",
       "available": "Có thể tải xuống",
       "deleteConfirm": "Bạn có chắc chắn muốn xóa {{modelName}}? Bạn sẽ cần tải lại để sử dụng.",
@@ -191,8 +247,6 @@
         "allLanguages": "Tất cả ngôn ngữ"
       },
       "noModelsMatch": "Không có mô hình nào khớp với bộ lọc này.",
-      "yourModels": "Mô hình đã tải",
-      "availableModels": "Có sẵn để tải xuống",
       "tabs": {
         "myModels": "Mô hình của tôi",
         "library": "Thư viện"
@@ -237,16 +291,16 @@
           "contextTermsDescription": "Các thuật ngữ phân cách bằng dấu phẩy để cải thiện độ chính xác nhận dạng",
           "contextDescription": "Mô tả ngữ cảnh",
           "contextDescriptionDescription": "Văn bản tự do cung cấp ngữ cảnh chung về nội dung âm thanh",
-          "smartFormat": "Smart Format",
-          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
-          "punctuate": "Punctuate",
-          "punctuateDescription": "Add punctuation and capitalization to the transcript",
+          "smartFormat": "Định dạng thông minh",
+          "smartFormatDescription": "Áp dụng định dạng để cải thiện khả năng đọc bao gồm dấu câu, viết hoa, v.v.",
+          "punctuate": "Thêm dấu câu",
+          "punctuateDescription": "Thêm dấu câu và viết hoa vào bản phiên âm",
           "enableSpeakerDiarization": "Phân biệt người nói",
           "enableSpeakerDiarizationDescription": "Nhận diện và tách biệt các người nói khác nhau",
           "enableLanguageIdentification": "Nhận diện ngôn ngữ",
           "enableLanguageIdentificationDescription": "Phát hiện ngôn ngữ cho từng đoạn",
-          "contextBias": "Context Bias",
-          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
+          "contextBias": "Thiên lệch ngữ cảnh",
+          "contextBiasDescription": "Các thuật ngữ phân cách bằng dấu phẩy để hướng dẫn mô hình hướng tới các chính tả đúng"
         }
       },
       "localModels": {
@@ -256,65 +310,11 @@
         "noModelsConfigured": "Chưa cấu hình mô hình nào. Truy cập Thư viện để tải mô hình hoặc thiết lập nhà cung cấp đám mây."
       }
     },
-    "general": {
-      "title": "Chung",
-      "shortcut": {
-        "title": "Phím tắt Handless",
-        "description": "Cấu hình phím tắt để kích hoạt ghi âm chuyển đổi giọng nói thành văn bản",
-        "loading": "Đang tải phím tắt...",
-        "none": "Chưa cấu hình phím tắt",
-        "notFound": "Không tìm thấy phím tắt",
-        "pressKeys": "Nhấn phím...",
-        "bindings": {
-          "transcribe": {
-            "name": "Phím tắt chuyển đổi",
-            "description": "Phím tắt để ghi âm và chuyển đổi giọng nói của bạn."
-          },
-          "cancel": {
-            "name": "Phím tắt hủy",
-            "description": "Phím tắt để hủy bản ghi hiện tại."
-          },
-          "transcribe_with_post_process": {
-            "name": "Phím tắt xử lý sau",
-            "description": "Tùy chọn: Phím tắt chuyên dụng luôn áp dụng xử lý sau bằng AI cho bản chuyển đổi của bạn."
-          }
-        },
-        "errors": {
-          "restore": "Không thể khôi phục phím tắt gốc",
-          "set": "Không thể đặt phím tắt: {{error}}",
-          "reset": "Không thể đặt lại phím tắt về giá trị gốc"
-        }
-      },
-      "language": {
-        "title": "Ngôn ngữ",
-        "description": "Chọn ngôn ngữ để nhận dạng giọng nói. Tự động sẽ tự động xác định ngôn ngữ, trong khi chọn một ngôn ngữ cụ thể có thể cải thiện độ chính xác cho ngôn ngữ đó.",
-        "descriptionUnsupported": "Mô hình Parakeet tự động phát hiện ngôn ngữ. Không cần chọn thủ công.",
-        "searchPlaceholder": "Tìm kiếm ngôn ngữ...",
-        "noResults": "Không tìm thấy ngôn ngữ",
-        "auto": "Tự động"
-      },
-      "activationMode": {
-        "label": "Activation Mode",
-        "description": "How the shortcut key controls recording",
-        "options": {
-          "toggle": "Toggle",
-          "hold": "Hold",
-          "holdOrToggle": "Hold or Toggle"
-        }
-      },
-      "shortcuts": {
-        "title": "Phím tắt",
-        "strategyNone": "Không có",
-        "addNew": "Thêm phím tắt",
-        "remove": "Xóa phím tắt",
-        "postProcessNotReady": "Vui lòng cấu hình nhà cung cấp xử lý sau trước"
-      }
-    },
     "sound": {
       "title": "Âm thanh",
       "microphone": {
         "title": "Micrô",
-        "description": "Chọn thiết bị micrô ưa thích của bạn",
+        "description": "Thứ tự ưu tiên — khi micrô không khả dụng, micrô tiếp theo sẽ được dùng làm dự phòng.",
         "placeholder": "Chọn micrô...",
         "loading": "Đang tải..."
       },
@@ -338,6 +338,42 @@
         "history": "Lịch sử",
         "data": "Dữ liệu",
         "configuration": "Cấu hình"
+      },
+      "exportData": {
+        "title": "Xuất dữ liệu",
+        "description": "Xuất cài đặt, lịch sử và bản ghi âm của bạn ra tệp",
+        "button": "Xuất...",
+        "includeSettings": "Cài đặt",
+        "includeHistory": "Lịch sử chuyển đổi",
+        "includeRecordings": "Bản ghi âm",
+        "success": "Xuất dữ liệu thành công",
+        "error": "Không thể xuất dữ liệu"
+      },
+      "importData": {
+        "title": "Nhập dữ liệu",
+        "description": "Nhập cài đặt và dữ liệu từ tệp đã xuất trước đó",
+        "button": "Nhập...",
+        "previewTitle": "Xem trước nhập",
+        "exportDate": "Đã xuất vào {{date}}",
+        "appVersion": "Phiên bản ứng dụng: {{version}}",
+        "historyCount": "{{count}} mục lịch sử",
+        "recordingsCount": "{{count}} bản ghi âm",
+        "statsCount": "{{count}} thống kê nói",
+        "importSettings": "Cài đặt",
+        "importRecordings": "Bản ghi âm",
+        "warning": "Nhập cài đặt sẽ ghi đè cấu hình hiện tại của bạn. Tệp xuất có thể chứa API Key.",
+        "success": "Nhập dữ liệu thành công",
+        "error": "Không thể nhập dữ liệu",
+        "invalidFile": "Tệp đã chọn không phải là tệp xuất Handless hợp lệ"
+      },
+      "theme": {
+        "title": "Giao diện",
+        "description": "Chọn giao diện màu sắc cho ứng dụng",
+        "options": {
+          "dark": "Tối",
+          "light": "Sáng",
+          "system": "Hệ thống"
+        }
       },
       "startHidden": {
         "label": "Khởi động ẩn",
@@ -364,20 +400,20 @@
         "title": "Phương thức dán",
         "description": "Chọn cách chèn văn bản. Trực tiếp: mô phỏng gõ phím qua đầu vào hệ thống. Không có: bỏ qua dán, chỉ cập nhật lịch sử/clipboard.",
         "options": {
-          "clipboard": "Bảng nhớ tạm ({{modifier}}+V)",
-          "clipboardCtrlShiftV": "Bảng nhớ tạm (Ctrl+Shift+V)",
-          "clipboardShiftInsert": "Bảng nhớ tạm (Shift+Insert)",
+          "clipboard": "Clipboard ({{modifier}}+V)",
+          "clipboardCtrlShiftV": "Clipboard (Ctrl+Shift+V)",
+          "clipboardShiftInsert": "Clipboard (Shift+Insert)",
           "direct": "Trực tiếp",
           "none": "Không có",
           "externalScript": "Script bên ngoài"
         },
-        "externalScriptPlaceholder": "/duong-dan/toi/script.sh"
+        "externalScriptPlaceholder": "/đường-dẫn/đến/script.sh"
       },
       "typingTool": {
         "title": "Công cụ gõ",
-        "description": "Chọn công cụ gõ trên Linux cho phương thức dán trực tiếp. Auto sẽ tự động phát hiện và dùng công cụ tốt nhất có sẵn cho hệ thống của bạn.",
+        "description": "Chọn công cụ gõ trên Linux cho phương thức dán trực tiếp. Tự động sẽ tự động phát hiện và dùng công cụ tốt nhất có sẵn cho hệ thống của bạn.",
         "options": {
-          "auto": "Auto (Khuyến nghị)"
+          "auto": "Tự động (Khuyến nghị)"
         }
       },
       "clipboardHandling": {
@@ -426,45 +462,9 @@
         "remove": "Xóa {{word}}",
         "duplicate": "\"{{word}}\" đã tồn tại"
       },
-      "exportData": {
-        "title": "Xuất dữ liệu",
-        "description": "Xuất cài đặt, lịch sử và bản ghi âm của bạn ra tệp",
-        "button": "Xuất...",
-        "includeSettings": "Cài đặt",
-        "includeHistory": "Lịch sử chuyển đổi",
-        "includeRecordings": "Bản ghi âm",
-        "success": "Xuất dữ liệu thành công",
-        "error": "Không thể xuất dữ liệu"
-      },
-      "importData": {
-        "title": "Nhập dữ liệu",
-        "description": "Nhập cài đặt và dữ liệu từ tệp đã xuất trước đó",
-        "button": "Nhập...",
-        "previewTitle": "Xem trước nhập",
-        "exportDate": "Đã xuất vào {{date}}",
-        "appVersion": "Phiên bản ứng dụng: {{version}}",
-        "historyCount": "{{count}} mục lịch sử",
-        "recordingsCount": "{{count}} bản ghi âm",
-        "statsCount": "{{count}} thống kê nói",
-        "importSettings": "Cài đặt",
-        "importRecordings": "Bản ghi âm",
-        "warning": "Nhập cài đặt sẽ ghi đè cấu hình hiện tại của bạn. Tệp xuất có thể chứa API Key.",
-        "success": "Nhập dữ liệu thành công",
-        "error": "Không thể nhập dữ liệu",
-        "invalidFile": "Tệp đã chọn không phải là tệp xuất Handless hợp lệ"
-      },
-      "theme": {
-        "title": "Giao diện",
-        "description": "Chọn giao diện màu sắc cho ứng dụng",
-        "options": {
-          "dark": "Tối",
-          "light": "Sáng",
-          "system": "Hệ thống"
-        }
-      },
       "configFile": {
         "title": "Tệp cấu hình",
-        "description": "Mở tệp cấu hình JSON bằng trình soạn thảo mặc định",
+        "description": "Mở hoặc tải lại tệp cài đặt JSON",
         "open": "Mở",
         "reload": "Tải lại",
         "reloadSuccess": "Đã tải lại cài đặt"
@@ -492,6 +492,7 @@
           "description": "URL cơ sở API cho nhà cung cấp đã chọn. Chỉ có thể chỉnh sửa nhà cung cấp tùy chỉnh.",
           "placeholder": "https://api.openai.com/v1"
         },
+        "verified": "Đã xác minh",
         "apiKey": {
           "title": "Khóa API",
           "description": "Khóa API cho nhà cung cấp đã chọn.",
@@ -509,15 +510,14 @@
         },
         "tokensPerSecond": "{{value}} tok/s",
         "pricing": {
-          "title": "Pricing",
-          "description": "Enter your provider's pricing to see cost estimates.",
-          "inputPrice": "Input $/M",
-          "outputPrice": "Output $/M",
-          "inputPlaceholder": "e.g. 0.15",
-          "outputPlaceholder": "e.g. 0.60",
-          "autoFetched": "Auto-fetched from models.dev"
-        },
-        "verified": "Đã xác minh"
+          "title": "Giá",
+          "description": "Nhập giá của nhà cung cấp để xem ước tính chi phí.",
+          "inputPrice": "Giá đầu vào $/M",
+          "outputPrice": "Giá đầu ra $/M",
+          "inputPlaceholder": "ví dụ: 0,15",
+          "outputPlaceholder": "ví dụ: 0,60",
+          "autoFetched": "Được tự động lấy từ models.dev"
+        }
       },
       "prompts": {
         "title": "Chỉ thị",
@@ -530,20 +530,20 @@
         "promptLabelPlaceholder": "Nhập tên prompt",
         "promptInstructions": "Hướng dẫn Prompt",
         "promptInstructionsPlaceholder": "Viết hướng dẫn để chạy sau khi chuyển đổi. Bản ghi được tự động thêm vào.",
-        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
+        "promptTip": "Mẹo: Tập trung vào phong cách định dạng và sửa chữa. Bản phiên âm luôn được thêm tự động.",
         "updatePrompt": "Cập nhật Prompt",
         "deletePrompt": "Xóa Prompt",
         "createPrompt": "Tạo",
         "cancel": "Hủy",
-        "createFirst": "Prompts transform your transcriptions — fix grammar, format text, or translate.",
-        "createFirstHint": "Create your first one below.",
-        "builtIn": "Built-in",
-        "builtInReadOnly": "Built-in prompts are read-only.",
-        "costEstimate": "~{{requests}} requests per $1",
-        "costTooltip": "System prompt: ~{{systemTokens}} tokens. Assumes avg 100-word transcript (~140 input tokens, ~120 output tokens). Total per request: ~{{totalInputTokens}} input + ~{{totalOutputTokens}} output tokens.",
-        "errorCreate": "Failed to create prompt. Please try again.",
-        "errorUpdate": "Failed to update prompt. Please try again.",
-        "errorDelete": "Failed to delete prompt. Please try again."
+        "createFirst": "Prompt chuyển đổi bản phiên âm của bạn — sửa ngữ pháp, định dạng văn bản hoặc dịch.",
+        "createFirstHint": "Tạo cái đầu tiên của bạn dưới đây.",
+        "builtIn": "Tích hợp sẵn",
+        "builtInReadOnly": "Các prompt tích hợp sẵn là chỉ đọc.",
+        "costEstimate": "~{{requests}} yêu cầu cho $1",
+        "costTooltip": "Prompt hệ thống: ~{{systemTokens}} token. Giả định bản phiên âm trung bình 100 từ (~140 token đầu vào, ~120 token đầu ra). Tổng cộng cho mỗi yêu cầu: ~{{totalInputTokens}} token đầu vào + ~{{totalOutputTokens}} token đầu ra.",
+        "errorCreate": "Không thể tạo prompt. Vui lòng thử lại.",
+        "errorUpdate": "Không thể cập nhật prompt. Vui lòng thử lại.",
+        "errorDelete": "Không thể xóa prompt. Vui lòng thử lại."
       }
     },
     "stats": {
@@ -553,8 +553,8 @@
       "recordingTime": "Thời gian ghi âm",
       "avgWpm": "TB từ/phút",
       "wpmOverTime": "Tốc độ nói theo thời gian",
-      "noData": "Press {{shortcut}} to start dictating",
-      "noDataHint": "Your speaking analytics will appear here.",
+      "noData": "Nhấn {{shortcut}} để bắt đầu chính tả",
+      "noDataHint": "Phân tích nói của bạn sẽ xuất hiện ở đây.",
       "transcriptions": "Chuyển đổi",
       "clearStats": "Xóa tất cả dữ liệu thống kê",
       "confirmClear": "Nhấn lại để xác nhận",
@@ -577,8 +577,8 @@
       },
       "openFolder": "Mở thư mục ghi âm",
       "loading": "Đang tải lịch sử...",
-      "empty": "Press {{shortcut}} to start recording",
-      "emptyHint": "Your transcriptions will appear here.",
+      "empty": "Nhấn {{shortcut}} để bắt đầu ghi âm",
+      "emptyHint": "Các bản phiên âm của bạn sẽ xuất hiện ở đây.",
       "copyToClipboard": "Sao chép bản ghi vào clipboard",
       "save": "Lưu bản ghi",
       "unsave": "Xóa khỏi đã lưu",
@@ -620,10 +620,10 @@
         "months3": "Sau 3 tháng",
         "placeholder": "Chọn thời gian lưu giữ...",
         "entries": "mục",
-        "confirmDelete": "This will permanently delete {{count}} unsaved recording(s) and their audio files.",
-        "confirmApply": "Delete and Apply",
-        "confirmCancel": "Cancel",
-        "noEntriesAffected": "No entries will be deleted with this setting."
+        "confirmDelete": "Điều này sẽ xóa vĩnh viễn {{count}} bản ghi chưa lưu và các tệp âm thanh của chúng.",
+        "confirmApply": "Xóa và áp dụng",
+        "confirmCancel": "Hủy",
+        "noEntriesAffected": "Không có mục nào sẽ bị xóa với cài đặt này."
       },
       "alwaysOnMicrophone": {
         "label": "Micrô luôn bật",
@@ -678,38 +678,38 @@
       "acknowledgments": {
         "handy": {
           "title": "Handy",
-          "description": "The open-source speech-to-text app that Handless was forked from",
-          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
+          "description": "Ứng dụng chuyển đổi giọng nói thành văn bản mã nguồn mở mà Handless được fork từ đó",
+          "details": "Được xây dựng dựa trên Handy bởi CJ Pais. Cảm ơn vì nền tảng."
         }
       }
     }
   },
   "dictionary": {
-    "title": "Dictionary",
+    "title": "Từ điển",
     "hints": {
-      "title": "Recognition Hints",
-      "description": "API providers only"
+      "title": "Gợi ý nhận dạng",
+      "description": "Chỉ dành cho các nhà cung cấp API"
     },
     "terms": {
-      "title": "Terms",
-      "description": "Words and phrases the speech engine should recognize accurately. These are sent to the provider before transcription to improve recognition of domain-specific vocabulary.",
-      "placeholder": "Add a term…",
-      "add": "Add",
-      "remove": "Remove {{term}}",
-      "duplicate": "\"{{term}}\" already exists",
-      "empty": "No terms added. Type a term and press Enter."
+      "title": "Thuật ngữ",
+      "description": "Các từ và cụm từ mà công cụ nhận dạng giọng nói phải nhận ra chính xác. Các thuật ngữ này được gửi đến nhà cung cấp trước khi chuyển đổi để cải thiện nhận dạng từ vựng theo lĩnh vực.",
+      "placeholder": "Thêm một thuật ngữ…",
+      "add": "Thêm",
+      "remove": "Xóa {{term}}",
+      "duplicate": "\"{{term}}\" đã tồn tại",
+      "empty": "Chưa thêm thuật ngữ. Nhập một thuật ngữ và nhấn Enter."
     },
     "context": {
-      "title": "Context Description",
-      "description": "Freeform text that gives the speech engine background context about what you're dictating. Helps improve accuracy for domain-specific content.",
-      "placeholder": "e.g. Technical discussion about React components and TypeScript interfaces"
+      "title": "Mô tả ngữ cảnh",
+      "description": "Văn bản tự do cung cấp ngữ cảnh nền tảng cho công cụ nhận dạng giọng nói về những gì bạn đang chính tả. Giúp cải thiện độ chính xác cho nội dung theo lĩnh vực.",
+      "placeholder": "ví dụ: Thảo luận kỹ thuật về các thành phần React và các giao diện TypeScript"
     },
-    "autoInjectedHint": "Auto-filled from Dictionary. Click to edit.",
+    "autoInjectedHint": "Tự động điền từ Từ điển. Nhấn để chỉnh sửa.",
     "customWords": {
-      "title": "Word Corrections",
-      "subtitle": "Rule-based post-processing · All providers",
-      "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription.",
-      "empty": "No corrections added. Type a word and press Enter."
+      "title": "Sửa từ",
+      "subtitle": "Xử lý sau dựa trên quy tắc · Tất cả các nhà cung cấp",
+      "description": "Các từ thường bị nghe nhầm hoặc viết sai sau khi chuyển đổi. Hệ thống sẽ tự động sửa các từ có âm thanh tương tự trong kết quả để khớp với danh sách của bạn. Điều này được áp dụng sau khi chuyển đổi, không giống như thuật ngữ dẫn dắt công cụ trước khi chuyển đổi.",
+      "empty": "Chưa thêm sửa chữa. Nhập một từ và nhấn Enter."
     }
   },
   "footer": {
@@ -725,7 +725,7 @@
     "installing": "Đang cài đặt...",
     "preparing": "Đang chuẩn bị...",
     "checkForUpdates": "Kiểm tra cập nhật",
-    "updateViaBrew": "Update via: brew upgrade --cask handless"
+    "updateViaBrew": "Cập nhật qua: brew upgrade --cask handless"
   },
   "common": {
     "loading": "Đang tải...",

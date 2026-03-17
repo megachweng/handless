@@ -12,7 +12,7 @@
     "general": "Genel",
     "shortcuts": "Kısayollar",
     "models": "Modeller",
-    "dictionary": "Dictionary",
+    "dictionary": "Sözlük",
     "postProcessing": "Son İşlem",
     "history": "Geçmiş",
     "debug": "Hata Ayıklama"
@@ -109,11 +109,11 @@
       },
       "elevenlabs": {
         "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+        "description": "ElevenLabs Scribe konuşmadan metne. 90+ dil desteğiyle yüksek doğruluk."
       },
       "groq": {
         "name": "Groq",
-        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+        "description": "Groq'un ultra hızlı Whisper transkripsiyonu. Işık hızında çıkarım ve 99+ dil desteği."
       },
       "soniox": {
         "name": "Soniox",
@@ -121,23 +121,23 @@
       },
       "deepgram": {
         "name": "Deepgram",
-        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
+        "description": "Deepgram'ın Nova konuşmadan metne API'si. 50+ dil desteğiyle hızlı ve doğru."
       },
       "assemblyai": {
         "name": "AssemblyAI",
-        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+        "description": "AssemblyAI konuşmadan metne. Konuşmacı ayrımı ve 40+ dil desteğiyle kurumsal sınıf doğruluk."
       },
       "cartesia": {
         "name": "Cartesia",
-        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+        "description": "Cartesia'nın Ink konuşmadan metne API'si. 99+ dil desteğiyle gerçek zamanlı akışlı transkripsiyon."
       },
       "mistral": {
         "name": "Mistral AI",
-        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+        "description": "Mistral AI'ın Voxtral konuşmadan metne. Bağlam eğilimi desteğiyle yüksek doğruluk."
       },
       "fireworks": {
         "name": "Fireworks AI",
-        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
+        "description": "Fireworks AI konuşmadan metne. 95+ dil desteğiyle ultra hızlı Whisper transkripsiyonu."
       }
     }
   },
@@ -175,6 +175,60 @@
     "modelSettings": {
       "title": "{{model}} Ayarları",
       "noSettingsNeeded": "Bu model yapılandırma gerektirmeden otomatik olarak çalışır."
+    },
+    "general": {
+      "title": "Genel",
+      "shortcuts": {
+        "title": "Kısayollar",
+        "strategyNone": "Yok",
+        "addNew": "Kısayol Ekle",
+        "remove": "Kısayolu kaldır",
+        "postProcessNotReady": "Önce bir son işlem sağlayıcısı yapılandırın"
+      },
+      "shortcut": {
+        "title": "Handless Kısayolları",
+        "description": "Sesle yazma kaydını başlatmak için klavye kısayollarını yapılandırın",
+        "loading": "Kısayollar yükleniyor...",
+        "none": "Kısayol yapılandırılmadı",
+        "notFound": "Kısayol bulunamadı",
+        "pressKeys": "Kayıt Yapılıyor...",
+        "bindings": {
+          "transcribe": {
+            "name": "Transkripsiyon Kısayolu",
+            "description": "Sesinizi kaydetmek ve metne dönüştürmek için klavye kısayolu."
+          },
+          "cancel": {
+            "name": "İptal Kısayolu",
+            "description": "Mevcut kaydı iptal etmek için klavye kısayolu."
+          },
+          "transcribe_with_post_process": {
+            "name": "Son İşlem Kısayolu",
+            "description": "İsteğe bağlı: Transkripsiyonunuza her zaman AI son işleme uygulayan özel bir kısayol tuşu."
+          }
+        },
+        "errors": {
+          "restore": "Orijinal kısayol geri yüklenemedi",
+          "set": "Kısayol ayarlanamadı: {{error}}",
+          "reset": "Kısayol orijinal değerine sıfırlanamadı"
+        }
+      },
+      "language": {
+        "title": "Dil",
+        "description": "Konuşma tanıma dilini seçin. 'Otomatik' seçeneği dili kendisi belirler, ancak belirli bir dil seçmek o dildeki doğruluğu artırabilir.",
+        "descriptionUnsupported": "Parakeet modeli dili otomatik algılar. Manuel seçim gerekmez.",
+        "searchPlaceholder": "Dil ara...",
+        "noResults": "Dil bulunamadı",
+        "auto": "Otomatik"
+      },
+      "activationMode": {
+        "label": "Aktivasyon Modu",
+        "description": "Kısayol tuşunun kaydı nasıl kontrol ettiği",
+        "options": {
+          "toggle": "Aç/Kapat",
+          "hold": "Basılı tut",
+          "holdOrToggle": "Basılı tut veya Aç/Kapat"
+        }
+      }
     },
     "models": {
       "title": "Transkripsiyon Modelleri",
@@ -237,16 +291,16 @@
           "contextTermsDescription": "Tanıma doğruluğunu artırmak için virgülle ayrılmış terimler",
           "contextDescription": "Bağlam Açıklaması",
           "contextDescriptionDescription": "Ses içeriği hakkında genel bağlam sağlayan serbest metin",
-          "smartFormat": "Smart Format",
-          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
-          "punctuate": "Punctuate",
-          "punctuateDescription": "Add punctuation and capitalization to the transcript",
+          "smartFormat": "Akıllı Biçimlendirme",
+          "smartFormatDescription": "Noktalama, büyük harfler ve daha fazlası dahil olmak üzere okunabilirliği artırmak için biçimlendirme uygulayın",
+          "punctuate": "Noktalandır",
+          "punctuateDescription": "Transkripte noktalama ve büyük harfler ekleyin",
           "enableSpeakerDiarization": "Konuşmacı Ayrımı",
           "enableSpeakerDiarizationDescription": "Farklı konuşmacıları tanımlayıp ayırır",
           "enableLanguageIdentification": "Dil Tanımlama",
           "enableLanguageIdentificationDescription": "Her segment için dili algıla",
-          "contextBias": "Context Bias",
-          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
+          "contextBias": "Bağlam Eğilimi",
+          "contextBiasDescription": "Modeli doğru yazılışlara yönlendirmek için virgülle ayrılmış terimler"
         }
       },
       "localModels": {
@@ -256,71 +310,17 @@
         "noModelsConfigured": "Yapılandırılmış model yok. Modelleri indirmek veya bulut sağlayıcıları ayarlamak için Kütüphane'yi ziyaret edin."
       }
     },
-    "general": {
-      "title": "Genel",
-      "shortcut": {
-        "title": "Handless Kısayolları",
-        "description": "Sesle yazma kaydını başlatmak için klavye kısayollarını yapılandırın",
-        "loading": "Kısayollar yükleniyor...",
-        "none": "Kısayol yapılandırılmadı",
-        "notFound": "Kısayol bulunamadı",
-        "pressKeys": "Tuşlara basın...",
-        "bindings": {
-          "transcribe": {
-            "name": "Transkripsiyon Kısayolu",
-            "description": "Sesinizi kaydetmek ve metne dönüştürmek için klavye kısayolu."
-          },
-          "cancel": {
-            "name": "İptal Kısayolu",
-            "description": "Mevcut kaydı iptal etmek için klavye kısayolu."
-          },
-          "transcribe_with_post_process": {
-            "name": "Son İşlem Kısayolu",
-            "description": "İsteğe bağlı: Transkripsiyonunuza her zaman AI son işleme uygulayan özel bir kısayol tuşu."
-          }
-        },
-        "errors": {
-          "restore": "Orijinal kısayol geri yüklenemedi",
-          "set": "Kısayol ayarlanamadı: {{error}}",
-          "reset": "Kısayol orijinal değerine sıfırlanamadı"
-        }
-      },
-      "language": {
-        "title": "Dil",
-        "description": "Konuşma tanıma dilini seçin. 'Otomatik' seçeneği dili kendisi belirler, ancak belirli bir dil seçmek o dildeki doğruluğu artırabilir.",
-        "descriptionUnsupported": "Parakeet modeli dili otomatik algılar. Manuel seçim gerekmez.",
-        "searchPlaceholder": "Dil ara...",
-        "noResults": "Dil bulunamadı",
-        "auto": "Otomatik"
-      },
-      "activationMode": {
-        "label": "Activation Mode",
-        "description": "How the shortcut key controls recording",
-        "options": {
-          "toggle": "Toggle",
-          "hold": "Hold",
-          "holdOrToggle": "Hold or Toggle"
-        }
-      },
-      "shortcuts": {
-        "title": "Kısayollar",
-        "strategyNone": "Yok",
-        "addNew": "Kısayol Ekle",
-        "remove": "Kısayolu kaldır",
-        "postProcessNotReady": "Önce bir son işlem sağlayıcısı yapılandırın"
-      }
-    },
     "sound": {
       "title": "Ses",
       "microphone": {
         "title": "Mikrofon",
-        "description": "Tercih ettiğiniz mikrofon cihazını seçin",
+        "description": "Tercih sırası — bir mikrofon kullanılamadığında, bir sonraki yedek olarak kullanılacaktır.",
         "placeholder": "Mikrofon seçin...",
         "loading": "Yükleniyor..."
       },
       "outputDevice": {
         "title": "Çıkış Cihazı",
-        "description": "Geri bildirim sesleri için ses çıkış cihazını seçin",
+        "description": "Geri bildirim sesleri için tercih ettiğiniz ses çıkış cihazını seçin",
         "placeholder": "Çıkış cihazı seçin...",
         "loading": "Yükleniyor..."
       },
@@ -509,13 +509,13 @@
         },
         "tokensPerSecond": "{{value}} tok/s",
         "pricing": {
-          "title": "Pricing",
-          "description": "Enter your provider's pricing to see cost estimates.",
-          "inputPrice": "Input $/M",
-          "outputPrice": "Output $/M",
-          "inputPlaceholder": "e.g. 0.15",
-          "outputPlaceholder": "e.g. 0.60",
-          "autoFetched": "Auto-fetched from models.dev"
+          "title": "Fiyatlandırma",
+          "description": "Maliyet tahminlerini görmek için sağlayıcınızın fiyatlandırmasını girin.",
+          "inputPrice": "Giriş $/M",
+          "outputPrice": "Çıkış $/M",
+          "inputPlaceholder": "örn. 0.15",
+          "outputPlaceholder": "örn. 0.60",
+          "autoFetched": "models.dev'den otomatik olarak alındı"
         },
         "verified": "Doğrulandı"
       },
@@ -530,20 +530,20 @@
         "promptLabelPlaceholder": "Prompt adı girin",
         "promptInstructions": "Prompt Talimatları",
         "promptInstructionsPlaceholder": "Transkripsiyondan sonra çalıştırılacak talimatları yazın. Transkript otomatik olarak eklenir.",
-        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
+        "promptTip": "İpucu: Biçimlendirme ve düzeltme stiline odaklanın. Transkript her zaman otomatik olarak eklenir.",
         "updatePrompt": "Promptu Güncelle",
         "deletePrompt": "Promptu Sil",
         "createPrompt": "Oluştur",
         "cancel": "İptal",
-        "createFirst": "Prompts transform your transcriptions — fix grammar, format text, or translate.",
-        "createFirstHint": "Create your first one below.",
-        "builtIn": "Built-in",
-        "builtInReadOnly": "Built-in prompts are read-only.",
-        "costEstimate": "~{{requests}} requests per $1",
-        "costTooltip": "System prompt: ~{{systemTokens}} tokens. Assumes avg 100-word transcript (~140 input tokens, ~120 output tokens). Total per request: ~{{totalInputTokens}} input + ~{{totalOutputTokens}} output tokens.",
-        "errorCreate": "Failed to create prompt. Please try again.",
-        "errorUpdate": "Failed to update prompt. Please try again.",
-        "errorDelete": "Failed to delete prompt. Please try again."
+        "createFirst": "Promptlar transkripsiyonlarınızı dönüştürür — gramer düzeltir, metni biçimlendirir veya çevirir.",
+        "createFirstHint": "Aşağıda ilkini oluşturun.",
+        "builtIn": "Yerleşik",
+        "builtInReadOnly": "Yerleşik promptlar salt okunurdur.",
+        "costEstimate": "~{{requests}} istek/$1",
+        "costTooltip": "Sistem prompt: ~{{systemTokens}} token. Ortalama 100 sözcüklü transkript (~140 giriş token, ~120 çıkış token) varsayılır. İstek başına toplam: ~{{totalInputTokens}} giriş + ~{{totalOutputTokens}} çıkış token.",
+        "errorCreate": "Prompt oluşturulamadı. Lütfen tekrar deneyin.",
+        "errorUpdate": "Prompt güncellenemedi. Lütfen tekrar deneyin.",
+        "errorDelete": "Prompt silinemedi. Lütfen tekrar deneyin."
       }
     },
     "stats": {
@@ -553,8 +553,8 @@
       "recordingTime": "Kayıt Süresi",
       "avgWpm": "Ort. Kelime/dk",
       "wpmOverTime": "Zaman İçinde Konuşma Hızı",
-      "noData": "Press {{shortcut}} to start dictating",
-      "noDataHint": "Your speaking analytics will appear here.",
+      "noData": "Yazmaya başlamak için {{shortcut}} tuşuna basın",
+      "noDataHint": "Konuşma analitikleriniz burada görünecektir.",
       "transcriptions": "Transkripsiyonlar",
       "clearStats": "Tüm istatistik verilerini temizle",
       "confirmClear": "Onaylamak için tekrar tıklayın",
@@ -577,8 +577,8 @@
       },
       "openFolder": "Kayıtlar Klasörünü Aç",
       "loading": "Geçmiş yükleniyor...",
-      "empty": "Press {{shortcut}} to start recording",
-      "emptyHint": "Your transcriptions will appear here.",
+      "empty": "Kayda başlamak için {{shortcut}} tuşuna basın",
+      "emptyHint": "Transkripsiyonlarınız burada görünecektir.",
       "copyToClipboard": "Transkripsiyonu panoya kopyala",
       "save": "Transkripsiyonu kaydet",
       "unsave": "Kaydedilenlerden kaldır",
@@ -620,10 +620,10 @@
         "months3": "3 ay sonra",
         "placeholder": "Saklama süresi seçin...",
         "entries": "kayıt",
-        "confirmDelete": "This will permanently delete {{count}} unsaved recording(s) and their audio files.",
-        "confirmApply": "Delete and Apply",
-        "confirmCancel": "Cancel",
-        "noEntriesAffected": "No entries will be deleted with this setting."
+        "confirmDelete": "Bu, {{count}} kaydedilmemiş kayıt(ları) ve ses dosyalarını kalıcı olarak silecektir.",
+        "confirmApply": "Sil ve Uygula",
+        "confirmCancel": "İptal",
+        "noEntriesAffected": "Bu ayarla hiçbir kayıt silinmeyecektir."
       },
       "alwaysOnMicrophone": {
         "label": "Mikrofon Her Zaman Açık",
@@ -678,38 +678,38 @@
       "acknowledgments": {
         "handy": {
           "title": "Handy",
-          "description": "The open-source speech-to-text app that Handless was forked from",
-          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
+          "description": "Handless'in fork edildiği açık kaynak konuşmadan metne uygulaması",
+          "details": "CJ Pais tarafından yapılan Handy üzerine inşa edilmiştir. Temel için teşekkürler."
         }
       }
     }
   },
   "dictionary": {
-    "title": "Dictionary",
+    "title": "Sözlük",
     "hints": {
-      "title": "Recognition Hints",
-      "description": "API providers only"
+      "title": "Tanıma İpuçları",
+      "description": "Yalnızca API sağlayıcıları"
     },
     "terms": {
-      "title": "Terms",
-      "description": "Words and phrases the speech engine should recognize accurately. These are sent to the provider before transcription to improve recognition of domain-specific vocabulary.",
-      "placeholder": "Add a term…",
-      "add": "Add",
-      "remove": "Remove {{term}}",
-      "duplicate": "\"{{term}}\" already exists",
-      "empty": "No terms added. Type a term and press Enter."
+      "title": "Terimler",
+      "description": "Konuşma motorunun doğru şekilde tanıması gereken sözcükler ve ifadeler. Alan özel kelime dağarcığının tanınmasını iyileştirmek için transkripsiyon öncesinde sağlayıcıya gönderilir.",
+      "placeholder": "Terim ekle…",
+      "add": "Ekle",
+      "remove": "{{term}} Kaldır",
+      "duplicate": "\"{{term}}\" zaten mevcut",
+      "empty": "Terim eklenmedi. Terim yazın ve Enter tuşuna basın."
     },
     "context": {
-      "title": "Context Description",
-      "description": "Freeform text that gives the speech engine background context about what you're dictating. Helps improve accuracy for domain-specific content.",
-      "placeholder": "e.g. Technical discussion about React components and TypeScript interfaces"
+      "title": "Bağlam Açıklaması",
+      "description": "Konuşma motoruna ne yazdığınız hakkında arka plan bağlamı sağlayan serbest metin. Alan özel içeriğin doğruluğunu artırmaya yardımcı olur.",
+      "placeholder": "örn. React bileşenleri ve TypeScript arayüzleri hakkında teknik tartışma"
     },
-    "autoInjectedHint": "Auto-filled from Dictionary. Click to edit.",
+    "autoInjectedHint": "Sözlükten otomatik olarak dolduruldu. Düzenlemek için tıklayın.",
     "customWords": {
-      "title": "Word Corrections",
-      "subtitle": "Rule-based post-processing · All providers",
-      "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription.",
-      "empty": "No corrections added. Type a word and press Enter."
+      "title": "Kelime Düzeltmeleri",
+      "subtitle": "Kurala dayalı son işleme · Tüm sağlayıcılar",
+      "description": "Transkripsiyon sonrası sıkça yanlış duyulan veya yanlış yazılan kelimeler. Sistem, çıktıdaki benzer sesli kelimeleri listenizle eşleştirmek için otomatik olarak düzeltir. Bu, transkripsiyondan sonra uygulanır, motor öncesinde yönlendiren terimlerden farklıdır.",
+      "empty": "Düzeltme eklenmedi. Kelime yazın ve Enter tuşuna basın."
     }
   },
   "footer": {
@@ -725,7 +725,7 @@
     "installing": "Yükleniyor...",
     "preparing": "Hazırlanıyor...",
     "checkForUpdates": "Güncellemeleri kontrol et",
-    "updateViaBrew": "Update via: brew upgrade --cask handless"
+    "updateViaBrew": "Şu komutla güncelleyin: brew upgrade --cask handless"
   },
   "common": {
     "loading": "Yükleniyor...",

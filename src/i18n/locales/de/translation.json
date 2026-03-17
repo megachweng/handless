@@ -12,7 +12,7 @@
     "general": "Allgemein",
     "shortcuts": "Tastenkürzel",
     "models": "Modelle",
-    "dictionary": "Dictionary",
+    "dictionary": "Wörterbuch",
     "postProcessing": "Nachbearbeitung",
     "history": "Verlauf",
     "debug": "Debug"
@@ -109,11 +109,11 @@
       },
       "elevenlabs": {
         "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+        "description": "ElevenLabs Scribe Sprache-zu-Text. Hohe Genauigkeit mit Unterstützung für 90+ Sprachen."
       },
       "groq": {
         "name": "Groq",
-        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+        "description": "Groqs ultraschnelle Whisper-Transkription. Blitzschnelle Verarbeitung mit Unterstützung für 99+ Sprachen."
       },
       "soniox": {
         "name": "Soniox",
@@ -121,23 +121,23 @@
       },
       "deepgram": {
         "name": "Deepgram",
-        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
+        "description": "Deepgrams Nova Sprache-zu-Text-API. Schnell und genau mit Unterstützung für 50+ Sprachen."
       },
       "assemblyai": {
         "name": "AssemblyAI",
-        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+        "description": "AssemblyAI Sprache-zu-Text. Unternehmensqualität mit Sprechererkennung und 40+ Sprachen."
       },
       "cartesia": {
         "name": "Cartesia",
-        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+        "description": "Cartesias Ink Sprache-zu-Text-API. Echtzeit-Streaming-Transkription mit Unterstützung für 99+ Sprachen."
       },
       "mistral": {
         "name": "Mistral AI",
-        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+        "description": "Mistral AIs Voxtral Sprache-zu-Text. Hohe Genauigkeit mit Kontextausrichtungsunterstützung."
       },
       "fireworks": {
         "name": "Fireworks AI",
-        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
+        "description": "Fireworks AI Sprache-zu-Text. Ultraschnelle Whisper-Transkription mit Unterstützung für 95+ Sprachen."
       }
     }
   },
@@ -237,16 +237,16 @@
           "contextTermsDescription": "Kommagetrennte Begriffe zur Verbesserung der Erkennungsgenauigkeit",
           "contextDescription": "Kontextbeschreibung",
           "contextDescriptionDescription": "Freitext mit allgemeinem Kontext zum Audioinhalt",
-          "smartFormat": "Smart Format",
-          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
-          "punctuate": "Punctuate",
-          "punctuateDescription": "Add punctuation and capitalization to the transcript",
+          "smartFormat": "Smart-Formatierung",
+          "smartFormatDescription": "Formatierung für verbesserte Lesbarkeit anwenden, einschließlich Satzzeichen, Großschreibung und mehr",
+          "punctuate": "Satzzeichen",
+          "punctuateDescription": "Satzzeichen und Großschreibung zum Transkript hinzufügen",
           "enableSpeakerDiarization": "Sprechererkennung",
           "enableSpeakerDiarizationDescription": "Verschiedene Sprecher identifizieren und trennen",
           "enableLanguageIdentification": "Spracherkennung",
           "enableLanguageIdentificationDescription": "Sprache für jedes Segment erkennen",
-          "contextBias": "Context Bias",
-          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
+          "contextBias": "Kontextausrichtung",
+          "contextBiasDescription": "Kommagetrennte Begriffe, um das Modell zur korrekten Schreibweise zu führen"
         }
       },
       "localModels": {
@@ -294,12 +294,12 @@
         "auto": "Automatisch"
       },
       "activationMode": {
-        "label": "Activation Mode",
-        "description": "How the shortcut key controls recording",
+        "label": "Aktivierungsmodus",
+        "description": "So steuert die Verknüpfungstaste die Aufnahme",
         "options": {
-          "toggle": "Toggle",
-          "hold": "Hold",
-          "holdOrToggle": "Hold or Toggle"
+          "toggle": "Umschalten",
+          "hold": "Gedrückt halten",
+          "holdOrToggle": "Gedrückt halten oder umschalten"
         }
       },
       "shortcuts": {
@@ -509,13 +509,13 @@
         },
         "tokensPerSecond": "{{value}} tok/s",
         "pricing": {
-          "title": "Pricing",
-          "description": "Enter your provider's pricing to see cost estimates.",
+          "title": "Preisgestaltung",
+          "description": "Geben Sie die Preise Ihres Anbieters ein, um Kostenschätzungen zu sehen.",
           "inputPrice": "Input $/M",
           "outputPrice": "Output $/M",
-          "inputPlaceholder": "e.g. 0.15",
-          "outputPlaceholder": "e.g. 0.60",
-          "autoFetched": "Auto-fetched from models.dev"
+          "inputPlaceholder": "z.B. 0.15",
+          "outputPlaceholder": "z.B. 0.60",
+          "autoFetched": "Automatisch von models.dev abgerufen"
         },
         "verified": "Verifiziert"
       },
@@ -530,20 +530,20 @@
         "promptLabelPlaceholder": "Prompt-Namen eingeben",
         "promptInstructions": "Prompt-Anweisungen",
         "promptInstructionsPlaceholder": "Schreibe die Anweisungen, die nach der Transkription ausgeführt werden sollen. Das Transkript wird automatisch angehängt.",
-        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
+        "promptTip": "Tipp: Konzentrieren Sie sich auf Formatierung und Korrekturstil. Das Transkript wird immer automatisch angehängt.",
         "updatePrompt": "Prompt aktualisieren",
         "deletePrompt": "Prompt löschen",
         "createPrompt": "Erstellen",
         "cancel": "Abbrechen",
-        "createFirst": "Prompts transform your transcriptions — fix grammar, format text, or translate.",
-        "createFirstHint": "Create your first one below.",
-        "builtIn": "Built-in",
-        "builtInReadOnly": "Built-in prompts are read-only.",
-        "costEstimate": "~{{requests}} requests per $1",
-        "costTooltip": "System prompt: ~{{systemTokens}} tokens. Assumes avg 100-word transcript (~140 input tokens, ~120 output tokens). Total per request: ~{{totalInputTokens}} input + ~{{totalOutputTokens}} output tokens.",
-        "errorCreate": "Failed to create prompt. Please try again.",
-        "errorUpdate": "Failed to update prompt. Please try again.",
-        "errorDelete": "Failed to delete prompt. Please try again."
+        "createFirst": "Prompts transformieren deine Transkriptionen — korrigiere Grammatik, formatiere Text oder übersetze.",
+        "createFirstHint": "Erstelle deinen ersten Prompt unten.",
+        "builtIn": "Integriert",
+        "builtInReadOnly": "Integrierte Prompts sind schreibgeschützt.",
+        "costEstimate": "~{{requests}} Anfragen pro $1",
+        "costTooltip": "System-Prompt: ~{{systemTokens}} Token. Durchschnittlich 100-Wort-Transkript (~140 Eingabe-Token, ~120 Ausgabe-Token). Gesamt pro Anfrage: ~{{totalInputTokens}} Eingabe + ~{{totalOutputTokens}} Ausgabe Token.",
+        "errorCreate": "Prompt konnte nicht erstellt werden. Bitte versuche es erneut.",
+        "errorUpdate": "Prompt konnte nicht aktualisiert werden. Bitte versuche es erneut.",
+        "errorDelete": "Prompt konnte nicht gelöscht werden. Bitte versuche es erneut."
       }
     },
     "stats": {
@@ -553,8 +553,8 @@
       "recordingTime": "Aufnahmedauer",
       "avgWpm": "Durchschn. Wörter/Min",
       "wpmOverTime": "Sprechgeschwindigkeit im Zeitverlauf",
-      "noData": "Press {{shortcut}} to start dictating",
-      "noDataHint": "Your speaking analytics will appear here.",
+      "noData": "Drücke {{shortcut}}, um mit dem Diktieren zu beginnen",
+      "noDataHint": "Deine Sprechstatistiken werden hier angezeigt.",
       "transcriptions": "Transkriptionen",
       "clearStats": "Alle Statistikdaten löschen",
       "confirmClear": "Zum Bestätigen erneut klicken",
@@ -577,8 +577,8 @@
       },
       "openFolder": "Aufnahmeordner öffnen",
       "loading": "Verlauf wird geladen...",
-      "empty": "Press {{shortcut}} to start recording",
-      "emptyHint": "Your transcriptions will appear here.",
+      "empty": "Drücke {{shortcut}}, um mit der Aufnahme zu beginnen",
+      "emptyHint": "Deine Transkriptionen werden hier angezeigt.",
       "copyToClipboard": "Transkription in Zwischenablage kopieren",
       "save": "Transkription speichern",
       "unsave": "Aus Gespeicherten entfernen",
@@ -620,10 +620,10 @@
         "months3": "Nach 3 Monaten",
         "placeholder": "Aufbewahrungszeitraum auswählen...",
         "entries": "Einträge",
-        "confirmDelete": "This will permanently delete {{count}} unsaved recording(s) and their audio files.",
-        "confirmApply": "Delete and Apply",
-        "confirmCancel": "Cancel",
-        "noEntriesAffected": "No entries will be deleted with this setting."
+        "confirmDelete": "Dies löscht {{count}} nicht gespeicherte Aufnahme(n) und ihre Audiodateien permanent.",
+        "confirmApply": "Löschen und anwenden",
+        "confirmCancel": "Abbrechen",
+        "noEntriesAffected": "Mit dieser Einstellung werden keine Einträge gelöscht."
       },
       "alwaysOnMicrophone": {
         "label": "Mikrofon immer aktiv",
@@ -678,38 +678,38 @@
       "acknowledgments": {
         "handy": {
           "title": "Handy",
-          "description": "The open-source speech-to-text app that Handless was forked from",
-          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
+          "description": "Die Open-Source-Sprache-zu-Text-App, von der Handless geforkt wurde",
+          "details": "Basierend auf Handy von CJ Pais. Danke für die Grundlage."
         }
       }
     }
   },
   "dictionary": {
-    "title": "Dictionary",
+    "title": "Wörterbuch",
     "hints": {
-      "title": "Recognition Hints",
-      "description": "API providers only"
+      "title": "Erkennungshinweise",
+      "description": "Nur API-Anbieter"
     },
     "terms": {
-      "title": "Terms",
-      "description": "Words and phrases the speech engine should recognize accurately. These are sent to the provider before transcription to improve recognition of domain-specific vocabulary.",
-      "placeholder": "Add a term…",
-      "add": "Add",
-      "remove": "Remove {{term}}",
-      "duplicate": "\"{{term}}\" already exists",
-      "empty": "No terms added. Type a term and press Enter."
+      "title": "Begriffe",
+      "description": "Wörter und Phrasen, die die Sprachmaschine genau erkennen soll. Diese werden vor der Transkription an den Anbieter gesendet, um die Erkennung von fachspezifischem Vokabular zu verbessern.",
+      "placeholder": "Einen Begriff hinzufügen…",
+      "add": "Hinzufügen",
+      "remove": "{{term}} entfernen",
+      "duplicate": "\"{{term}}\" existiert bereits",
+      "empty": "Keine Begriffe hinzugefügt. Gib einen Begriff ein und drücke Enter."
     },
     "context": {
-      "title": "Context Description",
-      "description": "Freeform text that gives the speech engine background context about what you're dictating. Helps improve accuracy for domain-specific content.",
-      "placeholder": "e.g. Technical discussion about React components and TypeScript interfaces"
+      "title": "Kontextbeschreibung",
+      "description": "Freitext, der der Sprachmaschine Kontext darüber gibt, was du diktierst. Verbessert die Genauigkeit bei fachspezifischem Inhalt.",
+      "placeholder": "z.B. Technische Diskussion über React-Komponenten und TypeScript-Schnittstellen"
     },
-    "autoInjectedHint": "Auto-filled from Dictionary. Click to edit.",
+    "autoInjectedHint": "Automatisch aus Wörterbuch gefüllt. Klicke zum Bearbeiten.",
     "customWords": {
-      "title": "Word Corrections",
-      "subtitle": "Rule-based post-processing · All providers",
-      "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription.",
-      "empty": "No corrections added. Type a word and press Enter."
+      "title": "Wortkorrektur",
+      "subtitle": "Regelgestützte Nachbearbeitung · Alle Anbieter",
+      "description": "Wörter, die nach der Transkription oft falsch gehört oder geschrieben werden. Das System korrigiert automatisch ähnlich klingende Wörter in der Ausgabe, um sie deiner Liste anzupassen. Dies wird nach der Transkription angewendet, anders als Begriffe, die die Maschine vor der Transkription lenken.",
+      "empty": "Keine Korrektionen hinzugefügt. Gib ein Wort ein und drücke Enter."
     }
   },
   "footer": {

@@ -12,7 +12,7 @@
     "general": "一般",
     "shortcuts": "快捷鍵",
     "models": "模型",
-    "dictionary": "Dictionary",
+    "dictionary": "字典",
     "postProcessing": "後處理",
     "history": "歷史紀錄",
     "debug": "偵錯"
@@ -109,11 +109,11 @@
       },
       "elevenlabs": {
         "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+        "description": "ElevenLabs Scribe 語音轉文字。高精度支援 90+ 種語言。"
       },
       "groq": {
         "name": "Groq",
-        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+        "description": "Groq 超快速 Whisper 轉錄。閃電級推論速度，支援 99+ 種語言。"
       },
       "soniox": {
         "name": "Soniox",
@@ -121,23 +121,23 @@
       },
       "deepgram": {
         "name": "Deepgram",
-        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
+        "description": "Deepgram Nova 語音轉文字 API。快速準確，支援 50+ 種語言。"
       },
       "assemblyai": {
         "name": "AssemblyAI",
-        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+        "description": "AssemblyAI 語音轉文字。企業級準確度，支援說話者分離和 40+ 種語言。"
       },
       "cartesia": {
         "name": "Cartesia",
-        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+        "description": "Cartesia Ink 語音轉文字 API。實時串流轉錄，支援 99+ 種語言。"
       },
       "mistral": {
         "name": "Mistral AI",
-        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+        "description": "Mistral AI Voxtral 語音轉文字。高準確度，支援上下文偏差。"
       },
       "fireworks": {
         "name": "Fireworks AI",
-        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
+        "description": "Fireworks AI 語音轉文字。超快速 Whisper 轉錄，支援 95+ 種語言。"
       }
     }
   },
@@ -156,6 +156,7 @@
     "loadingGeneric": "載入中...",
     "modelError": "模型錯誤",
     "modelUnloaded": "模型已卸載",
+    "notAvailable": "無法使用",
     "noModelDownloadRequired": "無模型 - 需要下載",
     "deleteModel": "刪除 {{modelName}}",
     "downloadSpeed": "{{speed}} MB/秒",
@@ -168,8 +169,7 @@
       "languageOnly": "僅 {{language}}",
       "translation": "可翻譯為英語",
       "translate": "翻譯為英語"
-    },
-    "notAvailable": "不可用"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -214,12 +214,12 @@
         "auto": "自動"
       },
       "activationMode": {
-        "label": "Activation Mode",
-        "description": "How the shortcut key controls recording",
+        "label": "啟動模式",
+        "description": "快捷鍵如何控制錄製",
         "options": {
-          "toggle": "Toggle",
-          "hold": "Hold",
-          "holdOrToggle": "Hold or Toggle"
+          "toggle": "切換",
+          "hold": "按住",
+          "holdOrToggle": "按住或切換"
         }
       },
       "shortcuts": {
@@ -291,16 +291,16 @@
           "contextTermsDescription": "以逗號分隔的術語，用於提高辨識準確度",
           "contextDescription": "上下文描述",
           "contextDescriptionDescription": "自由文字，提供有關音訊內容的一般上下文",
-          "smartFormat": "Smart Format",
-          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
-          "punctuate": "Punctuate",
-          "punctuateDescription": "Add punctuation and capitalization to the transcript",
+          "smartFormat": "智慧格式化",
+          "smartFormatDescription": "套用格式化以提高可讀性，包括標點、大小寫等",
+          "punctuate": "加標點",
+          "punctuateDescription": "為轉錄新增標點和大寫",
           "enableSpeakerDiarization": "說話者分離",
           "enableSpeakerDiarizationDescription": "辨識並區分不同的說話者",
           "enableLanguageIdentification": "語言辨識",
           "enableLanguageIdentificationDescription": "偵測每個片段的語言",
-          "contextBias": "Context Bias",
-          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
+          "contextBias": "上下文偏差",
+          "contextBiasDescription": "以逗號分隔的術語，引導模型正確拼寫"
         }
       },
       "localModels": {
@@ -509,13 +509,13 @@
         },
         "tokensPerSecond": "{{value}} tok/s",
         "pricing": {
-          "title": "Pricing",
-          "description": "Enter your provider's pricing to see cost estimates.",
-          "inputPrice": "Input $/M",
-          "outputPrice": "Output $/M",
-          "inputPlaceholder": "e.g. 0.15",
-          "outputPlaceholder": "e.g. 0.60",
-          "autoFetched": "Auto-fetched from models.dev"
+          "title": "定價",
+          "description": "輸入供應商的定價以查看成本估計",
+          "inputPrice": "輸入 $/M",
+          "outputPrice": "輸出 $/M",
+          "inputPlaceholder": "例如 0.15",
+          "outputPlaceholder": "例如 0.60",
+          "autoFetched": "從 models.dev 自動取得"
         },
         "verified": "已驗證"
       },
@@ -530,20 +530,20 @@
         "promptLabelPlaceholder": "輸入提示詞名稱",
         "promptInstructions": "提示詞指令",
         "promptInstructionsPlaceholder": "撰寫轉錄後要執行的指令。轉錄內容會自動附加。",
-        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
+        "promptTip": "提示：聚焦於格式化和修正風格。轉錄始終自動附加。",
         "updatePrompt": "更新提示詞",
         "deletePrompt": "刪除提示詞",
         "createPrompt": "建立",
         "cancel": "取消",
-        "createFirst": "Prompts transform your transcriptions — fix grammar, format text, or translate.",
-        "createFirstHint": "Create your first one below.",
-        "builtIn": "Built-in",
-        "builtInReadOnly": "Built-in prompts are read-only.",
-        "costEstimate": "~{{requests}} requests per $1",
-        "costTooltip": "System prompt: ~{{systemTokens}} tokens. Assumes avg 100-word transcript (~140 input tokens, ~120 output tokens). Total per request: ~{{totalInputTokens}} input + ~{{totalOutputTokens}} output tokens.",
-        "errorCreate": "Failed to create prompt. Please try again.",
-        "errorUpdate": "Failed to update prompt. Please try again.",
-        "errorDelete": "Failed to delete prompt. Please try again."
+        "createFirst": "提示詞能轉換您的轉錄 — 修正文法、格式化文字或翻譯。",
+        "createFirstHint": "在下面建立您的第一個。",
+        "builtIn": "內建",
+        "builtInReadOnly": "內建提示詞為唯讀。",
+        "costEstimate": "~{{requests}} 個請求每 $1",
+        "costTooltip": "系統提示詞：~{{systemTokens}} 個 token。假設平均 100 字轉錄（~140 個輸入 token、~120 個輸出 token）。每個請求合計：~{{totalInputTokens}} 個輸入 + ~{{totalOutputTokens}} 個輸出 token。",
+        "errorCreate": "建立提示詞失敗，請重試。",
+        "errorUpdate": "更新提示詞失敗，請重試。",
+        "errorDelete": "刪除提示詞失敗，請重試。"
       }
     },
     "stats": {
@@ -553,8 +553,8 @@
       "recordingTime": "錄音時長",
       "avgWpm": "平均 字/分鐘",
       "wpmOverTime": "語速變化趨勢",
-      "noData": "Press {{shortcut}} to start dictating",
-      "noDataHint": "Your speaking analytics will appear here.",
+      "noData": "按下 {{shortcut}} 開始聽寫",
+      "noDataHint": "您的語音分析將顯示在此。",
       "transcriptions": "轉錄次數",
       "clearStats": "清除所有統計資料",
       "confirmClear": "再次點擊以確認",
@@ -577,8 +577,8 @@
       },
       "openFolder": "開啟錄音資料夾",
       "loading": "載入歷史紀錄中...",
-      "empty": "Press {{shortcut}} to start recording",
-      "emptyHint": "Your transcriptions will appear here.",
+      "empty": "按下 {{shortcut}} 開始錄製",
+      "emptyHint": "您的轉錄將顯示在此。",
       "copyToClipboard": "複製轉錄到剪貼簿",
       "save": "儲存轉錄",
       "unsave": "從已儲存中移除",
@@ -620,10 +620,10 @@
         "months3": "3 個月後",
         "placeholder": "選擇保留期限...",
         "entries": "筆",
-        "confirmDelete": "This will permanently delete {{count}} unsaved recording(s) and their audio files.",
-        "confirmApply": "Delete and Apply",
-        "confirmCancel": "Cancel",
-        "noEntriesAffected": "No entries will be deleted with this setting."
+        "confirmDelete": "這將永久刪除 {{count}} 個未儲存的錄音及其音訊檔案。",
+        "confirmApply": "刪除並套用",
+        "confirmCancel": "取消",
+        "noEntriesAffected": "此設定不會刪除任何項目。"
       },
       "alwaysOnMicrophone": {
         "label": "麥克風常開",
@@ -678,38 +678,38 @@
       "acknowledgments": {
         "handy": {
           "title": "Handy",
-          "description": "The open-source speech-to-text app that Handless was forked from",
-          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
+          "description": "Handless 所 fork 的開源語音轉文字應用程式",
+          "details": "以 CJ Pais 的 Handy 為基礎。感謝提供基礎。"
         }
       }
     }
   },
   "dictionary": {
-    "title": "Dictionary",
+    "title": "字典",
     "hints": {
-      "title": "Recognition Hints",
-      "description": "API providers only"
+      "title": "辨識提示",
+      "description": "僅適用於 API 供應商"
     },
     "terms": {
-      "title": "Terms",
-      "description": "Words and phrases the speech engine should recognize accurately. These are sent to the provider before transcription to improve recognition of domain-specific vocabulary.",
-      "placeholder": "Add a term…",
-      "add": "Add",
-      "remove": "Remove {{term}}",
-      "duplicate": "\"{{term}}\" already exists",
-      "empty": "No terms added. Type a term and press Enter."
+      "title": "詞彙",
+      "description": "語音引擎應該準確辨識的詞彙和短語。這些詞彙在轉錄前傳送給供應商以改進領域特定詞彙的辨識。",
+      "placeholder": "新增詞彙…",
+      "add": "新增",
+      "remove": "移除 {{term}}",
+      "duplicate": "「{{term}}」已存在",
+      "empty": "未新增詞彙。輸入詞彙並按下 Enter。"
     },
     "context": {
-      "title": "Context Description",
-      "description": "Freeform text that gives the speech engine background context about what you're dictating. Helps improve accuracy for domain-specific content.",
-      "placeholder": "e.g. Technical discussion about React components and TypeScript interfaces"
+      "title": "上下文描述",
+      "description": "自由文字，為語音引擎提供您所聽寫內容的背景上下文。協助改進領域特定內容的準確度。",
+      "placeholder": "例如 關於 React 元件和 TypeScript 介面的技術討論"
     },
-    "autoInjectedHint": "Auto-filled from Dictionary. Click to edit.",
+    "autoInjectedHint": "從字典自動填入。點擊以編輯。",
     "customWords": {
-      "title": "Word Corrections",
-      "subtitle": "Rule-based post-processing · All providers",
-      "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription.",
-      "empty": "No corrections added. Type a word and press Enter."
+      "title": "詞彙修正",
+      "subtitle": "基於規則的後處理 · 所有供應商",
+      "description": "轉錄後經常被誤聽或拼寫錯誤的詞彙。系統會自動修正輸出中發音相似的詞彙以符合您的列表。這在轉錄後套用，不像詞彙在轉錄前引導引擎。",
+      "empty": "未新增修正。輸入詞彙並按下 Enter。"
     }
   },
   "footer": {
@@ -725,7 +725,7 @@
     "installing": "安裝中...",
     "preparing": "準備中...",
     "checkForUpdates": "檢查更新",
-    "updateViaBrew": "Update via: brew upgrade --cask handless"
+    "updateViaBrew": "透過以下方式更新: brew upgrade --cask handless"
   },
   "common": {
     "loading": "載入中...",

@@ -12,7 +12,7 @@
     "general": "一般",
     "shortcuts": "ショートカット",
     "models": "モデル",
-    "dictionary": "Dictionary",
+    "dictionary": "辞書",
     "postProcessing": "後処理",
     "history": "履歴",
     "debug": "デバッグ"
@@ -109,11 +109,11 @@
       },
       "elevenlabs": {
         "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe speech-to-text. High accuracy with 90+ language support."
+        "description": "ElevenLabs Scribeの音声テキスト変換。90以上の言語をサポートする高精度。"
       },
       "groq": {
         "name": "Groq",
-        "description": "Groq's ultra-fast Whisper transcription. Lightning-fast inference with 99+ language support."
+        "description": "Groqの超高速Whisper文字起こし。99以上の言語対応で高速推論。"
       },
       "soniox": {
         "name": "Soniox",
@@ -121,23 +121,23 @@
       },
       "deepgram": {
         "name": "Deepgram",
-        "description": "Deepgram's Nova speech-to-text API. Fast and accurate with 50+ language support."
+        "description": "DeepgramのNova音声テキスト変換API。50以上の言語対応で高速・高精度。"
       },
       "assemblyai": {
         "name": "AssemblyAI",
-        "description": "AssemblyAI speech-to-text. Enterprise-grade accuracy with speaker diarization and 40+ languages."
+        "description": "AssemblyAIの音声テキスト変換。話者分離と40以上の言語対応のエンタープライズグレード精度。"
       },
       "cartesia": {
         "name": "Cartesia",
-        "description": "Cartesia's Ink speech-to-text API. Real-time streaming transcription with 99+ language support."
+        "description": "CartesiaのInk音声テキスト変換API。99以上の言語対応のリアルタイムストリーミング文字起こし。"
       },
       "mistral": {
         "name": "Mistral AI",
-        "description": "Mistral AI's Voxtral speech-to-text. High accuracy with context biasing support."
+        "description": "Mistral AIのVoxtral音声テキスト変換。コンテキストバイアスサポート付きの高精度。"
       },
       "fireworks": {
         "name": "Fireworks AI",
-        "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
+        "description": "Fireworks AIの音声テキスト変換。95以上の言語対応の超高速Whisper文字起こし。"
       }
     }
   },
@@ -237,16 +237,16 @@
           "contextTermsDescription": "認識精度を向上させるためのカンマ区切りの用語",
           "contextDescription": "コンテキスト説明",
           "contextDescriptionDescription": "音声コンテンツの一般的なコンテキストを提供する自由形式のテキスト",
-          "smartFormat": "Smart Format",
-          "smartFormatDescription": "Apply formatting for improved readability including punctuation, capitalization, and more",
-          "punctuate": "Punctuate",
-          "punctuateDescription": "Add punctuation and capitalization to the transcript",
+          "smartFormat": "スマートフォーマット",
+          "smartFormatDescription": "句読点や大文字化など、読みやすさを向上させるためのフォーマットを適用",
+          "punctuate": "句読点追加",
+          "punctuateDescription": "文字起こしに句読点と大文字を追加",
           "enableSpeakerDiarization": "話者分離",
           "enableSpeakerDiarizationDescription": "異なる話者を識別して分離",
           "enableLanguageIdentification": "言語識別",
           "enableLanguageIdentificationDescription": "各セグメントの言語を検出",
-          "contextBias": "Context Bias",
-          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
+          "contextBias": "コンテキストバイアス",
+          "contextBiasDescription": "モデルを正しい綴りに導くためのカンマ区切りの用語"
         }
       },
       "localModels": {
@@ -294,12 +294,12 @@
         "auto": "自動"
       },
       "activationMode": {
-        "label": "Activation Mode",
-        "description": "How the shortcut key controls recording",
+        "label": "起動モード",
+        "description": "ショートカットキーが録音をコントロールする方法",
         "options": {
-          "toggle": "Toggle",
-          "hold": "Hold",
-          "holdOrToggle": "Hold or Toggle"
+          "toggle": "トグル",
+          "hold": "押下",
+          "holdOrToggle": "押下またはトグル"
         }
       },
       "shortcuts": {
@@ -509,13 +509,13 @@
         },
         "tokensPerSecond": "{{value}} tok/s",
         "pricing": {
-          "title": "Pricing",
-          "description": "Enter your provider's pricing to see cost estimates.",
-          "inputPrice": "Input $/M",
-          "outputPrice": "Output $/M",
-          "inputPlaceholder": "e.g. 0.15",
-          "outputPlaceholder": "e.g. 0.60",
-          "autoFetched": "Auto-fetched from models.dev"
+          "title": "料金",
+          "description": "プロバイダーの料金を入力してコスト見積もりを確認",
+          "inputPrice": "入力 $/M",
+          "outputPrice": "出力 $/M",
+          "inputPlaceholder": "例 0.15",
+          "outputPlaceholder": "例 0.60",
+          "autoFetched": "models.devから自動取得"
         },
         "verified": "確認済み"
       },
@@ -530,20 +530,20 @@
         "promptLabelPlaceholder": "プロンプト名を入力",
         "promptInstructions": "プロンプトの指示",
         "promptInstructionsPlaceholder": "文字起こし後に実行する指示を記述します。文字起こしは自動的に追加されます。",
-        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
+        "promptTip": "ヒント：フォーマットと修正スタイルに焦点を当ててください。文字起こしは自動的に追加されます。",
         "updatePrompt": "プロンプトを更新",
         "deletePrompt": "プロンプトを削除",
         "createPrompt": "作成",
         "cancel": "キャンセル",
-        "createFirst": "Prompts transform your transcriptions — fix grammar, format text, or translate.",
-        "createFirstHint": "Create your first one below.",
-        "builtIn": "Built-in",
-        "builtInReadOnly": "Built-in prompts are read-only.",
-        "costEstimate": "~{{requests}} requests per $1",
-        "costTooltip": "System prompt: ~{{systemTokens}} tokens. Assumes avg 100-word transcript (~140 input tokens, ~120 output tokens). Total per request: ~{{totalInputTokens}} input + ~{{totalOutputTokens}} output tokens.",
-        "errorCreate": "Failed to create prompt. Please try again.",
-        "errorUpdate": "Failed to update prompt. Please try again.",
-        "errorDelete": "Failed to delete prompt. Please try again."
+        "createFirst": "プロンプトはあなたの文字起こしを変換します — 文法を修正、テキストをフォーマット、または翻訳します。",
+        "createFirstHint": "下記で最初のプロンプトを作成してください。",
+        "builtIn": "組み込み",
+        "builtInReadOnly": "組み込みプロンプトは読み取り専用です。",
+        "costEstimate": "~{{requests}}回のリクエスト / $1",
+        "costTooltip": "システムプロンプト: ~{{systemTokens}}トークン。平均100語の文字起こし（入力約140トークン、出力約120トークン）を想定。リクエストあたり合計：~{{totalInputTokens}}入力 + ~{{totalOutputTokens}}出力トークン。",
+        "errorCreate": "プロンプトの作成に失敗しました。もう一度お試しください。",
+        "errorUpdate": "プロンプトの更新に失敗しました。もう一度お試しください。",
+        "errorDelete": "プロンプトの削除に失敗しました。もう一度お試しください。"
       }
     },
     "stats": {
@@ -553,8 +553,8 @@
       "recordingTime": "録音時間",
       "avgWpm": "平均 語/分",
       "wpmOverTime": "発話速度の推移",
-      "noData": "Press {{shortcut}} to start dictating",
-      "noDataHint": "Your speaking analytics will appear here.",
+      "noData": "{{shortcut}}を押して話し始めてください",
+      "noDataHint": "あなたの発話分析がここに表示されます。",
       "transcriptions": "文字起こし",
       "clearStats": "すべての統計データを消去",
       "confirmClear": "もう一度クリックして確認",
@@ -577,8 +577,8 @@
       },
       "openFolder": "録音フォルダを開く",
       "loading": "履歴を読み込み中...",
-      "empty": "Press {{shortcut}} to start recording",
-      "emptyHint": "Your transcriptions will appear here.",
+      "empty": "{{shortcut}}を押して録音を開始してください",
+      "emptyHint": "あなたの文字起こしがここに表示されます。",
       "copyToClipboard": "文字起こしをクリップボードにコピー",
       "save": "文字起こしを保存",
       "unsave": "保存から削除",
@@ -620,10 +620,10 @@
         "months3": "3ヶ月後",
         "placeholder": "保持期間を選択...",
         "entries": "件",
-        "confirmDelete": "This will permanently delete {{count}} unsaved recording(s) and their audio files.",
-        "confirmApply": "Delete and Apply",
-        "confirmCancel": "Cancel",
-        "noEntriesAffected": "No entries will be deleted with this setting."
+        "confirmDelete": "{{count}}件の未保存の録音とそのオーディオファイルを完全に削除します。",
+        "confirmApply": "削除して適用",
+        "confirmCancel": "キャンセル",
+        "noEntriesAffected": "この設定では削除されるエントリーはありません。"
       },
       "alwaysOnMicrophone": {
         "label": "マイク常時オン",
@@ -678,38 +678,38 @@
       "acknowledgments": {
         "handy": {
           "title": "Handy",
-          "description": "The open-source speech-to-text app that Handless was forked from",
-          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
+          "description": "Handlessがフォークされたオープンソースの音声テキスト変換アプリ",
+          "details": "CJ Paisによる Handy を基盤に構築。基盤をありがとうございます。"
         }
       }
     }
   },
   "dictionary": {
-    "title": "Dictionary",
+    "title": "辞書",
     "hints": {
-      "title": "Recognition Hints",
-      "description": "API providers only"
+      "title": "認識ヒント",
+      "description": "APIプロバイダーのみ"
     },
     "terms": {
-      "title": "Terms",
-      "description": "Words and phrases the speech engine should recognize accurately. These are sent to the provider before transcription to improve recognition of domain-specific vocabulary.",
-      "placeholder": "Add a term…",
-      "add": "Add",
-      "remove": "Remove {{term}}",
-      "duplicate": "\"{{term}}\" already exists",
-      "empty": "No terms added. Type a term and press Enter."
+      "title": "用語",
+      "description": "音声エンジンが正確に認識すべき単語とフレーズ。文字起こし前にプロバイダーに送信され、専門用語の認識を向上させます。",
+      "placeholder": "用語を追加…",
+      "add": "追加",
+      "remove": "{{term}}を削除",
+      "duplicate": "「{{term}}」は既に存在します",
+      "empty": "用語が追加されていません。用語を入力してEnterキーを押してください。"
     },
     "context": {
-      "title": "Context Description",
-      "description": "Freeform text that gives the speech engine background context about what you're dictating. Helps improve accuracy for domain-specific content.",
-      "placeholder": "e.g. Technical discussion about React components and TypeScript interfaces"
+      "title": "コンテキスト説明",
+      "description": "あなたが話している内容についての背景情報を音声エンジンに提供する自由形式のテキスト。専門用語を含むコンテンツの精度向上に役立ちます。",
+      "placeholder": "例 Reactコンポーネントとアクセシビリティについての技術的な議論"
     },
-    "autoInjectedHint": "Auto-filled from Dictionary. Click to edit.",
+    "autoInjectedHint": "辞書から自動入力されました。クリックして編集。",
     "customWords": {
-      "title": "Word Corrections",
-      "subtitle": "Rule-based post-processing · All providers",
-      "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription.",
-      "empty": "No corrections added. Type a word and press Enter."
+      "title": "単語修正",
+      "subtitle": "ルールベースの後処理・全プロバイダー対応",
+      "description": "文字起こし後によく誤認識または誤入力される単語。システムは出力内の類似した発音の単語をリストに合わせて自動修正します。文字起こし前のエンジンをガイドする用語とは異なり、文字起こし後に適用されます。",
+      "empty": "修正が追加されていません。単語を入力してEnterキーを押してください。"
     }
   },
   "footer": {
@@ -725,7 +725,7 @@
     "installing": "インストール中...",
     "preparing": "準備中...",
     "checkForUpdates": "アップデートを確認",
-    "updateViaBrew": "Update via: brew upgrade --cask handless"
+    "updateViaBrew": "更新: brew upgrade --cask handless"
   },
   "common": {
     "loading": "読み込み中...",
