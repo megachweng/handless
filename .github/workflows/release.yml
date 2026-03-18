@@ -46,9 +46,28 @@ jobs:
               });
             }
 
+      - name: Extract release notes from CHANGELOG.md
+        id: release-notes
+        shell: bash
+        run: |
+          VERSION="${{ steps.get-version.outputs.version }}"
+          # Extract the section between ## [VERSION] and the next ## [
+          NOTES=$(sed -n "/^## \[${VERSION}\]/,/^## \[/{/^## \[${VERSION}\]/d;/^## \[/d;p;}" CHANGELOG.md)
+          # Trim leading/trailing blank lines
+          NOTES=$(echo "$NOTES" | sed -e '/./,$!d' -e :a -e '/^\n*$/{$d;N;ba;}')
+          echo "Release notes for v${VERSION}:"
+          echo "$NOTES"
+          {
+            echo "notes<<NOTES_EOF"
+            echo "$NOTES"
+            echo "NOTES_EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Create Draft Release
         id: create-release
         uses: actions/github-script@v8
+        env:
+          RELEASE_NOTES: ${{ steps.release-notes.outputs.notes }}
         with:
           script: |
             const { data } = await github.rest.repos.createRelease({
@@ -56,6 +75,7 @@ jobs:
               repo: context.repo.repo,
               tag_name: `v${{ steps.get-version.outputs.version }}`,
               name: `v${{ steps.get-version.outputs.version }}`,
+              body: process.env.RELEASE_NOTES,
               draft: true,
               prerelease: false
             })
