@@ -462,6 +462,12 @@ pub fn hide_recording_overlay(app_handle: &AppHandle) {
             std::thread::sleep(std::time::Duration::from_millis(300));
             if OVERLAY_SHOW_GENERATION.load(Ordering::SeqCst) == gen {
                 let _ = window_clone.hide();
+                // Reset size to default so the next show() doesn't briefly
+                // flash the window at whatever dimensions this session left.
+                let _ = window_clone.set_size(tauri::Size::Logical(tauri::LogicalSize {
+                    width: OVERLAY_WIDTH,
+                    height: OVERLAY_HEIGHT,
+                }));
             }
         });
     }

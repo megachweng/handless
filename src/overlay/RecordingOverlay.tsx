@@ -112,6 +112,7 @@ const RecordingOverlay: React.FC = () => {
   );
   const progressStartTimeRef = useRef<number>(0);
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const showGenRef = useRef(0);
 
   // Word tracking for per-word animation
   const prevWordCountRef = useRef(0);
@@ -374,6 +375,9 @@ const RecordingOverlay: React.FC = () => {
             position,
             activation_mode,
           } = event.payload;
+          // Bump generation so any pending hide timeout becomes a no-op,
+          // even if the timeout callback has already been queued.
+          showGenRef.current++;
           // Reset all state BEFORE any async work so the overlay never
           // renders stale content from the previous session.
           setState(overlayState);
@@ -402,8 +406,14 @@ const RecordingOverlay: React.FC = () => {
         await listen("hide-overlay", () => {
           clearProgressInterval();
           setProgress(1);
-          // Delay hide slightly so the user sees 100%
-          hideTimeoutRef.current = setTimeout(() => setIsVisible(false), 200);
+          // Delay hide slightly so the user sees 100%.
+          // Guard with generation so a rapid re-show doesn't get undone.
+          const gen = showGenRef.current;
+          hideTimeoutRef.current = setTimeout(() => {
+            if (showGenRef.current === gen) {
+              setIsVisible(false);
+            }
+          }, 200);
         }),
       );
 
