@@ -5,12 +5,17 @@
 <h1 align="center">Handless</h1>
 
 <p align="center">
+  <a href="https://handless.elwin.cc"><img src="https://img.shields.io/badge/Website-handless.elwin.cc-ef6f2f" alt="Website" /></a>
   <a href="https://github.com/ElwinLiu/handless/actions/workflows/build-test.yml"><img src="https://github.com/ElwinLiu/handless/actions/workflows/build-test.yml/badge.svg" alt="Build" /></a>
   <a href="https://github.com/ElwinLiu/handless/actions/workflows/lint.yml"><img src="https://github.com/ElwinLiu/handless/actions/workflows/lint.yml/badge.svg" alt="Lint" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
 </p>
 
 Free, open-source macOS speech-to-text. Press a shortcut, speak, get text in any app. Run locally for privacy or use cloud APIs.
+
+<p align="center">
+  <a href="https://handless.elwin.cc">handless.elwin.cc</a>
+</p>
 
 Forked from [Handy](https://github.com/cjpais/Handy) v0.7.8.
 
