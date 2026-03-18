@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-03-18
+
+### Added
+
+- macOS code signing and notarization for smoother updates
+- Translated READMEs for 16 languages
+
 ## [0.1.14] - 2026-03-18
 
 ### Changed
