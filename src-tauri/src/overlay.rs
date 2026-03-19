@@ -369,7 +369,6 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         // Bump generation so any pending hide thread becomes a no-op
         OVERLAY_SHOW_GENERATION.fetch_add(1, Ordering::SeqCst);
-        let _ = overlay_window.show();
 
         // The overlay needs cursor events when it has interactive controls:
         // toggle-mode recording (cancel/confirm buttons) or post-processing
@@ -379,6 +378,29 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
             || state == "transcribing"
             || state == "processing";
         let _ = overlay_window.set_ignore_cursor_events(!needs_interaction);
+
+        let position_str = match settings.overlay_position {
+            OverlayPosition::Top => "top",
+            _ => "bottom",
+        };
+        let activation_mode_str = match settings.activation_mode {
+            ActivationMode::Toggle => "toggle",
+            ActivationMode::Hold | ActivationMode::HoldOrToggle => "hold",
+        };
+        // Emit the show event BEFORE making the window visible so the
+        // webview can process it and paint a clean frame. This prevents
+        // the macOS window server from briefly displaying the stale
+        // render buffer (which may contain content from a previous session).
+        let _ = overlay_window.emit(
+            "show-overlay",
+            OverlayPayload {
+                state,
+                position: position_str,
+                activation_mode: activation_mode_str,
+            },
+        );
+
+        let _ = overlay_window.show();
 
         // On macOS, also use the NSPanel's order_front_regardless to ensure
         // the overlay appears on fullscreen spaces. Must run on the main
@@ -396,23 +418,6 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
         // On Windows, aggressively re-assert "topmost" in the native Z-order after showing
         #[cfg(target_os = "windows")]
         force_overlay_topmost(&overlay_window);
-
-        let position_str = match settings.overlay_position {
-            OverlayPosition::Top => "top",
-            _ => "bottom",
-        };
-        let activation_mode_str = match settings.activation_mode {
-            ActivationMode::Toggle => "toggle",
-            ActivationMode::Hold | ActivationMode::HoldOrToggle => "hold",
-        };
-        let _ = overlay_window.emit(
-            "show-overlay",
-            OverlayPayload {
-                state,
-                position: position_str,
-                activation_mode: activation_mode_str,
-            },
-        );
     }
 }
 
@@ -453,13 +458,16 @@ pub fn hide_recording_overlay(app_handle: &AppHandle) {
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         // Emit event to trigger fade-out animation
         let _ = overlay_window.emit("hide-overlay", ());
-        // Hide the window after a short delay to allow animation to complete.
-        // Capture the current generation so we skip the hide if a new show
-        // was requested while we were sleeping (prevents Bug #2 race).
+        // Hide the window after the fade-out animation fully completes.
+        // The React side waits 200ms (to show 100% progress) then removes
+        // the fade-in class, which triggers a CSS opacity transition with
+        // a 60ms delay and 200ms duration — totalling ~460ms. We wait
+        // 500ms to ensure the backing store has fully-transparent content
+        // so the next show() doesn't flash stale pixels.
         let gen = OVERLAY_SHOW_GENERATION.load(Ordering::SeqCst);
         let window_clone = overlay_window.clone();
         std::thread::spawn(move || {
-            std::thread::sleep(std::time::Duration::from_millis(300));
+            std::thread::sleep(std::time::Duration::from_millis(500));
             if OVERLAY_SHOW_GENERATION.load(Ordering::SeqCst) == gen {
                 let _ = window_clone.hide();
                 // Reset size to default so the next show() doesn't briefly
