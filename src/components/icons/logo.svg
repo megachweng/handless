@@ -1,11 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-13 -13 154 154" width="128" height="128">
   <rect x="4" y="4" width="120" height="120" rx="28" fill="#141414"/>
   <rect x="4" y="4" width="120" height="120" rx="28" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-  <g transform="translate(24, 64)">
-    <rect x="0"  y="-5"  width="10" height="10" rx="5"  fill="#ff8c00" opacity="0.5"/>
-    <rect x="20" y="-18" width="10" height="36" rx="4"  fill="#ff8c00" opacity="0.75"/>
-    <rect x="40" y="-32" width="10" height="64" rx="4"  fill="#ff8c00" opacity="1"/>
-    <rect x="60" y="-18" width="10" height="36" rx="4"  fill="#ff8c00" opacity="0.75"/>
-    <rect x="80" y="-5"  width="10" height="10" rx="5"  fill="#ff8c00" opacity="0.5"/>
+  <g transform="translate(25.0, 64)">
+    <rect x="0" y="-8.0" width="8" height="16" rx="4.0" fill="#ef6f2f" opacity="0.53"/>
+    <rect x="14" y="-16.0" width="8" height="32" rx="4.0" fill="#ef6f2f" opacity="0.67"/>
+    <rect x="28" y="-36.0" width="8" height="72" rx="4.0" fill="#ef6f2f" opacity="1.0"/>
+    <rect x="42" y="-24.0" width="8" height="48" rx="4.0" fill="#ef6f2f" opacity="0.8"/>
+    <rect x="56" y="-12.0" width="8" height="24" rx="4.0" fill="#ef6f2f" opacity="0.6"/>
+    <rect x="70" y="-8.0" width="8" height="16" rx="4.0" fill="#ef6f2f" opacity="0.53"/>
   </g>
 </svg>
