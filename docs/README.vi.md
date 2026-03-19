@@ -47,12 +47,7 @@
 
 ## Cài đặt
 
-**macOS (Homebrew):**
-
-```sh
-brew tap ElwinLiu/tap
-brew install --cask handless
-```
+**[Tải về cho macOS](https://github.com/ElwinLiu/handless/releases/latest)** (Intel & Apple Silicon)
 
 Biên dịch từ mã nguồn: xem [BUILD.md](../BUILD.md).
 

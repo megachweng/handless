@@ -47,12 +47,7 @@
 
 ## Instalação
 
-**macOS (Homebrew):**
-
-```sh
-brew tap ElwinLiu/tap
-brew install --cask handless
-```
+**[Baixar para macOS](https://github.com/ElwinLiu/handless/releases/latest)** (Intel e Apple Silicon)
 
 Compilar a partir do código-fonte: consulte [BUILD.md](../BUILD.md).
 

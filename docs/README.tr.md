@@ -47,12 +47,7 @@
 
 ## Kurulum
 
-**macOS (Homebrew):**
-
-```sh
-brew tap ElwinLiu/tap
-brew install --cask handless
-```
+**[macOS için indir](https://github.com/ElwinLiu/handless/releases/latest)** (Intel ve Apple Silicon)
 
 Kaynaktan derlemek için: [BUILD.md](../BUILD.md) dosyasına bakın.
 
