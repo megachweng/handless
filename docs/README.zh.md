@@ -36,7 +36,7 @@
 
 **[下载 macOS 版本](https://github.com/ElwinLiu/handless/releases/latest)**（Intel 和 Apple Silicon）
 
-从源码构建：请参阅 [BUILD.md](../BUILD.md)。
+也可通过 [handless.elwin.cc](https://handless.elwin.cc) 下载。从源码构建：请参阅 [BUILD.md](../BUILD.md)。
 
 ## 命令行
 

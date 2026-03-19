@@ -36,7 +36,7 @@
 
 **[macOS 版をダウンロード](https://github.com/ElwinLiu/handless/releases/latest)**（Intel & Apple Silicon）
 
-ソースからビルドする場合は[BUILD.md](../BUILD.md)を参照してください。
+[handless.elwin.cc](https://handless.elwin.cc) からもダウンロードできます。ソースからビルドする場合は[BUILD.md](../BUILD.md)を参照してください。
 
 ## CLI
 
