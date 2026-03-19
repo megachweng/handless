@@ -21,8 +21,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          ARM_FILE="Handless_${VERSION}_aarch64.dmg"
-          X86_FILE="Handless_${VERSION}_x64.dmg"
+          ARM_FILE="Handless_${VERSION}_apple-silicon.dmg"
+          X86_FILE="Handless_${VERSION}_intel.dmg"
 
           for i in $(seq 1 20); do
             echo "Attempt $i/20: checking for DMG assets..."
@@ -80,20 +80,24 @@ jobs:
           with open(cask_path) as f:
               content = f.read()
 
+          base_url = f"https://github.com/ElwinLiu/handless/releases/download/v{version}"
+          arm_url = f"{base_url}/Handless_{version}_apple-silicon.dmg"
+          intel_url = f"{base_url}/Handless_{version}_intel.dmg"
+
           # Update version
           content = re.sub(r'version "[^"]*"', f'version "{version}"', content)
 
-          # Update arm sha256 (inside on_arm block)
+          # Update arm url and sha256 (inside on_arm block)
           content = re.sub(
-              r'(on_arm do\s+url "[^"]*"\s+sha256 ")[^"]*(")',
-              rf'\g<1>{arm_sha}\g<2>',
+              r'(on_arm do\s+url ")[^"]*("\s+sha256 ")[^"]*(")',
+              rf'\g<1>{arm_url}\g<2>{arm_sha}\g<3>',
               content,
           )
 
-          # Update intel sha256 (inside on_intel block)
+          # Update intel url and sha256 (inside on_intel block)
           content = re.sub(
-              r'(on_intel do\s+url "[^"]*"\s+sha256 ")[^"]*(")',
-              rf'\g<1>{x86_sha}\g<2>',
+              r'(on_intel do\s+url ")[^"]*("\s+sha256 ")[^"]*(")',
+              rf'\g<1>{intel_url}\g<2>{x86_sha}\g<3>',
               content,
           )
 

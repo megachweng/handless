@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-03-19
+
+### Changed
+
+- Renamed release assets from `aarch64`/`x64` to `apple-silicon`/`intel` for clarity
+- Replaced Homebrew install with direct DMG download link in README
+- Reduced README translations to English, 简体中文, 繁體中文, 日本語
+
+### Fixed
+
+- Homebrew tap auto-update now triggers correctly on release publish
+
 ## [0.2.2] - 2026-03-19
 
 ### Changed

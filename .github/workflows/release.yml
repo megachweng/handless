@@ -92,9 +92,11 @@ jobs:
           - platform: "macos-26" # for Arm based macs (M1 and above). Uses macOS 26 for Apple Intelligence SDK.
             args: "--target aarch64-apple-darwin"
             target: "aarch64-apple-darwin"
+            label: "apple-silicon"
           - platform: "macos-latest" # for Intel based macs.
             args: "--target x86_64-apple-darwin"
             target: "x86_64-apple-darwin"
+            label: "intel"
           # - platform: "ubuntu-22.04" # Build .deb on 22.04
           #   args: "--bundles deb"
           #   target: "x86_64-unknown-linux-gnu"
@@ -117,7 +119,8 @@ jobs:
       target: ${{ matrix.target }}
       build-args: ${{ matrix.args }}
       sign-binaries: true
-      asset-prefix: "handless"
+      asset-prefix: ""
+      asset-name-pattern: "[name]_[version]_${{ matrix.label }}[ext]"
       upload-artifacts: false
       release-id: ${{ needs.create-release.outputs.release-id }}
     secrets: inherit
@@ -131,6 +134,7 @@ jobs:
       - name: Publish release
         uses: actions/github-script@v8
         with:
+          github-token: ${{ secrets.TAP_GITHUB_TOKEN }}
           script: |
             await github.rest.repos.updateRelease({
               owner: context.repo.owner,
