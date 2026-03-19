@@ -281,16 +281,16 @@ impl HistoryManager {
         match retention_period {
             crate::settings::RecordingRetentionPeriod::Never => {
                 // Don't delete anything
-                return Ok(());
+                Ok(())
             }
             crate::settings::RecordingRetentionPeriod::PreserveLimit => {
                 // Use the old count-based logic with history_limit
                 let limit = crate::settings::get_history_limit(&self.app_handle);
-                return self.cleanup_by_count(limit);
+                self.cleanup_by_count(limit)
             }
             _ => {
                 // Use time-based logic
-                return self.cleanup_by_time(retention_period);
+                self.cleanup_by_time(retention_period)
             }
         }
     }
@@ -452,13 +452,13 @@ impl HistoryManager {
                 row.get(0)
             })?;
 
-        let (query, cursor_params): (&str, Vec<Box<dyn rusqlite::types::ToSql>>) = if cursor
-            .is_some()
+        let (query, cursor_params): (&str, Vec<Box<dyn rusqlite::types::ToSql>>) = if let Some(c) =
+            cursor
         {
             (
                 "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt
                  FROM transcription_history WHERE id < ?1 ORDER BY id DESC LIMIT ?2",
-                vec![Box::new(cursor.unwrap()), Box::new(limit)],
+                vec![Box::new(c), Box::new(limit)],
             )
         } else {
             (

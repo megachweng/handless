@@ -276,9 +276,8 @@ pub fn filter_transcription_output(text: &str) -> String {
 
     // Remove filler words — only allocate when a pattern actually matches
     for pattern in FILLER_PATTERNS.iter() {
-        match pattern.replace_all(&filtered, "") {
-            Cow::Owned(s) => filtered = s,
-            Cow::Borrowed(_) => {} // no match, no allocation
+        if let Cow::Owned(s) = pattern.replace_all(&filtered, "") {
+            filtered = s;
         }
     }
 
@@ -286,9 +285,8 @@ pub fn filter_transcription_output(text: &str) -> String {
     filtered = collapse_stutters(&filtered);
 
     // Clean up multiple spaces to single space — skip allocation if unchanged
-    match MULTI_SPACE_PATTERN.replace_all(&filtered, " ") {
-        Cow::Owned(s) => filtered = s,
-        Cow::Borrowed(_) => {}
+    if let Cow::Owned(s) = MULTI_SPACE_PATTERN.replace_all(&filtered, " ") {
+        filtered = s;
     }
 
     // Trim in place to avoid a final allocation when possible

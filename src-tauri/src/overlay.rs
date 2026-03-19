@@ -330,7 +330,7 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
                 // Prevent showing the overlay from activating Handless, which
                 // would cause macOS to leave a fullscreen space.
                 panel.set_style_mask(StyleMask::empty().nonactivating_panel().into());
-                let _ = panel.hide();
+                panel.hide();
             }
             Err(e) => {
                 log::error!("Failed to create recording overlay panel: {}", e);
