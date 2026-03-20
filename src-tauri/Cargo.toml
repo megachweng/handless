@@ -1,6 +1,6 @@
 [package]
 name = "handless"
-version = "0.2.3"
+version = "0.2.4"
 description = "Handless"
 authors = ["elwin"]
 edition = "2021"
