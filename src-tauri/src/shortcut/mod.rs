@@ -200,7 +200,8 @@ pub fn change_binding(
 #[tauri::command]
 #[specta::specta]
 pub fn reset_binding(app: AppHandle, id: String) -> Result<BindingResponse, String> {
-    let binding = settings::get_stored_binding(&app, &id);
+    let binding = settings::get_stored_binding(&app, &id)
+        .ok_or_else(|| format!("binding '{}' not found", id))?;
     change_binding(app, id, binding.default_binding)
 }
 
