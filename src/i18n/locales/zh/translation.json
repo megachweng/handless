@@ -164,6 +164,8 @@
       "multiLanguage": "多语言",
       "translation": "可翻译为英语",
       "translate": "翻译为英语",
+      "realtime": "Realtime",
+      "realtimeDescription": "Supports real-time streaming transcription",
       "singleLanguage": "仅支持此语言",
       "languageOnly": "仅 {{language}}"
     },

@@ -168,7 +168,9 @@
       "multiLanguage": "多語言",
       "languageOnly": "僅 {{language}}",
       "translation": "可翻譯為英語",
-      "translate": "翻譯為英語"
+      "translate": "翻譯為英語",
+      "realtime": "Realtime",
+      "realtimeDescription": "Supports real-time streaming transcription"
     }
   },
   "settings": {

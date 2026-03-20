@@ -168,7 +168,9 @@
       "multiLanguage": "Multi-language",
       "languageOnly": "{{language}} Only",
       "translation": "Can translate to English",
-      "translate": "Translate to English"
+      "translate": "Translate to English",
+      "realtime": "Realtime",
+      "realtimeDescription": "Supports real-time streaming transcription"
     }
   },
   "settings": {

@@ -164,6 +164,8 @@
       "multiLanguage": "多言語",
       "translation": "英語への翻訳が可能",
       "translate": "英語に翻訳",
+      "realtime": "Realtime",
+      "realtimeDescription": "Supports real-time streaming transcription",
       "singleLanguage": "この言語のみ対応",
       "languageOnly": "{{language}}のみ"
     },

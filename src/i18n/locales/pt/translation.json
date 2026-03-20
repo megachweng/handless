@@ -168,7 +168,9 @@
       "multiLanguage": "Multi-idioma",
       "languageOnly": "Apenas {{language}}",
       "translation": "Pode traduzir para inglês",
-      "translate": "Traduzir para inglês"
+      "translate": "Traduzir para inglês",
+      "realtime": "Realtime",
+      "realtimeDescription": "Supports real-time streaming transcription"
     }
   },
   "settings": {

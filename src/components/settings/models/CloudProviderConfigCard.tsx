@@ -8,6 +8,7 @@ import React, {
 import { useTranslation } from "react-i18next";
 import {
   Book,
+  Broadcast,
   CaretDown,
   Cloud,
   ArrowSquareOut,
@@ -510,6 +511,16 @@ export const CloudProviderConfigCard: React.FC<
             <div className={capabilityTagClasses}>
               <Translate className="w-3 h-3" />
               <span>{t("modelSelector.capabilities.translate")}</span>
+            </div>
+          </SimpleTooltip>
+        )}
+        {provider.supports_realtime && (
+          <SimpleTooltip
+            content={t("modelSelector.capabilities.realtimeDescription")}
+          >
+            <div className={capabilityTagClasses}>
+              <Broadcast className="w-3 h-3" />
+              <span>{t("modelSelector.capabilities.realtime")}</span>
             </div>
           </SimpleTooltip>
         )}

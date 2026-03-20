@@ -164,6 +164,8 @@
       "multiLanguage": "Vícejazyčný",
       "translation": "Umí překládat do angličtiny",
       "translate": "Přeložit do angličtiny",
+      "realtime": "Realtime",
+      "realtimeDescription": "Supports real-time streaming transcription",
       "singleLanguage": "Podporuje pouze tento jazyk",
       "languageOnly": "Pouze {{language}}"
     },

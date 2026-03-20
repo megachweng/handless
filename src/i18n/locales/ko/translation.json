@@ -167,7 +167,9 @@
       "multiLanguage": "다국어",
       "languageOnly": "{{language}} 전용",
       "translation": "영어로 번역 가능",
-      "translate": "영어로 번역"
+      "translate": "영어로 번역",
+      "realtime": "Realtime",
+      "realtimeDescription": "Supports real-time streaming transcription"
     },
     "notAvailable": "사용 불가"
   },
