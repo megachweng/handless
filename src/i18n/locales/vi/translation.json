@@ -168,7 +168,9 @@
       "multiLanguage": "Đa ngôn ngữ",
       "languageOnly": "Chỉ {{language}}",
       "translation": "Có thể dịch sang tiếng Anh",
-      "translate": "Dịch sang tiếng Anh"
+      "translate": "Dịch sang tiếng Anh",
+      "realtime": "Realtime",
+      "realtimeDescription": "Supports real-time streaming transcription"
     }
   },
   "settings": {

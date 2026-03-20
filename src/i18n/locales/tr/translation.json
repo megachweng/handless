@@ -164,6 +164,8 @@
       "multiLanguage": "Çok dilli",
       "translation": "İngilizce'ye çevirebilir",
       "translate": "İngilizce'ye çevir",
+      "realtime": "Realtime",
+      "realtimeDescription": "Supports real-time streaming transcription",
       "singleLanguage": "Yalnızca bu dili destekler",
       "languageOnly": "Yalnızca {{language}}"
     },

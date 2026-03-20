@@ -167,7 +167,9 @@
       "multiLanguage": "متعدد اللغات",
       "languageOnly": "{{language}} فقط",
       "translation": "يدعم الترجمة",
-      "translate": "ترجمة"
+      "translate": "ترجمة",
+      "realtime": "Realtime",
+      "realtimeDescription": "Supports real-time streaming transcription"
     },
     "notAvailable": "غير متاح"
   },

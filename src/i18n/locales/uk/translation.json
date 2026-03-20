@@ -164,6 +164,8 @@
       "multiLanguage": "Багатомовна",
       "translation": "Може перекладати на англійську",
       "translate": "Перекласти на англійську",
+      "realtime": "Realtime",
+      "realtimeDescription": "Supports real-time streaming transcription",
       "singleLanguage": "Підтримує лише цю мову",
       "languageOnly": "Лише {{language}}"
     },

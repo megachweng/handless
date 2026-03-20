@@ -164,6 +164,8 @@
       "multiLanguage": "Multiidioma",
       "translation": "Puede traducir al inglés",
       "translate": "Traducir al inglés",
+      "realtime": "Realtime",
+      "realtimeDescription": "Supports real-time streaming transcription",
       "singleLanguage": "Solo admite este idioma",
       "languageOnly": "Solo {{language}}"
     },
