@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.5] - 2026-03-27
+
+### Added
+
+- Chinese (Simplified & Traditional) language support for Deepgram via automatic nova-2 fallback
+
 ## [0.2.4] - 2026-03-20
 
 ### Added
