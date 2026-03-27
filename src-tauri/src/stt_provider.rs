@@ -340,6 +340,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "id", "it", "ja", "kn", "ko", "lv", "lt", "mk", "ms", "mr",
                 "no", "pl", "pt", "ro", "ru", "sr", "sk", "sl", "es", "sv",
                 "tl", "ta", "te", "tr", "uk", "ur", "vi",
+                "zh-Hans", "zh-Hant",
             ].into_iter().map(String::from).collect(),
             supports_translation: false,
             supports_realtime: true,

@@ -13,8 +13,15 @@ const WS_READ_TIMEOUT: Duration = Duration::from_secs(30);
 
 /// Build the WebSocket URL with query parameters for Deepgram's live transcription API.
 fn build_ws_url(model: &str, encoding: &str, options: Option<&serde_json::Value>) -> String {
+    let lang = options
+        .and_then(|o| o.get("language"))
+        .and_then(|v| v.as_str())
+        .filter(|s| !s.is_empty());
+    let effective_model =
+        crate::cloud_stt::deepgram::resolve_model_for_language(model, lang);
+
     let mut params = vec![
-        ("model".to_string(), model.to_string()),
+        ("model".to_string(), effective_model.to_string()),
         ("encoding".to_string(), encoding.to_string()),
         ("sample_rate".to_string(), "16000".to_string()),
         ("channels".to_string(), "1".to_string()),
@@ -23,7 +30,10 @@ fn build_ws_url(model: &str, encoding: &str, options: Option<&serde_json::Value>
     if let Some(opts) = options {
         if let Some(lang) = opts.get("language").and_then(|v| v.as_str()) {
             if !lang.is_empty() {
-                params.push(("language".to_string(), lang.to_string()));
+                params.push((
+                    "language".to_string(),
+                    crate::cloud_stt::strip_lang_subtag(lang).to_string(),
+                ));
             }
         }
         if opts
@@ -56,12 +66,18 @@ fn build_ws_url(model: &str, encoding: &str, options: Option<&serde_json::Value>
         }
         if let Some(keyterm) = opts.get("keyterm").and_then(|v| v.as_str()) {
             if !keyterm.is_empty() {
+                // nova-2 uses "keywords" instead of "keyterm"
+                let param_name = if effective_model.starts_with("nova-2") {
+                    "keywords"
+                } else {
+                    "keyterm"
+                };
                 for kw in keyterm
                     .split(',')
                     .map(|s| s.trim())
                     .filter(|s| !s.is_empty())
                 {
-                    params.push(("keyterm".to_string(), kw.to_string()));
+                    params.push((param_name.to_string(), kw.to_string()));
                 }
             }
         }
