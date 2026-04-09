@@ -359,7 +359,8 @@
         "options": {
           "none": "Yok",
           "bottom": "Alt",
-          "top": "Üst"
+          "top": "Üst",
+          "notch": "Notch"
         }
       },
       "pasteMethod": {

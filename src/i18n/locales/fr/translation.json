@@ -386,7 +386,8 @@
         "options": {
           "none": "Aucune",
           "bottom": "Bas",
-          "top": "Haut"
+          "top": "Haut",
+          "notch": "Notch"
         }
       },
       "pasteMethod": {

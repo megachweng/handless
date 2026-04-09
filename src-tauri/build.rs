@@ -2,6 +2,9 @@ fn main() {
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
     build_apple_intelligence_bridge();
 
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    build_notch_indicator_bridge();
+
     generate_tray_translations();
 
     tauri_build::build()
@@ -236,4 +239,105 @@ fn build_apple_intelligence_bridge() {
     }
 
     println!("cargo:rustc-link-arg=-Wl,-rpath,/usr/lib/swift");
+}
+
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn build_notch_indicator_bridge() {
+    use std::env;
+    use std::path::PathBuf;
+    use std::process::Command;
+
+    const SWIFT_FILE: &str = "swift/notch/notch_indicator.swift";
+    const BRIDGE_HEADER: &str = "swift/notch/notch_indicator_bridge.h";
+
+    println!("cargo:rerun-if-changed={SWIFT_FILE}");
+    println!("cargo:rerun-if-changed={BRIDGE_HEADER}");
+
+    let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR not set"));
+    let object_path = out_dir.join("notch_indicator.o");
+    let static_lib_path = out_dir.join("libnotch_indicator.a");
+
+    let sdk_path = String::from_utf8(
+        Command::new("xcrun")
+            .args(["--sdk", "macosx", "--show-sdk-path"])
+            .output()
+            .expect("Failed to locate macOS SDK")
+            .stdout,
+    )
+    .expect("SDK path is not valid UTF-8")
+    .trim()
+    .to_string();
+
+    let swiftc_path = String::from_utf8(
+        Command::new("xcrun")
+            .args(["--find", "swiftc"])
+            .output()
+            .expect("Failed to locate swiftc")
+            .stdout,
+    )
+    .expect("swiftc path is not valid UTF-8")
+    .trim()
+    .to_string();
+
+    let toolchain_swift_lib = std::path::Path::new(&swiftc_path)
+        .parent()
+        .and_then(|p| p.parent())
+        .map(|root| root.join("lib/swift/macosx"))
+        .expect("Unable to determine Swift toolchain lib directory");
+    let sdk_swift_lib = std::path::Path::new(&sdk_path).join("usr/lib/swift");
+
+    // Target macOS 14.0: the notch indicator uses APIs introduced across macOS 12-14
+    // (safeAreaInsets, auxiliaryTopLeftArea, NSHostingView.sizingOptions, etc.).
+    // MacBooks with a hardware notch ship with macOS 12.1+; macOS 14.0 covers all of them.
+    let status = Command::new("xcrun")
+        .args([
+            "swiftc",
+            "-target",
+            "arm64-apple-macosx14.0",
+            "-sdk",
+            &sdk_path,
+            "-O",
+            "-import-objc-header",
+            BRIDGE_HEADER,
+            "-c",
+            SWIFT_FILE,
+            "-o",
+            object_path
+                .to_str()
+                .expect("Failed to convert object path to string"),
+        ])
+        .status()
+        .expect("Failed to invoke swiftc for notch indicator bridge");
+
+    if !status.success() {
+        panic!("swiftc failed to compile {SWIFT_FILE}");
+    }
+
+    let status = Command::new("libtool")
+        .args([
+            "-static",
+            "-o",
+            static_lib_path
+                .to_str()
+                .expect("Failed to convert static lib path to string"),
+            object_path
+                .to_str()
+                .expect("Failed to convert object path to string"),
+        ])
+        .status()
+        .expect("Failed to create static library for notch indicator bridge");
+
+    if !status.success() {
+        panic!("libtool failed for notch indicator bridge");
+    }
+
+    println!("cargo:rustc-link-search=native={}", out_dir.display());
+    println!("cargo:rustc-link-lib=static=notch_indicator");
+    println!(
+        "cargo:rustc-link-search=native={}",
+        toolchain_swift_lib.display()
+    );
+    println!("cargo:rustc-link-search=native={}", sdk_swift_lib.display());
+    println!("cargo:rustc-link-lib=framework=AppKit");
+    println!("cargo:rustc-link-lib=framework=SwiftUI");
 }

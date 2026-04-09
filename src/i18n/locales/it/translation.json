@@ -359,7 +359,8 @@
         "options": {
           "none": "Nessuna",
           "bottom": "In basso",
-          "top": "In alto"
+          "top": "In alto",
+          "notch": "Notch"
         }
       },
       "pasteMethod": {

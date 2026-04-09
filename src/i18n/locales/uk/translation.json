@@ -359,7 +359,8 @@
         "options": {
           "none": "Немає",
           "bottom": "Внизу",
-          "top": "Вгорі"
+          "top": "Вгорі",
+          "notch": "Notch"
         }
       },
       "pasteMethod": {

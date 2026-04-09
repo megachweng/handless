@@ -958,7 +958,7 @@ export type ModelLoadStatus = { is_loaded: boolean; current_model: string | null
  */
 export type ModelPricing = { input: number; output: number }
 export type ModelUnloadTimeout = "never" | "immediately" | "min_2" | "min_5" | "min_10" | "min_15" | "hour_1" | "sec_5"
-export type OverlayPosition = "none" | "top" | "bottom"
+export type OverlayPosition = "none" | "top" | "bottom" | "notch"
 export type PasteMethod = "ctrl_v" | "direct" | "none" | "shift_insert" | "ctrl_shift_v" | "external_script"
 export type PostProcessProvider = { id: string; label: string; base_url: string; allow_base_url_edit?: boolean; models_endpoint?: string | null; supports_structured_output?: boolean }
 export type ProviderBackend = { type: "Local"; engine_type: EngineType; filename: string; url: string | null; size_mb: number; is_downloaded: boolean; is_downloading: boolean; partial_size: number; is_directory: boolean; accuracy_score: number; speed_score: number; is_custom: boolean } | { type: "Cloud"; base_url: string; default_model: string; console_url: string | null }

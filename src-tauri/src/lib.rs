@@ -1,6 +1,8 @@
 pub(crate) mod actions;
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 mod apple_intelligence;
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+pub(crate) mod notch;
 mod audio_feedback;
 pub mod audio_toolkit;
 pub mod cli;
@@ -261,6 +263,10 @@ fn initialize_core_logic(app_handle: &AppHandle) {
 
     // Create the recording overlay window (hidden by default)
     utils::create_recording_overlay(app_handle);
+
+    // Initialize the native notch indicator panel (macOS Apple Silicon only)
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    notch::init();
 }
 
 #[tauri::command]

@@ -359,7 +359,8 @@
         "options": {
           "none": "없음",
           "bottom": "하단",
-          "top": "상단"
+          "top": "상단",
+          "notch": "Notch"
         }
       },
       "pasteMethod": {

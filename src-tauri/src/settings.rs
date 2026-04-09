@@ -165,6 +165,7 @@ pub enum OverlayPosition {
     None,
     Top,
     Bottom,
+    Notch,
 }
 
 #[derive(Serialize, Deserialize, Default, Debug, Clone, Copy, PartialEq, Eq, Type)]

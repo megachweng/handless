@@ -395,7 +395,8 @@
         "options": {
           "none": "Nenhum",
           "bottom": "Inferior",
-          "top": "Superior"
+          "top": "Superior",
+          "notch": "Notch"
         }
       },
       "pasteMethod": {
