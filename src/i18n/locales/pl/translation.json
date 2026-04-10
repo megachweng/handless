@@ -138,6 +138,10 @@
       "fireworks": {
         "name": "Fireworks AI",
         "description": "Zamiana mowy na tekst Fireworks AI. Ultraszybka transkrypcja Whisper z obsługą ponad 95 języków."
+      },
+      "doubao": {
+        "name": "Doubao",
+        "description": "ByteDance Doubao speech-to-text. High-quality recognition optimized for Chinese with multi-language support."
       }
     }
   },
@@ -302,7 +306,17 @@
           "enableLanguageIdentification": "Identyfikacja języka",
           "enableLanguageIdentificationDescription": "Wykrywaj język dla każdego segmentu",
           "contextBias": "Stronniczość kontekstu",
-          "contextBiasDescription": "Terminy oddzielone przecinkami w celu kierowania modelem na poprawne pisownie"
+          "contextBiasDescription": "Terminy oddzielone przecinkami w celu kierowania modelem na poprawne pisownie",
+          "enableItn": "Inverse Text Normalization",
+          "enableItnDescription": "Convert spoken numbers, dates, and units to written form",
+          "enableDdc": "Disfluency Removal",
+          "enableDdcDescription": "Remove filler words, hesitations, and repetitions for smoother text"
+        },
+        "doubao": {
+          "appKey": "App Key (App ID)",
+          "appKeyDescription": "Your Volcengine App ID (from the Speech console)",
+          "resourceId": "Resource ID",
+          "resourceIdDescription": "Your Volcengine speech resource ID (from the Speech console)"
         }
       },
       "localModels": {

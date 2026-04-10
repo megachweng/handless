@@ -139,14 +139,30 @@ pub async fn test_stt_api_key(
 
     let base_url = provider.base_url.clone();
 
+    let cloud_opts: Option<serde_json::Value> = settings
+        .stt_cloud_options
+        .get(&provider_id)
+        .and_then(|s| serde_json::from_str(s).ok());
+
     if realtime {
-        crate::cloud_stt::realtime::test_api_key(&provider_id, &api_key, &model)
-            .await
-            .map_err(|e| e.to_string())?;
+        crate::cloud_stt::realtime::test_api_key(
+            &provider_id,
+            &api_key,
+            &model,
+            cloud_opts.as_ref(),
+        )
+        .await
+        .map_err(|e| e.to_string())?;
     } else {
-        crate::cloud_stt::test_api_key(&provider_id, &api_key, &base_url, &model)
-            .await
-            .map_err(|e| e.to_string())?;
+        crate::cloud_stt::test_api_key(
+            &provider_id,
+            &api_key,
+            &base_url,
+            &model,
+            cloud_opts.as_ref(),
+        )
+        .await
+        .map_err(|e| e.to_string())?;
     }
 
     // Mark provider as verified on success

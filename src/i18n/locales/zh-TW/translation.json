@@ -138,6 +138,10 @@
       "fireworks": {
         "name": "Fireworks AI",
         "description": "Fireworks AI 語音轉文字。超快速 Whisper 轉錄，支援 95+ 種語言。"
+      },
+      "doubao": {
+        "name": "豆包",
+        "description": "字節跳動豆包語音辨識。針對中文優化的高品質語音轉文字，支援多種語言。"
       }
     }
   },
@@ -302,7 +306,17 @@
           "enableLanguageIdentification": "語言辨識",
           "enableLanguageIdentificationDescription": "偵測每個片段的語言",
           "contextBias": "上下文偏差",
-          "contextBiasDescription": "以逗號分隔的術語，引導模型正確拼寫"
+          "contextBiasDescription": "以逗號分隔的術語，引導模型正確拼寫",
+          "enableItn": "文本規範化 (ITN)",
+          "enableItnDescription": "將口語中的數字、日期和單位轉換為書面形式",
+          "enableDdc": "語義順滑",
+          "enableDdcDescription": "刪除語氣詞、停頓詞和語義重複，使文字更加流暢易讀"
+        },
+        "doubao": {
+          "appKey": "應用金鑰 (App ID)",
+          "appKeyDescription": "火山引擎 App ID（從語音控制台取得）",
+          "resourceId": "資源 ID",
+          "resourceIdDescription": "火山引擎語音資源 ID（從語音控制台取得）"
         }
       },
       "localModels": {

@@ -138,6 +138,10 @@
       "fireworks": {
         "name": "Fireworks AI",
         "description": "Fireworks AIの音声テキスト変換。95以上の言語対応の超高速Whisper文字起こし。"
+      },
+      "doubao": {
+        "name": "Doubao",
+        "description": "ByteDance Doubao speech-to-text. High-quality recognition optimized for Chinese with multi-language support."
       }
     }
   },
@@ -248,7 +252,17 @@
           "enableLanguageIdentification": "言語識別",
           "enableLanguageIdentificationDescription": "各セグメントの言語を検出",
           "contextBias": "コンテキストバイアス",
-          "contextBiasDescription": "モデルを正しい綴りに導くためのカンマ区切りの用語"
+          "contextBiasDescription": "モデルを正しい綴りに導くためのカンマ区切りの用語",
+          "enableItn": "Inverse Text Normalization",
+          "enableItnDescription": "Convert spoken numbers, dates, and units to written form",
+          "enableDdc": "Disfluency Removal",
+          "enableDdcDescription": "Remove filler words, hesitations, and repetitions for smoother text"
+        },
+        "doubao": {
+          "appKey": "App Key (App ID)",
+          "appKeyDescription": "Your Volcengine App ID (from the Speech console)",
+          "resourceId": "Resource ID",
+          "resourceIdDescription": "Your Volcengine speech resource ID (from the Speech console)"
         }
       },
       "localModels": {

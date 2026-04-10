@@ -50,6 +50,7 @@ impl RealtimeStreamingSession {
         let handles = match config.provider_id.as_str() {
             "assemblyai" => start_provider!(assemblyai),
             "deepgram" => start_provider!(deepgram),
+            "doubao" => start_provider!(doubao),
             "elevenlabs" => start_provider!(elevenlabs),
             "fireworks" => start_provider!(fireworks),
             "mistral" => start_provider!(mistral),

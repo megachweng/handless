@@ -3,6 +3,7 @@ use serde::Deserialize;
 pub mod assemblyai;
 pub mod cartesia;
 pub mod deepgram;
+pub mod doubao;
 pub mod elevenlabs;
 pub mod fireworks;
 pub mod groq;
@@ -43,9 +44,11 @@ pub async fn test_api_key(
     api_key: &str,
     base_url: &str,
     model: &str,
+    options: Option<&serde_json::Value>,
 ) -> anyhow::Result<()> {
     match provider_id {
         "cartesia" => cartesia::test_api_key(api_key, base_url, model).await,
+        "doubao" => doubao::test_api_key(api_key, base_url, model, options).await,
         "mistral" => mistral::test_api_key(api_key, base_url, model).await,
         "openai_stt" => openai::test_api_key(api_key, base_url, model).await,
         "elevenlabs" => elevenlabs::test_api_key(api_key, base_url, model).await,
@@ -71,6 +74,7 @@ pub async fn transcribe(
 ) -> anyhow::Result<String> {
     match provider_id {
         "cartesia" => cartesia::transcribe(api_key, base_url, model, audio_wav, options).await,
+        "doubao" => doubao::transcribe(api_key, base_url, model, audio_wav, options).await,
         "mistral" => mistral::transcribe(api_key, base_url, model, audio_wav, options).await,
         "openai_stt" => openai::transcribe(api_key, base_url, model, audio_wav, options).await,
         "elevenlabs" => elevenlabs::transcribe(api_key, base_url, model, audio_wav, options).await,

@@ -648,6 +648,13 @@ fn default_stt_providers() -> Vec<SttProvider> {
             base_url: "https://audio-prod.api.fireworks.ai/v1".to_string(),
             default_model: "whisper-v3".to_string(),
         },
+        SttProvider {
+            id: "doubao".to_string(),
+            label: "Doubao".to_string(),
+            provider_type: SttProviderType::Cloud,
+            base_url: "wss://openspeech.bytedance.com/api/v3/sauc/bigmodel_async".to_string(),
+            default_model: "bigmodel".to_string(),
+        },
     ]
 }
 
