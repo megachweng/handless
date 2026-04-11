@@ -28,7 +28,7 @@ const BUTTON_AREA_WIDTH = 20; // px per side for cancel/confirm buttons
 const BUBBLE_CSS_WIDTH = 280; // must match .streaming-text-bubble { width }
 const BUBBLE_CHROME = 18; // 8+8 padding + 1+1 border on .streaming-text-bubble
 const BUBBLE_GAP = 6; // must match .overlay-wrapper { gap }
-const BUBBLE_MARGIN = 10; // window margin around bubble for shadows
+const BUBBLE_MARGIN = 2; // small safety margin around bubble during animation
 
 // Apple-style waveform: thick rounded bars that stretch vertically
 const BAR_WIDTH = 2.5;
