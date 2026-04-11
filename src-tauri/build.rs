@@ -286,14 +286,14 @@ fn build_notch_indicator_bridge() {
         .expect("Unable to determine Swift toolchain lib directory");
     let sdk_swift_lib = std::path::Path::new(&sdk_path).join("usr/lib/swift");
 
-    // Target macOS 14.0: the notch indicator uses APIs introduced across macOS 12-14
-    // (safeAreaInsets, auxiliaryTopLeftArea, NSHostingView.sizingOptions, etc.).
-    // MacBooks with a hardware notch ship with macOS 12.1+; macOS 14.0 covers all of them.
+    // Target macOS 12.0: every Mac with a hardware notch shipped with macOS 12.1+.
+    // APIs above 12.0 (e.g. NSHostingView.sizingOptions, macOS 13+) are guarded with
+    // `if #available` in the Swift source.
     let status = Command::new("xcrun")
         .args([
             "swiftc",
             "-target",
-            "arm64-apple-macosx14.0",
+            "arm64-apple-macosx12.0",
             "-sdk",
             &sdk_path,
             "-O",

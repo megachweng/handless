@@ -109,7 +109,12 @@ final class NotchGeometry: ObservableObject {
         } else {
             notchWidth = 0
         }
-        notchHeight = hasNotch ? screen.safeAreaInsets.top : 32
+        if hasNotch {
+            notchHeight = screen.safeAreaInsets.top
+        } else {
+            let measured = screen.frame.maxY - screen.visibleFrame.maxY
+            notchHeight = measured > 0 ? measured : NSStatusBar.system.thickness
+        }
     }
 }
 
@@ -154,7 +159,7 @@ struct AudioWaveformView: View {
             }
         }
         .frame(height: maxHeight)
-        .onChange(of: isSetup) { _, newValue in
+        .onChange(of: isSetup) { newValue in
             if newValue { startBounce() } else { stopBounce() }
         }
         .onAppear { if isSetup { startBounce() } }
@@ -215,7 +220,7 @@ struct IndicatorExpandableText: View {
             }
             .frame(height: expanded ? expandedHeight : 0)
             .clipped()
-            .onChange(of: text) {
+            .onChange(of: text) { _ in
                 proxy.scrollTo("bottom", anchor: .bottom)
             }
         }
@@ -254,7 +259,7 @@ struct NotchIndicatorView: View {
     // Width slightly narrower than the hardware notch so our shape sits
     // entirely inside the hardware black area without covering its rounded corners.
     private var collapsedWidth: CGFloat {
-        geometry.hasNotch ? geometry.notchWidth - 20 : 0
+        geometry.hasNotch ? geometry.notchWidth - 20 : expandedWidth
     }
 
     private var hasText: Bool { textExpanded }
@@ -274,11 +279,20 @@ struct NotchIndicatorView: View {
         notchState.visible ? 1 : 0
     }
 
-    // Only the bottom corners have the "ear" curves.
-    private var topRadius: CGFloat { 8 }
+    // On non-notch Macs, fade the entire indicator since there's no hardware notch to retract into.
+    private var shapeOpacity: Double {
+        geometry.hasNotch ? 1 : (notchState.visible ? 1 : 0)
+    }
+
+    // Only the bottom corners have the "ear" curves (notch Macs).
+    // Non-notch Macs use straight sides (topRadius = 0).
+    private var topRadius: CGFloat { geometry.hasNotch ? 8 : 0 }
 
     private var bottomRadius: CGFloat {
-        hasText ? 24 : 14
+        if geometry.hasNotch {
+            return hasText ? 24 : 14
+        }
+        return hasText ? 16 : 10
     }
 
     // Spring animation used for expand/collapse.
@@ -299,7 +313,7 @@ struct NotchIndicatorView: View {
                     expanded: textExpanded,
                     contentPadding: 18
                 )
-                .onChange(of: notchState.partialText) {
+                .onChange(of: notchState.partialText) { _ in
                     if !notchState.partialText.isEmpty, !textExpanded {
                         withAnimation(.easeOut(duration: 0.25)) {
                             textExpanded = true
@@ -314,13 +328,14 @@ struct NotchIndicatorView: View {
             topCornerRadius: topRadius,
             bottomCornerRadius: bottomRadius
         ))
+        .opacity(shapeOpacity)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .preferredColorScheme(.dark)
         // The main expand/collapse spring drives width, corner radii, and content opacity.
         .animation(expandAnimation, value: notchState.visible)
         .animation(.easeInOut(duration: 0.3), value: textExpanded)
         .animation(.easeOut(duration: 0.08), value: notchState.audioLevel)
-        .onChange(of: notchState.state) {
+        .onChange(of: notchState.state) { _ in
             if notchState.state == 1 {
                 withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
                     dotPulse = true
@@ -405,6 +420,7 @@ class NotchIndicatorPanel: NSPanel {
     private static let panelHeight: CGFloat = 500
 
     private let notchGeometry = NotchGeometry()
+    private var screenObserver: NSObjectProtocol?
 
     init() {
         super.init(
@@ -427,8 +443,25 @@ class NotchIndicatorPanel: NSPanel {
         animationBehavior = .none
 
         let hostingView = FirstMouseHostingView(rootView: NotchIndicatorView(geometry: notchGeometry))
-        hostingView.sizingOptions = []
+        if #available(macOS 13.0, *) {
+            hostingView.sizingOptions = []
+        }
         contentView = hostingView
+
+        screenObserver = NotificationCenter.default.addObserver(
+            forName: NSApplication.didChangeScreenParametersNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self, self.isVisible else { return }
+            self.show()
+        }
+    }
+
+    deinit {
+        if let observer = screenObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     override var canBecomeKey: Bool { false }
