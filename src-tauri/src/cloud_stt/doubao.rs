@@ -13,8 +13,7 @@ use tokio_tungstenite::{
 
 // ─── Default endpoint ───────────────────────────────────────────────
 
-pub(crate) const DEFAULT_WS_URL: &str =
-    "wss://openspeech.bytedance.com/api/v3/sauc/bigmodel_async";
+pub(crate) const DEFAULT_WS_URL: &str = "wss://openspeech.bytedance.com/api/v3/sauc/bigmodel_async";
 const DEFAULT_RESOURCE_ID: &str = "volc.seedasr.sauc.duration";
 
 // ─── Binary protocol constants ──────────────────────────────────────
@@ -108,12 +107,7 @@ fn map_language_code(lang: &str) -> &str {
 
 // ─── Binary protocol helpers ────────────────────────────────────────
 
-pub(crate) fn build_header(
-    msg_type: u8,
-    flags: u8,
-    serialization: u8,
-    compression: u8,
-) -> [u8; 4] {
+pub(crate) fn build_header(msg_type: u8, flags: u8, serialization: u8, compression: u8) -> [u8; 4] {
     [
         (PROTOCOL_VERSION << 4) | HEADER_SIZE,
         (msg_type << 4) | flags,

@@ -5,7 +5,7 @@ use log::debug;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 
-#[derive(Serialize, Deserialize, Debug, Clone, Type)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Type)]
 pub struct PostProcessProvider {
     pub id: String,
     pub label: String,

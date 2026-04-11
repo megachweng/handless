@@ -17,8 +17,7 @@ fn build_ws_url(model: &str, encoding: &str, options: Option<&serde_json::Value>
         .and_then(|o| o.get("language"))
         .and_then(|v| v.as_str())
         .filter(|s| !s.is_empty());
-    let effective_model =
-        crate::cloud_stt::deepgram::resolve_model_for_language(model, lang);
+    let effective_model = crate::cloud_stt::deepgram::resolve_model_for_language(model, lang);
 
     let mut params = vec![
         ("model".to_string(), effective_model.to_string()),

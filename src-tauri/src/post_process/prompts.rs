@@ -1,9 +1,8 @@
 use crate::settings::AppSettings;
-use log::debug;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 
-#[derive(Serialize, Deserialize, Debug, Clone, Type)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Type)]
 pub struct LLMPrompt {
     pub id: String,
     pub name: String,
@@ -14,6 +13,7 @@ pub const BUILTIN_PROMPT_PREFIX: &str = "default_";
 pub const BUILTIN_PROMPT_CORRECT: &str = "default_correct";
 const BUILTIN_PROMPT_IMPROVE: &str = "default_improve";
 const BUILTIN_PROMPT_RESTRUCTURE: &str = "default_restructure";
+const LEGACY_BUILTIN_PROMPT_IMPROVE_TRANSCRIPTIONS: &str = "default_improve_transcriptions";
 
 pub fn is_builtin_prompt(id: &str) -> bool {
     id.starts_with(BUILTIN_PROMPT_PREFIX)
@@ -43,48 +43,99 @@ pub fn default_selected_prompt_id() -> Option<String> {
     Some(BUILTIN_PROMPT_CORRECT.to_string())
 }
 
-pub fn ensure_prompt_defaults(settings: &mut AppSettings) -> bool {
-    let mut changed = false;
+pub fn normalized_prompts(stored_prompts: &[LLMPrompt]) -> Vec<LLMPrompt> {
+    let mut prompts = default_prompts();
 
-    // Sync built-in prompts: add missing ones and update content/name for existing ones
-    let builtin_prompts = default_prompts();
-    for default_prompt in &builtin_prompts {
-        match settings
-            .post_process_prompts
-            .iter_mut()
-            .find(|p| p.id == default_prompt.id)
-        {
-            Some(existing) => {
-                if existing.prompt != default_prompt.prompt || existing.name != default_prompt.name
-                {
-                    existing.prompt = default_prompt.prompt.clone();
-                    existing.name = default_prompt.name.clone();
-                    changed = true;
-                }
-            }
-            None => {
-                debug!("Adding missing default prompt: {}", default_prompt.id);
-                settings.post_process_prompts.push(default_prompt.clone());
+    for prompt in stored_prompts {
+        if is_builtin_prompt(&prompt.id) {
+            continue;
+        }
+
+        prompts.push(prompt.clone());
+    }
+
+    prompts
+}
+
+fn remap_prompt_reference(prompt_id: &str) -> Option<String> {
+    match prompt_id {
+        LEGACY_BUILTIN_PROMPT_IMPROVE_TRANSCRIPTIONS => Some(BUILTIN_PROMPT_CORRECT.to_string()),
+        _ => None,
+    }
+}
+
+pub fn ensure_prompt_defaults(settings: &mut AppSettings) -> bool {
+    let normalized_prompts = normalized_prompts(&settings.post_process_prompts);
+    let mut changed = settings.post_process_prompts != normalized_prompts;
+
+    if changed {
+        settings.post_process_prompts = normalized_prompts;
+    }
+
+    if let Some(selected_prompt_id) = settings.post_process_selected_prompt_id.clone() {
+        if let Some(remapped_prompt_id) = remap_prompt_reference(&selected_prompt_id) {
+            if settings.post_process_selected_prompt_id != Some(remapped_prompt_id.clone()) {
+                settings.post_process_selected_prompt_id = Some(remapped_prompt_id);
                 changed = true;
             }
         }
     }
 
-    // Migrate from old default_improve_transcriptions prompt
-    if let Some(old_idx) = settings
-        .post_process_prompts
-        .iter()
-        .position(|p| p.id == "default_improve_transcriptions")
-    {
-        // If the user had the old default selected, switch to the new default
-        if settings.post_process_selected_prompt_id.as_deref()
-            == Some("default_improve_transcriptions")
-        {
-            settings.post_process_selected_prompt_id = Some(BUILTIN_PROMPT_CORRECT.to_string());
+    for binding in settings.bindings.values_mut() {
+        let Some(prompt_id) = binding.post_process_prompt_id.clone() else {
+            continue;
+        };
+
+        if let Some(remapped_prompt_id) = remap_prompt_reference(&prompt_id) {
+            if binding.post_process_prompt_id != Some(remapped_prompt_id.clone()) {
+                binding.post_process_prompt_id = Some(remapped_prompt_id);
+                changed = true;
+            }
         }
-        settings.post_process_prompts.remove(old_idx);
-        changed = true;
     }
 
     changed
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn default_prompts_keep_stable_builtin_ids() {
+        let ids = default_prompts()
+            .into_iter()
+            .map(|prompt| prompt.id)
+            .collect::<Vec<_>>();
+
+        assert!(ids.iter().any(|id| id == "default_correct"));
+        assert!(ids.iter().any(|id| id == "default_improve"));
+        assert!(ids.iter().any(|id| id == "default_restructure"));
+    }
+
+    #[test]
+    fn ensure_prompt_defaults_remaps_legacy_builtin_prompt_references() {
+        let mut settings = crate::settings::get_default_settings();
+        settings.post_process_selected_prompt_id =
+            Some(LEGACY_BUILTIN_PROMPT_IMPROVE_TRANSCRIPTIONS.to_string());
+        settings
+            .bindings
+            .get_mut("transcribe_with_post_process")
+            .expect("binding should exist")
+            .post_process_prompt_id =
+            Some(LEGACY_BUILTIN_PROMPT_IMPROVE_TRANSCRIPTIONS.to_string());
+
+        assert!(ensure_prompt_defaults(&mut settings));
+        assert_eq!(
+            settings.post_process_selected_prompt_id,
+            Some(BUILTIN_PROMPT_CORRECT.to_string())
+        );
+        assert_eq!(
+            settings
+                .bindings
+                .get("transcribe_with_post_process")
+                .and_then(|binding| binding.post_process_prompt_id.clone()),
+            Some(BUILTIN_PROMPT_CORRECT.to_string())
+        );
+    }
 }

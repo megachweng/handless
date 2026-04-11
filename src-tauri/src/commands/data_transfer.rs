@@ -1,16 +1,18 @@
 use crate::managers::history::{DailySpeakingStats, HistoryEntry, HistoryManager};
-use crate::settings::{get_settings, write_settings, AppSettings};
+use crate::settings::{get_settings, load_or_create_app_settings, persisted_settings_value};
 use flate2::read::GzDecoder;
 use flate2::write::GzEncoder;
 use flate2::Compression;
 use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
+use serde_json::Value as JsonValue;
 use specta::Type;
 use std::fs;
 use std::io::{self, Read as _};
 use std::sync::Arc;
 use tar::{Archive, Builder as TarBuilder};
 use tauri::{AppHandle, State};
+use tauri_plugin_store::StoreExt;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Type)]
 pub struct ExportManifest {
@@ -25,7 +27,7 @@ pub struct ExportManifest {
 struct ExportData {
     manifest: ExportManifest,
     #[serde(default)]
-    settings: Option<AppSettings>,
+    settings: Option<JsonValue>,
     #[serde(default)]
     history: Vec<HistoryEntry>,
     #[serde(default)]
@@ -129,7 +131,7 @@ pub async fn export_app_data(
     );
 
     let settings = if include_settings {
-        Some(get_settings(&app))
+        Some(get_settings(&app)).map(|settings| persisted_settings_value(&settings))
     } else {
         None
     };
@@ -390,9 +392,12 @@ fn import_from_tar_gz(
     Ok(())
 }
 
-fn apply_imported_settings(app: &AppHandle, settings: AppSettings) -> Result<(), String> {
-    write_settings(app, settings);
-    crate::settings::load_or_create_app_settings(app);
+fn apply_imported_settings(app: &AppHandle, settings: JsonValue) -> Result<(), String> {
+    let store = app
+        .store(crate::settings::SETTINGS_STORE_PATH)
+        .map_err(|e| format!("Failed to access settings store: {}", e))?;
+    store.set("settings", settings);
+    load_or_create_app_settings(app);
     info!("Settings imported and migrations applied");
     Ok(())
 }

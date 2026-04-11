@@ -88,7 +88,6 @@ macro_rules! require_audio {
     }};
 }
 
-
 /// Get an API key from the environment, or skip the test.
 macro_rules! require_key {
     ($var:expr) => {{
@@ -840,10 +839,9 @@ mod doubao {
             &["Handless".to_string(), "Tauri".to_string()],
             "",
         );
-        let result =
-            cloud_stt::transcribe("doubao", &key, BASE_URL, MODEL, audio, opts.as_ref())
-                .await
-                .unwrap();
+        let result = cloud_stt::transcribe("doubao", &key, BASE_URL, MODEL, audio, opts.as_ref())
+            .await
+            .unwrap();
         assert_transcript_contains(&result, "test");
     }
 
