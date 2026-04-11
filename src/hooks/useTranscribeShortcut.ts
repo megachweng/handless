@@ -7,7 +7,7 @@ export function useTranscribeShortcut(): string {
   const getSetting = useSettingsStore((s) => s.getSetting);
   const bindings = getSetting("bindings") || {};
   const primaryBinding = bindings["transcribe"];
-  return primaryBinding
+  return primaryBinding?.current_binding
     ? formatKeyCombination(primaryBinding.current_binding, osType)
     : "";
 }

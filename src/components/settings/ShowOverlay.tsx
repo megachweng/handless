@@ -19,11 +19,17 @@ export const ShowOverlay: React.FC<ShowOverlayProps> = React.memo(
     const overlayOptions = useMemo(() => {
       const opts = [
         { value: "none", label: t("settings.advanced.overlay.options.none") },
-        { value: "bottom", label: t("settings.advanced.overlay.options.bottom") },
+        {
+          value: "bottom",
+          label: t("settings.advanced.overlay.options.bottom"),
+        },
         { value: "top", label: t("settings.advanced.overlay.options.top") },
       ];
       if (platform() === "macos") {
-        opts.push({ value: "notch", label: t("settings.advanced.overlay.options.notch") });
+        opts.push({
+          value: "notch",
+          label: t("settings.advanced.overlay.options.notch"),
+        });
       }
       return opts;
     }, [t]);

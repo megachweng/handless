@@ -166,8 +166,7 @@ const CloudOptionControl: React.FC<{
     }
     case "Boolean": {
       const defaultChecked = option.default_value === true;
-      const effective =
-        typeof value === "boolean" ? value : defaultChecked;
+      const effective = typeof value === "boolean" ? value : defaultChecked;
       return (
         <label className="flex items-center gap-2 cursor-pointer">
           <Checkbox checked={effective} onChange={onChange} />

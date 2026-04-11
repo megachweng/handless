@@ -459,7 +459,10 @@ function usePromptShortcuts(
       if (!binding?.post_process_prompt_id) continue;
       const pid = binding.post_process_prompt_id;
       if (!map[pid]) map[pid] = [];
-      const shortcut = formatKeyCombination(binding.current_binding, osType);
+      const shortcut = formatKeyCombination(
+        binding.current_binding ?? "",
+        osType,
+      );
       map[pid].push({ id: binding.id, shortcut });
     }
     return map;

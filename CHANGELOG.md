@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.6] - 2026-04-11
+
+### Added
+
+- Doubao cloud speech-to-text provider with realtime support and provider-specific configuration
+- Native notch overlay support on Macs, including support for systems without a hardware notch
+
+### Changed
+
+- Added bundled agent guidance and repository skills for architecture, release checks, onboarding, CLI parameters, and cloud STT providers
+- Removed Claude Code GitHub workflows from repository automation
+
+### Fixed
+
+- Settings persistence and import migrations now preserve legacy activation mode and post-processing prompt compatibility
+
 ## [0.2.5] - 2026-03-27
 
 ### Added

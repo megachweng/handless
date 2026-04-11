@@ -278,7 +278,10 @@ export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
       isEditing={editingShortcutId === shortcutId}
       editingRef={(ref) => setShortcutRef(shortcutId, ref)}
       currentKeysDisplay={formatCurrentKeys()}
-      bindingDisplay={formatKeyCombination(binding.current_binding, osType)}
+      bindingDisplay={formatKeyCombination(
+        binding.current_binding ?? "",
+        osType,
+      )}
       onStartRecording={() => startRecording(shortcutId)}
       onReset={() => resetBinding(shortcutId)}
       resetDisabled={isUpdating(`binding_${shortcutId}`)}
@@ -307,11 +310,11 @@ export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
   // Get translated name and description for the binding
   const translatedName = t(
     `settings.general.shortcut.bindings.${shortcutId}.name`,
-    binding.name,
+    binding.name ?? shortcutId,
   );
   const translatedDescription = t(
     `settings.general.shortcut.bindings.${shortcutId}.description`,
-    binding.description,
+    binding.description ?? "",
   );
 
   return (

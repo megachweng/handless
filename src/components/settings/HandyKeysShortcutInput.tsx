@@ -276,7 +276,10 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
       isEditing={isRecording}
       editingRef={shortcutRef}
       currentKeysDisplay={formatCurrentKeys()}
-      bindingDisplay={formatKeyCombination(binding.current_binding, osType)}
+      bindingDisplay={formatKeyCombination(
+        binding.current_binding ?? "",
+        osType,
+      )}
       onStartRecording={startRecording}
       onReset={() => resetBinding(shortcutId)}
       resetDisabled={isUpdating(`binding_${shortcutId}`)}
@@ -305,11 +308,11 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
   // Get translated name and description for the binding
   const translatedName = t(
     `settings.general.shortcut.bindings.${shortcutId}.name`,
-    binding.name,
+    binding.name ?? shortcutId,
   );
   const translatedDescription = t(
     `settings.general.shortcut.bindings.${shortcutId}.description`,
-    binding.description,
+    binding.description ?? "",
   );
 
   return (
