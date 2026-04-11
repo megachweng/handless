@@ -181,43 +181,65 @@ pub(crate) fn build_full_client_request(
         "show_utterances": true,
     });
 
-    if let Some(lang) = language {
-        let lang_code = map_language_code(lang);
-        request["language"] = serde_json::json!(lang_code);
-    }
-
-    // Hotwords from dictionary injection
-    if let Some(hotwords_str) = options
+    // Build corpus.context: hotwords + dialog context from dictionary injection
+    let hotwords: Vec<serde_json::Value> = options
         .and_then(|o| o.get("hotwords"))
         .and_then(|v| v.as_str())
         .filter(|s| !s.is_empty())
-    {
-        let hotwords: Vec<serde_json::Value> = hotwords_str
-            .split(',')
-            .map(|w| w.trim())
-            .filter(|w| !w.is_empty())
-            .map(|w| serde_json::json!({"word": w}))
-            .collect();
+        .map(|s| {
+            s.split(',')
+                .map(|w| w.trim())
+                .filter(|w| !w.is_empty())
+                .map(|w| serde_json::json!({"word": w}))
+                .collect()
+        })
+        .unwrap_or_default();
+
+    let dialog_context = options
+        .and_then(|o| o.get("dialog_context"))
+        .and_then(|v| v.as_str())
+        .filter(|s| !s.is_empty());
+
+    if !hotwords.is_empty() || dialog_context.is_some() {
+        let mut context_obj = serde_json::Map::new();
+
         if !hotwords.is_empty() {
-            let hotwords_json = serde_json::json!({"hotwords": hotwords});
-            let context_str = serde_json::to_string(&hotwords_json).unwrap_or_default();
-            request["corpus"] = serde_json::json!({ "context": context_str });
-            debug!(
-                "Doubao ASR: {} hotwords via corpus.context",
-                hotwords.len()
+            context_obj.insert("hotwords".to_string(), serde_json::json!(hotwords));
+        }
+        if let Some(ctx) = dialog_context {
+            context_obj.insert("context_type".to_string(), serde_json::json!("dialog_ctx"));
+            context_obj.insert(
+                "context_data".to_string(),
+                serde_json::json!([{"text": ctx}]),
             );
         }
+
+        let context_str =
+            serde_json::to_string(&serde_json::Value::Object(context_obj)).unwrap_or_default();
+        request["corpus"] = serde_json::json!({ "context": context_str });
+        debug!(
+            "Doubao ASR: {} hotwords, dialog_ctx={} via corpus.context",
+            hotwords.len(),
+            dialog_context.is_some()
+        );
+    }
+
+    let mut audio = serde_json::json!({
+        "format": "pcm",
+        "codec": "raw",
+        "rate": 16000,
+        "bits": 16,
+        "channel": 1,
+    });
+
+    if let Some(lang) = language {
+        let lang_code = map_language_code(lang);
+        audio["language"] = serde_json::json!(lang_code);
     }
 
     let payload_json = serde_json::json!({
         "user": { "uid": "handless" },
-        "audio": {
-            "format": "pcm",
-            "codec": "raw",
-            "rate": 16000,
-            "bits": 16,
-            "channel": 1,
-        },
+        "audio": audio,
         "request": request,
     });
 

@@ -569,7 +569,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 },
             ],
             supports_dictionary_terms: true,
-            supports_dictionary_context: false,
+            supports_dictionary_context: true,
         },
     ]
 }
@@ -735,9 +735,14 @@ pub fn inject_dictionary(
                 };
                 opts["hotwords"] = serde_json::json!(merged);
             }
+            // Merge context description into dialog_context
+            if !dictionary_context.is_empty() {
+                opts["dialog_context"] = serde_json::json!(dictionary_context);
+            }
             debug!(
-                "Injected dictionary into Doubao hotwords ({} terms)",
+                "Injected dictionary into Doubao options ({} terms, {} chars context)",
                 dictionary_terms.len(),
+                dictionary_context.len(),
             );
         }
         "soniox" => {
