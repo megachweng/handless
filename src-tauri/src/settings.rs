@@ -1,9 +1,12 @@
 use log::{debug, warn};
-use serde::de::{self, Visitor};
+use serde::de::{self, DeserializeOwned, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
+use serde_json::{Map as JsonMap, Value as JsonValue};
 use specta::Type;
 use std::collections::{HashMap, HashSet};
+use std::fs;
 use tauri::AppHandle;
+use tauri::Manager;
 use tauri_plugin_store::StoreExt;
 
 #[derive(Serialize, Default, Debug, Clone, Copy, PartialEq, Eq, Type)]
@@ -15,10 +18,6 @@ pub enum ActivationMode {
     HoldOrToggle,
 }
 
-// TODO: Remove this custom Deserialize impl once all users have migrated from
-// the old push_to_talk boolean setting (added 2026-03-12). After removal,
-// derive Deserialize normally and also remove the `alias = "push_to_talk"`
-// on AppSettings.activation_mode.
 impl<'de> Deserialize<'de> for ActivationMode {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -46,7 +45,6 @@ impl<'de> Deserialize<'de> for ActivationMode {
             }
 
             fn visit_bool<E: de::Error>(self, value: bool) -> Result<ActivationMode, E> {
-                // Migrate old push_to_talk boolean: true → Hold, false → Toggle
                 Ok(if value {
                     ActivationMode::Hold
                 } else {
@@ -132,18 +130,22 @@ impl From<LogLevel> for tauri_plugin_log::LogLevel {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Type)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Type)]
 pub struct ShortcutBinding {
     pub id: String,
+    #[serde(default)]
     pub name: String,
+    #[serde(default)]
     pub description: String,
+    #[serde(default)]
     pub default_binding: String,
+    #[serde(default)]
     pub current_binding: String,
     #[serde(default)]
     pub post_process_prompt_id: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Type)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Type)]
 pub struct SttProvider {
     pub id: String,
     pub label: String,
@@ -322,9 +324,9 @@ pub enum TypingTool {
 /* still useful for composing the initial JSON in the store ------------- */
 #[derive(Serialize, Deserialize, Debug, Clone, Type)]
 pub struct AppSettings {
+    #[serde(default = "default_bindings")]
     pub bindings: HashMap<String, ShortcutBinding>,
     #[serde(default, alias = "push_to_talk")]
-    // TODO: remove alias after migration period (see ActivationMode Deserialize impl)
     pub activation_mode: ActivationMode,
     #[serde(default = "default_audio_feedback_volume")]
     pub audio_feedback_volume: f32,
@@ -556,6 +558,64 @@ fn default_post_process_selected_prompt_id() -> Option<String> {
     crate::post_process::prompts::default_selected_prompt_id()
 }
 
+fn default_bindings() -> HashMap<String, ShortcutBinding> {
+    #[cfg(target_os = "windows")]
+    let default_shortcut = "ctrl+space";
+    #[cfg(target_os = "macos")]
+    let default_shortcut = "fn";
+    #[cfg(target_os = "linux")]
+    let default_shortcut = "ctrl+space";
+    #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
+    let default_shortcut = "alt+space";
+
+    let mut bindings = HashMap::new();
+    bindings.insert(
+        "transcribe".to_string(),
+        ShortcutBinding {
+            id: "transcribe".to_string(),
+            name: "Transcribe".to_string(),
+            description: "Converts your speech into text.".to_string(),
+            default_binding: default_shortcut.to_string(),
+            current_binding: default_shortcut.to_string(),
+            post_process_prompt_id: None,
+        },
+    );
+    #[cfg(target_os = "windows")]
+    let default_post_process_shortcut = "ctrl+shift+space";
+    #[cfg(target_os = "macos")]
+    let default_post_process_shortcut = "option+shift+space";
+    #[cfg(target_os = "linux")]
+    let default_post_process_shortcut = "ctrl+shift+space";
+    #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
+    let default_post_process_shortcut = "alt+shift+space";
+
+    bindings.insert(
+        "transcribe_with_post_process".to_string(),
+        ShortcutBinding {
+            id: "transcribe_with_post_process".to_string(),
+            name: "Transcribe with Post-Processing".to_string(),
+            description: "Converts your speech into text and applies AI post-processing."
+                .to_string(),
+            default_binding: default_post_process_shortcut.to_string(),
+            current_binding: default_post_process_shortcut.to_string(),
+            post_process_prompt_id: None,
+        },
+    );
+    bindings.insert(
+        "cancel".to_string(),
+        ShortcutBinding {
+            id: "cancel".to_string(),
+            name: "Cancel".to_string(),
+            description: "Cancels the current recording.".to_string(),
+            default_binding: "escape".to_string(),
+            current_binding: "escape".to_string(),
+            post_process_prompt_id: None,
+        },
+    );
+
+    bindings
+}
+
 fn default_typing_tool() -> TypingTool {
     TypingTool::Auto
 }
@@ -753,63 +813,501 @@ fn ensure_post_process_defaults(settings: &mut AppSettings) -> bool {
 
 pub const SETTINGS_STORE_PATH: &str = "settings_store.json";
 
+fn configured_provider_ids(values: &HashMap<String, String>) -> Vec<String> {
+    let mut providers = values
+        .iter()
+        .filter_map(|(provider_id, value)| {
+            if value.trim().is_empty() {
+                None
+            } else {
+                Some(provider_id.clone())
+            }
+        })
+        .collect::<Vec<_>>();
+    providers.sort();
+    providers
+}
+
+fn is_builtin_binding_id(binding_id: &str) -> bool {
+    default_bindings().contains_key(binding_id)
+}
+
+fn normalized_bindings(
+    stored_bindings: &HashMap<String, ShortcutBinding>,
+) -> HashMap<String, ShortcutBinding> {
+    let mut bindings = default_bindings();
+
+    for (binding_id, stored_binding) in stored_bindings {
+        if let Some(default_binding) = bindings.get_mut(binding_id) {
+            if !stored_binding.current_binding.is_empty() {
+                default_binding.current_binding = stored_binding.current_binding.clone();
+            }
+            default_binding.post_process_prompt_id = stored_binding.post_process_prompt_id.clone();
+            continue;
+        }
+
+        let mut custom_binding = stored_binding.clone();
+        if custom_binding.current_binding.is_empty() {
+            custom_binding.current_binding = custom_binding.default_binding.clone();
+        }
+        if custom_binding.default_binding.is_empty() {
+            custom_binding.default_binding = custom_binding.current_binding.clone();
+        }
+
+        bindings.insert(binding_id.clone(), custom_binding);
+    }
+
+    bindings
+}
+
+fn read_json_field<T: DeserializeOwned>(
+    object: &JsonMap<String, JsonValue>,
+    key: &str,
+) -> Option<T> {
+    object
+        .get(key)
+        .and_then(|value| serde_json::from_value(value.clone()).ok())
+}
+
+fn recover_custom_post_process_base_url(value: &JsonValue) -> Option<String> {
+    value.as_array().and_then(|providers| {
+        providers.iter().find_map(|provider| {
+            let object = provider.as_object()?;
+            let provider_id = object.get("id")?.as_str()?;
+            if provider_id != "custom" {
+                return None;
+            }
+            object
+                .get("base_url")
+                .and_then(|base_url| base_url.as_str())
+                .map(str::to_string)
+        })
+    })
+}
+
+fn configured_custom_post_process_base_url(object: &JsonMap<String, JsonValue>) -> Option<String> {
+    read_json_field::<String>(object, "post_process_custom_base_url").or_else(|| {
+        object
+            .get("post_process_providers")
+            .and_then(recover_custom_post_process_base_url)
+    })
+}
+
+fn apply_custom_post_process_base_url(
+    settings: &mut AppSettings,
+    custom_base_url: Option<String>,
+) -> bool {
+    let Some(custom_base_url) = custom_base_url else {
+        return false;
+    };
+
+    let Some(custom_provider) = settings
+        .post_process_providers
+        .iter_mut()
+        .find(|provider| provider.id == "custom")
+    else {
+        return false;
+    };
+
+    if custom_provider.base_url == custom_base_url {
+        return false;
+    }
+
+    custom_provider.base_url = custom_base_url;
+    true
+}
+
+fn normalized_post_process_providers(
+    stored_providers: &[PostProcessProvider],
+) -> Vec<PostProcessProvider> {
+    let custom_base_url = stored_providers
+        .iter()
+        .find(|provider| provider.id == "custom")
+        .map(|provider| provider.base_url.clone());
+
+    let mut providers = default_post_process_providers();
+    if let Some(custom_base_url) = custom_base_url {
+        if let Some(custom_provider) = providers
+            .iter_mut()
+            .find(|provider| provider.id == "custom")
+        {
+            custom_provider.base_url = custom_base_url;
+        }
+    }
+
+    providers
+}
+
+fn custom_post_process_base_url(settings: &AppSettings) -> Option<String> {
+    settings
+        .post_process_provider("custom")
+        .map(|provider| provider.base_url.clone())
+}
+
+fn persisted_settings_requires_rewrite(settings_value: &JsonValue) -> bool {
+    let Some(object) = settings_value.as_object() else {
+        return false;
+    };
+
+    object.contains_key("stt_providers")
+        || object.contains_key("post_process_providers")
+        || object
+            .get("post_process_prompts")
+            .and_then(JsonValue::as_array)
+            .is_some_and(|prompts| {
+                prompts.iter().any(|prompt| {
+                    prompt
+                        .as_object()
+                        .and_then(|prompt| prompt.get("id"))
+                        .and_then(JsonValue::as_str)
+                        .is_some_and(crate::post_process::is_builtin_prompt)
+                })
+            })
+        || object
+            .get("bindings")
+            .and_then(JsonValue::as_object)
+            .is_some_and(|bindings| {
+                bindings.iter().any(|(binding_id, binding)| {
+                    is_builtin_binding_id(binding_id)
+                        && binding.as_object().is_some_and(|binding| {
+                            binding.contains_key("name")
+                                || binding.contains_key("description")
+                                || binding.contains_key("default_binding")
+                        })
+                })
+            })
+}
+
+fn persisted_bindings_value(settings: &AppSettings) -> JsonValue {
+    let default_bindings = default_bindings();
+    let bindings = settings
+        .bindings
+        .iter()
+        .filter_map(|(binding_id, binding)| {
+            if let Some(default_binding) = default_bindings.get(binding_id) {
+                let has_override = binding.current_binding != default_binding.current_binding
+                    || binding.post_process_prompt_id != default_binding.post_process_prompt_id;
+                if !has_override {
+                    return None;
+                }
+
+                return Some((
+                    binding_id.clone(),
+                    serde_json::json!({
+                        "id": binding.id,
+                        "current_binding": binding.current_binding,
+                        "post_process_prompt_id": binding.post_process_prompt_id,
+                    }),
+                ));
+            }
+
+            Some((
+                binding_id.clone(),
+                serde_json::to_value(binding).expect("Failed to serialize shortcut binding"),
+            ))
+        })
+        .collect::<JsonMap<String, JsonValue>>();
+
+    JsonValue::Object(bindings)
+}
+
+fn persisted_post_process_prompts_value(settings: &AppSettings) -> JsonValue {
+    JsonValue::Array(
+        settings
+            .post_process_prompts
+            .iter()
+            .filter(|prompt| !crate::post_process::is_builtin_prompt(&prompt.id))
+            .map(|prompt| serde_json::to_value(prompt).expect("Failed to serialize prompt"))
+            .collect(),
+    )
+}
+
+pub(crate) fn persisted_settings_value(settings: &AppSettings) -> JsonValue {
+    let mut value = serde_json::to_value(settings).expect("Failed to serialize settings");
+    let JsonValue::Object(object) = &mut value else {
+        unreachable!("AppSettings must serialize to a JSON object");
+    };
+
+    object.remove("stt_providers");
+    object.remove("post_process_providers");
+    object.insert("bindings".to_string(), persisted_bindings_value(settings));
+    object.insert(
+        "post_process_prompts".to_string(),
+        persisted_post_process_prompts_value(settings),
+    );
+
+    if let Some(custom_base_url) = custom_post_process_base_url(settings) {
+        object.insert(
+            "post_process_custom_base_url".to_string(),
+            JsonValue::String(custom_base_url),
+        );
+    }
+
+    value
+}
+
+fn normalize_provider_catalogs(settings: &mut AppSettings) -> bool {
+    let mut changed = false;
+
+    let current_stt_providers = default_stt_providers();
+    if settings.stt_providers != current_stt_providers {
+        settings.stt_providers = current_stt_providers;
+        changed = true;
+    }
+
+    let current_post_process_providers =
+        normalized_post_process_providers(&settings.post_process_providers);
+    if settings.post_process_providers != current_post_process_providers {
+        settings.post_process_providers = current_post_process_providers;
+        changed = true;
+    }
+
+    changed
+}
+
+fn normalize_settings_definitions(settings: &mut AppSettings) -> bool {
+    let mut changed = false;
+
+    let current_bindings = normalized_bindings(&settings.bindings);
+    if settings.bindings != current_bindings {
+        settings.bindings = current_bindings;
+        changed = true;
+    }
+
+    let current_prompts =
+        crate::post_process::prompts::normalized_prompts(&settings.post_process_prompts);
+    if settings.post_process_prompts != current_prompts {
+        settings.post_process_prompts = current_prompts;
+        changed = true;
+    }
+
+    changed
+}
+
+fn recover_settings_from_value(settings_value: JsonValue) -> AppSettings {
+    let mut settings = get_default_settings();
+    let Some(object) = settings_value.as_object() else {
+        return settings;
+    };
+
+    if let Some(value) = read_json_field(object, "activation_mode")
+        .or_else(|| read_json_field(object, "push_to_talk"))
+    {
+        settings.activation_mode = value;
+    }
+
+    macro_rules! recover_field {
+        ($field:ident) => {
+            if let Some(value) = read_json_field(object, stringify!($field)) {
+                settings.$field = value;
+            }
+        };
+    }
+
+    recover_field!(bindings);
+    recover_field!(audio_feedback_volume);
+    recover_field!(sound_theme);
+    recover_field!(start_hidden);
+    recover_field!(autostart_enabled);
+    recover_field!(update_checks_enabled);
+    recover_field!(selected_model);
+    recover_field!(always_on_microphone);
+    recover_field!(selected_microphone);
+    recover_field!(microphone_priority);
+    recover_field!(clamshell_microphone);
+    recover_field!(selected_output_device);
+    recover_field!(translate_to_english);
+    recover_field!(selected_language);
+    recover_field!(overlay_position);
+    recover_field!(debug_mode);
+    recover_field!(log_level);
+    recover_field!(custom_words);
+    recover_field!(model_unload_timeout);
+    recover_field!(word_correction_threshold);
+    recover_field!(history_limit);
+    recover_field!(recording_retention_period);
+    recover_field!(paste_method);
+    recover_field!(clipboard_handling);
+    recover_field!(auto_submit);
+    recover_field!(auto_submit_key);
+    recover_field!(stt_provider_id);
+    recover_field!(stt_api_keys);
+    recover_field!(stt_cloud_models);
+    recover_field!(post_process_enabled);
+    recover_field!(post_process_provider_id);
+    recover_field!(post_process_api_keys);
+    recover_field!(post_process_models);
+    recover_field!(post_process_prompts);
+    recover_field!(post_process_selected_prompt_id);
+    recover_field!(mute_while_recording);
+    recover_field!(append_trailing_space);
+    recover_field!(app_language);
+    recover_field!(keyboard_implementation);
+    recover_field!(show_tray_icon);
+    recover_field!(paste_delay_ms);
+    recover_field!(typing_tool);
+    recover_field!(external_script_path);
+    recover_field!(app_theme);
+    recover_field!(stt_verified_providers);
+    recover_field!(post_process_verified_providers);
+    recover_field!(post_process_input_prices);
+    recover_field!(post_process_output_prices);
+    recover_field!(stt_cloud_options);
+    recover_field!(stt_realtime_enabled);
+    recover_field!(stats_date_range);
+    recover_field!(dictionary_terms);
+    recover_field!(dictionary_context);
+
+    if let Some(stored_providers) =
+        read_json_field::<Vec<PostProcessProvider>>(object, "post_process_providers")
+    {
+        settings.post_process_providers = normalized_post_process_providers(&stored_providers);
+    }
+
+    apply_custom_post_process_base_url(
+        &mut settings,
+        configured_custom_post_process_base_url(object),
+    );
+
+    settings
+}
+
+fn backup_invalid_settings_store(app: &AppHandle) {
+    let Ok(app_data_dir) = app.path().app_data_dir() else {
+        return;
+    };
+
+    let store_path = app_data_dir.join(SETTINGS_STORE_PATH);
+    if !store_path.exists() {
+        return;
+    }
+
+    let backup_path = app_data_dir.join(format!(
+        "settings_store.invalid-{}.json",
+        chrono::Local::now().format("%Y%m%d-%H%M%S")
+    ));
+
+    match fs::copy(&store_path, &backup_path) {
+        Ok(_) => warn!(
+            "Backed up invalid settings store to {}",
+            backup_path.display()
+        ),
+        Err(error) => warn!(
+            "Failed to back up invalid settings store to {}: {}",
+            backup_path.display(),
+            error
+        ),
+    }
+}
+
+fn apply_settings_migrations(settings: &mut AppSettings) -> bool {
+    let mut updated = normalize_provider_catalogs(settings);
+    updated |= normalize_settings_definitions(settings);
+
+    if settings.microphone_priority.is_empty() {
+        if let Some(ref mic) = settings.selected_microphone {
+            debug!(
+                "Migrating selected_microphone '{}' to microphone_priority",
+                mic
+            );
+            settings.microphone_priority = vec![mic.clone()];
+            updated = true;
+        }
+    }
+
+    if let Some(binding) = settings.bindings.get_mut("transcribe_with_post_process") {
+        if binding.post_process_prompt_id.is_none() {
+            let prompt_id = settings
+                .post_process_selected_prompt_id
+                .clone()
+                .unwrap_or_else(|| crate::post_process::BUILTIN_PROMPT_CORRECT.to_string());
+            debug!(
+                "Migrating transcribe_with_post_process prompt_id to '{}'",
+                prompt_id
+            );
+            binding.post_process_prompt_id = Some(prompt_id);
+            updated = true;
+        }
+    }
+
+    if settings.stt_provider(&settings.stt_provider_id).is_none() {
+        settings.stt_provider_id = default_stt_provider_id();
+        updated = true;
+    }
+
+    if settings
+        .post_process_provider(&settings.post_process_provider_id)
+        .is_none()
+    {
+        settings.post_process_provider_id = default_post_process_provider_id();
+        updated = true;
+    }
+
+    updated |= ensure_stt_defaults(settings);
+    updated |= ensure_post_process_defaults(settings);
+
+    updated
+}
+
+fn read_or_create_app_settings(app: &AppHandle, log_existing: bool) -> AppSettings {
+    let store = app
+        .store(SETTINGS_STORE_PATH)
+        .expect("Failed to initialize store");
+
+    let (mut settings, mut updated) = if let Some(settings_value) = store.get("settings") {
+        match serde_json::from_value::<AppSettings>(settings_value.clone()) {
+            Ok(mut settings) => {
+                let settings_updated = settings_value.as_object().is_some_and(|object| {
+                    apply_custom_post_process_base_url(
+                        &mut settings,
+                        configured_custom_post_process_base_url(object),
+                    )
+                });
+                if log_existing {
+                    debug!(
+                        "Found existing settings: selected_model={}, stt_provider_id={}, post_process_provider_id={}, bindings={:?}, microphone_priority={:?}, clipboard_handling={:?}, mute_while_recording={}, app_language={}, stats_date_range={:?}, configured_stt_api_keys={:?}, configured_post_process_api_keys={:?}",
+                        settings.selected_model,
+                        settings.stt_provider_id,
+                        settings.post_process_provider_id,
+                        settings.bindings,
+                        settings.microphone_priority,
+                        settings.clipboard_handling,
+                        settings.mute_while_recording,
+                        settings.app_language,
+                        settings.stats_date_range,
+                        configured_provider_ids(&settings.stt_api_keys),
+                        configured_provider_ids(&settings.post_process_api_keys),
+                    );
+                }
+                (
+                    settings,
+                    persisted_settings_requires_rewrite(&settings_value) || settings_updated,
+                )
+            }
+            Err(error) => {
+                warn!("Failed to parse settings: {}", error);
+                backup_invalid_settings_store(app);
+                let recovered = recover_settings_from_value(settings_value);
+                warn!("Recovered settings from partially invalid configuration data");
+                (recovered, true)
+            }
+        }
+    } else {
+        (get_default_settings(), true)
+    };
+
+    updated |= apply_settings_migrations(&mut settings);
+
+    if updated {
+        store.set("settings", persisted_settings_value(&settings));
+    }
+
+    settings
+}
+
 pub fn get_default_settings() -> AppSettings {
-    #[cfg(target_os = "windows")]
-    let default_shortcut = "ctrl+space";
-    #[cfg(target_os = "macos")]
-    let default_shortcut = "fn";
-    #[cfg(target_os = "linux")]
-    let default_shortcut = "ctrl+space";
-    #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
-    let default_shortcut = "alt+space";
-
-    let mut bindings = HashMap::new();
-    bindings.insert(
-        "transcribe".to_string(),
-        ShortcutBinding {
-            id: "transcribe".to_string(),
-            name: "Transcribe".to_string(),
-            description: "Converts your speech into text.".to_string(),
-            default_binding: default_shortcut.to_string(),
-            current_binding: default_shortcut.to_string(),
-            post_process_prompt_id: None,
-        },
-    );
-    #[cfg(target_os = "windows")]
-    let default_post_process_shortcut = "ctrl+shift+space";
-    #[cfg(target_os = "macos")]
-    let default_post_process_shortcut = "option+shift+space";
-    #[cfg(target_os = "linux")]
-    let default_post_process_shortcut = "ctrl+shift+space";
-    #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
-    let default_post_process_shortcut = "alt+shift+space";
-
-    bindings.insert(
-        "transcribe_with_post_process".to_string(),
-        ShortcutBinding {
-            id: "transcribe_with_post_process".to_string(),
-            name: "Transcribe with Post-Processing".to_string(),
-            description: "Converts your speech into text and applies AI post-processing."
-                .to_string(),
-            default_binding: default_post_process_shortcut.to_string(),
-            current_binding: default_post_process_shortcut.to_string(),
-            post_process_prompt_id: None,
-        },
-    );
-    bindings.insert(
-        "cancel".to_string(),
-        ShortcutBinding {
-            id: "cancel".to_string(),
-            name: "Cancel".to_string(),
-            description: "Cancels the current recording.".to_string(),
-            default_binding: "escape".to_string(),
-            current_binding: "escape".to_string(),
-            post_process_prompt_id: None,
-        },
-    );
-
     AppSettings {
-        bindings,
+        bindings: default_bindings(),
         activation_mode: ActivationMode::HoldOrToggle,
         audio_feedback_volume: default_audio_feedback_volume(),
         sound_theme: default_sound_theme(),
@@ -898,89 +1396,7 @@ impl AppSettings {
 }
 
 pub fn load_or_create_app_settings(app: &AppHandle) -> AppSettings {
-    // Initialize store
-    let store = app
-        .store(SETTINGS_STORE_PATH)
-        .expect("Failed to initialize store");
-
-    let mut settings = if let Some(settings_value) = store.get("settings") {
-        // Parse the entire settings object
-        match serde_json::from_value::<AppSettings>(settings_value) {
-            Ok(mut settings) => {
-                debug!("Found existing settings: {:?}", settings);
-                let default_settings = get_default_settings();
-                let mut updated = false;
-
-                // Merge default bindings into existing settings
-                for (key, value) in default_settings.bindings {
-                    if let std::collections::hash_map::Entry::Vacant(e) =
-                        settings.bindings.entry(key)
-                    {
-                        debug!("Adding missing binding: {}", e.key());
-                        e.insert(value);
-                        updated = true;
-                    }
-                }
-
-                // Migrate: populate microphone_priority from selected_microphone
-                if settings.microphone_priority.is_empty() {
-                    if let Some(ref mic) = settings.selected_microphone {
-                        debug!(
-                            "Migrating selected_microphone '{}' to microphone_priority",
-                            mic
-                        );
-                        settings.microphone_priority = vec![mic.clone()];
-                        updated = true;
-                    }
-                }
-
-                // Migrate: populate post_process_prompt_id for existing
-                // transcribe_with_post_process binding from the global setting
-                if let Some(binding) = settings.bindings.get_mut("transcribe_with_post_process") {
-                    if binding.post_process_prompt_id.is_none() {
-                        let prompt_id = settings
-                            .post_process_selected_prompt_id
-                            .clone()
-                            .unwrap_or_else(|| {
-                                crate::post_process::BUILTIN_PROMPT_CORRECT.to_string()
-                            });
-                        debug!(
-                            "Migrating transcribe_with_post_process prompt_id to '{}'",
-                            prompt_id
-                        );
-                        binding.post_process_prompt_id = Some(prompt_id);
-                        updated = true;
-                    }
-                }
-
-                if updated {
-                    debug!("Settings updated with new bindings");
-                    store.set("settings", serde_json::to_value(&settings).unwrap());
-                }
-
-                settings
-            }
-            Err(e) => {
-                warn!("Failed to parse settings: {}", e);
-                // Fall back to default settings if parsing fails
-                let default_settings = get_default_settings();
-                store.set("settings", serde_json::to_value(&default_settings).unwrap());
-                default_settings
-            }
-        }
-    } else {
-        let default_settings = get_default_settings();
-        store.set("settings", serde_json::to_value(&default_settings).unwrap());
-        default_settings
-    };
-
-    let stt_changed = ensure_stt_defaults(&mut settings);
-    let pp_changed = ensure_post_process_defaults(&mut settings);
-    if stt_changed || pp_changed {
-        store.set("settings", serde_json::to_value(&settings).unwrap());
-    }
-
-    settings
+    read_or_create_app_settings(app, true)
 }
 
 pub fn reload_from_disk(app: &AppHandle) -> Result<AppSettings, String> {
@@ -992,31 +1408,11 @@ pub fn reload_from_disk(app: &AppHandle) -> Result<AppSettings, String> {
         .reload()
         .map_err(|e| format!("Failed to reload settings from disk: {}", e))?;
 
-    // Validate that the reloaded JSON can be parsed before applying migrations
-    if let Some(settings_value) = store.get("settings") {
-        serde_json::from_value::<AppSettings>(settings_value)
-            .map_err(|e| format!("Invalid settings in configuration file: {}", e))?;
-    }
-
     Ok(load_or_create_app_settings(app))
 }
 
 pub fn get_settings(app: &AppHandle) -> AppSettings {
-    let store = app
-        .store(SETTINGS_STORE_PATH)
-        .expect("Failed to initialize store");
-
-    if let Some(settings_value) = store.get("settings") {
-        serde_json::from_value::<AppSettings>(settings_value).unwrap_or_else(|_| {
-            let default_settings = get_default_settings();
-            store.set("settings", serde_json::to_value(&default_settings).unwrap());
-            default_settings
-        })
-    } else {
-        let default_settings = get_default_settings();
-        store.set("settings", serde_json::to_value(&default_settings).unwrap());
-        default_settings
-    }
+    read_or_create_app_settings(app, false)
 }
 
 pub fn write_settings(app: &AppHandle, settings: AppSettings) {
@@ -1024,7 +1420,7 @@ pub fn write_settings(app: &AppHandle, settings: AppSettings) {
         .store(SETTINGS_STORE_PATH)
         .expect("Failed to initialize store");
 
-    store.set("settings", serde_json::to_value(&settings).unwrap());
+    store.set("settings", persisted_settings_value(&settings));
 }
 
 pub fn get_bindings(app: &AppHandle) -> HashMap<String, ShortcutBinding> {
@@ -1051,11 +1447,300 @@ pub fn get_recording_retention_period(app: &AppHandle) -> RecordingRetentionPeri
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::json;
 
     #[test]
     fn default_settings_disable_auto_submit() {
         let settings = get_default_settings();
         assert!(!settings.auto_submit);
         assert_eq!(settings.auto_submit_key, AutoSubmitKey::Enter);
+    }
+
+    #[test]
+    fn legacy_push_to_talk_settings_still_deserialize_into_activation_mode() {
+        let hold_settings = json!({
+            "push_to_talk": true
+        });
+        let toggle_settings = json!({
+            "push_to_talk": false
+        });
+
+        let hold = serde_json::from_value::<AppSettings>(hold_settings).expect("hold settings");
+        let toggle =
+            serde_json::from_value::<AppSettings>(toggle_settings).expect("toggle settings");
+
+        assert_eq!(hold.activation_mode, ActivationMode::Hold);
+        assert_eq!(toggle.activation_mode, ActivationMode::Toggle);
+    }
+
+    #[test]
+    fn recover_settings_preserves_user_data_when_provider_catalog_is_invalid() {
+        let invalid_settings = json!({
+            "bindings": {
+                "transcribe": {
+                    "id": "transcribe",
+                    "name": "Transcribe",
+                    "description": "Converts your speech into text.",
+                    "default_binding": "fn",
+                    "current_binding": "fn",
+                    "post_process_prompt_id": "default_restructure"
+                }
+            },
+            "stt_provider_id": "deepgram",
+            "stt_api_keys": {
+                "deepgram": "dg-key"
+            },
+            "post_process_provider_id": "groq",
+            "post_process_api_keys": {
+                "groq": "groq-key"
+            },
+            "post_process_providers": [
+                {
+                    "id": "custom",
+                    "label": "Custom",
+                    "base_url": "http://localhost:8080/v1",
+                    "allow_base_url_edit": true,
+                    "models_endpoint": "/models",
+                    "supports_structured_output": false
+                }
+            ],
+            "dictionary_terms": ["handless"],
+            "stt_providers": [
+                {
+                    "id": "future",
+                    "label": "Future STT",
+                    "provider_type": "satellite",
+                    "base_url": "https://example.com",
+                    "default_model": "future-1"
+                }
+            ]
+        });
+
+        assert!(serde_json::from_value::<AppSettings>(invalid_settings.clone()).is_err());
+
+        let recovered = recover_settings_from_value(invalid_settings);
+
+        assert_eq!(
+            recovered.stt_api_keys.get("deepgram").map(String::as_str),
+            Some("dg-key")
+        );
+        assert_eq!(
+            recovered
+                .post_process_api_keys
+                .get("groq")
+                .map(String::as_str),
+            Some("groq-key")
+        );
+        assert_eq!(recovered.stt_provider_id, "deepgram");
+        assert_eq!(recovered.post_process_provider_id, "groq");
+        assert_eq!(recovered.dictionary_terms, vec!["handless"]);
+        assert!(recovered
+            .stt_providers
+            .iter()
+            .any(|provider| provider.id == "deepgram"));
+        assert!(recovered
+            .stt_providers
+            .iter()
+            .all(|provider| provider.id != "future"));
+        assert_eq!(
+            recovered
+                .post_process_provider("custom")
+                .map(|provider| provider.base_url.as_str()),
+            Some("http://localhost:8080/v1")
+        );
+    }
+
+    #[test]
+    fn persisted_settings_omit_provider_catalogs_and_keep_custom_base_url() {
+        let mut settings = get_default_settings();
+        settings
+            .post_process_provider_mut("custom")
+            .expect("custom provider should exist")
+            .base_url = "http://localhost:8080/v1".to_string();
+
+        let serialized = persisted_settings_value(&settings);
+        let settings = serialized.as_object().unwrap();
+
+        assert!(!settings.contains_key("stt_providers"));
+        assert!(!settings.contains_key("post_process_providers"));
+        assert_eq!(
+            settings
+                .get("post_process_custom_base_url")
+                .and_then(|value| value.as_str()),
+            Some("http://localhost:8080/v1")
+        );
+    }
+
+    #[test]
+    fn slim_persisted_settings_restore_custom_base_url_after_deserialize() {
+        let settings_value = json!({
+            "post_process_provider_id": "custom",
+            "post_process_models": {
+                "custom": "llama3"
+            },
+            "post_process_api_keys": {
+                "custom": ""
+            },
+            "post_process_custom_base_url": "http://localhost:8080/v1"
+        });
+
+        let mut settings =
+            serde_json::from_value::<AppSettings>(settings_value.clone()).expect("settings parse");
+
+        let object = settings_value
+            .as_object()
+            .expect("settings should be an object");
+        let changed = apply_custom_post_process_base_url(
+            &mut settings,
+            configured_custom_post_process_base_url(object),
+        );
+
+        assert!(changed);
+        assert_eq!(
+            settings
+                .post_process_provider("custom")
+                .map(|provider| provider.base_url.as_str()),
+            Some("http://localhost:8080/v1")
+        );
+    }
+
+    #[test]
+    fn persisted_settings_keep_only_custom_prompts_and_binding_overrides() {
+        let mut settings = get_default_settings();
+        let default_transcribe_binding = settings
+            .bindings
+            .get("transcribe")
+            .expect("transcribe binding should exist")
+            .current_binding
+            .clone();
+        settings
+            .bindings
+            .get_mut("transcribe")
+            .unwrap()
+            .current_binding = if default_transcribe_binding == "ctrl+space" {
+            "alt+space".to_string()
+        } else {
+            "ctrl+space".to_string()
+        };
+        settings
+            .bindings
+            .get_mut("transcribe_with_post_process")
+            .unwrap()
+            .post_process_prompt_id = Some("default_restructure".to_string());
+        settings.bindings.insert(
+            "transcribe_custom_1".to_string(),
+            ShortcutBinding {
+                id: "transcribe_custom_1".to_string(),
+                name: "Custom Transcription".to_string(),
+                description: "Custom transcription shortcut.".to_string(),
+                default_binding: "ctrl+alt+space".to_string(),
+                current_binding: "ctrl+alt+space".to_string(),
+                post_process_prompt_id: Some("prompt_1".to_string()),
+            },
+        );
+        settings.post_process_prompts.push(LLMPrompt {
+            id: "prompt_1".to_string(),
+            name: "Custom".to_string(),
+            prompt: "Rewrite this.".to_string(),
+        });
+
+        let serialized = persisted_settings_value(&settings);
+        let settings = serialized.as_object().unwrap();
+        let bindings = settings
+            .get("bindings")
+            .and_then(JsonValue::as_object)
+            .expect("bindings should be serialized");
+        let prompts = settings
+            .get("post_process_prompts")
+            .and_then(JsonValue::as_array)
+            .expect("prompts should be serialized");
+
+        assert_eq!(bindings.len(), 3);
+        assert_eq!(
+            bindings
+                .get("transcribe")
+                .and_then(JsonValue::as_object)
+                .and_then(|binding| binding.get("name")),
+            None
+        );
+        assert_eq!(
+            bindings
+                .get("transcribe_with_post_process")
+                .and_then(JsonValue::as_object)
+                .and_then(|binding| binding.get("default_binding")),
+            None
+        );
+        assert_eq!(
+            bindings
+                .get("transcribe_custom_1")
+                .and_then(JsonValue::as_object)
+                .and_then(|binding| binding.get("name"))
+                .and_then(JsonValue::as_str),
+            Some("Custom Transcription")
+        );
+        assert_eq!(prompts.len(), 1);
+        assert_eq!(
+            prompts[0]
+                .as_object()
+                .and_then(|prompt| prompt.get("id"))
+                .and_then(JsonValue::as_str),
+            Some("prompt_1")
+        );
+    }
+
+    #[test]
+    fn normalize_settings_definitions_rebuilds_builtin_bindings_and_prompts() {
+        let mut settings = get_default_settings();
+        settings.bindings = HashMap::from([
+            (
+                "transcribe".to_string(),
+                ShortcutBinding {
+                    id: "transcribe".to_string(),
+                    name: String::new(),
+                    description: String::new(),
+                    default_binding: String::new(),
+                    current_binding: "ctrl+space".to_string(),
+                    post_process_prompt_id: None,
+                },
+            ),
+            (
+                "transcribe_custom_1".to_string(),
+                ShortcutBinding {
+                    id: "transcribe_custom_1".to_string(),
+                    name: "Custom Transcription".to_string(),
+                    description: "Custom transcription shortcut.".to_string(),
+                    default_binding: "ctrl+alt+space".to_string(),
+                    current_binding: "ctrl+alt+space".to_string(),
+                    post_process_prompt_id: Some("prompt_1".to_string()),
+                },
+            ),
+        ]);
+        settings.post_process_prompts = vec![LLMPrompt {
+            id: "prompt_1".to_string(),
+            name: "Custom".to_string(),
+            prompt: "Rewrite this.".to_string(),
+        }];
+
+        assert!(normalize_settings_definitions(&mut settings));
+        assert_eq!(
+            settings
+                .bindings
+                .get("transcribe")
+                .map(|binding| binding.name.as_str()),
+            Some("Transcribe")
+        );
+        assert!(settings.bindings.contains_key("cancel"));
+        assert_eq!(
+            settings
+                .post_process_prompts
+                .iter()
+                .filter(|prompt| crate::post_process::is_builtin_prompt(&prompt.id))
+                .count(),
+            crate::post_process::prompts::default_prompts().len()
+        );
+        assert!(settings
+            .post_process_prompts
+            .iter()
+            .any(|prompt| prompt.id == "prompt_1"));
     }
 }

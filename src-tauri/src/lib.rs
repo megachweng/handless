@@ -1,8 +1,6 @@
 pub(crate) mod actions;
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 mod apple_intelligence;
-#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-pub(crate) mod notch;
 mod audio_feedback;
 pub mod audio_toolkit;
 pub mod cli;
@@ -13,6 +11,8 @@ mod device_watcher;
 mod helpers;
 mod input;
 mod managers;
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+pub(crate) mod notch;
 mod overlay;
 pub mod post_process;
 mod settings;

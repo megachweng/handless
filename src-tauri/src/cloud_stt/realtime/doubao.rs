@@ -43,8 +43,7 @@ pub async fn start_streaming(
     options: Option<serde_json::Value>,
     delta_tx: Option<tokio::sync::mpsc::UnboundedSender<String>>,
 ) -> Result<StreamingHandles> {
-    let (access_key, app_key, resource_id) =
-        extract_credentials(api_key, options.as_ref())?;
+    let (access_key, app_key, resource_id) = extract_credentials(api_key, options.as_ref())?;
 
     let request = build_ws_request(DEFAULT_WS_URL, access_key, app_key, resource_id)?;
 
@@ -142,9 +141,7 @@ pub async fn start_streaming(
                         break;
                     }
                     DoubaoEvent::Error { code, message } => {
-                        return Err(anyhow::anyhow!(
-                            "Doubao server error {code}: {message}"
-                        ));
+                        return Err(anyhow::anyhow!("Doubao server error {code}: {message}"));
                     }
                 }
             } else if let Message::Close(_) = msg {
