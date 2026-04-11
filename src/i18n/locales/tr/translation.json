@@ -138,6 +138,10 @@
       "fireworks": {
         "name": "Fireworks AI",
         "description": "Fireworks AI konuşmadan metne. 95+ dil desteğiyle ultra hızlı Whisper transkripsiyonu."
+      },
+      "doubao": {
+        "name": "Doubao",
+        "description": "ByteDance Doubao speech-to-text. High-quality recognition optimized for Chinese with multi-language support."
       }
     }
   },
@@ -302,7 +306,17 @@
           "enableLanguageIdentification": "Dil Tanımlama",
           "enableLanguageIdentificationDescription": "Her segment için dili algıla",
           "contextBias": "Bağlam Eğilimi",
-          "contextBiasDescription": "Modeli doğru yazılışlara yönlendirmek için virgülle ayrılmış terimler"
+          "contextBiasDescription": "Modeli doğru yazılışlara yönlendirmek için virgülle ayrılmış terimler",
+          "enableItn": "Inverse Text Normalization",
+          "enableItnDescription": "Convert spoken numbers, dates, and units to written form",
+          "enableDdc": "Disfluency Removal",
+          "enableDdcDescription": "Remove filler words, hesitations, and repetitions for smoother text"
+        },
+        "doubao": {
+          "appKey": "App Key (App ID)",
+          "appKeyDescription": "Your Volcengine App ID (from the Speech console)",
+          "resourceId": "Resource ID",
+          "resourceIdDescription": "Your Volcengine speech resource ID (from the Speech console)"
         }
       },
       "localModels": {

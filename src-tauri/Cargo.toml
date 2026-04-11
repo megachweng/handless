@@ -71,6 +71,7 @@ chrono = "0.4"
 rusqlite = { version = "0.38", features = ["bundled"] }
 tar = "0.4.44"
 flate2 = "1.0"
+uuid = { version = "1", features = ["v4"] }
 transcribe-rs = { version = "0.2.9", features = ["whisper", "parakeet", "moonshine", "sense_voice"] }
 handy-keys = "0.2.2"
 ferrous-opencc = "0.3.0"

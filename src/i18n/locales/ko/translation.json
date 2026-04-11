@@ -138,6 +138,10 @@
       "fireworks": {
         "name": "Fireworks AI",
         "description": "Fireworks AI 음성-텍스트 변환. 95개 이상의 언어를 지원하는 초고속 Whisper 전사."
+      },
+      "doubao": {
+        "name": "Doubao",
+        "description": "ByteDance Doubao speech-to-text. High-quality recognition optimized for Chinese with multi-language support."
       }
     }
   },
@@ -321,7 +325,17 @@
           "enableLanguageIdentification": "언어 식별",
           "enableLanguageIdentificationDescription": "각 세그먼트의 언어를 감지",
           "contextBias": "컨텍스트 편향",
-          "contextBiasDescription": "올바른 스펠링을 유도하기 위한 쉼표로 구분된 용어"
+          "contextBiasDescription": "올바른 스펠링을 유도하기 위한 쉼표로 구분된 용어",
+          "enableItn": "Inverse Text Normalization",
+          "enableItnDescription": "Convert spoken numbers, dates, and units to written form",
+          "enableDdc": "Disfluency Removal",
+          "enableDdcDescription": "Remove filler words, hesitations, and repetitions for smoother text"
+        },
+        "doubao": {
+          "appKey": "App Key (App ID)",
+          "appKeyDescription": "Your Volcengine App ID (from the Speech console)",
+          "resourceId": "Resource ID",
+          "resourceIdDescription": "Your Volcengine speech resource ID (from the Speech console)"
         }
       },
       "localModels": {

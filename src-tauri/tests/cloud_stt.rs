@@ -18,6 +18,9 @@
 //!    SONIOX_API_KEY=...
 //!    CARTESIA_API_KEY=...
 //!    FIREWORKS_API_KEY=...
+//!    DOUBAO_ACCESS_KEY=...
+//!    DOUBAO_APP_KEY=...
+//!    DOUBAO_RESOURCE_ID=...
 //!    ```
 //!
 //! 2. Place a short WAV file (16 kHz, mono, 16-bit, ~2-3s of English speech)
@@ -232,7 +235,7 @@ mod openai {
     #[tokio::test]
     async fn api_key_validation() {
         let key = require_key!("OPENAI_STT_API_KEY");
-        cloud_stt::test_api_key("openai_stt", &key, BASE_URL, MODEL)
+        cloud_stt::test_api_key("openai_stt", &key, BASE_URL, MODEL, None)
             .await
             .unwrap();
     }
@@ -241,7 +244,7 @@ mod openai {
     async fn api_key_validation_rejects_bad_key() {
         init();
         let result =
-            cloud_stt::test_api_key("openai_stt", "sk-bad-key-12345", BASE_URL, MODEL).await;
+            cloud_stt::test_api_key("openai_stt", "sk-bad-key-12345", BASE_URL, MODEL, None).await;
         assert!(result.is_err(), "bad API key should be rejected");
     }
 }
@@ -326,7 +329,7 @@ mod deepgram {
     #[tokio::test]
     async fn api_key_validation() {
         let key = require_key!("DEEPGRAM_API_KEY");
-        cloud_stt::test_api_key("deepgram", &key, BASE_URL, MODEL)
+        cloud_stt::test_api_key("deepgram", &key, BASE_URL, MODEL, None)
             .await
             .unwrap();
     }
@@ -386,7 +389,7 @@ mod groq {
     #[tokio::test]
     async fn api_key_validation() {
         let key = require_key!("GROQ_API_KEY");
-        cloud_stt::test_api_key("groq", &key, BASE_URL, MODEL)
+        cloud_stt::test_api_key("groq", &key, BASE_URL, MODEL, None)
             .await
             .unwrap();
     }
@@ -450,7 +453,7 @@ mod elevenlabs {
     #[tokio::test]
     async fn api_key_validation() {
         let key = require_key!("ELEVENLABS_API_KEY");
-        cloud_stt::test_api_key("elevenlabs", &key, BASE_URL, MODEL)
+        cloud_stt::test_api_key("elevenlabs", &key, BASE_URL, MODEL, None)
             .await
             .unwrap();
     }
@@ -520,7 +523,7 @@ mod mistral {
     #[tokio::test]
     async fn api_key_validation() {
         let key = require_key!("MISTRAL_API_KEY");
-        cloud_stt::test_api_key("mistral", &key, BASE_URL, MODEL)
+        cloud_stt::test_api_key("mistral", &key, BASE_URL, MODEL, None)
             .await
             .unwrap();
     }
@@ -560,7 +563,7 @@ mod cartesia {
     #[tokio::test]
     async fn api_key_validation() {
         let key = require_key!("CARTESIA_API_KEY");
-        cloud_stt::test_api_key("cartesia", &key, BASE_URL, MODEL)
+        cloud_stt::test_api_key("cartesia", &key, BASE_URL, MODEL, None)
             .await
             .unwrap();
     }
@@ -634,7 +637,7 @@ mod soniox {
     #[tokio::test]
     async fn api_key_validation() {
         let key = require_key!("SONIOX_API_KEY");
-        cloud_stt::test_api_key("soniox", &key, BASE_URL, BATCH_MODEL)
+        cloud_stt::test_api_key("soniox", &key, BASE_URL, BATCH_MODEL, None)
             .await
             .unwrap();
     }
@@ -704,7 +707,7 @@ mod assemblyai {
     #[tokio::test]
     async fn api_key_validation() {
         let key = require_key!("ASSEMBLYAI_API_KEY");
-        cloud_stt::test_api_key("assemblyai", &key, BASE_URL, MODEL)
+        cloud_stt::test_api_key("assemblyai", &key, BASE_URL, MODEL, None)
             .await
             .unwrap();
     }
@@ -776,7 +779,90 @@ mod fireworks {
     #[tokio::test]
     async fn api_key_validation() {
         let key = require_key!("FIREWORKS_API_KEY");
-        cloud_stt::test_api_key("fireworks", &key, BASE_URL, MODEL)
+        cloud_stt::test_api_key("fireworks", &key, BASE_URL, MODEL, None)
+            .await
+            .unwrap();
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Doubao  (batch + realtime, dictionary hotwords)
+// ---------------------------------------------------------------------------
+
+mod doubao {
+    use super::*;
+
+    const BASE_URL: &str = "wss://openspeech.bytedance.com/api/v3/sauc/bigmodel_async";
+    const MODEL: &str = "bigmodel";
+
+    fn doubao_options() -> serde_json::Value {
+        let app_key = std::env::var("DOUBAO_APP_KEY").unwrap_or_default();
+        let resource_id = std::env::var("DOUBAO_RESOURCE_ID").unwrap_or_default();
+        serde_json::json!({
+            "app_key": app_key,
+            "resource_id": resource_id,
+            "enable_itn": true,
+            "enable_punc": true,
+        })
+    }
+
+    #[tokio::test]
+    async fn batch_default() {
+        let key = require_key!("DOUBAO_ACCESS_KEY");
+        let audio = require_audio!();
+        let opts = doubao_options();
+        let result = cloud_stt::transcribe("doubao", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
+        assert_transcript_contains(&result, "test");
+    }
+
+    #[tokio::test]
+    async fn batch_with_language() {
+        let key = require_key!("DOUBAO_ACCESS_KEY");
+        let audio = require_audio!();
+        let mut opts = doubao_options();
+        opts["language"] = serde_json::json!("en");
+        let result = cloud_stt::transcribe("doubao", &key, BASE_URL, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
+        assert_transcript_contains(&result, "test");
+    }
+
+    #[tokio::test]
+    async fn batch_with_dictionary() {
+        let key = require_key!("DOUBAO_ACCESS_KEY");
+        let audio = require_audio!();
+        let opts = doubao_options();
+        let opts = stt_provider::inject_dictionary(
+            "doubao",
+            Some(opts),
+            &["Handless".to_string(), "Tauri".to_string()],
+            "",
+        );
+        let result =
+            cloud_stt::transcribe("doubao", &key, BASE_URL, MODEL, audio, opts.as_ref())
+                .await
+                .unwrap();
+        assert_transcript_contains(&result, "test");
+    }
+
+    #[tokio::test]
+    async fn realtime_default() {
+        let key = require_key!("DOUBAO_ACCESS_KEY");
+        let audio = require_audio!();
+        let opts = doubao_options();
+        let result = cloud_stt::realtime::transcribe("doubao", &key, MODEL, audio, Some(&opts))
+            .await
+            .unwrap();
+        assert_transcript_contains(&result, "test");
+    }
+
+    #[tokio::test]
+    async fn api_key_validation() {
+        let key = require_key!("DOUBAO_ACCESS_KEY");
+        let opts = doubao_options();
+        cloud_stt::test_api_key("doubao", &key, BASE_URL, MODEL, Some(&opts))
             .await
             .unwrap();
     }

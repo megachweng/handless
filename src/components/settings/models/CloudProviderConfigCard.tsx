@@ -98,6 +98,10 @@ const CloudOptionControl: React.FC<{
       );
     }
     case "Text": {
+      const textDefault =
+        typeof option.default_value === "string"
+          ? option.default_value
+          : undefined;
       return (
         <div className="flex flex-col gap-1">
           <label className="text-xs text-text/60 font-medium">{label}</label>
@@ -109,6 +113,7 @@ const CloudOptionControl: React.FC<{
           <Input
             type="text"
             value={(value as string) || ""}
+            placeholder={textDefault}
             onChange={(e) => onChange(e.target.value)}
             variant="compact"
             className="max-w-[400px]"
@@ -136,6 +141,10 @@ const CloudOptionControl: React.FC<{
     }
     case "Number": {
       const { min, max, step } = option.option_type;
+      const numDefault =
+        typeof option.default_value === "number"
+          ? String(option.default_value)
+          : String(min);
       return (
         <div className="flex flex-col gap-1">
           <label className="text-xs text-text/60 font-medium">{label}</label>
@@ -146,7 +155,7 @@ const CloudOptionControl: React.FC<{
           )}
           <NumberInput
             value={typeof value === "number" ? value : undefined}
-            placeholder={String(min)}
+            placeholder={numDefault}
             onChange={onChange}
             min={min}
             max={max}
@@ -156,9 +165,12 @@ const CloudOptionControl: React.FC<{
       );
     }
     case "Boolean": {
+      const defaultChecked = option.default_value === true;
+      const effective =
+        typeof value === "boolean" ? value : defaultChecked;
       return (
         <label className="flex items-center gap-2 cursor-pointer">
-          <Checkbox checked={!!value} onChange={onChange} />
+          <Checkbox checked={effective} onChange={onChange} />
           <span className="text-xs text-text/60 font-medium">{label}</span>
           {option.description && (
             <span className="text-xs text-text/50">

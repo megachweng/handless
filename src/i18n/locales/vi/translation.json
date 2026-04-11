@@ -138,6 +138,10 @@
       "fireworks": {
         "name": "Fireworks AI",
         "description": "Chuyển đổi giọng nói thành văn bản của Fireworks AI. Phiên âm Whisper siêu nhanh với hỗ trợ 95+ ngôn ngữ."
+      },
+      "doubao": {
+        "name": "Doubao",
+        "description": "ByteDance Doubao speech-to-text. High-quality recognition optimized for Chinese with multi-language support."
       }
     }
   },
@@ -302,7 +306,17 @@
           "enableLanguageIdentification": "Nhận diện ngôn ngữ",
           "enableLanguageIdentificationDescription": "Phát hiện ngôn ngữ cho từng đoạn",
           "contextBias": "Thiên lệch ngữ cảnh",
-          "contextBiasDescription": "Các thuật ngữ phân cách bằng dấu phẩy để hướng dẫn mô hình hướng tới các chính tả đúng"
+          "contextBiasDescription": "Các thuật ngữ phân cách bằng dấu phẩy để hướng dẫn mô hình hướng tới các chính tả đúng",
+          "enableItn": "Inverse Text Normalization",
+          "enableItnDescription": "Convert spoken numbers, dates, and units to written form",
+          "enableDdc": "Disfluency Removal",
+          "enableDdcDescription": "Remove filler words, hesitations, and repetitions for smoother text"
+        },
+        "doubao": {
+          "appKey": "App Key (App ID)",
+          "appKeyDescription": "Your Volcengine App ID (from the Speech console)",
+          "resourceId": "Resource ID",
+          "resourceIdDescription": "Your Volcengine speech resource ID (from the Speech console)"
         }
       },
       "localModels": {

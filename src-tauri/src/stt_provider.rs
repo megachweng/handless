@@ -9,6 +9,8 @@ pub struct CloudProviderOption {
     pub label: String,
     pub option_type: CloudOptionType,
     pub description: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default_value: Option<CloudOptionDefault>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
@@ -19,6 +21,14 @@ pub enum CloudOptionType {
     Boolean,
     Language,
     LanguageMulti,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Type)]
+#[serde(untagged)]
+pub enum CloudOptionDefault {
+    Bool(bool),
+    Text(String),
+    Number(f64),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
@@ -90,18 +100,21 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     label: "settings.models.cloudProviders.options.language".to_string(),
                     option_type: CloudOptionType::Language,
                     description: String::new(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "prompt".to_string(),
                     label: "settings.models.cloudProviders.options.prompt".to_string(),
                     option_type: CloudOptionType::Text,
                     description: "settings.models.cloudProviders.options.promptDescription".to_string(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "temperature".to_string(),
                     label: "settings.models.cloudProviders.options.temperature".to_string(),
                     option_type: CloudOptionType::Number { min: 0.0, max: 1.0, step: 0.1 },
                     description: "settings.models.cloudProviders.options.temperatureDescription".to_string(),
+                    default_value: None,
                 },
             ],
             supports_dictionary_terms: true,
@@ -137,6 +150,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     label: "settings.models.cloudProviders.options.language".to_string(),
                     option_type: CloudOptionType::Language,
                     description: String::new(),
+                    default_value: None,
                 },
             ],
             supports_dictionary_terms: false,
@@ -171,12 +185,14 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     label: "settings.models.cloudProviders.options.language".to_string(),
                     option_type: CloudOptionType::Language,
                     description: String::new(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "enable_speaker_diarization".to_string(),
                     label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
                     option_type: CloudOptionType::Boolean,
                     description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                    default_value: None,
                 },
             ],
             supports_dictionary_terms: true,
@@ -208,18 +224,21 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     label: "settings.models.cloudProviders.options.language".to_string(),
                     option_type: CloudOptionType::Language,
                     description: String::new(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "prompt".to_string(),
                     label: "settings.models.cloudProviders.options.prompt".to_string(),
                     option_type: CloudOptionType::Text,
                     description: "settings.models.cloudProviders.options.promptDescription".to_string(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "temperature".to_string(),
                     label: "settings.models.cloudProviders.options.temperature".to_string(),
                     option_type: CloudOptionType::Number { min: 0.0, max: 1.0, step: 0.1 },
                     description: "settings.models.cloudProviders.options.temperatureDescription".to_string(),
+                    default_value: None,
                 },
             ],
             supports_dictionary_terms: true,
@@ -246,24 +265,28 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     label: "settings.models.cloudProviders.options.language".to_string(),
                     option_type: CloudOptionType::Language,
                     description: String::new(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "temperature".to_string(),
                     label: "settings.models.cloudProviders.options.temperature".to_string(),
                     option_type: CloudOptionType::Number { min: 0.0, max: 1.0, step: 0.1 },
                     description: "settings.models.cloudProviders.options.temperatureDescription".to_string(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "diarize".to_string(),
                     label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
                     option_type: CloudOptionType::Boolean,
                     description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "context_bias".to_string(),
                     label: "settings.models.cloudProviders.options.contextBias".to_string(),
                     option_type: CloudOptionType::Text,
                     description: "settings.models.cloudProviders.options.contextBiasDescription".to_string(),
+                    default_value: None,
                 },
             ],
             supports_dictionary_terms: true,
@@ -295,36 +318,42 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     label: "settings.models.cloudProviders.options.languageHints".to_string(),
                     option_type: CloudOptionType::LanguageMulti,
                     description: String::new(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "language_hints_strict".to_string(),
                     label: "settings.models.cloudProviders.options.languageHintsStrict".to_string(),
                     option_type: CloudOptionType::Boolean,
                     description: "settings.models.cloudProviders.options.languageHintsStrictDescription".to_string(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "context_terms".to_string(),
                     label: "settings.models.cloudProviders.options.contextTerms".to_string(),
                     option_type: CloudOptionType::Text,
                     description: "settings.models.cloudProviders.options.contextTermsDescription".to_string(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "context_description".to_string(),
                     label: "settings.models.cloudProviders.options.contextDescription".to_string(),
                     option_type: CloudOptionType::Text,
                     description: "settings.models.cloudProviders.options.contextDescriptionDescription".to_string(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "enable_speaker_diarization".to_string(),
                     label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
                     option_type: CloudOptionType::Boolean,
                     description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "enable_language_identification".to_string(),
                     label: "settings.models.cloudProviders.options.enableLanguageIdentification".to_string(),
                     option_type: CloudOptionType::Boolean,
                     description: "settings.models.cloudProviders.options.enableLanguageIdentificationDescription".to_string(),
+                    default_value: None,
                 },
             ],
             supports_dictionary_terms: true,
@@ -356,24 +385,28 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     label: "settings.models.cloudProviders.options.language".to_string(),
                     option_type: CloudOptionType::Language,
                     description: String::new(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "smart_format".to_string(),
                     label: "settings.models.cloudProviders.options.smartFormat".to_string(),
                     option_type: CloudOptionType::Boolean,
                     description: "settings.models.cloudProviders.options.smartFormatDescription".to_string(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "punctuate".to_string(),
                     label: "settings.models.cloudProviders.options.punctuate".to_string(),
                     option_type: CloudOptionType::Boolean,
                     description: "settings.models.cloudProviders.options.punctuateDescription".to_string(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "diarize".to_string(),
                     label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
                     option_type: CloudOptionType::Boolean,
                     description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                    default_value: None,
                 },
             ],
             supports_dictionary_terms: true,
@@ -408,12 +441,14 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     label: "settings.models.cloudProviders.options.language".to_string(),
                     option_type: CloudOptionType::Language,
                     description: String::new(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "speaker_labels".to_string(),
                     label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
                     option_type: CloudOptionType::Boolean,
                     description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                    default_value: None,
                 },
             ],
             supports_dictionary_terms: true,
@@ -445,24 +480,92 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     label: "settings.models.cloudProviders.options.language".to_string(),
                     option_type: CloudOptionType::Language,
                     description: String::new(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "prompt".to_string(),
                     label: "settings.models.cloudProviders.options.prompt".to_string(),
                     option_type: CloudOptionType::Text,
                     description: "settings.models.cloudProviders.options.promptDescription".to_string(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "temperature".to_string(),
                     label: "settings.models.cloudProviders.options.temperature".to_string(),
                     option_type: CloudOptionType::Number { min: 0.0, max: 1.0, step: 0.1 },
                     description: "settings.models.cloudProviders.options.temperatureDescription".to_string(),
+                    default_value: None,
                 },
                 CloudProviderOption {
                     key: "diarize".to_string(),
                     label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
                     option_type: CloudOptionType::Boolean,
                     description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                    default_value: None,
+                },
+            ],
+            supports_dictionary_terms: true,
+            supports_dictionary_context: true,
+        },
+        SttProviderInfo {
+            id: "doubao".to_string(),
+            name: "Doubao".to_string(),
+            description: "onboarding.cloud.doubao.description".to_string(),
+            supported_languages: vec![
+                "zh-Hans", "zh-Hant", "yue", "en", "ja", "ko", "es", "fr", "de", "ru",
+                "pt", "it", "ar", "th", "vi", "id", "ms", "bn", "el", "nl",
+                "tr", "pl", "ro", "ne", "uk",
+            ].into_iter().map(String::from).collect(),
+            supports_translation: false,
+            supports_realtime: true,
+            is_recommended: false,
+            backend: ProviderBackend::Cloud {
+                base_url: "wss://openspeech.bytedance.com/api/v3/sauc/bigmodel_async".to_string(),
+                default_model: "bigmodel".to_string(),
+                console_url: Some("https://console.volcengine.com/speech/app".to_string()),
+            },
+            available_options: vec![
+                CloudProviderOption {
+                    key: "app_key".to_string(),
+                    label: "settings.models.cloudProviders.doubao.appKey".to_string(),
+                    option_type: CloudOptionType::Text,
+                    description: "settings.models.cloudProviders.doubao.appKeyDescription".to_string(),
+                    default_value: None,
+                },
+                CloudProviderOption {
+                    key: "resource_id".to_string(),
+                    label: "settings.models.cloudProviders.doubao.resourceId".to_string(),
+                    option_type: CloudOptionType::Text,
+                    description: "settings.models.cloudProviders.doubao.resourceIdDescription".to_string(),
+                    default_value: Some(CloudOptionDefault::Text("volc.seedasr.sauc.duration".to_string())),
+                },
+                CloudProviderOption {
+                    key: "language".to_string(),
+                    label: "settings.models.cloudProviders.options.language".to_string(),
+                    option_type: CloudOptionType::Language,
+                    description: String::new(),
+                    default_value: None,
+                },
+                CloudProviderOption {
+                    key: "enable_itn".to_string(),
+                    label: "settings.models.cloudProviders.options.enableItn".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.enableItnDescription".to_string(),
+                    default_value: Some(CloudOptionDefault::Bool(true)),
+                },
+                CloudProviderOption {
+                    key: "enable_punc".to_string(),
+                    label: "settings.models.cloudProviders.options.punctuate".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.punctuateDescription".to_string(),
+                    default_value: Some(CloudOptionDefault::Bool(true)),
+                },
+                CloudProviderOption {
+                    key: "enable_ddc".to_string(),
+                    label: "settings.models.cloudProviders.options.enableDdc".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.enableDdcDescription".to_string(),
+                    default_value: Some(CloudOptionDefault::Bool(true)),
                 },
             ],
             supports_dictionary_terms: true,
@@ -613,6 +716,33 @@ pub fn inject_dictionary(
             debug!(
                 "Injected dictionary into ElevenLabs options ({} terms)",
                 dictionary_terms.len(),
+            );
+        }
+        "doubao" => {
+            // Merge terms into hotwords (comma-separated string parsed by the Doubao module)
+            if !dictionary_terms.is_empty() {
+                let dict_hotwords = dictionary_terms.join(", ");
+                let existing_hotwords = opts
+                    .get("hotwords")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_string();
+
+                let merged = if existing_hotwords.is_empty() {
+                    dict_hotwords
+                } else {
+                    format!("{}, {}", dict_hotwords, existing_hotwords)
+                };
+                opts["hotwords"] = serde_json::json!(merged);
+            }
+            // Merge context description into dialog_context
+            if !dictionary_context.is_empty() {
+                opts["dialog_context"] = serde_json::json!(dictionary_context);
+            }
+            debug!(
+                "Injected dictionary into Doubao options ({} terms, {} chars context)",
+                dictionary_terms.len(),
+                dictionary_context.len(),
             );
         }
         "soniox" => {

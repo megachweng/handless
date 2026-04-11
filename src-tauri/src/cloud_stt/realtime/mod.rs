@@ -1,5 +1,6 @@
 mod assemblyai;
 mod deepgram;
+mod doubao;
 mod elevenlabs;
 mod fireworks;
 mod mistral;
@@ -9,10 +10,16 @@ mod soniox;
 
 pub use session::{RealtimeStreamingSession, SessionConfig, StreamingHandles};
 
-pub async fn test_api_key(provider_id: &str, api_key: &str, model: &str) -> anyhow::Result<()> {
+pub async fn test_api_key(
+    provider_id: &str,
+    api_key: &str,
+    model: &str,
+    options: Option<&serde_json::Value>,
+) -> anyhow::Result<()> {
     match provider_id {
         "assemblyai" => assemblyai::test_api_key(api_key, model).await,
         "deepgram" => deepgram::test_api_key(api_key, model).await,
+        "doubao" => doubao::test_api_key(api_key, model, options).await,
         "elevenlabs" => elevenlabs::test_api_key(api_key, model).await,
         "fireworks" => fireworks::test_api_key(api_key, model).await,
         "mistral" => mistral::test_api_key(api_key, model).await,
@@ -35,6 +42,7 @@ pub async fn transcribe(
     match provider_id {
         "assemblyai" => assemblyai::transcribe(api_key, model, audio_wav, options).await,
         "deepgram" => deepgram::transcribe(api_key, model, audio_wav, options).await,
+        "doubao" => doubao::transcribe(api_key, model, audio_wav, options).await,
         "elevenlabs" => elevenlabs::transcribe(api_key, model, audio_wav, options).await,
         "fireworks" => fireworks::transcribe(api_key, model, audio_wav, options).await,
         "mistral" => mistral::transcribe(api_key, model, audio_wav, options).await,

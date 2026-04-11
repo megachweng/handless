@@ -114,6 +114,10 @@
       "fireworks": {
         "name": "Fireworks AI",
         "description": "Fireworks AI speech-to-text. Ultra-fast Whisper transcription with 95+ language support."
+      },
+      "doubao": {
+        "name": "Doubao",
+        "description": "ByteDance Doubao speech-to-text. High-quality recognition optimized for Chinese with multi-language support."
       }
     },
     "errors": {
@@ -302,7 +306,17 @@
           "enableLanguageIdentification": "Language Identification",
           "enableLanguageIdentificationDescription": "Detect language for each segment",
           "contextBias": "Context Bias",
-          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings"
+          "contextBiasDescription": "Comma-separated terms to guide the model toward correct spellings",
+          "enableItn": "Inverse Text Normalization",
+          "enableItnDescription": "Convert spoken numbers, dates, and units to written form",
+          "enableDdc": "Disfluency Removal",
+          "enableDdcDescription": "Remove filler words, hesitations, and repetitions for smoother text"
+        },
+        "doubao": {
+          "appKey": "App Key (App ID)",
+          "appKeyDescription": "Your Volcengine App ID (from the Speech console)",
+          "resourceId": "Resource ID",
+          "resourceIdDescription": "Your Volcengine speech resource ID (from the Speech console)"
         }
       },
       "localModels": {
@@ -696,7 +710,7 @@
     "terms": {
       "title": "Terms",
       "description": "Words and phrases the speech engine should recognize accurately. These are sent to the provider before transcription to improve recognition of domain-specific vocabulary.",
-      "placeholder": "Add a term\u2026",
+      "placeholder": "Add a term…",
       "add": "Add",
       "remove": "Remove {{term}}",
       "duplicate": "\"{{term}}\" already exists",
