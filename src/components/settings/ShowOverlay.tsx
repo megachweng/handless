@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { platform } from "@tauri-apps/plugin-os";
 import { Dropdown } from "../ui/Dropdown";
 import { SettingContainer } from "../ui/SettingContainer";
 import { useSettings } from "../../hooks/useSettings";
@@ -15,11 +16,17 @@ export const ShowOverlay: React.FC<ShowOverlayProps> = React.memo(
     const { t } = useTranslation();
     const { getSetting, updateSetting, isUpdating } = useSettings();
 
-    const overlayOptions = [
-      { value: "none", label: t("settings.advanced.overlay.options.none") },
-      { value: "bottom", label: t("settings.advanced.overlay.options.bottom") },
-      { value: "top", label: t("settings.advanced.overlay.options.top") },
-    ];
+    const overlayOptions = useMemo(() => {
+      const opts = [
+        { value: "none", label: t("settings.advanced.overlay.options.none") },
+        { value: "bottom", label: t("settings.advanced.overlay.options.bottom") },
+        { value: "top", label: t("settings.advanced.overlay.options.top") },
+      ];
+      if (platform() === "macos") {
+        opts.push({ value: "notch", label: t("settings.advanced.overlay.options.notch") });
+      }
+      return opts;
+    }, [t]);
 
     const selectedPosition = (getSetting("overlay_position") ||
       "bottom") as OverlayPosition;

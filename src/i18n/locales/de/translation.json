@@ -359,7 +359,8 @@
         "options": {
           "none": "Keine",
           "bottom": "Unten",
-          "top": "Oben"
+          "top": "Oben",
+          "notch": "Notch"
         }
       },
       "pasteMethod": {

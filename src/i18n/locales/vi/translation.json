@@ -395,7 +395,8 @@
         "options": {
           "none": "Không có",
           "bottom": "Dưới",
-          "top": "Trên"
+          "top": "Trên",
+          "notch": "Notch"
         }
       },
       "pasteMethod": {

@@ -395,7 +395,8 @@
         "options": {
           "none": "Brak",
           "bottom": "Dół",
-          "top": "Góra"
+          "top": "Góra",
+          "notch": "Notch"
         }
       },
       "pasteMethod": {

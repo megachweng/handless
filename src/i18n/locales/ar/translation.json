@@ -395,7 +395,8 @@
         "options": {
           "none": "بلا",
           "bottom": "أسفل",
-          "top": "أعلى"
+          "top": "أعلى",
+          "notch": "Notch"
         }
       },
       "pasteMethod": {

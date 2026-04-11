@@ -359,7 +359,8 @@
         "options": {
           "none": "無",
           "bottom": "底部",
-          "top": "頂部"
+          "top": "頂部",
+          "notch": "Notch"
         }
       },
       "pasteMethod": {

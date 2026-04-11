@@ -66,7 +66,7 @@ fn update_gtk_layer_shell_anchors(overlay_window: &tauri::webview::WebviewWindow
                     gtk_window.set_anchor(Edge::Top, true);
                     gtk_window.set_anchor(Edge::Bottom, false);
                 }
-                OverlayPosition::Bottom | OverlayPosition::None => {
+                OverlayPosition::Bottom | OverlayPosition::None | OverlayPosition::Notch => {
                     gtk_window.set_anchor(Edge::Bottom, true);
                     gtk_window.set_anchor(Edge::Top, false);
                 }
@@ -221,7 +221,7 @@ fn calculate_overlay_position(app_handle: &AppHandle) -> Option<(f64, f64)> {
         let x = b.x + (b.width - OVERLAY_WIDTH) / 2.0;
         let y = match settings.overlay_position {
             OverlayPosition::Top => b.y + OVERLAY_TOP_OFFSET,
-            OverlayPosition::Bottom | OverlayPosition::None => {
+            OverlayPosition::Bottom | OverlayPosition::None | OverlayPosition::Notch => {
                 #[cfg(target_os = "macos")]
                 let bottom_offset = get_dock_bottom_inset(&b) + OVERLAY_DOCK_GAP;
                 #[cfg(not(target_os = "macos"))]
@@ -349,7 +349,10 @@ struct OverlayPayload<'a> {
 fn show_overlay_state(app_handle: &AppHandle, state: &str) {
     // Check if overlay should be shown based on position setting
     let settings = settings::get_settings(app_handle);
-    if settings.overlay_position == OverlayPosition::None {
+    if matches!(
+        settings.overlay_position,
+        OverlayPosition::None | OverlayPosition::Notch
+    ) {
         return;
     }
 
@@ -421,13 +424,21 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
     }
 }
 
-/// Shows the recording overlay window with fade-in animation
+/// Shows the recording overlay window with fade-in animation.
 pub fn show_recording_overlay(app_handle: &AppHandle) {
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    if settings::get_settings(app_handle).overlay_position == OverlayPosition::Notch {
+        crate::notch::update_state(crate::notch::NotchState::Recording);
+    }
     show_overlay_state(app_handle, "recording");
 }
 
-/// Shows the transcribing overlay window
+/// Shows the transcribing overlay window.
 pub fn show_transcribing_overlay(app_handle: &AppHandle) {
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    if settings::get_settings(app_handle).overlay_position == OverlayPosition::Notch {
+        crate::notch::update_state(crate::notch::NotchState::Transcribing);
+    }
     show_overlay_state(app_handle, "transcribing");
 }
 
@@ -451,8 +462,12 @@ pub fn update_overlay_position(app_handle: &AppHandle) {
     }
 }
 
-/// Hides the recording overlay window with fade-out animation
+/// Hides the recording overlay window with fade-out animation.
 pub fn hide_recording_overlay(app_handle: &AppHandle) {
+    // Dismiss the notch indicator unconditionally (no-op if already hidden)
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    crate::notch::update_state(crate::notch::NotchState::Hidden);
+
     // Always hide the overlay regardless of settings - if setting was changed while recording,
     // we still want to hide it properly
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
@@ -489,6 +504,13 @@ pub fn emit_levels(app_handle: &AppHandle, levels: &Vec<f32>) {
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         let _ = overlay_window.emit("mic-level", levels);
     }
+
+    // Forward peak level to the native notch indicator (only in notch mode)
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    if settings::get_settings(app_handle).overlay_position == OverlayPosition::Notch {
+        let peak = levels.iter().copied().fold(0.0f32, f32::max);
+        crate::notch::update_audio_level(peak);
+    }
 }
 
 /// Notify the overlay that the effective activation mode has changed
@@ -517,7 +539,7 @@ pub fn resize_overlay_window(app_handle: &AppHandle, width: f64, height: f64) {
         // before resizing (setSize keeps top-left fixed).
         if matches!(
             settings.overlay_position,
-            OverlayPosition::Bottom | OverlayPosition::None
+            OverlayPosition::Bottom | OverlayPosition::None | OverlayPosition::Notch
         ) {
             if let (Ok(old_size), Ok(old_pos)) =
                 (overlay_window.outer_size(), overlay_window.outer_position())
@@ -542,5 +564,11 @@ pub fn resize_overlay_window(app_handle: &AppHandle, width: f64, height: f64) {
 pub fn emit_streaming_text(app_handle: &AppHandle, text: &str) {
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         let _ = overlay_window.emit("streaming-text", text);
+    }
+
+    // Forward streaming text to the native notch indicator (only in notch mode)
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    if settings::get_settings(app_handle).overlay_position == OverlayPosition::Notch {
+        crate::notch::update_streaming_text(text);
     }
 }

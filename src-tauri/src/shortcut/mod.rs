@@ -621,6 +621,7 @@ pub fn change_overlay_position_setting(app: AppHandle, position: String) -> Resu
         "none" => OverlayPosition::None,
         "top" => OverlayPosition::Top,
         "bottom" => OverlayPosition::Bottom,
+        "notch" => OverlayPosition::Notch,
         other => {
             warn!("Invalid overlay position '{}', defaulting to bottom", other);
             OverlayPosition::Bottom
@@ -628,6 +629,12 @@ pub fn change_overlay_position_setting(app: AppHandle, position: String) -> Resu
     };
     settings.overlay_position = parsed;
     settings::write_settings(&app, settings);
+
+    // Dismiss the notch indicator when switching away from notch mode
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    if parsed != OverlayPosition::Notch {
+        crate::notch::update_state(crate::notch::NotchState::Hidden);
+    }
 
     // Update overlay position without recreating window
     crate::utils::update_overlay_position(&app);

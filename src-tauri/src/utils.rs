@@ -47,7 +47,7 @@ pub fn cancel_current_operation(app: &AppHandle) {
     let recording_was_active = audio_manager.is_recording();
     audio_manager.cancel_recording();
 
-    // Update tray icon and hide overlay
+    // Update tray icon and hide overlay (also dismisses notch indicator)
     change_tray_icon(app, crate::tray::TrayIconState::Idle);
     hide_recording_overlay(app);
 

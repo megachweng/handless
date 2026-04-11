@@ -310,13 +310,6 @@
           "hold": "Držení",
           "holdOrToggle": "Držení nebo přepínání"
         }
-      },
-      "shortcuts": {
-        "title": "Zkratky",
-        "strategyNone": "Žádné",
-        "addNew": "Přidat zkratku",
-        "remove": "Odebrat zkratku",
-        "postProcessNotReady": "Nejprve nastavte poskytovatele následného zpracování"
       }
     },
     "sound": {
@@ -366,7 +359,8 @@
         "options": {
           "none": "Žádné",
           "bottom": "Dole",
-          "top": "Nahoře"
+          "top": "Nahoře",
+          "notch": "Notch"
         }
       },
       "pasteMethod": {
