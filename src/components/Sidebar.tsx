@@ -4,6 +4,7 @@ import { motion, LayoutGroup } from "motion/react";
 import { DragRegion } from "./ui/DragRegion";
 import {
   House,
+  GearSix,
   Command,
   Cube,
   Book,
@@ -14,6 +15,7 @@ import {
 import { useSettings } from "../hooks/useSettings";
 import {
   GeneralSettings,
+  AdvancedSettings,
   ShortcutsSettings,
   HistorySettings,
   DebugSettings,
@@ -75,6 +77,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.history",
     icon: ClockCounterClockwise,
     component: HistorySettings,
+    enabled: () => true,
+  },
+  advanced: {
+    labelKey: "sidebar.advanced",
+    icon: GearSix,
+    component: AdvancedSettings,
     enabled: () => true,
   },
   debug: {

@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "General",
+    "advanced": "Advanced",
     "shortcuts": "Shortcuts",
     "models": "Models",
     "dictionary": "Dictionary",

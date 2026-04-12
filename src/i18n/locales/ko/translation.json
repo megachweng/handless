@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "일반",
+    "advanced": "Advanced",
     "shortcuts": "단축키",
     "models": "모델",
     "dictionary": "사전",

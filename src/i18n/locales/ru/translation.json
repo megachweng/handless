@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "Общие",
+    "advanced": "Advanced",
     "shortcuts": "Горячие клавиши",
     "models": "Модели",
     "dictionary": "Словарь",

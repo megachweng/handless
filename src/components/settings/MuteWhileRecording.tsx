@@ -13,7 +13,7 @@ export const MuteWhileRecording: React.FC<MuteWhileRecordingToggleProps> =
     const { t } = useTranslation();
     const { getSetting, updateSetting, isUpdating } = useSettings();
 
-    const muteEnabled = getSetting("mute_while_recording") ?? false;
+    const muteEnabled = getSetting("mute_while_recording") ?? true;
 
     return (
       <ToggleSwitch

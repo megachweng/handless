@@ -130,18 +130,18 @@ const RecordingOverlay: React.FC = () => {
   const buttonsExtra = showButtons ? BUTTON_AREA_WIDTH * 2 : 0;
   // Toggle mode: text floats above waveform bars instead of replacing them
   const showTextAboveBars = hasStreamingText && activationMode === "toggle";
+  const showInlineStreamingText = hasStreamingText && !showTextAboveBars;
 
   // Compute overlay dimensions — pill never changes shape in toggle mode
   const overlayWidth = (() => {
     if (!isVisible) return 33;
-    if (hasStreamingText && !showTextAboveBars)
-      return STREAMING_WIDTH + buttonsExtra;
+    if (showInlineStreamingText) return STREAMING_WIDTH + buttonsExtra;
     return 70 + buttonsExtra;
   })();
 
   const overlayHeight = (() => {
     if (!isVisible) return 33;
-    if (hasStreamingText && !showTextAboveBars && contentHeight > 0) {
+    if (showInlineStreamingText && contentHeight > 0) {
       const maxTextHeight = STREAMING_LINE_HEIGHT * MAX_LINES;
       const clampedHeight = Math.min(contentHeight, maxTextHeight);
       return Math.max(33, clampedHeight + OVERLAY_PADDING);
@@ -149,8 +149,8 @@ const RecordingOverlay: React.FC = () => {
     return 33;
   })();
 
-  const overlayRadius = hasStreamingText && !showTextAboveBars ? 14 : 999;
-  const buttonRadius = hasStreamingText && !showTextAboveBars ? 8 : 13;
+  const overlayRadius = showInlineStreamingText ? 14 : 999;
+  const buttonRadius = showInlineStreamingText ? 8 : 13;
 
   // Track words (runs before paint to avoid flicker)
   useLayoutEffect(() => {
@@ -487,7 +487,7 @@ const RecordingOverlay: React.FC = () => {
           borderRadius: overlayRadius,
           clipPath: `inset(0 round ${overlayRadius}px)`,
         }}
-        className={`recording-overlay ${isVisible ? "fade-in" : ""} ${showButtons ? "has-buttons" : ""}`}
+        className={`recording-overlay ${isVisible ? "fade-in" : ""} ${showButtons ? "has-buttons" : ""} ${showInlineStreamingText ? "has-inline-text" : ""}`}
       >
         {state === "recording" && (
           <>
@@ -499,7 +499,7 @@ const RecordingOverlay: React.FC = () => {
             >
               <X size={12} weight="bold" aria-hidden="true" />
             </button>
-            {hasStreamingText && !showTextAboveBars && (
+            {showInlineStreamingText && (
               <div ref={streamingTextRef} className="streaming-text">
                 {streamingWords}
               </div>

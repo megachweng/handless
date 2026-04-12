@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "通用",
+    "advanced": "Advanced",
     "shortcuts": "快捷键",
     "models": "模型",
     "dictionary": "词典",
