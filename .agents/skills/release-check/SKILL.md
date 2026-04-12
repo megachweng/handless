@@ -87,15 +87,15 @@ git diff --name-only src/bindings.ts
 
 If `bindings.ts` has uncommitted changes, bindings are stale — **Fail**.
 
-### 9. Build Smoke Test
+### 9. Local Release Build Smoke Test
 
 Run:
 
 ```bash
-bun run tauri build
+bun run tauri build --config src-tauri/tauri.release-check.conf.json
 ```
 
-Non-zero exit code is a **Fail**. This is the slowest step; run it last.
+This local smoke test must compile the production app and produce the native bundle, but it should not require updater-signing secrets that only exist in CI. It intentionally disables Tauri updater artifacts while keeping the rest of the release build path intact. Non-zero exit code is a **Fail**. This is the slowest step; run it last.
 
 ### 10. Clean Working Tree
 
@@ -124,10 +124,10 @@ Print a summary table:
 | 6  | Clippy                 | Pass   |
 | 7  | Cargo.lock sync        | Pass   |
 | 8  | Bindings up-to-date    | Pass   |
-| 9  | Build smoke test       | Pass   |
+| 9  | Local release build    | Pass   |
 | 10 | Clean working tree     | Pass   |
 
 Result: READY TO RELEASE ✓
 ```
 
-Any **Fail** must be fixed before release. After all checks pass, the release can be triggered via `gh workflow run release.yml`.
+Any **Fail** must be fixed before release. After all checks pass, the release can be triggered via `gh workflow run release.yml`. CI remains responsible for updater artifact signing and any secrets required for that path.
