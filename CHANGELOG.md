@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.7] - 2026-04-12
+
+### Changed
+
+- Local release check now uses a release-build smoke test that skips updater artifact signing and leaves updater signing to CI
+
+### Fixed
+
+- Notch overlay clippy violations in `overlay.rs` that blocked release verification
+
 ## [0.2.6] - 2026-04-11
 
 ### Added
