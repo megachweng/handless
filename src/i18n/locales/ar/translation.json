@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "عام",
+    "advanced": "Advanced",
     "shortcuts": "اختصارات",
     "dictionary": "القاموس",
     "postProcessing": "معالجة لاحقة",

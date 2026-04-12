@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "一般",
+    "advanced": "Advanced",
     "shortcuts": "ショートカット",
     "models": "モデル",
     "dictionary": "辞書",
