@@ -369,8 +369,9 @@
         "description": "Zobrazit ikonu Handless v systémové liště."
       },
       "overlay": {
-        "title": "Pozice překryvu",
-        "description": "Zobrazovat vizuální překryv během nahrávání a přepisu. Na Linuxu je doporučeno 'Žádné'.",
+        "title": "Zpětná vazba překryvu",
+        "description": "Během nahrávání a přepisu zobrazuje vizuální překryv pro okamžitou zpětnou vazbu o stavu.",
+        "position_label": "Pozice",
         "options": {
           "none": "Žádné",
           "bottom": "Dole",

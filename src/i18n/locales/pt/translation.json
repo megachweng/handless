@@ -405,8 +405,9 @@
         "description": "Exibir o ícone do Handless na bandeja do sistema."
       },
       "overlay": {
-        "title": "Posição da Sobreposição",
-        "description": "Exibir sobreposição de feedback visual durante gravação e transcrição. No Linux, 'Nenhum' é recomendado.",
+        "title": "Feedback de Sobreposição",
+        "description": "Exibe uma sobreposição visual durante a gravação e transcrição para feedback imediato do status.",
+        "position_label": "Posição",
         "options": {
           "none": "Nenhum",
           "bottom": "Inferior",

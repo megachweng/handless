@@ -405,8 +405,9 @@
         "description": "Wyświetlaj ikonę Handless w zasobniku systemowym."
       },
       "overlay": {
-        "title": "Pozycja nakładki",
-        "description": "Wyświetlaj wizualną nakładkę podczas nagrywania i transkrypcji. Na Linuxie zalecane 'Brak'.",
+        "title": "Informacja zwrotna nakładki",
+        "description": "Wyświetla wizualną nakładkę podczas nagrywania i transkrypcji w celu natychmiastowej informacji zwrotnej o stanie.",
+        "position_label": "Pozycja",
         "options": {
           "none": "Brak",
           "bottom": "Dół",

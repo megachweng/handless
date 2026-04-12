@@ -369,8 +369,9 @@
         "description": "システムトレイにHandlessのアイコンを表示します。"
       },
       "overlay": {
-        "title": "オーバーレイ位置",
-        "description": "録音と文字起こし中に視覚的なフィードバックオーバーレイを表示。Linuxでは「なし」を推奨。",
+        "title": "オーバーレイ・フィードバック",
+        "description": "録音と文字起こし中に視覚的なオーバーレイを表示し、即座にステータスをフィードバックします。",
+        "position_label": "位置",
         "options": {
           "none": "なし",
           "bottom": "下",

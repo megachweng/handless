@@ -354,6 +354,8 @@ pub struct AppSettings {
     pub translate_to_english: bool,
     #[serde(default = "default_selected_language")]
     pub selected_language: String,
+    #[serde(default = "default_overlay_enabled")]
+    pub overlay_enabled: bool,
     #[serde(default = "default_overlay_position")]
     pub overlay_position: OverlayPosition,
     #[serde(default = "default_debug_mode")]
@@ -463,6 +465,17 @@ fn default_update_checks_enabled() -> bool {
 
 fn default_selected_language() -> String {
     "auto".to_string()
+}
+
+fn default_overlay_enabled() -> bool {
+    true
+}
+
+fn default_overlay_enabled_for_new_install() -> bool {
+    #[cfg(target_os = "linux")]
+    return false;
+    #[cfg(not(target_os = "linux"))]
+    return true;
 }
 
 fn default_overlay_position() -> OverlayPosition {
@@ -1118,7 +1131,11 @@ fn recover_settings_from_value(settings_value: JsonValue) -> AppSettings {
     recover_field!(selected_output_device);
     recover_field!(translate_to_english);
     recover_field!(selected_language);
+    recover_field!(overlay_enabled);
     recover_field!(overlay_position);
+    if !object.contains_key("overlay_enabled") {
+        settings.overlay_enabled = settings.overlay_position != OverlayPosition::None;
+    }
     recover_field!(debug_mode);
     recover_field!(log_level);
     recover_field!(custom_words);
@@ -1258,10 +1275,18 @@ fn read_or_create_app_settings(app: &AppHandle, log_existing: bool) -> AppSettin
         match serde_json::from_value::<AppSettings>(settings_value.clone()) {
             Ok(mut settings) => {
                 let settings_updated = settings_value.as_object().is_some_and(|object| {
-                    apply_custom_post_process_base_url(
+                    let mut updated = apply_custom_post_process_base_url(
                         &mut settings,
                         configured_custom_post_process_base_url(object),
-                    )
+                    );
+
+                    if !object.contains_key("overlay_enabled") {
+                        settings.overlay_enabled =
+                            settings.overlay_position != OverlayPosition::None;
+                        updated = true;
+                    }
+
+                    updated
                 });
                 if log_existing {
                     debug!(
@@ -1322,6 +1347,7 @@ pub fn get_default_settings() -> AppSettings {
         selected_output_device: None,
         translate_to_english: false,
         selected_language: "auto".to_string(),
+        overlay_enabled: default_overlay_enabled_for_new_install(),
         overlay_position: default_overlay_position(),
         debug_mode: false,
         log_level: default_log_level(),
