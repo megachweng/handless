@@ -369,8 +369,9 @@
         "description": "Mostrar el icono de Handless en la bandeja del sistema."
       },
       "overlay": {
-        "title": "Posición de Superposición",
-        "description": "Mostrar superposición de retroalimentación visual durante la grabación y transcripción. En Linux se recomienda 'Ninguna'.",
+        "title": "Retroalimentación de Superposición",
+        "description": "Muestra una superposición visual durante la grabación y la transcripción para obtener comentarios de estado inmediatos.",
+        "position_label": "Posición",
         "options": {
           "none": "Ninguna",
           "bottom": "Abajo",

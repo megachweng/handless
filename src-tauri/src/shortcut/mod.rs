@@ -615,6 +615,28 @@ pub fn change_selected_language_setting(app: AppHandle, language: String) -> Res
 
 #[tauri::command]
 #[specta::specta]
+pub fn change_overlay_enabled_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.overlay_enabled = enabled;
+
+    if enabled && settings.overlay_position == OverlayPosition::None {
+        settings.overlay_position = OverlayPosition::Bottom;
+    }
+
+    settings::write_settings(&app, settings.clone());
+
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    if !enabled || settings.overlay_position != OverlayPosition::Notch {
+        crate::notch::update_state(crate::notch::NotchState::Hidden);
+    }
+
+    crate::utils::update_overlay_position(&app);
+
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn change_overlay_position_setting(app: AppHandle, position: String) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     let parsed = match position.as_str() {
@@ -628,6 +650,7 @@ pub fn change_overlay_position_setting(app: AppHandle, position: String) -> Resu
         }
     };
     settings.overlay_position = parsed;
+    settings.overlay_enabled = parsed != OverlayPosition::None;
     settings::write_settings(&app, settings);
 
     // Dismiss the notch indicator when switching away from notch mode

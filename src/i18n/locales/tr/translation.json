@@ -369,8 +369,9 @@
         "description": "Handless simgesini sistem tepsisinde göster."
       },
       "overlay": {
-        "title": "Overlay Konumu",
-        "description": "Kayıt ve transkripsiyon sırasında görsel geri bildirim kaplamasını gösterir. Linux'ta 'Yok' önerilir.",
+        "title": "Overlay Geri Bildirimi",
+        "description": "Anında durum geri bildirimi için kayıt ve transkripsiyon sırasında görsel bir kaplama görüntüler.",
+        "position_label": "Konum",
         "options": {
           "none": "Yok",
           "bottom": "Alt",

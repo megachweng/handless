@@ -396,8 +396,9 @@
         "description": "Afficher l'icône de Handless dans la barre système."
       },
       "overlay": {
-        "title": "Position de la fenêtre d'enregistrement",
-        "description": "Afficher un retour visuel pendant l'enregistrement et la transcription. Sur Linux, 'Aucune' est recommandé.",
+        "title": "Retour visuel de superposition",
+        "description": "Affiche une superposition visuelle pendant l’enregistrement et la transcription pour un retour d’état immédiat.",
+        "position_label": "Position",
         "options": {
           "none": "Aucune",
           "bottom": "Bas",

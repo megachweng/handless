@@ -369,8 +369,9 @@
         "description": "Mostra l'icona di Handless nella barra di sistema."
       },
       "overlay": {
-        "title": "Posizione della Sovrimpressione",
-        "description": "Mostra un feedback visivo in sovrimpressione durante la registrazione e la trascrizione. Su Linux si raccomanda 'Nessuna'.",
+        "title": "Feedback in Sovrimpressione",
+        "description": "Mostra una sovrimpressione visiva durante la registrazione e la trascrizione per un feedback immediato sullo stato.",
+        "position_label": "Posizione",
         "options": {
           "none": "Nessuna",
           "bottom": "In basso",

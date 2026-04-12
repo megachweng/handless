@@ -405,8 +405,9 @@
         "description": "Hiển thị biểu tượng Handless trong khay hệ thống."
       },
       "overlay": {
-        "title": "Vị trí lớp phủ",
-        "description": "Hiển thị lớp phủ phản hồi trực quan trong quá trình ghi âm và chuyển đổi. Trên Linux, 'Không có' được khuyến nghị.",
+        "title": "Phản hồi lớp phủ",
+        "description": "Hiển thị lớp phủ trực quan trong quá trình ghi âm và chuyển đổi để có phản hồi trạng thái ngay lập tức.",
+        "position_label": "Vị trí",
         "options": {
           "none": "Không có",
           "bottom": "Dưới",

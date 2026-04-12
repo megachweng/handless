@@ -405,8 +405,9 @@
         "description": "Display the Handless icon in the system tray."
       },
       "overlay": {
-        "title": "Overlay Position",
-        "description": "Display visual feedback overlay during recording and transcription. On Linux 'None' is recommended.",
+        "title": "Overlay Feedback",
+        "description": "Display a visual overlay during recording and transcription for immediate status feedback.",
+        "position_label": "Position",
         "options": {
           "none": "None",
           "bottom": "Bottom",

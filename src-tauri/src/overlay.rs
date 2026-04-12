@@ -349,10 +349,12 @@ struct OverlayPayload<'a> {
 fn show_overlay_state(app_handle: &AppHandle, state: &str) {
     // Check if overlay should be shown based on position setting
     let settings = settings::get_settings(app_handle);
-    if matches!(
-        settings.overlay_position,
-        OverlayPosition::None | OverlayPosition::Notch
-    ) {
+    if !settings.overlay_enabled
+        || matches!(
+            settings.overlay_position,
+            OverlayPosition::None | OverlayPosition::Notch
+        )
+    {
         return;
     }
 
@@ -427,7 +429,10 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
 /// Shows the recording overlay window with fade-in animation.
 pub fn show_recording_overlay(app_handle: &AppHandle) {
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-    if settings::get_settings(app_handle).overlay_position == OverlayPosition::Notch {
+    if {
+        let settings = settings::get_settings(app_handle);
+        settings.overlay_enabled && settings.overlay_position == OverlayPosition::Notch
+    } {
         crate::notch::update_state(crate::notch::NotchState::Recording);
     }
     show_overlay_state(app_handle, "recording");
@@ -436,7 +441,10 @@ pub fn show_recording_overlay(app_handle: &AppHandle) {
 /// Shows the transcribing overlay window.
 pub fn show_transcribing_overlay(app_handle: &AppHandle) {
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-    if settings::get_settings(app_handle).overlay_position == OverlayPosition::Notch {
+    if {
+        let settings = settings::get_settings(app_handle);
+        settings.overlay_enabled && settings.overlay_position == OverlayPosition::Notch
+    } {
         crate::notch::update_state(crate::notch::NotchState::Transcribing);
     }
     show_overlay_state(app_handle, "transcribing");
@@ -507,7 +515,10 @@ pub fn emit_levels(app_handle: &AppHandle, levels: &Vec<f32>) {
 
     // Forward peak level to the native notch indicator (only in notch mode)
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-    if settings::get_settings(app_handle).overlay_position == OverlayPosition::Notch {
+    if {
+        let settings = settings::get_settings(app_handle);
+        settings.overlay_enabled && settings.overlay_position == OverlayPosition::Notch
+    } {
         let peak = levels.iter().copied().fold(0.0f32, f32::max);
         crate::notch::update_audio_level(peak);
     }
@@ -568,7 +579,10 @@ pub fn emit_streaming_text(app_handle: &AppHandle, text: &str) {
 
     // Forward streaming text to the native notch indicator (only in notch mode)
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-    if settings::get_settings(app_handle).overlay_position == OverlayPosition::Notch {
+    if {
+        let settings = settings::get_settings(app_handle);
+        settings.overlay_enabled && settings.overlay_position == OverlayPosition::Notch
+    } {
         crate::notch::update_streaming_text(text);
     }
 }
