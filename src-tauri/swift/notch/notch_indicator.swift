@@ -205,7 +205,8 @@ struct IndicatorExpandableText: View {
     let contentPadding: CGFloat
 
     private let textFontSize: CGFloat = 12
-    private let expandedHeight: CGFloat = 80
+    private let maxExpandedHeight: CGFloat = 80
+    @State private var measuredTextHeight: CGFloat = 0
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -216,15 +217,36 @@ struct IndicatorExpandableText: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, contentPadding)
                     .padding(.vertical, 14)
+                    .background(
+                        GeometryReader { proxy in
+                            Color.clear
+                                .preference(
+                                    key: ExpandableTextHeightPreferenceKey.self,
+                                    value: proxy.size.height
+                                )
+                        }
+                    )
                     .id("bottom")
             }
-            .frame(height: expanded ? expandedHeight : 0)
+            .frame(height: expanded ? min(measuredTextHeight, maxExpandedHeight) : 0)
             .clipped()
             .onChange(of: text) { _ in
                 proxy.scrollTo("bottom", anchor: .bottom)
             }
+            .onPreferenceChange(ExpandableTextHeightPreferenceKey.self) { newHeight in
+                guard abs(measuredTextHeight - newHeight) > 0.5 else { return }
+                measuredTextHeight = newHeight
+            }
         }
         .transaction { $0.disablesAnimations = true }
+    }
+}
+
+private struct ExpandableTextHeightPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 
