@@ -5,6 +5,7 @@
 
 use log::warn;
 use std::sync::Arc;
+use std::time::Instant;
 use tauri::{AppHandle, Manager};
 
 use crate::actions::ACTION_MAP;
@@ -32,6 +33,7 @@ pub fn handle_shortcut_event(
     hotkey_string: &str,
     is_pressed: bool,
 ) {
+    let event_time = Instant::now();
     let settings = get_settings(app);
 
     // Transcribe bindings are handled by the coordinator.
@@ -42,6 +44,7 @@ pub fn handle_shortcut_event(
                 hotkey_string,
                 is_pressed,
                 settings.activation_mode,
+                event_time,
             );
         } else {
             warn!("TranscriptionCoordinator is not initialized");

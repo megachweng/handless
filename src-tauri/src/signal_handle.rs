@@ -1,6 +1,7 @@
 use crate::settings::ActivationMode;
 use crate::TranscriptionCoordinator;
 use log::{debug, warn};
+use std::time::Instant;
 use tauri::{AppHandle, Manager};
 
 #[cfg(unix)]
@@ -14,7 +15,13 @@ use std::thread;
 /// Used by signal handlers, CLI flags, and any other external trigger.
 pub fn send_transcription_input(app: &AppHandle, binding_id: &str, source: &str) {
     if let Some(c) = app.try_state::<TranscriptionCoordinator>() {
-        c.send_input(binding_id, source, true, ActivationMode::Toggle);
+        c.send_input(
+            binding_id,
+            source,
+            true,
+            ActivationMode::Toggle,
+            Instant::now(),
+        );
     } else {
         warn!("TranscriptionCoordinator not initialized");
     }
