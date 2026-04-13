@@ -87,12 +87,67 @@ fn set_mute(mute: bool) {
 
     #[cfg(target_os = "macos")]
     {
-        use std::process::Command;
-        let script = format!(
-            "set volume output muted {}",
-            if mute { "true" } else { "false" }
-        );
-        let _ = Command::new("osascript").args(["-e", &script]).output();
+        use coreaudio_sys::{
+            kAudioDevicePropertyMute, kAudioHardwarePropertyDefaultOutputDevice,
+            kAudioObjectPropertyElementMaster, kAudioObjectPropertyScopeGlobal,
+            kAudioObjectPropertyScopeOutput, kAudioObjectSystemObject, AudioDeviceID,
+            AudioObjectGetPropertyData, AudioObjectPropertyAddress, AudioObjectSetPropertyData,
+        };
+        use std::{ffi::c_void, mem, process::Command, ptr};
+
+        unsafe fn fallback_to_osascript(mute: bool) {
+            let script = format!(
+                "set volume output muted {}",
+                if mute { "true" } else { "false" }
+            );
+            let _ = Command::new("osascript").args(["-e", &script]).output();
+        }
+
+        let default_output_address = AudioObjectPropertyAddress {
+            mSelector: kAudioHardwarePropertyDefaultOutputDevice,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMaster,
+        };
+
+        let mut device_id: AudioDeviceID = 0;
+        let mut device_id_size = mem::size_of::<AudioDeviceID>() as u32;
+        let default_output_status = unsafe {
+            AudioObjectGetPropertyData(
+                kAudioObjectSystemObject,
+                &default_output_address,
+                0,
+                ptr::null(),
+                &mut device_id_size,
+                &mut device_id as *mut _ as *mut c_void,
+            )
+        };
+
+        if default_output_status != 0 || device_id == 0 {
+            unsafe { fallback_to_osascript(mute) };
+            return;
+        }
+
+        let mute_address = AudioObjectPropertyAddress {
+            mSelector: kAudioDevicePropertyMute,
+            mScope: kAudioObjectPropertyScopeOutput,
+            mElement: kAudioObjectPropertyElementMaster,
+        };
+
+        let mute_value: u32 = u32::from(mute);
+        let mute_status = unsafe {
+            AudioObjectSetPropertyData(
+                device_id,
+                &mute_address,
+                0,
+                ptr::null(),
+                mem::size_of_val(&mute_value) as u32,
+                &mute_value as *const _ as *const c_void,
+            )
+        };
+
+        if mute_status != 0 {
+            unsafe { fallback_to_osascript(mute) };
+        }
     }
 }
 

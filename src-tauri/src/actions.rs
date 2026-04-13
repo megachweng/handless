@@ -14,7 +14,7 @@ use ferrous_opencc::{config::BuiltinConfig, OpenCC};
 use log::{debug, error, info, warn};
 use once_cell::sync::Lazy;
 use std::collections::HashMap;
-use std::sync::Arc;
+use std::sync::{mpsc, Arc};
 use std::time::Instant;
 use tauri::AppHandle;
 use tauri::Emitter;
@@ -51,6 +51,22 @@ pub trait ShortcutAction: Send + Sync {
 
 // Transcribe Action
 pub struct TranscribeAction;
+
+fn play_start_feedback_and_apply_mute(
+    app: &AppHandle,
+    rm: Arc<AudioRecordingManager>,
+) -> mpsc::Sender<()> {
+    let (recording_started_tx, recording_started_rx) = mpsc::channel();
+    let app_clone = app.clone();
+    std::thread::spawn(move || {
+        play_feedback_sound_blocking(&app_clone, SoundType::Start);
+        if recording_started_rx.recv().is_ok() && rm.is_recording() {
+            rm.apply_mute();
+        }
+    });
+
+    recording_started_tx
+}
 
 async fn maybe_convert_chinese_variant(
     settings: &AppSettings,
@@ -111,10 +127,13 @@ impl ShortcutAction for TranscribeAction {
         tm.initiate_model_load();
 
         let binding_id = binding_id.to_string();
+        let rm = app.state::<Arc<AudioRecordingManager>>();
+
+        // Start the cue immediately on press; recording startup can continue in parallel.
+        let recording_started_tx = play_start_feedback_and_apply_mute(app, Arc::clone(&rm));
+
         change_tray_icon(app, TrayIconState::Recording);
         show_recording_overlay(app);
-
-        let rm = app.state::<Arc<AudioRecordingManager>>();
 
         // Get the microphone mode to determine audio feedback timing
         let settings = get_settings(app);
@@ -191,39 +210,23 @@ impl ShortcutAction for TranscribeAction {
 
         let mut recording_started = false;
         if is_always_on {
-            // Always-on mode: Play audio feedback immediately, then apply mute after sound finishes
-            debug!("Always-on mode: Playing audio feedback immediately");
-            let rm_clone = Arc::clone(&rm);
-            let app_clone = app.clone();
-            std::thread::spawn(move || {
-                play_feedback_sound_blocking(&app_clone, SoundType::Start);
-                rm_clone.apply_mute();
-            });
-
             recording_started = rm.try_start_recording(&binding_id, stream_tap_tx);
             debug!("Recording started: {}", recording_started);
         } else {
-            // On-demand mode: Start recording first, then play audio feedback, then apply mute
-            debug!("On-demand mode: Starting recording first, then audio feedback");
+            // On-demand mode: start recording immediately; feedback is already playing.
+            debug!("On-demand mode: Starting recording in parallel with audio feedback");
             let recording_start_time = Instant::now();
             let started = rm.try_start_recording(&binding_id, stream_tap_tx);
             if started {
                 recording_started = true;
                 debug!("Recording started in {:?}", recording_start_time.elapsed());
-                let app_clone = app.clone();
-                let rm_clone = Arc::clone(&rm);
-                std::thread::spawn(move || {
-                    std::thread::sleep(std::time::Duration::from_millis(100));
-                    debug!("Handling delayed audio feedback/mute sequence");
-                    play_feedback_sound_blocking(&app_clone, SoundType::Start);
-                    rm_clone.apply_mute();
-                });
             } else {
                 debug!("Failed to start recording");
             }
         }
 
         if recording_started {
+            let _ = recording_started_tx.send(());
             shortcut::register_cancel_shortcut(app);
         }
 
@@ -256,14 +259,14 @@ impl ShortcutAction for TranscribeAction {
         let streaming_state = Arc::clone(&app.state::<ActiveStreamingState>());
         let pipeline_handle = Arc::clone(&app.state::<PipelineAbortHandle>());
 
-        change_tray_icon(app, TrayIconState::Transcribing);
-        show_transcribing_overlay(app);
-
         // Unmute before playing audio feedback so the stop sound is audible
         rm.remove_mute();
 
-        // Play audio feedback for recording stop
+        // Trigger the stop cue as early as possible on key release.
         play_feedback_sound(app, SoundType::Stop);
+
+        change_tray_icon(app, TrayIconState::Transcribing);
+        show_transcribing_overlay(app);
 
         let binding_id = binding_id.to_string();
 

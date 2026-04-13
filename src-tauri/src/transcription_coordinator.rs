@@ -25,6 +25,7 @@ enum Command {
         hotkey_string: String,
         is_pressed: bool,
         activation_mode: ActivationMode,
+        event_time: Instant,
     },
     Cancel {
         recording_was_active: bool,
@@ -71,16 +72,18 @@ impl TranscriptionCoordinator {
                             hotkey_string,
                             is_pressed,
                             activation_mode,
+                            event_time,
                         } => {
                             // Debounce rapid-fire press events (key repeat / double-tap).
                             // Releases always pass through for hold-based modes.
                             if is_pressed {
-                                let now = Instant::now();
-                                if last_press.is_some_and(|t| now.duration_since(t) < DEBOUNCE) {
+                                if last_press
+                                    .is_some_and(|t| event_time.duration_since(t) < DEBOUNCE)
+                                {
                                     debug!("Debounced press for '{binding_id}'");
                                     continue;
                                 }
-                                last_press = Some(now);
+                                last_press = Some(event_time);
                             }
 
                             match activation_mode {
@@ -124,14 +127,14 @@ impl TranscriptionCoordinator {
                                             press_start = None;
                                         } else if matches!(stage, Stage::Idle) {
                                             // Start recording and record timestamp.
-                                            press_start = Some(Instant::now());
+                                            press_start = Some(event_time);
                                             toggled = false;
                                             start(&app, &mut stage, &binding_id, &hotkey_string);
                                         }
                                     } else if matches!(&stage, Stage::Recording(id) if id == &binding_id)
                                     {
                                         if let Some(t) = press_start {
-                                            if t.elapsed() >= HOLD_THRESHOLD {
+                                            if event_time.duration_since(t) >= HOLD_THRESHOLD {
                                                 // Held long enough: treat as hold → stop.
                                                 stop(&app, &mut stage, &binding_id, &hotkey_string);
                                                 press_start = None;
@@ -194,6 +197,7 @@ impl TranscriptionCoordinator {
         hotkey_string: &str,
         is_pressed: bool,
         activation_mode: ActivationMode,
+        event_time: Instant,
     ) {
         if self
             .tx
@@ -202,6 +206,7 @@ impl TranscriptionCoordinator {
                 hotkey_string: hotkey_string.to_string(),
                 is_pressed,
                 activation_mode,
+                event_time,
             })
             .is_err()
         {
