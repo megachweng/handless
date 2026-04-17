@@ -4,6 +4,7 @@ pub mod history;
 pub mod models;
 pub mod transcription;
 
+use crate::permission_assistant::PermissionAssistantPanel;
 use crate::settings::{self, get_settings, write_settings, AppSettings, LogLevel};
 use crate::utils::cancel_current_operation;
 use crate::TranscriptionCoordinator;
@@ -249,5 +250,19 @@ pub fn initialize_shortcuts(app: AppHandle) -> Result<(), String> {
     app.manage(ShortcutsInitialized);
 
     log::info!("Shortcuts initialized successfully");
+    Ok(())
+}
+
+#[specta::specta]
+#[tauri::command]
+pub fn present_permission_assistant(panel: PermissionAssistantPanel) -> Result<(), String> {
+    crate::permission_assistant::present(panel);
+    Ok(())
+}
+
+#[specta::specta]
+#[tauri::command]
+pub fn dismiss_permission_assistant() -> Result<(), String> {
+    crate::permission_assistant::dismiss();
     Ok(())
 }

@@ -14,6 +14,7 @@ mod managers;
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 pub(crate) mod notch;
 mod overlay;
+mod permission_assistant;
 pub mod post_process;
 mod settings;
 mod shortcut;
@@ -358,6 +359,8 @@ pub fn run(cli_args: CliArgs) {
         commands::is_homebrew_install,
         commands::initialize_enigo,
         commands::initialize_shortcuts,
+        commands::present_permission_assistant,
+        commands::dismiss_permission_assistant,
         commands::models::get_available_models,
         commands::models::get_model_info,
         commands::models::download_model,
