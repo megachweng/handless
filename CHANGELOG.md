@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.8] - 2026-04-17
+
+### Added
+
+- Guided macOS permission assistant overlays for Accessibility and Microphone setup
+
+### Fixed
+
+- Permission onboarding and settings retry flow after interrupted permission requests
+
 ## [0.2.7] - 2026-04-12
 
 ### Changed
