@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.9] - 2026-04-27
+
+### Added
+
+- Local transcription engine options for model setup
+
+### Changed
+
+- Minimum macOS release target is now 10.15 to support local transcription engines
+
+### Fixed
+
+- Doubao credential labels now distinguish access tokens from API keys
+
 ## [0.2.8] - 2026-04-17
 
 ### Added
