@@ -279,7 +279,11 @@
           "appKey": "应用密钥 (App ID)",
           "appKeyDescription": "火山引擎 App ID（从语音控制台获取）",
           "resourceId": "资源 ID",
-          "resourceIdDescription": "火山引擎语音资源 ID（从语音控制台获取）"
+          "resourceIdDescription": "火山引擎语音资源 ID（从语音控制台获取）",
+          "accessToken": "Access Token",
+          "accessTokenPlaceholder": "Access Token",
+          "verifyFirst": "请先验证您的 Access Token",
+          "openSpeechConsole": "打开语音控制台"
         }
       },
       "localModels": {

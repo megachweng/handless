@@ -279,7 +279,11 @@
           "appKey": "App Key (App ID)",
           "appKeyDescription": "Your Volcengine App ID (from the Speech console)",
           "resourceId": "Resource ID",
-          "resourceIdDescription": "Your Volcengine speech resource ID (from the Speech console)"
+          "resourceIdDescription": "Your Volcengine speech resource ID (from the Speech console)",
+          "accessToken": "Access Token",
+          "accessTokenPlaceholder": "Access Token",
+          "verifyFirst": "Verify your Access Token first",
+          "openSpeechConsole": "Open speech console"
         }
       },
       "localModels": {

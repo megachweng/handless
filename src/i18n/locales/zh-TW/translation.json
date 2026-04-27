@@ -333,7 +333,11 @@
           "appKey": "應用金鑰 (App ID)",
           "appKeyDescription": "火山引擎 App ID（從語音控制台取得）",
           "resourceId": "資源 ID",
-          "resourceIdDescription": "火山引擎語音資源 ID（從語音控制台取得）"
+          "resourceIdDescription": "火山引擎語音資源 ID（從語音控制台取得）",
+          "accessToken": "Access Token",
+          "accessTokenPlaceholder": "Access Token",
+          "verifyFirst": "請先驗證您的 Access Token",
+          "openSpeechConsole": "開啟語音控制台"
         }
       },
       "localModels": {

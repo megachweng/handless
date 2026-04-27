@@ -50,7 +50,7 @@ pub(crate) enum DoubaoEvent {
 // ─── Credential extraction ──────────────────────────────────────────
 
 /// Extract the three Doubao credentials:
-/// - `access_key` from the `api_key` parameter (the main API Key field)
+/// - `access_token` from the main credential field
 /// - `app_key` and `resource_id` from the cloud options
 pub(crate) fn extract_credentials<'a>(
     api_key: &'a str,
@@ -69,7 +69,8 @@ pub(crate) fn extract_credentials<'a>(
         .and_then(|v| v.as_str())
         .filter(|s| !s.is_empty())
         .unwrap_or(DEFAULT_RESOURCE_ID);
-    Ok((api_key, app_key, resource_id))
+    let access_token = api_key;
+    Ok((access_token, app_key, resource_id))
 }
 
 /// Map app language codes to Doubao API language codes.

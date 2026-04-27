@@ -10,11 +10,20 @@ interface ApiKeyFieldProps {
   onChange?: (value: string) => void;
   disabled: boolean;
   placeholder?: string;
+  ariaLabel?: string;
   className?: string;
 }
 
 export const ApiKeyField: React.FC<ApiKeyFieldProps> = React.memo(
-  ({ value, onBlur, onChange, disabled, placeholder, className = "" }) => {
+  ({
+    value,
+    onBlur,
+    onChange,
+    disabled,
+    placeholder,
+    ariaLabel,
+    className = "",
+  }) => {
     const { t } = useTranslation();
     const [localValue, setLocalValue] = useState(value);
     const [showCopied, setShowCopied] = useState(false);
@@ -53,6 +62,7 @@ export const ApiKeyField: React.FC<ApiKeyFieldProps> = React.memo(
             if (localValue !== value) onBlur(localValue);
           }}
           placeholder={placeholder}
+          aria-label={ariaLabel}
           variant="compact"
           disabled={disabled}
           className={`w-full ${localValue ? "pr-7" : ""}`}

@@ -276,6 +276,19 @@ export const CloudProviderConfigCard: React.FC<
   const effectiveStatus =
     !isVerified && status === "active" ? "available" : status;
   const isClickable = isVerified;
+  const isDoubao = provider.id === "doubao";
+  const credentialLabel = isDoubao
+    ? t("settings.models.cloudProviders.doubao.accessToken")
+    : t("settings.models.cloudProviders.apiKey.title");
+  const credentialPlaceholder = isDoubao
+    ? t("settings.models.cloudProviders.doubao.accessTokenPlaceholder")
+    : t("settings.models.cloudProviders.apiKey.placeholder");
+  const verifyFirstLabel = isDoubao
+    ? t("settings.models.cloudProviders.doubao.verifyFirst")
+    : t("settings.models.cloudProviders.verifyFirst");
+  const consoleButtonLabel = isDoubao
+    ? t("settings.models.cloudProviders.doubao.openSpeechConsole")
+    : t("settings.models.cloudProviders.getApiKey");
 
   const [showVerifyHint, setShowVerifyHint] = useState(false);
   const hintTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -328,7 +341,7 @@ export const CloudProviderConfigCard: React.FC<
         )}
         {showVerifyHint && (
           <span className="text-xs text-warning font-medium animate-pulse">
-            {t("settings.models.cloudProviders.verifyFirst")}
+            {verifyFirstLabel}
           </span>
         )}
         <button
@@ -365,9 +378,8 @@ export const CloudProviderConfigCard: React.FC<
                 onBlur={onApiKeyChange}
                 onChange={setLocalApiKey}
                 disabled={false}
-                placeholder={t(
-                  "settings.models.cloudProviders.apiKey.placeholder",
-                )}
+                placeholder={credentialPlaceholder}
+                ariaLabel={credentialLabel}
                 className="min-w-[180px] max-w-[240px]"
               />
               <Input
@@ -433,7 +445,7 @@ export const CloudProviderConfigCard: React.FC<
                     }}
                   >
                     <ArrowSquareOut className="w-3 h-3" />
-                    {t("settings.models.cloudProviders.getApiKey")}
+                    {consoleButtonLabel}
                   </button>
                 )}
             </div>
