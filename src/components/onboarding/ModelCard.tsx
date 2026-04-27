@@ -55,6 +55,7 @@ interface ModelCardProps {
   showSettings?: boolean;
   supportedLanguages?: string[];
   supportsTranslation?: boolean;
+  supportsAutoLanguage?: boolean;
 }
 
 const ModelCard: React.FC<ModelCardProps> = ({
@@ -75,6 +76,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
   showSettings = false,
   supportedLanguages,
   supportsTranslation = false,
+  supportsAutoLanguage = true,
 }) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
@@ -86,11 +88,17 @@ const ModelCard: React.FC<ModelCardProps> = ({
         (lang) =>
           !supportedLanguages ||
           supportedLanguages.length === 0 ||
-          lang.value === "auto" ||
+          (supportsAutoLanguage && lang.value === "auto") ||
           supportedLanguages.includes(lang.value),
       ).map((lang) => ({ value: lang.value, label: lang.label })),
-    [supportedLanguages],
+    [supportedLanguages, supportsAutoLanguage],
   );
+  const selectedLanguage = getSetting("selected_language") || "auto";
+  const selectedLanguageValue = languageOptions.some(
+    (option) => option.value === selectedLanguage,
+  )
+    ? selectedLanguage
+    : (languageOptions[0]?.value ?? selectedLanguage);
   const isFeatured = variant === "featured";
   const isCloud = provider.backend.type === "Cloud";
   const isLocal = provider.backend.type === "Local";
@@ -193,7 +201,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
                 {t("settings.general.language.title")}
               </label>
               <Dropdown
-                selectedValue={getSetting("selected_language") || "auto"}
+                selectedValue={selectedLanguageValue}
                 options={languageOptions}
                 onSelect={(val) => updateSetting("selected_language", val)}
                 placeholder={t("settings.general.language.auto")}

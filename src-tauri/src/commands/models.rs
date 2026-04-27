@@ -1,4 +1,4 @@
-use crate::managers::model::{ModelInfo, ModelManager};
+use crate::managers::model::{EngineType, ModelInfo, ModelManager};
 use crate::managers::transcription::TranscriptionManager;
 use crate::settings::{get_settings, write_settings, SttProviderType};
 use crate::stt_provider::{cloud_provider_registry, SttProviderInfo};
@@ -80,6 +80,16 @@ pub async fn set_active_model(
     // (emitted during load_model) read the correct selected_model
     let mut settings = get_settings(&app_handle);
     settings.selected_model = model_id.clone();
+    let selected_language_supported = settings.selected_language == "auto"
+        || model_info.supported_languages.is_empty()
+        || model_info
+            .supported_languages
+            .contains(&settings.selected_language);
+    if !supports_auto_language(&model_info.engine_type)
+        && (settings.selected_language == "auto" || !selected_language_supported)
+    {
+        settings.selected_language = default_language_for_model(&model_info);
+    }
     write_settings(&app_handle, settings);
 
     // Load the model in the transcription manager
@@ -88,6 +98,20 @@ pub async fn set_active_model(
         .map_err(|e| e.to_string())?;
 
     Ok(())
+}
+
+fn supports_auto_language(engine_type: &EngineType) -> bool {
+    matches!(engine_type, EngineType::Whisper | EngineType::SenseVoice)
+}
+
+fn default_language_for_model(model_info: &ModelInfo) -> String {
+    model_info
+        .supported_languages
+        .iter()
+        .find(|language| language.as_str() == "en")
+        .or_else(|| model_info.supported_languages.first())
+        .cloned()
+        .unwrap_or_else(|| "en".to_string())
 }
 
 #[tauri::command]
