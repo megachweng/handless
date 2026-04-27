@@ -961,7 +961,7 @@ export type CloudOptionType = { type: "Text" } | { type: "Number"; min: number; 
 export type CloudProviderOption = { key: string; label: string; option_type: CloudOptionType; description: string; default_value?: CloudOptionDefault | null }
 export type CustomSounds = { start: boolean; stop: boolean }
 export type DailySpeakingStats = { date: string; total_word_count: number; total_duration_ms: number; transcription_count: number; avg_wpm: number }
-export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice"
+export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice" | "GigaAM" | "Canary" | "Cohere"
 export type HistoryEntry = { id: number; file_name: string; timestamp: number; saved: boolean; title: string; transcription_text: string; post_processed_text: string | null; post_process_prompt: string | null }
 export type HistoryPage = { entries: HistoryEntry[]; total_count: number }
 /**

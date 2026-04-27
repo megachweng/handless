@@ -9,11 +9,19 @@ export const getModelSettingsProps = (provider: SttProviderInfo) => {
     provider.backend.type === "Local"
       ? provider.backend.engine_type
       : undefined;
+  const supportsAutoLanguage =
+    provider.backend.type !== "Local" ||
+    engineType === "Whisper" ||
+    engineType === "SenseVoice";
   const supportsLanguageSelection =
-    engineType === "Whisper" || engineType === "SenseVoice";
+    engineType === "Whisper" ||
+    engineType === "SenseVoice" ||
+    engineType === "Canary" ||
+    engineType === "Cohere";
   return {
     showSettings: supportsLanguageSelection || provider.supports_translation,
     supportedLanguages: provider.supported_languages,
     supportsTranslation: provider.supports_translation,
+    supportsAutoLanguage,
   };
 };

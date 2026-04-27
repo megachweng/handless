@@ -23,6 +23,9 @@ pub enum EngineType {
     Moonshine,
     MoonshineStreaming,
     SenseVoice,
+    GigaAM,
+    Canary,
+    Cohere,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
@@ -394,6 +397,121 @@ impl ModelManager {
                 supports_translation: false,
                 is_recommended: false,
                 supported_languages: sense_voice_languages,
+                is_custom: false,
+            },
+        );
+
+        let gigaam_languages: Vec<String> = vec!["ru"].into_iter().map(String::from).collect();
+
+        available_models.insert(
+            "gigaam-v3-e2e-ctc".to_string(),
+            ModelInfo {
+                id: "gigaam-v3-e2e-ctc".to_string(),
+                name: "GigaAM v3".to_string(),
+                description: "onboarding.models.gigaam-v3-e2e-ctc.description".to_string(),
+                filename: "giga-am-v3-int8".to_string(),
+                url: Some("https://blob.handy.computer/giga-am-v3-int8.tar.gz".to_string()),
+                size_mb: 151,
+                is_downloaded: false,
+                is_downloading: false,
+                partial_size: 0,
+                is_directory: true,
+                engine_type: EngineType::GigaAM,
+                accuracy_score: 0.85,
+                speed_score: 0.75,
+                supports_translation: false,
+                is_recommended: false,
+                supported_languages: gigaam_languages,
+                is_custom: false,
+            },
+        );
+
+        let canary_flash_languages: Vec<String> = vec!["en", "de", "es", "fr"]
+            .into_iter()
+            .map(String::from)
+            .collect();
+
+        available_models.insert(
+            "canary-180m-flash".to_string(),
+            ModelInfo {
+                id: "canary-180m-flash".to_string(),
+                name: "Canary 180M Flash".to_string(),
+                description: "onboarding.models.canary-180m-flash.description".to_string(),
+                filename: "canary-180m-flash".to_string(),
+                url: Some("https://blob.handy.computer/canary-180m-flash.tar.gz".to_string()),
+                size_mb: 146,
+                is_downloaded: false,
+                is_downloading: false,
+                partial_size: 0,
+                is_directory: true,
+                engine_type: EngineType::Canary,
+                accuracy_score: 0.75,
+                speed_score: 0.85,
+                supports_translation: true,
+                is_recommended: false,
+                supported_languages: canary_flash_languages,
+                is_custom: false,
+            },
+        );
+
+        let canary_1b_languages: Vec<String> = vec![
+            "bg", "hr", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "hu", "it", "lv",
+            "lt", "mt", "pl", "pt", "ro", "sk", "sl", "es", "sv", "ru", "uk",
+        ]
+        .into_iter()
+        .map(String::from)
+        .collect();
+
+        available_models.insert(
+            "canary-1b-v2".to_string(),
+            ModelInfo {
+                id: "canary-1b-v2".to_string(),
+                name: "Canary 1B v2".to_string(),
+                description: "onboarding.models.canary-1b-v2.description".to_string(),
+                filename: "canary-1b-v2".to_string(),
+                url: Some("https://blob.handy.computer/canary-1b-v2.tar.gz".to_string()),
+                size_mb: 691,
+                is_downloaded: false,
+                is_downloading: false,
+                partial_size: 0,
+                is_directory: true,
+                engine_type: EngineType::Canary,
+                accuracy_score: 0.85,
+                speed_score: 0.70,
+                supports_translation: true,
+                is_recommended: false,
+                supported_languages: canary_1b_languages,
+                is_custom: false,
+            },
+        );
+
+        let cohere_languages: Vec<String> = vec![
+            "en", "fr", "de", "it", "es", "pt", "el", "nl", "pl", "zh", "zh-Hans", "zh-Hant", "ja",
+            "ko", "vi", "ar",
+        ]
+        .into_iter()
+        .map(String::from)
+        .collect();
+
+        available_models.insert(
+            "cohere-int8".to_string(),
+            ModelInfo {
+                id: "cohere-int8".to_string(),
+                name: "Cohere".to_string(),
+                description: "onboarding.models.cohere-int8.description".to_string(),
+                filename: "cohere-int8".to_string(),
+                url: Some("https://blob.handy.computer/cohere-int8.tar.gz".to_string()),
+                size_mb: 1708,
+                is_downloaded: false,
+                is_downloading: false,
+                partial_size: 0,
+                is_directory: true,
+                engine_type: EngineType::Cohere,
+                accuracy_score: 0.90,
+                speed_score: 0.60,
+                supports_translation: false,
+                is_recommended: false,
+                supported_languages: cohere_languages,
                 is_custom: false,
             },
         );

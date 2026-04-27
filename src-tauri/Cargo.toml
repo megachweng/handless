@@ -72,7 +72,7 @@ rusqlite = { version = "0.38", features = ["bundled"] }
 tar = "0.4.44"
 flate2 = "1.0"
 uuid = { version = "1", features = ["v4"] }
-transcribe-rs = { version = "0.2.9", features = ["whisper", "parakeet", "moonshine", "sense_voice"] }
+transcribe-rs = { version = "0.3.8", features = ["whisper-cpp", "onnx"] }
 handy-keys = "0.2.2"
 ferrous-opencc = "0.3.0"
 clap = { version = "4", features = ["derive"] }
@@ -92,6 +92,7 @@ tauri-plugin-single-instance = "2.4.0"
 tauri-plugin-updater = "2.10.0"
 
 [target.'cfg(windows)'.dependencies]
+transcribe-rs = { version = "0.3.8", features = ["whisper-vulkan", "ort-directml"] }
 windows = { version = "0.61", features = [
   "Win32_Media_Audio_Endpoints",
   "Win32_System_Com_StructuredStorage",
@@ -106,10 +107,12 @@ coreaudio-sys = "0.2"
 objc2 = "0.6.3"
 objc2-app-kit = { version = "0.3.2", features = ["NSScreen", "NSGraphics"] }
 objc2-foundation = { version = "0.3.2", features = ["NSGeometry"] }
+transcribe-rs = { version = "0.3.8", features = ["whisper-metal"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 gtk-layer-shell = { version = "0.8", features = ["v0_6"] }
 gtk = "0.18"
+transcribe-rs = { version = "0.3.8", features = ["whisper-vulkan"] }
 
 [patch.crates-io]
 tauri-runtime = { git = "https://github.com/cjpais/tauri.git", branch = "handy-2.9.1" }
