@@ -66,6 +66,10 @@ pub struct ModelManager {
 }
 
 impl ModelManager {
+    fn supports_onnx_local_engines() -> bool {
+        !cfg!(all(target_os = "macos", target_arch = "x86_64"))
+    }
+
     pub fn new(app_handle: &AppHandle) -> Result<Self> {
         // Create models directory in app data
         let models_dir = app_handle
@@ -213,308 +217,313 @@ impl ModelManager {
             },
         );
 
-        // Add NVIDIA Parakeet models (directory-based)
-        available_models.insert(
-            "parakeet-tdt-0.6b-v2".to_string(),
-            ModelInfo {
-                id: "parakeet-tdt-0.6b-v2".to_string(),
-                name: "Parakeet V2".to_string(),
-                description: "onboarding.models.parakeet-tdt-0.6b-v2.description".to_string(),
-                filename: "parakeet-tdt-0.6b-v2-int8".to_string(), // Directory name
-                url: Some("https://blob.handy.computer/parakeet-v2-int8.tar.gz".to_string()),
-                size_mb: 473, // Approximate size for int8 quantized model
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::Parakeet,
-                accuracy_score: 0.85,
-                speed_score: 0.85,
-                supports_translation: false,
-                is_recommended: false,
-                supported_languages: vec!["en".to_string()],
-                is_custom: false,
-            },
-        );
+        if Self::supports_onnx_local_engines() {
+            // Add NVIDIA Parakeet models (directory-based)
+            available_models.insert(
+                "parakeet-tdt-0.6b-v2".to_string(),
+                ModelInfo {
+                    id: "parakeet-tdt-0.6b-v2".to_string(),
+                    name: "Parakeet V2".to_string(),
+                    description: "onboarding.models.parakeet-tdt-0.6b-v2.description".to_string(),
+                    filename: "parakeet-tdt-0.6b-v2-int8".to_string(), // Directory name
+                    url: Some("https://blob.handy.computer/parakeet-v2-int8.tar.gz".to_string()),
+                    size_mb: 473, // Approximate size for int8 quantized model
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::Parakeet,
+                    accuracy_score: 0.85,
+                    speed_score: 0.85,
+                    supports_translation: false,
+                    is_recommended: false,
+                    supported_languages: vec!["en".to_string()],
+                    is_custom: false,
+                },
+            );
 
-        // Parakeet V3 supported languages (25 EU languages + Russian/Ukrainian):
-        // bg, hr, cs, da, nl, en, et, fi, fr, de, el, hu, it, lv, lt, mt, pl, pt, ro, sk, sl, es, sv, ru, uk
-        let parakeet_v3_languages: Vec<String> = vec![
-            "bg", "hr", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "hu", "it", "lv",
-            "lt", "mt", "pl", "pt", "ro", "sk", "sl", "es", "sv", "ru", "uk",
-        ]
-        .into_iter()
-        .map(String::from)
-        .collect();
-
-        available_models.insert(
-            "parakeet-tdt-0.6b-v3".to_string(),
-            ModelInfo {
-                id: "parakeet-tdt-0.6b-v3".to_string(),
-                name: "Parakeet V3".to_string(),
-                description: "onboarding.models.parakeet-tdt-0.6b-v3.description".to_string(),
-                filename: "parakeet-tdt-0.6b-v3-int8".to_string(), // Directory name
-                url: Some("https://blob.handy.computer/parakeet-v3-int8.tar.gz".to_string()),
-                size_mb: 478, // Approximate size for int8 quantized model
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::Parakeet,
-                accuracy_score: 0.80,
-                speed_score: 0.85,
-                supports_translation: false,
-                is_recommended: true,
-                supported_languages: parakeet_v3_languages,
-                is_custom: false,
-            },
-        );
-
-        available_models.insert(
-            "moonshine-base".to_string(),
-            ModelInfo {
-                id: "moonshine-base".to_string(),
-                name: "Moonshine Base".to_string(),
-                description: "onboarding.models.moonshine-base.description".to_string(),
-                filename: "moonshine-base".to_string(),
-                url: Some("https://blob.handy.computer/moonshine-base.tar.gz".to_string()),
-                size_mb: 58,
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::Moonshine,
-                accuracy_score: 0.70,
-                speed_score: 0.90,
-                supports_translation: false,
-                is_recommended: false,
-                supported_languages: vec!["en".to_string()],
-                is_custom: false,
-            },
-        );
-
-        available_models.insert(
-            "moonshine-tiny-streaming-en".to_string(),
-            ModelInfo {
-                id: "moonshine-tiny-streaming-en".to_string(),
-                name: "Moonshine V2 Tiny".to_string(),
-                description: "onboarding.models.moonshine-tiny-streaming-en.description"
-                    .to_string(),
-                filename: "moonshine-tiny-streaming-en".to_string(),
-                url: Some(
-                    "https://blob.handy.computer/moonshine-tiny-streaming-en.tar.gz".to_string(),
-                ),
-                size_mb: 31,
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::MoonshineStreaming,
-                accuracy_score: 0.55,
-                speed_score: 0.95,
-                supports_translation: false,
-                is_recommended: false,
-                supported_languages: vec!["en".to_string()],
-                is_custom: false,
-            },
-        );
-
-        available_models.insert(
-            "moonshine-small-streaming-en".to_string(),
-            ModelInfo {
-                id: "moonshine-small-streaming-en".to_string(),
-                name: "Moonshine V2 Small".to_string(),
-                description: "onboarding.models.moonshine-small-streaming-en.description"
-                    .to_string(),
-                filename: "moonshine-small-streaming-en".to_string(),
-                url: Some(
-                    "https://blob.handy.computer/moonshine-small-streaming-en.tar.gz".to_string(),
-                ),
-                size_mb: 100,
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::MoonshineStreaming,
-                accuracy_score: 0.65,
-                speed_score: 0.90,
-                supports_translation: false,
-                is_recommended: false,
-                supported_languages: vec!["en".to_string()],
-                is_custom: false,
-            },
-        );
-
-        available_models.insert(
-            "moonshine-medium-streaming-en".to_string(),
-            ModelInfo {
-                id: "moonshine-medium-streaming-en".to_string(),
-                name: "Moonshine V2 Medium".to_string(),
-                description: "onboarding.models.moonshine-medium-streaming-en.description"
-                    .to_string(),
-                filename: "moonshine-medium-streaming-en".to_string(),
-                url: Some(
-                    "https://blob.handy.computer/moonshine-medium-streaming-en.tar.gz".to_string(),
-                ),
-                size_mb: 192,
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::MoonshineStreaming,
-                accuracy_score: 0.75,
-                speed_score: 0.80,
-                supports_translation: false,
-                is_recommended: false,
-                supported_languages: vec!["en".to_string()],
-                is_custom: false,
-            },
-        );
-
-        // SenseVoice supported languages
-        let sense_voice_languages: Vec<String> =
-            vec!["zh", "zh-Hans", "zh-Hant", "en", "yue", "ja", "ko"]
-                .into_iter()
-                .map(String::from)
-                .collect();
-
-        available_models.insert(
-            "sense-voice-int8".to_string(),
-            ModelInfo {
-                id: "sense-voice-int8".to_string(),
-                name: "SenseVoice".to_string(),
-                description: "onboarding.models.sense-voice-int8.description".to_string(),
-                filename: "sense-voice-int8".to_string(),
-                url: Some("https://blob.handy.computer/sense-voice-int8.tar.gz".to_string()),
-                size_mb: 160,
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::SenseVoice,
-                accuracy_score: 0.65,
-                speed_score: 0.95,
-                supports_translation: false,
-                is_recommended: false,
-                supported_languages: sense_voice_languages,
-                is_custom: false,
-            },
-        );
-
-        let gigaam_languages: Vec<String> = vec!["ru"].into_iter().map(String::from).collect();
-
-        available_models.insert(
-            "gigaam-v3-e2e-ctc".to_string(),
-            ModelInfo {
-                id: "gigaam-v3-e2e-ctc".to_string(),
-                name: "GigaAM v3".to_string(),
-                description: "onboarding.models.gigaam-v3-e2e-ctc.description".to_string(),
-                filename: "giga-am-v3-int8".to_string(),
-                url: Some("https://blob.handy.computer/giga-am-v3-int8.tar.gz".to_string()),
-                size_mb: 151,
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::GigaAM,
-                accuracy_score: 0.85,
-                speed_score: 0.75,
-                supports_translation: false,
-                is_recommended: false,
-                supported_languages: gigaam_languages,
-                is_custom: false,
-            },
-        );
-
-        let canary_flash_languages: Vec<String> = vec!["en", "de", "es", "fr"]
+            // Parakeet V3 supported languages (25 EU languages + Russian/Ukrainian):
+            // bg, hr, cs, da, nl, en, et, fi, fr, de, el, hu, it, lv, lt, mt, pl, pt, ro, sk, sl, es, sv, ru, uk
+            let parakeet_v3_languages: Vec<String> = vec![
+                "bg", "hr", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "hu", "it", "lv",
+                "lt", "mt", "pl", "pt", "ro", "sk", "sl", "es", "sv", "ru", "uk",
+            ]
             .into_iter()
             .map(String::from)
             .collect();
 
-        available_models.insert(
-            "canary-180m-flash".to_string(),
-            ModelInfo {
-                id: "canary-180m-flash".to_string(),
-                name: "Canary 180M Flash".to_string(),
-                description: "onboarding.models.canary-180m-flash.description".to_string(),
-                filename: "canary-180m-flash".to_string(),
-                url: Some("https://blob.handy.computer/canary-180m-flash.tar.gz".to_string()),
-                size_mb: 146,
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::Canary,
-                accuracy_score: 0.75,
-                speed_score: 0.85,
-                supports_translation: true,
-                is_recommended: false,
-                supported_languages: canary_flash_languages,
-                is_custom: false,
-            },
-        );
+            available_models.insert(
+                "parakeet-tdt-0.6b-v3".to_string(),
+                ModelInfo {
+                    id: "parakeet-tdt-0.6b-v3".to_string(),
+                    name: "Parakeet V3".to_string(),
+                    description: "onboarding.models.parakeet-tdt-0.6b-v3.description".to_string(),
+                    filename: "parakeet-tdt-0.6b-v3-int8".to_string(), // Directory name
+                    url: Some("https://blob.handy.computer/parakeet-v3-int8.tar.gz".to_string()),
+                    size_mb: 478, // Approximate size for int8 quantized model
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::Parakeet,
+                    accuracy_score: 0.80,
+                    speed_score: 0.85,
+                    supports_translation: false,
+                    is_recommended: true,
+                    supported_languages: parakeet_v3_languages,
+                    is_custom: false,
+                },
+            );
 
-        let canary_1b_languages: Vec<String> = vec![
-            "bg", "hr", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "hu", "it", "lv",
-            "lt", "mt", "pl", "pt", "ro", "sk", "sl", "es", "sv", "ru", "uk",
-        ]
-        .into_iter()
-        .map(String::from)
-        .collect();
+            available_models.insert(
+                "moonshine-base".to_string(),
+                ModelInfo {
+                    id: "moonshine-base".to_string(),
+                    name: "Moonshine Base".to_string(),
+                    description: "onboarding.models.moonshine-base.description".to_string(),
+                    filename: "moonshine-base".to_string(),
+                    url: Some("https://blob.handy.computer/moonshine-base.tar.gz".to_string()),
+                    size_mb: 58,
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::Moonshine,
+                    accuracy_score: 0.70,
+                    speed_score: 0.90,
+                    supports_translation: false,
+                    is_recommended: false,
+                    supported_languages: vec!["en".to_string()],
+                    is_custom: false,
+                },
+            );
 
-        available_models.insert(
-            "canary-1b-v2".to_string(),
-            ModelInfo {
-                id: "canary-1b-v2".to_string(),
-                name: "Canary 1B v2".to_string(),
-                description: "onboarding.models.canary-1b-v2.description".to_string(),
-                filename: "canary-1b-v2".to_string(),
-                url: Some("https://blob.handy.computer/canary-1b-v2.tar.gz".to_string()),
-                size_mb: 691,
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::Canary,
-                accuracy_score: 0.85,
-                speed_score: 0.70,
-                supports_translation: true,
-                is_recommended: false,
-                supported_languages: canary_1b_languages,
-                is_custom: false,
-            },
-        );
+            available_models.insert(
+                "moonshine-tiny-streaming-en".to_string(),
+                ModelInfo {
+                    id: "moonshine-tiny-streaming-en".to_string(),
+                    name: "Moonshine V2 Tiny".to_string(),
+                    description: "onboarding.models.moonshine-tiny-streaming-en.description"
+                        .to_string(),
+                    filename: "moonshine-tiny-streaming-en".to_string(),
+                    url: Some(
+                        "https://blob.handy.computer/moonshine-tiny-streaming-en.tar.gz"
+                            .to_string(),
+                    ),
+                    size_mb: 31,
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::MoonshineStreaming,
+                    accuracy_score: 0.55,
+                    speed_score: 0.95,
+                    supports_translation: false,
+                    is_recommended: false,
+                    supported_languages: vec!["en".to_string()],
+                    is_custom: false,
+                },
+            );
 
-        let cohere_languages: Vec<String> = vec![
-            "en", "fr", "de", "it", "es", "pt", "el", "nl", "pl", "zh", "zh-Hans", "zh-Hant", "ja",
-            "ko", "vi", "ar",
-        ]
-        .into_iter()
-        .map(String::from)
-        .collect();
+            available_models.insert(
+                "moonshine-small-streaming-en".to_string(),
+                ModelInfo {
+                    id: "moonshine-small-streaming-en".to_string(),
+                    name: "Moonshine V2 Small".to_string(),
+                    description: "onboarding.models.moonshine-small-streaming-en.description"
+                        .to_string(),
+                    filename: "moonshine-small-streaming-en".to_string(),
+                    url: Some(
+                        "https://blob.handy.computer/moonshine-small-streaming-en.tar.gz"
+                            .to_string(),
+                    ),
+                    size_mb: 100,
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::MoonshineStreaming,
+                    accuracy_score: 0.65,
+                    speed_score: 0.90,
+                    supports_translation: false,
+                    is_recommended: false,
+                    supported_languages: vec!["en".to_string()],
+                    is_custom: false,
+                },
+            );
 
-        available_models.insert(
-            "cohere-int8".to_string(),
-            ModelInfo {
-                id: "cohere-int8".to_string(),
-                name: "Cohere".to_string(),
-                description: "onboarding.models.cohere-int8.description".to_string(),
-                filename: "cohere-int8".to_string(),
-                url: Some("https://blob.handy.computer/cohere-int8.tar.gz".to_string()),
-                size_mb: 1708,
-                is_downloaded: false,
-                is_downloading: false,
-                partial_size: 0,
-                is_directory: true,
-                engine_type: EngineType::Cohere,
-                accuracy_score: 0.90,
-                speed_score: 0.60,
-                supports_translation: false,
-                is_recommended: false,
-                supported_languages: cohere_languages,
-                is_custom: false,
-            },
-        );
+            available_models.insert(
+                "moonshine-medium-streaming-en".to_string(),
+                ModelInfo {
+                    id: "moonshine-medium-streaming-en".to_string(),
+                    name: "Moonshine V2 Medium".to_string(),
+                    description: "onboarding.models.moonshine-medium-streaming-en.description"
+                        .to_string(),
+                    filename: "moonshine-medium-streaming-en".to_string(),
+                    url: Some(
+                        "https://blob.handy.computer/moonshine-medium-streaming-en.tar.gz"
+                            .to_string(),
+                    ),
+                    size_mb: 192,
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::MoonshineStreaming,
+                    accuracy_score: 0.75,
+                    speed_score: 0.80,
+                    supports_translation: false,
+                    is_recommended: false,
+                    supported_languages: vec!["en".to_string()],
+                    is_custom: false,
+                },
+            );
+
+            // SenseVoice supported languages
+            let sense_voice_languages: Vec<String> =
+                vec!["zh", "zh-Hans", "zh-Hant", "en", "yue", "ja", "ko"]
+                    .into_iter()
+                    .map(String::from)
+                    .collect();
+
+            available_models.insert(
+                "sense-voice-int8".to_string(),
+                ModelInfo {
+                    id: "sense-voice-int8".to_string(),
+                    name: "SenseVoice".to_string(),
+                    description: "onboarding.models.sense-voice-int8.description".to_string(),
+                    filename: "sense-voice-int8".to_string(),
+                    url: Some("https://blob.handy.computer/sense-voice-int8.tar.gz".to_string()),
+                    size_mb: 160,
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::SenseVoice,
+                    accuracy_score: 0.65,
+                    speed_score: 0.95,
+                    supports_translation: false,
+                    is_recommended: false,
+                    supported_languages: sense_voice_languages,
+                    is_custom: false,
+                },
+            );
+
+            let gigaam_languages: Vec<String> = vec!["ru"].into_iter().map(String::from).collect();
+
+            available_models.insert(
+                "gigaam-v3-e2e-ctc".to_string(),
+                ModelInfo {
+                    id: "gigaam-v3-e2e-ctc".to_string(),
+                    name: "GigaAM v3".to_string(),
+                    description: "onboarding.models.gigaam-v3-e2e-ctc.description".to_string(),
+                    filename: "giga-am-v3-int8".to_string(),
+                    url: Some("https://blob.handy.computer/giga-am-v3-int8.tar.gz".to_string()),
+                    size_mb: 151,
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::GigaAM,
+                    accuracy_score: 0.85,
+                    speed_score: 0.75,
+                    supports_translation: false,
+                    is_recommended: false,
+                    supported_languages: gigaam_languages,
+                    is_custom: false,
+                },
+            );
+
+            let canary_flash_languages: Vec<String> = vec!["en", "de", "es", "fr"]
+                .into_iter()
+                .map(String::from)
+                .collect();
+
+            available_models.insert(
+                "canary-180m-flash".to_string(),
+                ModelInfo {
+                    id: "canary-180m-flash".to_string(),
+                    name: "Canary 180M Flash".to_string(),
+                    description: "onboarding.models.canary-180m-flash.description".to_string(),
+                    filename: "canary-180m-flash".to_string(),
+                    url: Some("https://blob.handy.computer/canary-180m-flash.tar.gz".to_string()),
+                    size_mb: 146,
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::Canary,
+                    accuracy_score: 0.75,
+                    speed_score: 0.85,
+                    supports_translation: true,
+                    is_recommended: false,
+                    supported_languages: canary_flash_languages,
+                    is_custom: false,
+                },
+            );
+
+            let canary_1b_languages: Vec<String> = vec![
+                "bg", "hr", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "hu", "it", "lv",
+                "lt", "mt", "pl", "pt", "ro", "sk", "sl", "es", "sv", "ru", "uk",
+            ]
+            .into_iter()
+            .map(String::from)
+            .collect();
+
+            available_models.insert(
+                "canary-1b-v2".to_string(),
+                ModelInfo {
+                    id: "canary-1b-v2".to_string(),
+                    name: "Canary 1B v2".to_string(),
+                    description: "onboarding.models.canary-1b-v2.description".to_string(),
+                    filename: "canary-1b-v2".to_string(),
+                    url: Some("https://blob.handy.computer/canary-1b-v2.tar.gz".to_string()),
+                    size_mb: 691,
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::Canary,
+                    accuracy_score: 0.85,
+                    speed_score: 0.70,
+                    supports_translation: true,
+                    is_recommended: false,
+                    supported_languages: canary_1b_languages,
+                    is_custom: false,
+                },
+            );
+
+            let cohere_languages: Vec<String> = vec![
+                "en", "fr", "de", "it", "es", "pt", "el", "nl", "pl", "zh", "zh-Hans", "zh-Hant",
+                "ja", "ko", "vi", "ar",
+            ]
+            .into_iter()
+            .map(String::from)
+            .collect();
+
+            available_models.insert(
+                "cohere-int8".to_string(),
+                ModelInfo {
+                    id: "cohere-int8".to_string(),
+                    name: "Cohere".to_string(),
+                    description: "onboarding.models.cohere-int8.description".to_string(),
+                    filename: "cohere-int8".to_string(),
+                    url: Some("https://blob.handy.computer/cohere-int8.tar.gz".to_string()),
+                    size_mb: 1708,
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::Cohere,
+                    accuracy_score: 0.90,
+                    speed_score: 0.60,
+                    supports_translation: false,
+                    is_recommended: false,
+                    supported_languages: cohere_languages,
+                    is_custom: false,
+                },
+            );
+        }
 
         // Auto-discover custom Whisper models (.bin files) in the models directory
         if let Err(e) = Self::discover_custom_whisper_models(&models_dir, &mut available_models) {

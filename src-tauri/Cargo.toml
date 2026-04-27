@@ -55,7 +55,6 @@ hound = "3.5.1"
 log = "0.4.29"
 env_filter = "1.0.0"
 tokio = "1.50.0"
-vad-rs = { git = "https://github.com/cjpais/vad-rs", default-features = false }
 enigo = "0.6.1"
 rodio = { git = "https://github.com/cjpais/rodio.git" }
 reqwest = { version = "0.13", features = ["json", "stream", "multipart"] }
@@ -72,7 +71,6 @@ rusqlite = { version = "0.38", features = ["bundled"] }
 tar = "0.4.44"
 flate2 = "1.0"
 uuid = { version = "1", features = ["v4"] }
-transcribe-rs = { version = "0.3.8", features = ["whisper-cpp", "onnx"] }
 handy-keys = "0.2.2"
 ferrous-opencc = "0.3.0"
 clap = { version = "4", features = ["derive"] }
@@ -91,8 +89,16 @@ tauri-plugin-global-shortcut = "2.3.1"
 tauri-plugin-single-instance = "2.4.0"
 tauri-plugin-updater = "2.10.0"
 
+[target.'cfg(not(all(target_os = "macos", target_arch = "x86_64")))'.dependencies]
+vad-rs = { git = "https://github.com/cjpais/vad-rs", default-features = false }
+
 [target.'cfg(windows)'.dependencies]
-transcribe-rs = { version = "0.3.8", features = ["whisper-vulkan", "ort-directml"] }
+transcribe-rs = { version = "0.3.8", features = [
+  "whisper-cpp",
+  "onnx",
+  "whisper-vulkan",
+  "ort-directml",
+] }
 windows = { version = "0.61", features = [
   "Win32_Media_Audio_Endpoints",
   "Win32_System_Com_StructuredStorage",
@@ -107,12 +113,28 @@ coreaudio-sys = "0.2"
 objc2 = "0.6.3"
 objc2-app-kit = { version = "0.3.2", features = ["NSScreen", "NSGraphics"] }
 objc2-foundation = { version = "0.3.2", features = ["NSGeometry"] }
-transcribe-rs = { version = "0.3.8", features = ["whisper-metal"] }
+
+[target.'cfg(all(target_os = "macos", target_arch = "aarch64"))'.dependencies]
+transcribe-rs = { version = "0.3.8", features = [
+  "whisper-cpp",
+  "onnx",
+  "whisper-metal",
+] }
+
+[target.'cfg(all(target_os = "macos", target_arch = "x86_64"))'.dependencies]
+transcribe-rs = { version = "0.3.8", features = [
+  "whisper-cpp",
+  "whisper-metal",
+] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 gtk-layer-shell = { version = "0.8", features = ["v0_6"] }
 gtk = "0.18"
-transcribe-rs = { version = "0.3.8", features = ["whisper-vulkan"] }
+transcribe-rs = { version = "0.3.8", features = [
+  "whisper-cpp",
+  "onnx",
+  "whisper-vulkan",
+] }
 
 [patch.crates-io]
 tauri-runtime = { git = "https://github.com/cjpais/tauri.git", branch = "handy-2.9.1" }

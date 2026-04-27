@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Minimum macOS release target is now 10.15 to support local transcription engines
+- ONNX-backed local engines are hidden on Intel macOS builds until ONNX Runtime has compatible binaries
+- Local voice activity detection is disabled on Intel macOS builds for the same ONNX Runtime compatibility reason
 
 ### Fixed
 

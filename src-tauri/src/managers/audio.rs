@@ -1,4 +1,6 @@
-use crate::audio_toolkit::{list_input_devices, vad::SmoothedVad, AudioRecorder, SileroVad};
+use crate::audio_toolkit::{list_input_devices, AudioRecorder};
+#[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
+use crate::audio_toolkit::{vad::SmoothedVad, SileroVad};
 use crate::helpers::clamshell;
 use crate::settings::{get_settings, AppSettings};
 use crate::utils;
@@ -170,15 +172,21 @@ pub enum MicrophoneMode {
 /* ──────────────────────────────────────────────────────────────── */
 
 fn create_audio_recorder(
-    vad_path: &str,
+    _vad_path: &str,
     app_handle: &tauri::AppHandle,
     use_vad: bool,
 ) -> Result<AudioRecorder, anyhow::Error> {
     let mut recorder = AudioRecorder::new()
         .map_err(|e| anyhow::anyhow!("Failed to create AudioRecorder: {}", e))?;
 
+    #[cfg(all(target_os = "macos", target_arch = "x86_64"))]
     if use_vad {
-        let silero = SileroVad::new(vad_path, 0.15)
+        info!("Silero VAD is unavailable on Intel macOS; recording without local VAD");
+    }
+
+    #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
+    if use_vad {
+        let silero = SileroVad::new(_vad_path, 0.15)
             .map_err(|e| anyhow::anyhow!("Failed to create SileroVad: {}", e))?;
         let smoothed_vad = SmoothedVad::new(Box::new(silero), 15, 15, 2);
         recorder = recorder.with_vad(Box::new(smoothed_vad));

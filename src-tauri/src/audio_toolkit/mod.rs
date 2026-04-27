@@ -9,4 +9,6 @@ pub use audio::{
 };
 pub use text::{apply_custom_words, filter_transcription_output};
 pub use utils::get_cpal_host;
-pub use vad::{SileroVad, VoiceActivityDetector};
+#[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
+pub use vad::SileroVad;
+pub use vad::VoiceActivityDetector;

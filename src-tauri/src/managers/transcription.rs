@@ -10,6 +10,8 @@ use std::sync::{Arc, Condvar, Mutex, MutexGuard};
 use std::thread;
 use std::time::{Duration, SystemTime};
 use tauri::{AppHandle, Emitter};
+use transcribe_rs::whisper_cpp::{WhisperEngine, WhisperInferenceParams};
+#[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
 use transcribe_rs::{
     onnx::{
         canary::CanaryModel,
@@ -20,7 +22,6 @@ use transcribe_rs::{
         sense_voice::{SenseVoiceModel, SenseVoiceParams},
         Quantization,
     },
-    whisper_cpp::{WhisperEngine, WhisperInferenceParams},
     SpeechModel, TranscribeOptions,
 };
 
@@ -34,12 +35,19 @@ pub struct ModelStateEvent {
 
 enum LoadedEngine {
     Whisper(WhisperEngine),
+    #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
     Parakeet(ParakeetModel),
+    #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
     Moonshine(MoonshineModel),
+    #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
     MoonshineStreaming(StreamingModel),
+    #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
     SenseVoice(SenseVoiceModel),
+    #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
     GigaAM(GigaAMModel),
+    #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
     Canary(CanaryModel),
+    #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
     Cohere(CohereModel),
 }
 
@@ -264,11 +272,13 @@ impl TranscriptionManager {
                     .map_err(|e| emit_load_failure("whisper", &e))?;
                 LoadedEngine::Whisper(engine)
             }
+            #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
             EngineType::Parakeet => {
                 let engine = ParakeetModel::load(&model_path, &Quantization::Int8)
                     .map_err(|e| emit_load_failure("parakeet", &e))?;
                 LoadedEngine::Parakeet(engine)
             }
+            #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
             EngineType::Moonshine => {
                 let engine = MoonshineModel::load(
                     &model_path,
@@ -278,30 +288,47 @@ impl TranscriptionManager {
                 .map_err(|e| emit_load_failure("moonshine", &e))?;
                 LoadedEngine::Moonshine(engine)
             }
+            #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
             EngineType::MoonshineStreaming => {
                 let engine = StreamingModel::load(&model_path, 0, &Quantization::default())
                     .map_err(|e| emit_load_failure("moonshine streaming", &e))?;
                 LoadedEngine::MoonshineStreaming(engine)
             }
+            #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
             EngineType::SenseVoice => {
                 let engine = SenseVoiceModel::load(&model_path, &Quantization::Int8)
                     .map_err(|e| emit_load_failure("SenseVoice", &e))?;
                 LoadedEngine::SenseVoice(engine)
             }
+            #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
             EngineType::GigaAM => {
                 let engine = GigaAMModel::load(&model_path, &Quantization::Int8)
                     .map_err(|e| emit_load_failure("gigaam", &e))?;
                 LoadedEngine::GigaAM(engine)
             }
+            #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
             EngineType::Canary => {
                 let engine = CanaryModel::load(&model_path, &Quantization::Int8)
                     .map_err(|e| emit_load_failure("canary", &e))?;
                 LoadedEngine::Canary(engine)
             }
+            #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
             EngineType::Cohere => {
                 let engine = CohereModel::load(&model_path, &Quantization::Int8)
                     .map_err(|e| emit_load_failure("cohere", &e))?;
                 LoadedEngine::Cohere(engine)
+            }
+            #[cfg(all(target_os = "macos", target_arch = "x86_64"))]
+            EngineType::Parakeet
+            | EngineType::Moonshine
+            | EngineType::MoonshineStreaming
+            | EngineType::SenseVoice
+            | EngineType::GigaAM
+            | EngineType::Canary
+            | EngineType::Cohere => {
+                let err =
+                    "ONNX local transcription engines are not supported on Intel macOS builds";
+                return Err(emit_load_failure("ONNX", &err));
             }
         };
 
@@ -613,6 +640,7 @@ impl TranscriptionManager {
                                 .transcribe_with(&audio, &params)
                                 .map_err(|e| anyhow::anyhow!("Whisper transcription failed: {}", e))
                         }
+                        #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
                         LoadedEngine::Parakeet(parakeet_engine) => {
                             let params = ParakeetParams {
                                 timestamp_granularity: Some(TimestampGranularity::Segment),
@@ -624,14 +652,17 @@ impl TranscriptionManager {
                                     anyhow::anyhow!("Parakeet transcription failed: {}", e)
                                 })
                         }
+                        #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
                         LoadedEngine::Moonshine(moonshine_engine) => moonshine_engine
                             .transcribe(&audio, &TranscribeOptions::default())
                             .map_err(|e| anyhow::anyhow!("Moonshine transcription failed: {}", e)),
+                        #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
                         LoadedEngine::MoonshineStreaming(streaming_engine) => streaming_engine
                             .transcribe(&audio, &TranscribeOptions::default())
                             .map_err(|e| {
                                 anyhow::anyhow!("Moonshine streaming transcription failed: {}", e)
                             }),
+                        #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
                         LoadedEngine::SenseVoice(sense_voice_engine) => {
                             let language = match validated_language.as_str() {
                                 "zh" | "zh-Hans" | "zh-Hant" => Some("zh".to_string()),
@@ -651,9 +682,11 @@ impl TranscriptionManager {
                                     anyhow::anyhow!("SenseVoice transcription failed: {}", e)
                                 })
                         }
+                        #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
                         LoadedEngine::GigaAM(gigaam_engine) => gigaam_engine
                             .transcribe(&audio, &TranscribeOptions::default())
                             .map_err(|e| anyhow::anyhow!("GigaAM transcription failed: {}", e)),
+                        #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
                         LoadedEngine::Canary(canary_engine) => {
                             let language = if validated_language == "auto" {
                                 None
@@ -669,6 +702,7 @@ impl TranscriptionManager {
                                 .transcribe(&audio, &options)
                                 .map_err(|e| anyhow::anyhow!("Canary transcription failed: {}", e))
                         }
+                        #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
                         LoadedEngine::Cohere(cohere_engine) => {
                             let language = if validated_language == "auto" {
                                 None

@@ -1,6 +1,8 @@
 use crate::post_process::pricing::ModelPricing;
 use crate::post_process::prompts::{is_builtin_prompt, LLMPrompt};
-use crate::settings::{self, APPLE_INTELLIGENCE_DEFAULT_MODEL_ID, APPLE_INTELLIGENCE_PROVIDER_ID};
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+use crate::settings::APPLE_INTELLIGENCE_DEFAULT_MODEL_ID;
+use crate::settings::{self, APPLE_INTELLIGENCE_PROVIDER_ID};
 use tauri::AppHandle;
 
 /// Generic helper to validate provider exists

@@ -25,8 +25,11 @@ pub trait VoiceActivityDetector: Send + Sync {
     fn reset(&mut self) {}
 }
 
-mod silero;
 mod smoothed;
 
+#[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
+mod silero;
+
+#[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
 pub use silero::SileroVad;
 pub use smoothed::SmoothedVad;
