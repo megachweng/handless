@@ -1,6 +1,7 @@
 use crate::input;
 use crate::settings;
 use crate::settings::{ActivationMode, OverlayPosition};
+use serde::Serialize;
 use std::sync::atomic::{AtomicU64, Ordering};
 use tauri::{AppHandle, Emitter, Manager, WebviewWindowBuilder};
 
@@ -14,13 +15,42 @@ const OVERLAY_BOTTOM_OFFSET: f64 = 40.0;
 #[cfg(target_os = "windows")]
 fn force_overlay_topmost(overlay_window: &tauri::webview::WebviewWindow) {
     use windows::Win32::UI::WindowsAndMessaging::{
-        SetWindowPos, HWND_TOPMOST, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_SHOWWINDOW,
+        SetWindowPos, HWND_TOPMOST, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE,
     };
 
     let overlay_clone = overlay_window.clone();
     let _ = overlay_clone.clone().run_on_main_thread(move || {
         if let Ok(hwnd) = overlay_clone.hwnd() {
             unsafe {
+                let _ = SetWindowPos(
+                    hwnd,
+                    Some(HWND_TOPMOST),
+                    0,
+                    0,
+                    0,
+                    0,
+                    SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE,
+                );
+            }
+        }
+    });
+}
+
+#[cfg(not(target_os = "windows"))]
+fn force_overlay_topmost(_overlay_window: &tauri::webview::WebviewWindow) {}
+
+#[cfg(target_os = "windows")]
+fn show_overlay_window(overlay_window: &tauri::webview::WebviewWindow) {
+    use windows::Win32::UI::WindowsAndMessaging::{
+        SetWindowPos, ShowWindow, HWND_TOPMOST, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE,
+        SWP_SHOWWINDOW, SW_SHOWNOACTIVATE,
+    };
+
+    let overlay_clone = overlay_window.clone();
+    let _ = overlay_clone.clone().run_on_main_thread(move || {
+        if let Ok(hwnd) = overlay_clone.hwnd() {
+            unsafe {
+                let _ = ShowWindow(hwnd, SW_SHOWNOACTIVATE);
                 let _ = SetWindowPos(
                     hwnd,
                     Some(HWND_TOPMOST),
@@ -36,13 +66,38 @@ fn force_overlay_topmost(overlay_window: &tauri::webview::WebviewWindow) {
 }
 
 #[cfg(not(target_os = "windows"))]
-fn force_overlay_topmost(_overlay_window: &tauri::webview::WebviewWindow) {}
+fn show_overlay_window(overlay_window: &tauri::webview::WebviewWindow) {
+    let _ = overlay_window.show();
+    force_overlay_topmost(overlay_window);
+}
 
 struct LogicalBounds {
     x: f64,
     y: f64,
     width: f64,
     height: f64,
+}
+
+#[derive(Clone, Serialize)]
+struct ShowOverlayPayload<'a> {
+    state: &'a str,
+    position: &'a str,
+    activation_mode: &'a str,
+}
+
+fn activation_mode_payload(mode: ActivationMode) -> &'static str {
+    match mode {
+        ActivationMode::Toggle => "toggle",
+        ActivationMode::Hold => "hold",
+        ActivationMode::HoldOrToggle => "hold_or_toggle",
+    }
+}
+
+fn overlay_position_payload(position: OverlayPosition) -> &'static str {
+    match position {
+        OverlayPosition::Top => "top",
+        OverlayPosition::Bottom | OverlayPosition::None => "bottom",
+    }
 }
 
 fn logical_bounds(monitor: &tauri::Monitor) -> LogicalBounds {
@@ -112,7 +167,7 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
     .visible(false);
 
     #[cfg(target_os = "windows")]
-    let builder = builder.transparent(true);
+    let builder = builder.transparent(true).focused(false).focusable(false);
 
     match builder.build() {
         Ok(window) => {
@@ -133,13 +188,26 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
 
     let generation = OVERLAY_SHOW_GENERATION.fetch_add(1, Ordering::SeqCst) + 1;
 
+    if app_handle.get_webview_window("recording_overlay").is_none() {
+        create_recording_overlay(app_handle);
+    }
+
     if let Some(window) = app_handle.get_webview_window("recording_overlay") {
         if let Some((x, y)) = calculate_overlay_position(app_handle) {
             let _ = window.set_position(tauri::LogicalPosition::new(x, y));
         }
-        let _ = window.emit("overlay-state", state);
-        let _ = window.show();
-        force_overlay_topmost(&window);
+        let _ = window.set_size(tauri::LogicalSize::new(OVERLAY_WIDTH, OVERLAY_HEIGHT));
+        #[cfg(target_os = "windows")]
+        let _ = window.set_focusable(false);
+        show_overlay_window(&window);
+        let _ = window.emit(
+            "show-overlay",
+            ShowOverlayPayload {
+                state,
+                position: overlay_position_payload(settings.overlay_position),
+                activation_mode: activation_mode_payload(settings.activation_mode),
+            },
+        );
     }
 
     if state == "processing" {
@@ -177,25 +245,20 @@ pub fn update_overlay_position(app_handle: &AppHandle) {
 pub fn hide_recording_overlay(app_handle: &AppHandle) {
     OVERLAY_SHOW_GENERATION.fetch_add(1, Ordering::SeqCst);
     if let Some(window) = app_handle.get_webview_window("recording_overlay") {
-        let _ = window.emit("overlay-state", "idle");
+        let _ = window.emit("hide-overlay", ());
         let _ = window.hide();
     }
 }
 
 pub fn emit_levels(app_handle: &AppHandle, levels: &Vec<f32>) {
     if let Some(window) = app_handle.get_webview_window("recording_overlay") {
-        let _ = window.emit("audio-levels", levels);
+        let _ = window.emit("mic-level", levels);
     }
 }
 
 pub fn update_overlay_activation_mode(app_handle: &AppHandle, mode: ActivationMode) {
     if let Some(window) = app_handle.get_webview_window("recording_overlay") {
-        let mode = match mode {
-            ActivationMode::Toggle => "toggle",
-            ActivationMode::Hold => "hold",
-            ActivationMode::HoldOrToggle => "hold_or_toggle",
-        };
-        let _ = window.emit("activation-mode", mode);
+        let _ = window.emit("update-activation-mode", activation_mode_payload(mode));
     }
 }
 
