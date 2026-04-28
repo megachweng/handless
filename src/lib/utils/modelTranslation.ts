@@ -12,14 +12,9 @@ export function getTranslatedModelName(
   provider: SttProviderInfo,
   t: TFunction,
 ): string {
-  if (provider.backend.type === "Cloud") {
-    const cloudKey = `onboarding.cloud.${provider.id}.name`;
-    const cloudTranslated = t(cloudKey, { defaultValue: "" });
-    return cloudTranslated !== "" ? cloudTranslated : provider.name;
-  }
-  const translationKey = `onboarding.models.${provider.id}.name`;
-  const translated = t(translationKey, { defaultValue: "" });
-  return translated !== "" ? translated : provider.name;
+  const cloudKey = `onboarding.cloud.${provider.id}.name`;
+  const cloudTranslated = t(cloudKey, { defaultValue: "" });
+  return cloudTranslated !== "" ? cloudTranslated : provider.name;
 }
 
 export function getLanguageDisplayText(

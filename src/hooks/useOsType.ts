@@ -7,10 +7,5 @@ import { type OSType } from "../lib/utils/keyboard";
  */
 export function useOsType(): OSType {
   const osType = type();
-  // type() returns "macos" | "windows" | "linux" | "ios" | "android"
-  // OSType expects "macos" | "windows" | "linux" | "unknown"
-  if (osType === "macos" || osType === "windows" || osType === "linux") {
-    return osType;
-  }
-  return "unknown";
+  return osType === "windows" || osType === "linux" ? osType : "unknown";
 }

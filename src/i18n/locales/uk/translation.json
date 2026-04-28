@@ -4,7 +4,6 @@
     "settings": "Налаштування...",
     "checkUpdates": "Перевірити оновлення...",
     "copyLastTranscript": "Скопіювати останню транскрипцію",
-    "unloadModel": "Вивантажити модель",
     "quit": "Вийти",
     "cancel": "Скасувати"
   },
@@ -19,142 +18,10 @@
     "debug": "Дебаг"
   },
   "onboarding": {
-    "subtitle": "Для початку оберіть модель транскрипції",
-    "recommended": "Рекомендовано",
-    "download": "Завантажити",
-    "downloading": "Завантаження...",
-    "customModelDescription": "Офіційно не підтримується",
-    "downloadFailed": "Завантаження не вдалося. Будь ласка, спробуйте ще раз.",
-    "modelCard": {
-      "accuracy": "точність",
-      "speed": "швидкість"
-    },
-    "models": {
-      "small": {
-        "name": "Whisper Small",
-        "description": "Швидка та досить точна"
-      },
-      "medium": {
-        "name": "Whisper Medium",
-        "description": "Хороша точність, середня швидкість"
-      },
-      "turbo": {
-        "name": "Whisper Turbo",
-        "description": "Збалансована точність та швидкість"
-      },
-      "large": {
-        "name": "Whisper Large",
-        "description": "Хороша точність, але повільна"
-      },
-      "parakeet-tdt-0.6b-v2": {
-        "name": "Parakeet V2",
-        "description": "Лише англійська. Найкраща модель для англомовних"
-      },
-      "parakeet-tdt-0.6b-v3": {
-        "name": "Parakeet V3",
-        "description": "Швидка та точна. Підтримує 25 європейських мов."
-      },
-      "moonshine-base": {
-        "name": "Moonshine Base",
-        "description": "Дуже швидкий, лише англійська. Добре справляється з акцентами."
-      },
-      "moonshine-tiny-streaming-en": {
-        "name": "Moonshine V2 Tiny",
-        "description": "Надшвидкий, лише англійська"
-      },
-      "moonshine-small-streaming-en": {
-        "name": "Moonshine V2 Small",
-        "description": "Швидкий, лише англійська. Добрий баланс швидкості та точності."
-      },
-      "moonshine-medium-streaming-en": {
-        "name": "Moonshine V2 Medium",
-        "description": "Лише англійська. Висока якість."
-      },
-      "breeze-asr": {
-        "name": "Breeze ASR",
-        "description": "Оптимізовано для тайванської мандаринської. Підтримка перемикання мов."
-      },
-      "sense-voice-int8": {
-        "name": "SenseVoice",
-        "description": "Дуже швидкий. Китайська, англійська, японська, корейська, кантонська."
-      },
-      "gigaam-v3-e2e-ctc": {
-        "name": "GigaAM v3",
-        "description": "Russian speech recognition. Fast and accurate."
-      },
-      "canary-180m-flash": {
-        "name": "Canary 180M Flash",
-        "description": "Very fast. English, German, Spanish, French. Supports translation."
-      },
-      "canary-1b-v2": {
-        "name": "Canary 1B v2",
-        "description": "Accurate multilingual. 25 European languages. Supports translation."
-      },
-      "cohere-int8": {
-        "name": "Cohere",
-        "description": "A large, slower, but very accurate multilingual model."
-      }
-    },
-    "errors": {
-      "loadModels": "Не вдалося завантажити доступні моделі",
-      "downloadModel": "Не вдалося завантажити модель: {{error}}"
-    },
-    "permissions": {
-      "title": "Потрібні дозволи",
-      "description": "Handless потребує деяких дозволів для коректної роботи.",
-      "microphone": {
-        "title": "Доступ до мікрофона",
-        "description": "Потрібен для прослуховування вашого голосу для транскрипції."
-      },
-      "accessibility": {
-        "title": "Доступ до доступності",
-        "description": "Потрібен для введення транскрибованого тексту у ваші додатки."
-      },
-      "grant": "Надати дозвіл",
-      "granted": "Надано",
-      "waiting": "Очікування...",
-      "allGranted": "Все готово!",
-      "errors": {
-        "checkFailed": "Не вдалося перевірити дозволи. Будь ласка, спробуйте ще раз.",
-        "requestFailed": "Не вдалося запросити дозвіл. Будь ласка, спробуйте ще раз."
-      }
-    },
     "cloud": {
-      "openai_stt": {
-        "name": "OpenAI",
-        "description": "Хмарний API розпізнавання мовлення OpenAI. Швидкий і точний з підтримкою 57+ мов."
-      },
-      "elevenlabs": {
-        "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe розпізнавання мовлення. Висока точність з підтримкою 90+ мов."
-      },
-      "groq": {
-        "name": "Groq",
-        "description": "Надшвидка транскрипція Whisper від Groq. Блискавична обробка з підтримкою 99+ мов."
-      },
       "soniox": {
         "name": "Soniox",
         "description": "Хмарне розпізнавання мовлення Soniox. Висока точність з транскрипцією в реальному часі."
-      },
-      "deepgram": {
-        "name": "Deepgram",
-        "description": "API розпізнавання мовлення Nova від Deepgram. Швидкий і точний з підтримкою 50+ мов."
-      },
-      "assemblyai": {
-        "name": "AssemblyAI",
-        "description": "Розпізнавання мовлення AssemblyAI. Точність рівня корпоративу з діаризацією спікерів та 40+ мовами."
-      },
-      "cartesia": {
-        "name": "Cartesia",
-        "description": "API розпізнавання мовлення Ink від Cartesia. Потоковіння транскрипції в реальному часі з підтримкою 99+ мов."
-      },
-      "mistral": {
-        "name": "Mistral AI",
-        "description": "Розпізнавання мовлення Voxtral від Mistral AI. Висока точність з підтримкою контекстного зміщення."
-      },
-      "fireworks": {
-        "name": "Fireworks AI",
-        "description": "Розпізнавання мовлення Fireworks AI. Надшвидка транскрипція Whisper з підтримкою 95+ мов."
       },
       "doubao": {
         "name": "Doubao",
@@ -163,23 +30,8 @@
     }
   },
   "modelSelector": {
-    "custom": "Користувацька",
     "active": "Активна",
     "noModelsAvailable": "Немає доступних моделей",
-    "extracting": "Розпакування {{modelName}}...",
-    "extractingMultiple": "Розпакування {{count}} моделей...",
-    "extractingGeneric": "Розпакування...",
-    "downloading": "Завантаження {{percentage}}%",
-    "downloadingMultiple": "Завантаження {{count}} моделей...",
-    "modelReady": "Модель готова",
-    "loading": "Завантаження {{modelName}}...",
-    "loadingGeneric": "Завантаження...",
-    "modelError": "Помилка моделі",
-    "modelUnloaded": "Модель вивантажена",
-    "noModelDownloadRequired": "Немає моделі - потрібно завантажити",
-    "deleteModel": "Видалити {{modelName}}",
-    "switching": "Перемикання...",
-    "downloadSpeed": "{{speed}} МБ/с",
     "capabilities": {
       "languageSelection": "Підтримує кілька мов введення",
       "multiLanguage": "Багатомовна",
@@ -190,9 +42,8 @@
       "singleLanguage": "Підтримує лише цю мову",
       "languageOnly": "Лише {{language}}"
     },
-    "cancel": "Скасувати",
-    "cancelDownload": "Скасувати завантаження",
-    "notAvailable": "Недоступно"
+    "notAvailable": "Недоступно",
+    "switchProviderError": "Failed to switch STT provider: {{error}}"
   },
   "settings": {
     "modelSettings": {
@@ -254,26 +105,8 @@
       }
     },
     "models": {
-      "title": "Моделі транскрипції",
-      "description": "Виберіть модель транскрипції або завантажте додаткові моделі. Різні моделі пропонують різні рівні точності та швидкості.",
-      "downloaded": "Завантажено",
-      "available": "Доступні для завантаження",
-      "deleteConfirm": "Ви впевнені, що хочете видалити {{modelName}}? Вам потрібно буде завантажити її знову, щоб використовувати.",
-      "deleteActiveConfirm": "{{modelName}} — ваша активна модель. Видалення зупинить транскрипцію, доки ви не оберете нову модель. Ви впевнені?",
-      "deleteTitle": "Видалити модель",
-      "filters": {
-        "all": "Усі",
-        "multiLanguage": "Багатомовні",
-        "translation": "Переклад",
-        "allLanguages": "Усі мови"
-      },
-      "noModelsMatch": "Жодна модель не відповідає цьому фільтру.",
-      "yourModels": "Завантажені моделі",
-      "availableModels": "Доступні для завантаження",
-      "tabs": {
-        "myModels": "Мої моделі",
-        "library": "Бібліотека"
-      },
+      "title": "Cloud STT Providers",
+      "description": "Configure Soniox and DoubaoASR cloud speech-to-text providers.",
       "cloudProviders": {
         "title": "Хмарні провайдери",
         "badge": "Хмара",
@@ -303,10 +136,6 @@
           "selectLanguageHint": "Залиште порожнім для автовизначення",
           "selectLanguages": "Оберіть мови...",
           "selectTranslate": "Оберіть мови...",
-          "prompt": "Промпт",
-          "promptDescription": "Необов'язковий текст для керування стилем моделі або продовження попереднього сегмента. Не підтримується gpt-4o-transcribe-diarize.",
-          "temperature": "Температура",
-          "temperatureDescription": "Вищі значення дають більш випадкові результати (0-1). Підтримується лише whisper-1.",
           "languageHints": "Мовні підказки",
           "languageHintsStrict": "Суворі мовні підказки",
           "languageHintsStrictDescription": "Транскрибувати лише вказаними мовами",
@@ -314,16 +143,12 @@
           "contextTermsDescription": "Терміни через кому для покращення точності розпізнавання",
           "contextDescription": "Опис контексту",
           "contextDescriptionDescription": "Довільний текст із загальним контекстом про аудіовміст",
-          "smartFormat": "Розумне форматування",
-          "smartFormatDescription": "Застосувати форматування для покращеної читабельності, включаючи пунктуацію, велику літеру та інше",
           "punctuate": "Пунктуація",
           "punctuateDescription": "Додати пунктуацію та велику літеру до транскрипції",
           "enableSpeakerDiarization": "Діаризація спікерів",
           "enableSpeakerDiarizationDescription": "Визначати та розділяти різних мовців",
           "enableLanguageIdentification": "Визначення мови",
           "enableLanguageIdentificationDescription": "Визначати мову для кожного сегмента",
-          "contextBias": "Контекстне зміщення",
-          "contextBiasDescription": "Терміни через кому для керування моделлю до правильної орфографії",
           "enableItn": "Inverse Text Normalization",
           "enableItnDescription": "Convert spoken numbers, dates, and units to written form",
           "enableDdc": "Disfluency Removal",
@@ -339,12 +164,6 @@
           "verifyFirst": "Verify your Access Token first",
           "openSpeechConsole": "Open speech console"
         }
-      },
-      "localModels": {
-        "title": "Локальні моделі"
-      },
-      "myModels": {
-        "noModelsConfigured": "Моделі не налаштовані. Перейдіть до Бібліотеки, щоб завантажити моделі або налаштувати хмарних провайдерів."
       }
     },
     "sound": {
@@ -395,8 +214,7 @@
         "options": {
           "none": "Немає",
           "bottom": "Внизу",
-          "top": "Вгорі",
-          "notch": "Notch"
+          "top": "Вгорі"
         }
       },
       "pasteMethod": {
@@ -412,13 +230,6 @@
         },
         "externalScriptPlaceholder": "/шлях/до/вашого/скрипту.sh"
       },
-      "typingTool": {
-        "title": "Інструмент введення",
-        "description": "Виберіть, який інструмент введення в Linux використовувати для методу прямого вставлення. Auto автоматично визначить і використає найкращий доступний інструмент для вашої системи.",
-        "options": {
-          "auto": "Auto (Рекомендовано)"
-        }
-      },
       "clipboardHandling": {
         "title": "Робота з буфером обміну",
         "description": "Не змінювати буфер обміну зберігає поточний вміст буфера після транскрипції. Копіювати в буфер обміну залишає результат транскрипції в буфері після вставки.",
@@ -429,11 +240,10 @@
       },
       "autoSubmit": {
         "title": "Автоматичне надсилання",
-        "description": "Автоматично надсилає вибрану комбінацію клавіш після вставки тексту. Cmd+Enter застосовується на macOS, тоді як Windows/Linux використовують Super+Enter.",
+        "description": "Automatically send the selected key combination after text insertion.",
         "options": {
           "off": "Вимк.",
           "enter": "Enter",
-          "cmdEnter": "Cmd+Enter",
           "superEnter": "Super+Enter",
           "ctrlEnter": "Ctrl+Enter"
         }
@@ -442,20 +252,6 @@
         "label": "Перекласти на англійську",
         "description": "Автоматично перекладати мовлення з інших мов англійською під час транскрипції.",
         "descriptionUnsupported": "Переклад не підтримується моделлю {{model}}."
-      },
-      "modelUnload": {
-        "title": "Вивантаження моделі",
-        "description": "Автоматично звільняти пам'ять GPU/CPU, коли модель не використовується протягом вказаного часу",
-        "options": {
-          "never": "Ніколи",
-          "immediately": "Негайно",
-          "min2": "Через 2 хвилини",
-          "min5": "Через 5 хвилин",
-          "min10": "Через 10 хвилин",
-          "min15": "Через 15 хвилин",
-          "hour1": "Через 1 годину",
-          "sec5": "Через 5 секунд (Дебаг)"
-        }
       },
       "customWords": {
         "title": "Власні слова",
@@ -520,12 +316,6 @@
           "title": "Провайдер",
           "description": "Оберіть OpenAI-сумісного провайдера"
         },
-        "appleIntelligence": {
-          "title": "Apple Intelligence",
-          "description": "Працює повністю на пристрої. API-ключ або доступ до мережі не потрібні.",
-          "requirements": "Потрібен Mac з Apple Silicon під управлінням macOS Tahoe (26.0) або новіше. Apple Intelligence має бути увімкнений у Системних налаштуваннях.",
-          "unavailable": "Apple Intelligence недоступний на цьому пристрої. Потрібен Mac з Apple Silicon під управлінням macOS Tahoe (26.0) або новіше з увімкненим Apple Intelligence в Системних налаштуваннях."
-        },
         "baseUrl": {
           "title": "Базова URL-адреса",
           "description": "Базова URL-адреса API для обраного провайдера. Лише власний провайдер можна редагувати.",
@@ -538,10 +328,8 @@
         },
         "model": {
           "title": "Модель",
-          "descriptionApple": "Вкажіть необов'язковий числовий ліміт токенів або залиште стандартний пресет на пристрої.",
           "descriptionCustom": "Вкажіть ідентифікатор моделі, який очікує ваш ендпоінт.",
           "descriptionDefault": "Оберіть модель, надану обраним провайдером",
-          "placeholderApple": "Apple Intelligence",
           "placeholderWithOptions": "Шукайте або оберіть модель",
           "placeholderNoOptions": "Введіть назву моделі",
           "refreshModels": "Оновити моделі"
@@ -668,10 +456,6 @@
         "label": "Постійно активний мікрофон",
         "description": "Тримати мікрофон активним для швидшого відгуку"
       },
-      "clamshellMicrophone": {
-        "title": "Мікрофон у закритому режимі",
-        "description": "Мікрофон для використання при закритій кришці ноутбука"
-      },
       "postProcessingToggle": {
         "label": "Постобробка",
         "description": "Увімкнути покращення тексту за допомогою AI після транскрипції"
@@ -752,19 +536,16 @@
     }
   },
   "footer": {
-    "downloadingModel": "Завантаження {{model}}...",
     "checkingUpdates": "Перевірка оновлень...",
     "updateAvailable": "Доступне оновлення: {{version}}",
     "updateAvailableShort": "Доступне оновлення",
     "upToDate": "Актуальна версія",
-    "downloadUpdate": "Завантажити оновлення",
     "restart": "Перезапустити",
     "updateCheckingDisabled": "Перевірка оновлень вимкнена",
     "downloading": "Завантаження... {{progress}}%",
     "installing": "Встановлення...",
     "preparing": "Підготовка...",
-    "checkForUpdates": "Перевірити оновлення",
-    "updateViaBrew": "Оновіти через: brew upgrade --cask handless"
+    "checkForUpdates": "Перевірити оновлення"
   },
   "common": {
     "loading": "Завантаження...",
@@ -791,9 +572,6 @@
     "search": "Пошук..."
   },
   "accessibility": {
-    "permissionsRequired": "Потрібні права доступу",
-    "permissionsDescription": "Handless потребує дозволи доступності для введення транскрибованого тексту.",
-    "openSettings": "Відкрити Системні налаштування",
     "dismiss": "Закрити"
   },
   "errors": {

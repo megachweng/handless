@@ -537,18 +537,7 @@ async reloadSettings() : Promise<Result<null, string>> {
 }
 },
 /**
- * Check if Apple Intelligence is available on this device.
- * Called by the frontend when the user selects Apple Intelligence provider.
- */
-async checkAppleIntelligenceAvailable() : Promise<boolean> {
-    return await TAURI_INVOKE("check_apple_intelligence_available");
-},
-async isHomebrewInstall() : Promise<boolean> {
-    return await TAURI_INVOKE("is_homebrew_install");
-},
-/**
  * Try to initialize Enigo (keyboard/mouse simulation).
- * On macOS, this will return an error if accessibility permissions are not granted.
  */
 async initializeEnigo() : Promise<Result<null, string>> {
     try {
@@ -560,92 +549,11 @@ async initializeEnigo() : Promise<Result<null, string>> {
 },
 /**
  * Initialize keyboard shortcuts.
- * On macOS, this should be called after accessibility permissions are granted.
  * This is idempotent - calling it multiple times is safe.
  */
 async initializeShortcuts() : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("initialize_shortcuts") };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async presentPermissionAssistant(panel: PermissionAssistantPanel) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("present_permission_assistant", { panel }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async dismissPermissionAssistant() : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("dismiss_permission_assistant") };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async getAvailableModels() : Promise<Result<ModelInfo[], string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("get_available_models") };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async getModelInfo(modelId: string) : Promise<Result<ModelInfo | null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("get_model_info", { modelId }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async downloadModel(modelId: string) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("download_model", { modelId }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async deleteModel(modelId: string) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("delete_model", { modelId }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async cancelDownload(modelId: string) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("cancel_download", { modelId }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async setActiveModel(modelId: string) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("set_active_model", { modelId }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async getCurrentModel() : Promise<Result<string, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("get_current_model") };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async getTranscriptionModelStatus() : Promise<Result<string | null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("get_transcription_model_status") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -769,22 +677,6 @@ async playTestSound(soundType: string) : Promise<void> {
 async checkCustomSounds() : Promise<CustomSounds> {
     return await TAURI_INVOKE("check_custom_sounds");
 },
-async setClamshellMicrophone(deviceName: string) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("set_clamshell_microphone", { deviceName }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async getClamshellMicrophone() : Promise<Result<string, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("get_clamshell_microphone") };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
 /**
  * Returns the name of the microphone the backend would currently select.
  * Mirrors the resolution logic in `AudioRecordingManager::get_effective_microphone_device`.
@@ -799,25 +691,6 @@ async getEffectiveMicrophoneName() : Promise<Result<string, string>> {
 },
 async isRecording() : Promise<boolean> {
     return await TAURI_INVOKE("is_recording");
-},
-async setModelUnloadTimeout(timeout: ModelUnloadTimeout) : Promise<void> {
-    await TAURI_INVOKE("set_model_unload_timeout", { timeout });
-},
-async getModelLoadStatus() : Promise<Result<ModelLoadStatus, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("get_model_load_status") };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
-async unloadModelManually() : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("unload_model_manually") };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
 },
 async getHistoryEntries() : Promise<Result<HistoryEntry[], string>> {
     try {
@@ -922,20 +795,6 @@ async importAppData(importPath: string, importSettings: boolean, importHistory: 
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
-},
-/**
- * Checks if the Mac is a laptop by detecting battery presence
- * 
- * This uses pmset to check for battery information.
- * Returns true if a battery is detected (laptop), false otherwise (desktop)
- */
-async isLaptop() : Promise<Result<boolean, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("is_laptop") };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
 }
 }
 
@@ -950,10 +809,10 @@ async isLaptop() : Promise<Result<boolean, string>> {
 /** user-defined types **/
 
 export type ActivationMode = "toggle" | "hold" | "hold_or_toggle"
-export type AppSettings = { bindings?: Partial<{ [key in string]: ShortcutBinding }>; activation_mode?: ActivationMode; audio_feedback_volume?: number; sound_theme?: SoundTheme; start_hidden?: boolean; autostart_enabled?: boolean; update_checks_enabled?: boolean; selected_model?: string; always_on_microphone?: boolean; selected_microphone?: string | null; microphone_priority?: string[]; clamshell_microphone?: string | null; selected_output_device?: string | null; translate_to_english?: boolean; selected_language?: string; overlay_enabled?: boolean; overlay_position?: OverlayPosition; debug_mode?: boolean; log_level?: LogLevel; custom_words?: string[]; model_unload_timeout?: ModelUnloadTimeout; word_correction_threshold?: number; history_limit?: number; recording_retention_period?: RecordingRetentionPeriod; paste_method?: PasteMethod; clipboard_handling?: ClipboardHandling; auto_submit?: boolean; auto_submit_key?: AutoSubmitKey; stt_provider_id?: string; stt_providers?: SttProvider[]; stt_api_keys?: Partial<{ [key in string]: string }>; stt_cloud_models?: Partial<{ [key in string]: string }>; post_process_enabled?: boolean; post_process_provider_id?: string; post_process_providers?: PostProcessProvider[]; post_process_api_keys?: Partial<{ [key in string]: string }>; post_process_models?: Partial<{ [key in string]: string }>; post_process_prompts?: LLMPrompt[]; post_process_selected_prompt_id?: string | null; mute_while_recording?: boolean; append_trailing_space?: boolean; app_language?: string; keyboard_implementation?: KeyboardImplementation; show_tray_icon?: boolean; paste_delay_ms?: number; typing_tool?: TypingTool; external_script_path: string | null; app_theme?: AppTheme; stt_verified_providers?: string[]; post_process_verified_providers?: string[]; post_process_input_prices?: Partial<{ [key in string]: number }>; post_process_output_prices?: Partial<{ [key in string]: number }>; stt_cloud_options?: Partial<{ [key in string]: string }>; stt_realtime_enabled?: Partial<{ [key in string]: boolean }>; stats_date_range?: StatsDateRange; dictionary_terms?: string[]; dictionary_context?: string }
+export type AppSettings = { bindings?: Partial<{ [key in string]: ShortcutBinding }>; activation_mode?: ActivationMode; audio_feedback_volume?: number; sound_theme?: SoundTheme; start_hidden?: boolean; autostart_enabled?: boolean; update_checks_enabled?: boolean; always_on_microphone?: boolean; selected_microphone?: string | null; microphone_priority?: string[]; selected_output_device?: string | null; translate_to_english?: boolean; selected_language?: string; overlay_enabled?: boolean; overlay_position?: OverlayPosition; debug_mode?: boolean; log_level?: LogLevel; custom_words?: string[]; word_correction_threshold?: number; history_limit?: number; recording_retention_period?: RecordingRetentionPeriod; paste_method?: PasteMethod; clipboard_handling?: ClipboardHandling; auto_submit?: boolean; auto_submit_key?: AutoSubmitKey; stt_provider_id?: string; stt_providers?: SttProvider[]; stt_api_keys?: Partial<{ [key in string]: string }>; stt_cloud_models?: Partial<{ [key in string]: string }>; post_process_enabled?: boolean; post_process_provider_id?: string; post_process_providers?: PostProcessProvider[]; post_process_api_keys?: Partial<{ [key in string]: string }>; post_process_models?: Partial<{ [key in string]: string }>; post_process_prompts?: LLMPrompt[]; post_process_selected_prompt_id?: string | null; mute_while_recording?: boolean; append_trailing_space?: boolean; app_language?: string; keyboard_implementation?: KeyboardImplementation; show_tray_icon?: boolean; paste_delay_ms?: number; typing_tool?: TypingTool; external_script_path: string | null; app_theme?: AppTheme; stt_verified_providers?: string[]; post_process_verified_providers?: string[]; post_process_input_prices?: Partial<{ [key in string]: number }>; post_process_output_prices?: Partial<{ [key in string]: number }>; stt_cloud_options?: Partial<{ [key in string]: string }>; stt_realtime_enabled?: Partial<{ [key in string]: boolean }>; stats_date_range?: StatsDateRange; dictionary_terms?: string[]; dictionary_context?: string }
 export type AppTheme = "dark" | "light" | "system"
 export type AudioDevice = { index: string; name: string; is_default: boolean }
-export type AutoSubmitKey = "enter" | "ctrl_enter" | "cmd_enter"
+export type AutoSubmitKey = "enter" | "ctrl_enter" | "super_enter"
 export type BindingResponse = { success: boolean; binding: ShortcutBinding | null; error: string | null }
 export type ClipboardHandling = "dont_modify" | "copy_to_clipboard"
 export type CloudOptionDefault = boolean | string | number
@@ -961,7 +820,6 @@ export type CloudOptionType = { type: "Text" } | { type: "Number"; min: number; 
 export type CloudProviderOption = { key: string; label: string; option_type: CloudOptionType; description: string; default_value?: CloudOptionDefault | null }
 export type CustomSounds = { start: boolean; stop: boolean }
 export type DailySpeakingStats = { date: string; total_word_count: number; total_duration_ms: number; transcription_count: number; avg_wpm: number }
-export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice" | "GigaAM" | "Canary" | "Cohere"
 export type HistoryEntry = { id: number; file_name: string; timestamp: number; saved: boolean; title: string; transcription_text: string; post_processed_text: string | null; post_process_prompt: string | null }
 export type HistoryPage = { entries: HistoryEntry[]; total_count: number }
 /**
@@ -976,25 +834,21 @@ export type ImportPreview = { export_version: number; app_version: string; platf
 export type KeyboardImplementation = "tauri" | "handy_keys"
 export type LLMPrompt = { id: string; name: string; prompt: string }
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error"
-export type ModelInfo = { id: string; name: string; description: string; filename: string; url: string | null; size_mb: number; is_downloaded: boolean; is_downloading: boolean; partial_size: number; is_directory: boolean; engine_type: EngineType; accuracy_score: number; speed_score: number; supports_translation: boolean; is_recommended: boolean; supported_languages: string[]; is_custom: boolean }
-export type ModelLoadStatus = { is_loaded: boolean; current_model: string | null }
 /**
  * Pricing info returned to the frontend ($/M tokens).
  */
 export type ModelPricing = { input: number; output: number }
-export type ModelUnloadTimeout = "never" | "immediately" | "min_2" | "min_5" | "min_10" | "min_15" | "hour_1" | "sec_5"
-export type OverlayPosition = "none" | "top" | "bottom" | "notch"
+export type OverlayPosition = "none" | "top" | "bottom"
 export type PasteMethod = "ctrl_v" | "direct" | "none" | "shift_insert" | "ctrl_shift_v" | "external_script"
-export type PermissionAssistantPanel = "accessibility" | "microphone"
 export type PostProcessProvider = { id: string; label: string; base_url: string; allow_base_url_edit?: boolean; models_endpoint?: string | null; supports_structured_output?: boolean }
-export type ProviderBackend = { type: "Local"; engine_type: EngineType; filename: string; url: string | null; size_mb: number; is_downloaded: boolean; is_downloading: boolean; partial_size: number; is_directory: boolean; accuracy_score: number; speed_score: number; is_custom: boolean } | { type: "Cloud"; base_url: string; default_model: string; console_url: string | null }
+export type ProviderBackend = { type: "Cloud"; base_url: string; default_model: string; console_url: string | null }
 export type RecordingRetentionPeriod = "never" | "preserve_limit" | "days_3" | "weeks_2" | "months_3"
 export type ShortcutBinding = { id: string; name?: string; description?: string; default_binding?: string; current_binding?: string; post_process_prompt_id?: string | null }
 export type SoundTheme = "marimba" | "pop" | "custom"
 export type StatsDateRange = "today" | "3days" | "week" | "month" | "all" | "custom"
 export type SttProvider = { id: string; label: string; provider_type: SttProviderType; base_url: string; default_model: string }
 export type SttProviderInfo = { id: string; name: string; description: string; supported_languages: string[]; supports_translation: boolean; supports_realtime: boolean; is_recommended: boolean; backend: ProviderBackend; available_options?: CloudProviderOption[]; supports_dictionary_terms?: boolean; supports_dictionary_context?: boolean }
-export type SttProviderType = "local" | "cloud"
+export type SttProviderType = "cloud"
 export type TypingTool = "auto" | "wtype" | "kwtype" | "dotool" | "ydotool" | "xdotool"
 
 /** tauri-specta globals **/

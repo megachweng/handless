@@ -16,7 +16,8 @@ Thank you for your interest in contributing! Whether it's fixing a bug, adding a
 ### Prerequisites
 
 - [Rust](https://rustup.rs/) (latest stable)
-- [Bun](https://bun.sh/) package manager
+- [Node.js](https://nodejs.org/) 20.19 or newer
+- [pnpm](https://pnpm.io/) 10.33.2
 - Platform-specific build tools (see [BUILD.md](BUILD.md))
 
 ### Development Setup
@@ -32,22 +33,13 @@ Thank you for your interest in contributing! Whether it's fixing a bug, adding a
 2. **Install dependencies**:
 
    ```bash
-   bun install
+   pnpm install
    ```
 
-3. **Download required models**:
+3. **Run in development mode**:
 
    ```bash
-   mkdir -p src-tauri/resources/models
-   curl -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.computer/silero_vad_v4.onnx
-   ```
-
-4. **Run in development mode**:
-
-   ```bash
-   bun run tauri dev
-   # On macOS if you encounter cmake errors:
-   CMAKE_POLICY_VERSION_MINIMUM=3.5 bun run tauri dev
+   pnpm run tauri dev
    ```
 
 For detailed platform-specific instructions, see [BUILD.md](BUILD.md).
@@ -57,8 +49,8 @@ For detailed platform-specific instructions, see [BUILD.md](BUILD.md).
 **Backend (Rust -- `src-tauri/src/`):**
 
 - `lib.rs` -- Application entry point with Tauri setup
-- `managers/` -- Core business logic (audio, model, transcription)
-- `audio_toolkit/` -- Low-level audio processing (recording, VAD)
+- `managers/` -- Core business logic (audio, transcription, history)
+- `audio_toolkit/` -- Low-level audio processing and recording
 - `commands/` -- Tauri command handlers for frontend communication
 - `shortcut.rs` -- Global keyboard shortcut handling
 - `settings.rs` -- Application settings management
@@ -78,7 +70,7 @@ Before reporting, please:
 
 1. **Search [existing issues](https://github.com/elwin/handless/issues)** and [discussions](https://github.com/elwin/handless/discussions)
 2. **Try the latest release** to see if it's already fixed
-3. **Enable debug mode** (`Cmd/Ctrl+Shift+D`) to gather diagnostic info
+3. **Enable debug mode** (`Ctrl+Shift+D`) to gather diagnostic info
 
 When filing a bug, include:
 
@@ -146,10 +138,10 @@ AI-assisted PRs are welcome. In your PR description, note which tools were used 
 
 ### Testing
 
-- **Development**: `bun run tauri dev`
-- **Production build**: `bun run tauri build`
+- **Development**: `pnpm run tauri dev`
+- **Production build**: `pnpm run tauri build`
 - Test with debug mode enabled, different audio devices, and various transcription scenarios
-- Verify on multiple platforms if possible
+- Verify on Windows
 
 ## Code Style
 

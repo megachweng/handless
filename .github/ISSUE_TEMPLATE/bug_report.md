@@ -22,7 +22,7 @@ A clear and concise description of what the bug is.
 
 **Operating System:**
 
-<!-- e.g., macOS 14.1, macOS 15.0 -->
+<!-- e.g., Windows 11 24H2, Windows 10 22H2 -->
 
 **CPU:**
 

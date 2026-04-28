@@ -1,6 +1,5 @@
 use crate::actions::{ActiveStreamingState, PipelineAbortHandle};
 use crate::managers::audio::AudioRecordingManager;
-use crate::managers::transcription::TranscriptionManager;
 use crate::shortcut;
 use crate::TranscriptionCoordinator;
 use log::info;
@@ -47,13 +46,9 @@ pub fn cancel_current_operation(app: &AppHandle) {
     let recording_was_active = audio_manager.is_recording();
     audio_manager.cancel_recording();
 
-    // Update tray icon and hide overlay (also dismisses notch indicator)
+    // Update tray icon and hide overlay.
     change_tray_icon(app, crate::tray::TrayIconState::Idle);
     hide_recording_overlay(app);
-
-    // Unload model if immediate unload is enabled
-    let tm = app.state::<Arc<TranscriptionManager>>();
-    tm.maybe_unload_immediately("cancellation");
 
     // Notify coordinator so it can keep lifecycle state coherent.
     if let Some(coordinator) = app.try_state::<TranscriptionCoordinator>() {

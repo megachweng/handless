@@ -4,7 +4,6 @@
     "settings": "Configurações...",
     "checkUpdates": "Verificar Atualizações...",
     "copyLastTranscript": "Copiar última transcrição",
-    "unloadModel": "Descarregar modelo",
     "quit": "Sair",
     "cancel": "Cancelar"
   },
@@ -19,142 +18,10 @@
     "debug": "Depuração"
   },
   "onboarding": {
-    "subtitle": "Para começar, escolha um modelo de transcrição",
-    "recommended": "Recomendado",
-    "download": "Baixar",
-    "downloading": "Baixando...",
-    "customModelDescription": "Não suportado oficialmente",
-    "downloadFailed": "Falha no download. Por favor, tente novamente.",
-    "modelCard": {
-      "accuracy": "precisão",
-      "speed": "velocidade"
-    },
-    "models": {
-      "small": {
-        "name": "Whisper Small",
-        "description": "Rápido e razoavelmente preciso."
-      },
-      "medium": {
-        "name": "Whisper Medium",
-        "description": "Boa precisão, velocidade média"
-      },
-      "turbo": {
-        "name": "Whisper Turbo",
-        "description": "Precisão e velocidade balanceadas."
-      },
-      "large": {
-        "name": "Whisper Large",
-        "description": "Boa precisão, mas lento."
-      },
-      "parakeet-tdt-0.6b-v2": {
-        "name": "Parakeet V2",
-        "description": "Apenas inglês. O melhor modelo para falantes de inglês."
-      },
-      "parakeet-tdt-0.6b-v3": {
-        "name": "Parakeet V3",
-        "description": "Rápido e preciso. Suporta 25 idiomas europeus."
-      },
-      "moonshine-base": {
-        "name": "Moonshine Base",
-        "description": "Muito rápido, apenas inglês. Lida bem com sotaques."
-      },
-      "moonshine-tiny-streaming-en": {
-        "name": "Moonshine V2 Tiny",
-        "description": "Ultrarrápido, apenas inglês"
-      },
-      "moonshine-small-streaming-en": {
-        "name": "Moonshine V2 Small",
-        "description": "Rápido, apenas inglês. Bom equilíbrio entre velocidade e precisão."
-      },
-      "moonshine-medium-streaming-en": {
-        "name": "Moonshine V2 Medium",
-        "description": "Apenas inglês. Alta qualidade."
-      },
-      "breeze-asr": {
-        "name": "Breeze ASR",
-        "description": "Otimizado para mandarim taiwanês. Suporte para alternância de código."
-      },
-      "sense-voice-int8": {
-        "name": "SenseVoice",
-        "description": "Muito rápido. Chinês, inglês, japonês, coreano, cantonês."
-      },
-      "gigaam-v3-e2e-ctc": {
-        "name": "GigaAM v3",
-        "description": "Russian speech recognition. Fast and accurate."
-      },
-      "canary-180m-flash": {
-        "name": "Canary 180M Flash",
-        "description": "Very fast. English, German, Spanish, French. Supports translation."
-      },
-      "canary-1b-v2": {
-        "name": "Canary 1B v2",
-        "description": "Accurate multilingual. 25 European languages. Supports translation."
-      },
-      "cohere-int8": {
-        "name": "Cohere",
-        "description": "A large, slower, but very accurate multilingual model."
-      }
-    },
-    "errors": {
-      "loadModels": "Falha ao carregar modelos disponíveis",
-      "downloadModel": "Falha ao baixar modelo: {{error}}"
-    },
-    "permissions": {
-      "title": "Permissões Necessárias",
-      "description": "O Handless precisa de algumas permissões para funcionar corretamente.",
-      "microphone": {
-        "title": "Acesso ao Microfone",
-        "description": "Necessário para ouvir sua voz para transcrição."
-      },
-      "accessibility": {
-        "title": "Acesso à Acessibilidade",
-        "description": "Necessário para digitar o texto transcrito em seus aplicativos."
-      },
-      "grant": "Conceder Permissão",
-      "granted": "Concedido",
-      "waiting": "Aguardando...",
-      "allGranted": "Tudo pronto!",
-      "errors": {
-        "checkFailed": "Erro ao verificar permissões. Por favor, tente novamente.",
-        "requestFailed": "Erro ao solicitar permissão. Por favor, tente novamente."
-      }
-    },
     "cloud": {
-      "openai_stt": {
-        "name": "OpenAI",
-        "description": "API de voz para texto na nuvem da OpenAI. Rápida e precisa com suporte para mais de 57 idiomas."
-      },
-      "elevenlabs": {
-        "name": "ElevenLabs",
-        "description": "Transcrição de voz para texto Scribe do ElevenLabs. Alta precisão com suporte para mais de 90 idiomas."
-      },
-      "groq": {
-        "name": "Groq",
-        "description": "Transcrição Whisper ultra-rápida do Groq. Inferência extremamente rápida com suporte para mais de 99 idiomas."
-      },
       "soniox": {
         "name": "Soniox",
         "description": "Voz para texto na nuvem da Soniox. Alta precisão com transcrição em tempo real."
-      },
-      "deepgram": {
-        "name": "Deepgram",
-        "description": "API de voz para texto Nova do Deepgram. Rápida e precisa com suporte para mais de 50 idiomas."
-      },
-      "assemblyai": {
-        "name": "AssemblyAI",
-        "description": "Voz para texto do AssemblyAI. Precisão de nível empresarial com diarização de falantes e mais de 40 idiomas."
-      },
-      "cartesia": {
-        "name": "Cartesia",
-        "description": "API de voz para texto Ink do Cartesia. Transcrição em tempo real com suporte para mais de 99 idiomas."
-      },
-      "mistral": {
-        "name": "Mistral AI",
-        "description": "Voz para texto Voxtral do Mistral AI. Alta precisão com suporte de viés de contexto."
-      },
-      "fireworks": {
-        "name": "Fireworks AI",
-        "description": "Voz para texto do Fireworks AI. Transcrição Whisper ultra-rápida com suporte para mais de 95 idiomas."
       },
       "doubao": {
         "name": "Doubao",
@@ -163,25 +30,8 @@
     }
   },
   "modelSelector": {
-    "custom": "Personalizado",
     "active": "Ativo",
     "noModelsAvailable": "Nenhum modelo disponível",
-    "extracting": "Extraindo {{modelName}}...",
-    "extractingMultiple": "Extraindo {{count}} modelos...",
-    "extractingGeneric": "Extraindo...",
-    "downloading": "Baixando {{percentage}}%",
-    "downloadingMultiple": "Baixando {{count}} modelos...",
-    "modelReady": "Modelo Pronto",
-    "loading": "Carregando {{modelName}}...",
-    "loadingGeneric": "Carregando...",
-    "modelError": "Erro no Modelo",
-    "modelUnloaded": "Modelo Descarregado",
-    "noModelDownloadRequired": "Sem Modelo - Download Necessário",
-    "deleteModel": "Excluir {{modelName}}",
-    "switching": "Alternando...",
-    "downloadSpeed": "{{speed}} MB/s",
-    "cancel": "Cancelar",
-    "cancelDownload": "Cancelar download",
     "notAvailable": "Não Disponível",
     "capabilities": {
       "languageSelection": "Suporta vários idiomas de entrada",
@@ -192,7 +42,8 @@
       "translate": "Traduzir para inglês",
       "realtime": "Realtime",
       "realtimeDescription": "Supports real-time streaming transcription"
-    }
+    },
+    "switchProviderError": "Failed to switch STT provider: {{error}}"
   },
   "settings": {
     "modelSettings": {
@@ -254,26 +105,8 @@
       }
     },
     "models": {
-      "title": "Modelos de Transcrição",
-      "description": "Selecione um modelo de transcrição ou baixe modelos adicionais. Diferentes modelos oferecem diferentes níveis de precisão e velocidade.",
-      "yourModels": "Modelos Baixados",
-      "availableModels": "Disponíveis para Download",
-      "downloaded": "Baixados",
-      "available": "Disponíveis para Download",
-      "deleteConfirm": "Tem certeza de que deseja excluir {{modelName}}? Você precisará baixá-lo novamente para usá-lo.",
-      "deleteActiveConfirm": "{{modelName}} é o seu modelo ativo. Excluí-lo interromperá as transcrições até que você selecione um novo modelo. Tem certeza?",
-      "deleteTitle": "Excluir Modelo",
-      "filters": {
-        "all": "Todos",
-        "multiLanguage": "Multi-idioma",
-        "translation": "Tradução",
-        "allLanguages": "Todos os Idiomas"
-      },
-      "noModelsMatch": "Nenhum modelo corresponde a este filtro.",
-      "tabs": {
-        "myModels": "Meus Modelos",
-        "library": "Biblioteca"
-      },
+      "title": "Cloud STT Providers",
+      "description": "Configure Soniox and DoubaoASR cloud speech-to-text providers.",
       "cloudProviders": {
         "title": "Provedores na Nuvem",
         "badge": "Nuvem",
@@ -303,10 +136,6 @@
           "selectLanguageHint": "Deixe vazio para detecção automática",
           "selectLanguages": "Selecionar idiomas...",
           "selectTranslate": "Selecionar idiomas...",
-          "prompt": "Instrução",
-          "promptDescription": "Texto opcional para guiar o estilo do modelo ou continuar um segmento anterior. Não compatível com gpt-4o-transcribe-diarize.",
-          "temperature": "Temperatura",
-          "temperatureDescription": "Valores mais altos produzem resultados mais aleatórios (0-1). Apenas compatível com whisper-1.",
           "languageHints": "Sugestões de Idioma",
           "languageHintsStrict": "Sugestões de Idioma Estritas",
           "languageHintsStrictDescription": "Transcrever apenas nos idiomas especificados",
@@ -314,16 +143,12 @@
           "contextTermsDescription": "Termos separados por vírgula para melhorar a precisão do reconhecimento",
           "contextDescription": "Descrição do Contexto",
           "contextDescriptionDescription": "Texto livre fornecendo contexto geral sobre o conteúdo de áudio",
-          "smartFormat": "Formatação Inteligente",
-          "smartFormatDescription": "Aplicar formatação para melhor legibilidade, incluindo pontuação, capitalização e muito mais",
           "punctuate": "Adicionar Pontuação",
           "punctuateDescription": "Adicionar pontuação e capitalização à transcrição",
           "enableSpeakerDiarization": "Diarização de Falantes",
           "enableSpeakerDiarizationDescription": "Identificar e separar diferentes falantes",
           "enableLanguageIdentification": "Identificação de Idioma",
           "enableLanguageIdentificationDescription": "Detectar o idioma de cada segmento",
-          "contextBias": "Viés de Contexto",
-          "contextBiasDescription": "Termos separados por vírgula para orientar o modelo em relação às ortografias corretas",
           "enableItn": "Inverse Text Normalization",
           "enableItnDescription": "Convert spoken numbers, dates, and units to written form",
           "enableDdc": "Disfluency Removal",
@@ -339,12 +164,6 @@
           "verifyFirst": "Verify your Access Token first",
           "openSpeechConsole": "Open speech console"
         }
-      },
-      "localModels": {
-        "title": "Modelos Locais"
-      },
-      "myModels": {
-        "noModelsConfigured": "Nenhum modelo configurado. Visite a Biblioteca para baixar modelos ou configurar provedores na nuvem."
       }
     },
     "sound": {
@@ -431,8 +250,7 @@
         "options": {
           "none": "Nenhum",
           "bottom": "Inferior",
-          "top": "Superior",
-          "notch": "Notch"
+          "top": "Superior"
         }
       },
       "pasteMethod": {
@@ -448,13 +266,6 @@
         },
         "externalScriptPlaceholder": "/caminho/para/seu/script.sh"
       },
-      "typingTool": {
-        "title": "Ferramenta de digitação",
-        "description": "Escolha qual ferramenta de digitação do Linux usar para o método de colagem direta. Auto detectará e usará automaticamente a melhor ferramenta disponível para o seu sistema.",
-        "options": {
-          "auto": "Auto (Recomendado)"
-        }
-      },
       "clipboardHandling": {
         "title": "Manipulação da Área de Transferência",
         "description": "Não Modificar Área de Transferência preserva o conteúdo atual da área de transferência após a transcrição. Copiar para Área de Transferência deixa o resultado da transcrição na área de transferência após colar.",
@@ -465,11 +276,10 @@
       },
       "autoSubmit": {
         "title": "Envio automático",
-        "description": "Envia automaticamente a combinação de teclas selecionada após a inserção do texto. Cmd+Enter aplica-se no macOS, enquanto Windows/Linux usam Super+Enter.",
+        "description": "Automatically send the selected key combination after text insertion.",
         "options": {
           "off": "Desativado",
           "enter": "Enter",
-          "cmdEnter": "Cmd+Enter",
           "superEnter": "Super+Enter",
           "ctrlEnter": "Ctrl+Enter"
         }
@@ -478,20 +288,6 @@
         "label": "Traduzir para Inglês",
         "description": "Traduzir automaticamente fala de outros idiomas para inglês durante a transcrição.",
         "descriptionUnsupported": "Tradução não é suportada pelo modelo {{model}}."
-      },
-      "modelUnload": {
-        "title": "Descarregar Modelo",
-        "description": "Liberar automaticamente memória GPU/CPU quando o modelo não for usado pelo tempo especificado",
-        "options": {
-          "never": "Nunca",
-          "immediately": "Imediatamente",
-          "min2": "Após 2 minutos",
-          "min5": "Após 5 minutos",
-          "min10": "Após 10 minutos",
-          "min15": "Após 15 minutos",
-          "hour1": "Após 1 hora",
-          "sec5": "Após 5 segundos (Depuração)"
-        }
       },
       "customWords": {
         "title": "Palavras Personalizadas",
@@ -520,12 +316,6 @@
           "title": "Provedor",
           "description": "Selecione um provedor compatível com OpenAI."
         },
-        "appleIntelligence": {
-          "title": "Apple Intelligence",
-          "description": "Executa totalmente no dispositivo. Nenhuma chave de API ou acesso à rede é necessário.",
-          "requirements": "Requer um Mac Apple Silicon executando macOS Tahoe (26.0) ou posterior. Apple Intelligence deve estar habilitado nas Configurações do Sistema.",
-          "unavailable": "Apple Intelligence não está disponível neste dispositivo. Requer um Mac Apple Silicon executando macOS Tahoe (26.0) ou posterior com Apple Intelligence habilitado nas Configurações do Sistema."
-        },
         "baseUrl": {
           "title": "URL Base",
           "description": "URL base da API para o provedor selecionado. Apenas o provedor personalizado pode ser editado.",
@@ -539,10 +329,8 @@
         },
         "model": {
           "title": "Modelo",
-          "descriptionApple": "Forneça um limite numérico opcional de tokens ou mantenha a predefinição padrão no dispositivo.",
           "descriptionCustom": "Forneça o identificador do modelo esperado pelo seu endpoint personalizado.",
           "descriptionDefault": "Escolha um modelo exposto pelo provedor selecionado.",
-          "placeholderApple": "Apple Intelligence",
           "placeholderWithOptions": "Buscar ou selecionar um modelo",
           "placeholderNoOptions": "Digite o nome de um modelo",
           "refreshModels": "Atualizar modelos"
@@ -668,10 +456,6 @@
         "label": "Microfone Sempre Ativo",
         "description": "Manter microfone ativo para resposta mais rápida"
       },
-      "clamshellMicrophone": {
-        "title": "Microfone em Modo Fechado",
-        "description": "Microfone a usar quando a tampa do laptop está fechada"
-      },
       "postProcessingToggle": {
         "label": "Pós-Processamento",
         "description": "Habilitar refinamento de texto com IA após a transcrição"
@@ -752,19 +536,16 @@
     }
   },
   "footer": {
-    "downloadingModel": "Baixando {{model}}...",
     "checkingUpdates": "Verificando atualizações...",
     "updateAvailable": "Atualização disponível: {{version}}",
     "updateAvailableShort": "Atualização disponível",
     "upToDate": "Atualizado",
-    "downloadUpdate": "Baixar Atualização",
     "restart": "Reiniciar",
     "updateCheckingDisabled": "Verificação de Atualização Desabilitada",
     "downloading": "Baixando... {{progress}}%",
     "installing": "Instalando...",
     "preparing": "Preparando...",
-    "checkForUpdates": "Verificar atualizações",
-    "updateViaBrew": "Atualizar via: brew upgrade --cask handless"
+    "checkForUpdates": "Verificar atualizações"
   },
   "common": {
     "loading": "Carregando...",
@@ -791,9 +572,6 @@
     "search": "Buscar..."
   },
   "accessibility": {
-    "permissionsRequired": "Permissões de Acessibilidade Necessárias",
-    "permissionsDescription": "O Handless precisa de permissões de acessibilidade para digitar o texto transcrito.",
-    "openSettings": "Abrir Configurações do Sistema",
     "dismiss": "Dispensar"
   },
   "errors": {

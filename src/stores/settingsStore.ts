@@ -132,10 +132,6 @@ const settingUpdaters: {
     await commands.setMicrophonePriority(value as string[]);
     useSettingsStore.getState().refreshEffectiveMicrophone();
   },
-  clamshell_microphone: (value) =>
-    commands.setClamshellMicrophone(
-      (value as string) === "Default" ? "default" : (value as string),
-    ),
   selected_output_device: (value) =>
     commands.setSelectedOutputDevice(
       (value as string) === "Default" || value === null
@@ -224,7 +220,6 @@ export const useSettingsStore = create<SettingsStore>()(
             ...settings,
             always_on_microphone: settings.always_on_microphone ?? false,
             selected_microphone: settings.selected_microphone ?? "Default",
-            clamshell_microphone: settings.clamshell_microphone ?? "Default",
             selected_output_device:
               settings.selected_output_device ?? "Default",
           };
@@ -338,7 +333,7 @@ export const useSettingsStore = create<SettingsStore>()(
         const updater = settingUpdaters[key];
         if (updater) {
           await updater(value);
-        } else if (key !== "bindings" && key !== "selected_model") {
+        } else if (key !== "bindings") {
           console.warn(`No handler for setting: ${String(key)}`);
         }
       } catch (error) {
@@ -807,8 +802,7 @@ export const useSettingsStore = create<SettingsStore>()(
 
       // Note: Audio devices are NOT refreshed here. The frontend (App.tsx)
       // is responsible for calling refreshAudioDevices/refreshOutputDevices
-      // after onboarding completes. This avoids triggering permission dialogs
-      // on macOS before the user is ready.
+      // after onboarding completes.
       await Promise.all([
         loadDefaultSettings(),
         refreshSettings(),

@@ -1,4 +1,4 @@
-Handless is a macOS desktop speech-to-text app built with Tauri 2.x (Rust backend + React/TypeScript frontend).
+Handless is a Windows desktop speech-to-text app built with Tauri 2.x (Rust backend + React/TypeScript frontend).
 
 ## Design Context
 
@@ -30,7 +30,7 @@ Developers, power users, and general productivity users who want fast, accurate 
 1. **Invisible until needed** — The app should disappear into the user's workflow. Minimal chrome, no unnecessary UI. Like Raycast: summon it, use it, move on.
 2. **Warmth over sterility** — Warm browns and orange accent prevent the glass aesthetic from feeling cold or clinical. The palette should feel inviting.
 3. **Motion with purpose** — Every animation communicates state change (recording, processing, complete). No gratuitous animation. Spring physics for natural feel.
-4. **Native-quality craft** — Should feel like a macOS-native app, not a web app in a wrapper. Tight spacing, precise typography, glass effects that match system vibrancy.
+4. **Native-quality craft** — Should feel like a Windows-native desktop app, not a web app in a wrapper. Tight spacing, precise typography, and glass effects should align with Mica/Acrylic surfaces.
 5. **Clarity over density** — Prefer generous whitespace and clear hierarchy. Settings and options should be discoverable but never overwhelming.
 
 ## Development
@@ -38,14 +38,14 @@ Developers, power users, and general productivity users who want fast, accurate 
 ### Commands
 
 ```bash
-bun run tauri dev                # Dev mode (prefix CMAKE_POLICY_VERSION_MINIMUM=3.5 if cmake errors on macOS)
-bun run tauri build              # Production build
-bun run lint                     # ESLint check
-bun run lint:fix                 # ESLint auto-fix
-bun run format                   # Prettier + cargo fmt
-bun run format:check             # Check formatting only
-bun run test:playwright          # E2E tests
-bun run check:translations       # Validate translation files
+pnpm run tauri dev                # Dev mode
+pnpm run tauri build              # Production build
+pnpm run lint                     # ESLint check
+pnpm run lint:fix                 # ESLint auto-fix
+pnpm run format                   # Prettier + cargo fmt
+pnpm run format:check             # Check formatting only
+pnpm run test:playwright          # E2E tests
+pnpm run check:translations       # Validate translation files
 ```
 
 ### Code Style
@@ -79,7 +79,7 @@ All user-facing strings use i18next (ESLint enforces no hardcoded JSX strings).
 **Before committing:**
 
 3. Add the same key to all 16 other locale files (ar, cs, de, es, fr, it, ja, ko, pl, pt, ru, tr, uk, vi, zh, zh-TW) — use English as placeholder
-4. Run `bun run check:translations` to verify all locales have matching keys
+4. Run `pnpm run check:translations` to verify all locales have matching keys
 
 Keys are organized by feature area: `tray.*`, `sidebar.*`, `onboarding.*`, `settings.*`, `models.*`, etc.
 
@@ -89,7 +89,8 @@ Integration tests for cloud STT providers live in `src-tauri/tests/cloud_stt.rs`
 
 ```bash
 cargo test --features cloud-stt-tests --test cloud_stt              # All providers
-cargo test --features cloud-stt-tests --test cloud_stt -- openai    # Single provider
+cargo test --features cloud-stt-tests --test cloud_stt -- soniox    # Soniox only
+cargo test --features cloud-stt-tests --test cloud_stt -- doubao    # Doubao only
 cargo test --features cloud-stt-tests --test cloud_stt -- realtime  # Only realtime tests
 ```
 

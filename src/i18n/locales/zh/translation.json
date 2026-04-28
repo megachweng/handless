@@ -4,7 +4,6 @@
     "settings": "设置...",
     "checkUpdates": "检查更新...",
     "copyLastTranscript": "复制最新转录",
-    "unloadModel": "卸载模型",
     "quit": "退出",
     "cancel": "取消"
   },
@@ -19,142 +18,10 @@
     "debug": "调试"
   },
   "onboarding": {
-    "subtitle": "请选择一个转录模型以开始使用",
-    "recommended": "推荐",
-    "download": "下载",
-    "downloading": "下载中...",
-    "customModelDescription": "非官方支持",
-    "downloadFailed": "下载失败。请重试。",
-    "modelCard": {
-      "accuracy": "准确度",
-      "speed": "速度"
-    },
-    "models": {
-      "small": {
-        "name": "Whisper Small",
-        "description": "快速且相当准确。"
-      },
-      "medium": {
-        "name": "Whisper Medium",
-        "description": "准确度高，速度适中"
-      },
-      "turbo": {
-        "name": "Whisper Turbo",
-        "description": "准确度和速度均衡。"
-      },
-      "large": {
-        "name": "Whisper Large",
-        "description": "准确度高，但速度较慢。"
-      },
-      "parakeet-tdt-0.6b-v2": {
-        "name": "Parakeet V2",
-        "description": "仅支持英语。英语用户的最佳模型。"
-      },
-      "parakeet-tdt-0.6b-v3": {
-        "name": "Parakeet V3",
-        "description": "快速且准确。支持25种欧洲语言。"
-      },
-      "moonshine-base": {
-        "name": "Moonshine Base",
-        "description": "非常快速，仅支持英语。口音处理良好。"
-      },
-      "moonshine-tiny-streaming-en": {
-        "name": "Moonshine V2 Tiny",
-        "description": "超快速，仅支持英语"
-      },
-      "moonshine-small-streaming-en": {
-        "name": "Moonshine V2 Small",
-        "description": "快速，仅支持英语。速度与准确度的良好平衡。"
-      },
-      "moonshine-medium-streaming-en": {
-        "name": "Moonshine V2 Medium",
-        "description": "仅支持英语。高质量。"
-      },
-      "breeze-asr": {
-        "name": "Breeze ASR",
-        "description": "针对台湾国语优化。支持语码转换。"
-      },
-      "sense-voice-int8": {
-        "name": "SenseVoice",
-        "description": "非常快速。支持中文、英语、日语、韩语、粤语。"
-      },
-      "gigaam-v3-e2e-ctc": {
-        "name": "GigaAM v3",
-        "description": "Russian speech recognition. Fast and accurate."
-      },
-      "canary-180m-flash": {
-        "name": "Canary 180M Flash",
-        "description": "Very fast. English, German, Spanish, French. Supports translation."
-      },
-      "canary-1b-v2": {
-        "name": "Canary 1B v2",
-        "description": "Accurate multilingual. 25 European languages. Supports translation."
-      },
-      "cohere-int8": {
-        "name": "Cohere",
-        "description": "A large, slower, but very accurate multilingual model."
-      }
-    },
-    "errors": {
-      "loadModels": "无法加载可用模型",
-      "downloadModel": "模型下载失败: {{error}}"
-    },
-    "permissions": {
-      "title": "需要权限",
-      "description": "Handless 需要一些权限才能正常工作。",
-      "microphone": {
-        "title": "麦克风访问",
-        "description": "需要听取您的语音进行转录。"
-      },
-      "accessibility": {
-        "title": "辅助功能访问",
-        "description": "需要将转录文本输入到您的应用程序中。"
-      },
-      "grant": "授予权限",
-      "granted": "已授予",
-      "waiting": "等待中...",
-      "allGranted": "全部完成！",
-      "errors": {
-        "checkFailed": "检查权限失败。请重试。",
-        "requestFailed": "请求权限失败。请重试。"
-      }
-    },
     "cloud": {
-      "openai_stt": {
-        "name": "OpenAI",
-        "description": "OpenAI 云端语音转文字 API。快速准确，支持 57 种以上语言。"
-      },
-      "elevenlabs": {
-        "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe 语音转文字。高准确度，支持 90 多种语言。"
-      },
-      "groq": {
-        "name": "Groq",
-        "description": "Groq 超快速 Whisper 转录。闪电级推理速度，支持 99 多种语言。"
-      },
       "soniox": {
         "name": "Soniox",
         "description": "Soniox 云端语音转文字。高准确度，支持实时转录。"
-      },
-      "deepgram": {
-        "name": "Deepgram",
-        "description": "Deepgram Nova 语音转文字 API。快速准确，支持 50 多种语言。"
-      },
-      "assemblyai": {
-        "name": "AssemblyAI",
-        "description": "AssemblyAI 语音转文字。企业级准确度，支持说话人分离和 40 多种语言。"
-      },
-      "cartesia": {
-        "name": "Cartesia",
-        "description": "Cartesia Ink 语音转文字 API。实时流式转录，支持 99 多种语言。"
-      },
-      "mistral": {
-        "name": "Mistral AI",
-        "description": "Mistral AI Voxtral 语音转文字。高准确度，支持上下文偏向。"
-      },
-      "fireworks": {
-        "name": "Fireworks AI",
-        "description": "Fireworks AI 语音转文字。超快速 Whisper 转录，支持 95 多种语言。"
       },
       "doubao": {
         "name": "豆包",
@@ -163,23 +30,8 @@
     }
   },
   "modelSelector": {
-    "custom": "自定义",
     "active": "活跃",
-    "switching": "切换中...",
     "noModelsAvailable": "没有可用的模型",
-    "extracting": "正在解压 {{modelName}}...",
-    "extractingMultiple": "正在解压 {{count}} 个模型...",
-    "extractingGeneric": "解压中...",
-    "downloading": "下载中 {{percentage}}%",
-    "downloadingMultiple": "正在下载 {{count}} 个模型...",
-    "modelReady": "模型已就绪",
-    "loading": "正在加载 {{modelName}}...",
-    "loadingGeneric": "加载中...",
-    "modelError": "模型错误",
-    "modelUnloaded": "模型已卸载",
-    "noModelDownloadRequired": "无模型 - 需要下载",
-    "deleteModel": "删除 {{modelName}}",
-    "downloadSpeed": "{{speed}} MB/秒",
     "capabilities": {
       "languageSelection": "支持多种输入语言",
       "multiLanguage": "多语言",
@@ -190,9 +42,8 @@
       "singleLanguage": "仅支持此语言",
       "languageOnly": "仅 {{language}}"
     },
-    "cancel": "取消",
-    "cancelDownload": "取消下载",
-    "notAvailable": "不可用"
+    "notAvailable": "不可用",
+    "switchProviderError": "Failed to switch STT provider: {{error}}"
   },
   "settings": {
     "modelSettings": {
@@ -200,26 +51,8 @@
       "noSettingsNeeded": "此模型自动运行，无需配置。"
     },
     "models": {
-      "title": "转录模型",
-      "description": "选择转录模型或下载其他模型。不同模型提供不同的准确度和速度。",
-      "downloaded": "已下载",
-      "available": "可下载",
-      "deleteConfirm": "确定要删除 {{modelName}} 吗？您需要重新下载才能使用。",
-      "deleteActiveConfirm": "{{modelName}} 是您当前使用的模型。删除后将停止转录，直到您选择新的模型。确定要删除吗？",
-      "deleteTitle": "删除模型",
-      "filters": {
-        "all": "全部",
-        "multiLanguage": "多语言",
-        "translation": "翻译",
-        "allLanguages": "所有语言"
-      },
-      "noModelsMatch": "没有符合此筛选条件的模型。",
-      "yourModels": "已下载的模型",
-      "availableModels": "可供下载",
-      "tabs": {
-        "myModels": "我的模型",
-        "library": "模型库"
-      },
+      "title": "Cloud STT Providers",
+      "description": "Configure Soniox and DoubaoASR cloud speech-to-text providers.",
       "cloudProviders": {
         "title": "云端提供商",
         "badge": "云端",
@@ -249,10 +82,6 @@
           "selectLanguageHint": "留空以自动检测",
           "selectLanguages": "选择语言...",
           "selectTranslate": "选择语言...",
-          "prompt": "提示词",
-          "promptDescription": "可选文本，用于引导模型风格或续接上一段内容。gpt-4o-transcribe-diarize 不支持此功能。",
-          "temperature": "温度",
-          "temperatureDescription": "值越高结果越随机（0-1）。仅 whisper-1 支持。",
           "languageHints": "语言提示",
           "languageHintsStrict": "严格语言提示",
           "languageHintsStrictDescription": "仅转录指定的语言",
@@ -260,16 +89,12 @@
           "contextTermsDescription": "以逗号分隔的术语，用于提高识别准确度",
           "contextDescription": "上下文描述",
           "contextDescriptionDescription": "自由文本，提供有关音频内容的一般上下文",
-          "smartFormat": "智能格式化",
-          "smartFormatDescription": "应用格式化以改进可读性，包括标点符号、大小写等",
           "punctuate": "加标点",
           "punctuateDescription": "向转录添加标点符号和大小写",
           "enableSpeakerDiarization": "说话人分离",
           "enableSpeakerDiarizationDescription": "识别并区分不同的说话人",
           "enableLanguageIdentification": "语言识别",
           "enableLanguageIdentificationDescription": "检测每个片段的语言",
-          "contextBias": "上下文偏向",
-          "contextBiasDescription": "以逗号分隔的术语，指导模型拼写正确",
           "enableItn": "文本规范化 (ITN) ",
           "enableItnDescription": "将口语中的数字、日期和单位转换为书面形式",
           "enableDdc": "语义顺滑",
@@ -285,12 +110,6 @@
           "verifyFirst": "请先验证您的 Access Token",
           "openSpeechConsole": "打开语音控制台"
         }
-      },
-      "localModels": {
-        "title": "本地模型"
-      },
-      "myModels": {
-        "noModelsConfigured": "尚未配置模型。前往模型库下载模型或设置云端提供商。"
       }
     },
     "general": {
@@ -395,8 +214,7 @@
         "options": {
           "none": "无",
           "bottom": "底部",
-          "top": "顶部",
-          "notch": "Notch"
+          "top": "顶部"
         }
       },
       "pasteMethod": {
@@ -412,13 +230,6 @@
         },
         "externalScriptPlaceholder": "/你的/脚本/路径.sh"
       },
-      "typingTool": {
-        "title": "输入工具",
-        "description": "选择在直接粘贴方式下使用的 Linux 输入工具。Auto 会自动检测并使用系统中可用的最佳工具。",
-        "options": {
-          "auto": "自动（推荐）"
-        }
-      },
       "clipboardHandling": {
         "title": "剪贴板处理",
         "description": "不修改剪贴板将在转录后保留当前剪贴板内容。复制到剪贴板将在粘贴后将转录结果留在剪贴板中。",
@@ -429,11 +240,10 @@
       },
       "autoSubmit": {
         "title": "自动提交",
-        "description": "在文本插入后自动发送所选的按键组合。macOS 上使用 Cmd+Enter，Windows/Linux 上使用 Super+Enter。",
+        "description": "Automatically send the selected key combination after text insertion.",
         "options": {
           "off": "关闭",
           "enter": "Enter",
-          "cmdEnter": "Cmd+Enter",
           "superEnter": "Super+Enter",
           "ctrlEnter": "Ctrl+Enter"
         }
@@ -442,20 +252,6 @@
         "label": "翻译为英语",
         "description": "在转录过程中自动将其他语言的语音翻译为英语。",
         "descriptionUnsupported": "{{model}} 模型不支持翻译功能。"
-      },
-      "modelUnload": {
-        "title": "卸载模型",
-        "description": "当模型在指定时间内未使用时自动释放 GPU/CPU 内存",
-        "options": {
-          "never": "从不",
-          "immediately": "立即",
-          "min2": "2 分钟后",
-          "min5": "5 分钟后",
-          "min10": "10 分钟后",
-          "min15": "15 分钟后",
-          "hour1": "1 小时后",
-          "sec5": "5 秒后（调试）"
-        }
       },
       "customWords": {
         "title": "自定义词汇",
@@ -520,12 +316,6 @@
           "title": "提供商",
           "description": "选择一个兼容 OpenAI 的提供商。"
         },
-        "appleIntelligence": {
-          "title": "Apple Intelligence",
-          "description": "完全在设备上运行。无需 API 密钥或网络访问。",
-          "requirements": "需要运行 macOS Tahoe（26.0）或更高版本的 Apple Silicon Mac。必须在系统设置中启用 Apple Intelligence。",
-          "unavailable": "Apple Intelligence 在此设备上不可用。需要运行 macOS Tahoe（26.0）或更高版本的 Apple Silicon Mac，并在系统设置中启用 Apple Intelligence。"
-        },
         "baseUrl": {
           "title": "基础 URL",
           "description": "所选提供商的 API 基础 URL。仅自定义提供商可编辑。",
@@ -538,10 +328,8 @@
         },
         "model": {
           "title": "模型",
-          "descriptionApple": "提供可选的数字令牌限制或保持默认的设备预设。",
           "descriptionCustom": "提供自定义端点期望的模型标识符。",
           "descriptionDefault": "选择所选提供商提供的模型。",
-          "placeholderApple": "Apple Intelligence",
           "placeholderWithOptions": "搜索或选择模型",
           "placeholderNoOptions": "输入模型名称",
           "refreshModels": "刷新模型"
@@ -668,10 +456,6 @@
         "label": "麦克风常开",
         "description": "保持麦克风活跃以获得更快的响应"
       },
-      "clamshellMicrophone": {
-        "title": "合盖麦克风",
-        "description": "笔记本电脑盖子关闭时使用的麦克风"
-      },
       "postProcessingToggle": {
         "label": "后处理",
         "description": "启用转录后的 AI 文本优化"
@@ -752,19 +536,16 @@
     }
   },
   "footer": {
-    "downloadingModel": "正在下载 {{model}}...",
     "checkingUpdates": "检查更新中...",
     "updateAvailable": "有可用更新: {{version}}",
     "updateAvailableShort": "有可用更新",
     "upToDate": "已是最新版本",
-    "downloadUpdate": "下载更新",
     "restart": "重启",
     "updateCheckingDisabled": "更新检查已禁用",
     "downloading": "下载中... {{progress}}%",
     "installing": "安装中...",
     "preparing": "准备中...",
-    "checkForUpdates": "检查更新",
-    "updateViaBrew": "更新方式: brew upgrade --cask handless"
+    "checkForUpdates": "检查更新"
   },
   "common": {
     "loading": "加载中...",
@@ -791,9 +572,6 @@
     "search": "搜索..."
   },
   "accessibility": {
-    "permissionsRequired": "需要辅助功能权限",
-    "permissionsDescription": "Handless 需要辅助功能权限才能输入转录的文字。",
-    "openSettings": "打开系统设置",
     "dismiss": "关闭"
   },
   "errors": {

@@ -22,17 +22,10 @@ pub fn get_cursor_position(app_handle: &AppHandle) -> Option<(i32, i32)> {
     enigo.location().ok()
 }
 
-/// Sends a Ctrl+V or Cmd+V paste command using platform-specific virtual key codes.
+/// Sends a Ctrl+V paste command using the Windows virtual key code.
 /// This ensures the paste works regardless of keyboard layout (e.g., Russian, AZERTY, DVORAK).
-/// Note: On Wayland, this may not work - callers should check for Wayland and use alternative methods.
 pub fn send_paste_ctrl_v(enigo: &mut Enigo) -> Result<(), String> {
-    // Platform-specific key definitions
-    #[cfg(target_os = "macos")]
-    let (modifier_key, v_key_code) = (Key::Meta, Key::Other(9));
-    #[cfg(target_os = "windows")]
     let (modifier_key, v_key_code) = (Key::Control, Key::Other(0x56)); // VK_V
-    #[cfg(target_os = "linux")]
-    let (modifier_key, v_key_code) = (Key::Control, Key::Unicode('v'));
 
     // Press modifier + V
     enigo
@@ -52,18 +45,10 @@ pub fn send_paste_ctrl_v(enigo: &mut Enigo) -> Result<(), String> {
 }
 
 /// Sends a Ctrl+Shift+V paste command.
-/// This is commonly used in terminal applications on Linux to paste without formatting.
-/// Note: On Wayland, this may not work - callers should check for Wayland and use alternative methods.
 pub fn send_paste_ctrl_shift_v(enigo: &mut Enigo) -> Result<(), String> {
-    // Platform-specific key definitions
-    #[cfg(target_os = "macos")]
-    let (modifier_key, v_key_code) = (Key::Meta, Key::Other(9)); // Cmd+Shift+V on macOS
-    #[cfg(target_os = "windows")]
     let (modifier_key, v_key_code) = (Key::Control, Key::Other(0x56)); // VK_V
-    #[cfg(target_os = "linux")]
-    let (modifier_key, v_key_code) = (Key::Control, Key::Unicode('v'));
 
-    // Press Ctrl/Cmd + Shift + V
+    // Press Ctrl + Shift + V
     enigo
         .key(modifier_key, enigo::Direction::Press)
         .map_err(|e| format!("Failed to press modifier key: {}", e))?;

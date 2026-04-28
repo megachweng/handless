@@ -24,7 +24,6 @@ import { Dropdown } from "@/components/ui/Dropdown";
 import { MultiSelectDropdown } from "@/components/ui/MultiSelectDropdown";
 import { SelectableCard } from "@/components/ui/SelectableCard";
 import type { CloudProviderOption, SttProviderInfo } from "@/bindings";
-import type { ModelCardStatus } from "@/components/onboarding/ModelCard";
 import { LANGUAGES } from "@/lib/constants/languages";
 import {
   getLanguageDisplayText,
@@ -35,6 +34,8 @@ import { NAVIGATE_SECTION_EVENT } from "@/components/Sidebar";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { SimpleTooltip } from "@/components/ui/Tooltip";
 import { Checkbox } from "@/components/ui/Checkbox";
+
+type ModelCardStatus = "active" | "available" | "switching";
 
 const CloudOptionControl: React.FC<{
   option: CloudProviderOption;
@@ -254,12 +255,6 @@ export const CloudProviderConfigCard: React.FC<
       const hasContext = dictionaryContext.trim().length > 0;
       if (!hasTerms && !hasContext) return undefined;
 
-      if (provider.id === "openai_stt" && optionKey === "prompt") {
-        const parts: string[] = [];
-        if (hasTerms) parts.push(`Glossary: ${dictionaryTerms.join(", ")}.`);
-        if (hasContext) parts.push(dictionaryContext);
-        return parts.join(" ") || undefined;
-      }
       if (provider.id === "soniox") {
         if (optionKey === "context_terms" && hasTerms) {
           return dictionaryTerms.join(", ");

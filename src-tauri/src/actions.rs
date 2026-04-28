@@ -122,10 +122,6 @@ impl ShortcutAction for TranscribeAction {
             .lock()
             .unwrap_or_else(|e| e.into_inner()) = Some(start_time);
 
-        // Load model in the background
-        let tm = app.state::<Arc<TranscriptionManager>>();
-        tm.initiate_model_load();
-
         let binding_id = binding_id.to_string();
         let rm = app.state::<Arc<AudioRecordingManager>>();
 
@@ -274,10 +270,9 @@ impl ShortcutAction for TranscribeAction {
         // If the provider is not verified, treat as no prompt so we skip post-processing entirely.
         let settings_snapshot = get_settings(app);
         let provider_id = &settings_snapshot.post_process_provider_id;
-        let provider_ready = provider_id == "apple_intelligence"
-            || settings_snapshot
-                .post_process_verified_providers
-                .contains(provider_id);
+        let provider_ready = settings_snapshot
+            .post_process_verified_providers
+            .contains(provider_id);
         let post_process_prompt_id = if provider_ready {
             settings_snapshot
                 .bindings
@@ -296,7 +291,7 @@ impl ShortcutAction for TranscribeAction {
             );
 
             let stop_recording_time = Instant::now();
-            // stop_recording drops the stream tap (via the recorder's Cmd::Stop),
+            // stop_recording drops the stream tap through the recorder stop command,
             // which signals end-of-audio to the streaming sender task.
             if let Some(samples) = rm.stop_recording(&binding_id) {
                 debug!(

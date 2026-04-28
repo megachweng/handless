@@ -32,11 +32,10 @@ export const ShortcutBindingsCard: React.FC = () => {
   const bindings = getSetting("bindings") || {};
   const prompts = getSetting("post_process_prompts") || [];
 
-  // Post-processing requires a verified provider (or Apple Intelligence)
+  // Post-processing requires a verified provider.
   const providerId = settings?.post_process_provider_id ?? "";
   const isPostProcessReady =
-    providerId === "apple_intelligence" ||
-    (settings?.post_process_verified_providers?.includes(providerId) ?? false);
+    settings?.post_process_verified_providers?.includes(providerId) ?? false;
 
   // Filter to transcribe-prefixed bindings only
   const transcribeBindings = Object.values(bindings)

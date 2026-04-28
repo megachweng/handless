@@ -2,8 +2,10 @@ import React from "react";
 import { Check } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
-interface CheckboxProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
+interface CheckboxProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "onChange"
+> {
   checked?: boolean;
   onChange?: (checked: boolean) => void;
 }

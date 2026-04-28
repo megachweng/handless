@@ -89,29 +89,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: "macos-26" # for Arm based macs (M1 and above). Uses macOS 26 for Apple Intelligence SDK.
-            args: "--target aarch64-apple-darwin"
-            target: "aarch64-apple-darwin"
-            label: "apple-silicon"
-          - platform: "macos-latest" # for Intel based macs.
-            args: "--target x86_64-apple-darwin"
-            target: "x86_64-apple-darwin"
-            label: "intel"
-          # - platform: "ubuntu-22.04" # Build .deb on 22.04
-          #   args: "--bundles deb"
-          #   target: "x86_64-unknown-linux-gnu"
-          # - platform: "ubuntu-24.04" # Build AppImage and RPM on 24.04
-          #   args: "--bundles appimage,rpm"
-          #   target: "x86_64-unknown-linux-gnu"
-          # - platform: "ubuntu-24.04-arm" # Build for ARM64 Linux
-          #   args: "--bundles appimage,deb,rpm"
-          #   target: "aarch64-unknown-linux-gnu"
-          # - platform: "windows-latest"
-          #   args: ""
-          #   target: "x86_64-pc-windows-msvc"
-          # - platform: "windows-11-arm" # for ARM64 Windows runner
-          #   args: "--target aarch64-pc-windows-msvc"
-          #   target: "aarch64-pc-windows-msvc"
+          - platform: "windows-latest"
+            args: ""
+            target: "x86_64-pc-windows-msvc"
+            label: "windows-x64"
 
     uses: ./.github/workflows/build.yml
     with:
@@ -134,7 +115,6 @@ jobs:
       - name: Publish release
         uses: actions/github-script@v8
         with:
-          github-token: ${{ secrets.TAP_GITHUB_TOKEN }}
           script: |
             await github.rest.repos.updateRelease({
               owner: context.repo.owner,

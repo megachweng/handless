@@ -2,17 +2,10 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import { toast, Toaster } from "sonner";
 import { useTranslation } from "react-i18next";
 import { platform } from "@tauri-apps/plugin-os";
-import { getCurrentWindow } from "@tauri-apps/api/window";
 import { MotionConfig, AnimatePresence, motion } from "motion/react";
 import { DragRegion } from "./components/ui/DragRegion";
-import {
-  checkAccessibilityPermission,
-  checkMicrophonePermission,
-} from "tauri-plugin-macos-permissions-api";
 import "./App.css";
-import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import Footer from "./components/footer";
-import { AccessibilityOnboarding } from "./components/onboarding";
 import {
   Sidebar,
   SidebarSection,
@@ -25,7 +18,7 @@ import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 import { pageVariants, pageTransition } from "@/lib/motion";
 
-type OnboardingStep = "accessibility" | "done";
+type OnboardingStep = "done";
 
 const LAST_SECTION_KEY = "lastSection";
 
@@ -101,7 +94,7 @@ function App() {
     const handleKeyDown = (event: KeyboardEvent) => {
       const hasModifier = event.ctrlKey || event.metaKey;
 
-      // Ctrl+Shift+D / Cmd+Shift+D: Toggle debug mode
+      // Ctrl+Shift+D: Toggle debug mode
       if (hasModifier && event.shiftKey && event.key.toLowerCase() === "d") {
         event.preventDefault();
         const currentDebugMode = settings?.debug_mode ?? false;
@@ -109,7 +102,7 @@ function App() {
         return;
       }
 
-      // Ctrl+Shift+, / Cmd+Shift+,: Reload configuration
+      // Ctrl+Shift+,: Reload configuration
       if (hasModifier && event.shiftKey && event.key === ",") {
         event.preventDefault();
         commands
@@ -132,7 +125,7 @@ function App() {
     };
   }, [settings?.debug_mode, updateSetting, refreshSettings]);
 
-  // Cmd+[ / Cmd+]: Navigate sidebar sections
+  // Ctrl+[ / Ctrl+]: Navigate sidebar sections
   useEffect(() => {
     const handleSectionNav = (event: KeyboardEvent) => {
       if (!event.metaKey) return;
@@ -167,27 +160,8 @@ function App() {
   }, [handleSectionChange]);
 
   const checkOnboardingStatus = async () => {
-    if (platform() === "macos") {
-      try {
-        const [hasAccessibility, hasMicrophone] = await Promise.all([
-          checkAccessibilityPermission(),
-          checkMicrophonePermission(),
-        ]);
-        if (!hasAccessibility || !hasMicrophone) {
-          setOnboardingStep("accessibility");
-          return;
-        }
-      } catch (e) {
-        console.warn("Failed to check permissions:", e);
-      }
-    }
     setOnboardingStep("done");
   };
-
-  const handleAccessibilityComplete = useCallback(() => {
-    setOnboardingStep("done");
-    getCurrentWindow().setFocus();
-  }, []);
 
   // Still checking onboarding status
   if (onboardingStep === null) {
@@ -197,19 +171,6 @@ function App() {
   return (
     <MotionConfig reducedMotion="user">
       <AnimatePresence mode="wait">
-        {onboardingStep === "accessibility" && (
-          <motion.div
-            key="accessibility"
-            variants={pageVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={pageTransition}
-          >
-            <AccessibilityOnboarding onComplete={handleAccessibilityComplete} />
-          </motion.div>
-        )}
-
         {onboardingStep === "done" && (
           <motion.div
             key="done"
@@ -249,7 +210,6 @@ function App() {
                 <DragRegion />
                 <div className="flex-1 overflow-y-auto overscroll-contain">
                   <div className="flex flex-col ps-10 pe-6 py-6 gap-5">
-                    <AccessibilityPermissions />
                     <div className="w-full">
                       <ActiveComponent />
                     </div>

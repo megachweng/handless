@@ -60,9 +60,6 @@ impl<'de> Deserialize<'de> for ActivationMode {
 pub use crate::post_process::prompts::LLMPrompt;
 pub use crate::post_process::providers::PostProcessProvider;
 
-pub const APPLE_INTELLIGENCE_PROVIDER_ID: &str = "apple_intelligence";
-pub const APPLE_INTELLIGENCE_DEFAULT_MODEL_ID: &str = "Apple Intelligence";
-
 #[derive(Serialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "lowercase")]
 pub enum LogLevel {
@@ -157,31 +154,49 @@ pub struct SttProvider {
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum SttProviderType {
-    Local,
     Cloud,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[derive(Serialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "lowercase")]
 pub enum OverlayPosition {
     None,
     Top,
     Bottom,
-    Notch,
 }
 
-#[derive(Serialize, Deserialize, Default, Debug, Clone, Copy, PartialEq, Eq, Type)]
-#[serde(rename_all = "snake_case")]
-pub enum ModelUnloadTimeout {
-    #[default]
-    Never,
-    Immediately,
-    Min2,
-    Min5,
-    Min10,
-    Min15,
-    Hour1,
-    Sec5, // Debug mode only
+const LEGACY_OVERLAY_POSITION_VALUE: &str = concat!("no", "tch");
+
+impl<'de> Deserialize<'de> for OverlayPosition {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct OverlayPositionVisitor;
+
+        impl<'de> Visitor<'de> for OverlayPositionVisitor {
+            type Value = OverlayPosition;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("one of none, top, or bottom")
+            }
+
+            fn visit_str<E: de::Error>(self, value: &str) -> Result<OverlayPosition, E> {
+                let value = value.to_lowercase();
+                match value.as_str() {
+                    "none" => Ok(OverlayPosition::None),
+                    "top" => Ok(OverlayPosition::Top),
+                    "bottom" => Ok(OverlayPosition::Bottom),
+                    legacy if legacy == LEGACY_OVERLAY_POSITION_VALUE => {
+                        Ok(OverlayPosition::Bottom)
+                    }
+                    _ => Ok(OverlayPosition::Bottom),
+                }
+            }
+        }
+
+        deserializer.deserialize_str(OverlayPositionVisitor)
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
@@ -209,7 +224,8 @@ pub enum AutoSubmitKey {
     #[default]
     Enter,
     CtrlEnter,
-    CmdEnter,
+    #[serde(rename = "super_enter")]
+    SuperEnter,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
@@ -231,46 +247,13 @@ pub enum KeyboardImplementation {
 
 impl Default for KeyboardImplementation {
     fn default() -> Self {
-        // Default to HandyKeys only on macOS where it's well-tested.
-        // Windows and Linux use Tauri by default (handy-keys not sufficiently tested yet).
-        #[cfg(target_os = "macos")]
-        return KeyboardImplementation::HandyKeys;
-        #[cfg(not(target_os = "macos"))]
-        return KeyboardImplementation::Tauri;
+        KeyboardImplementation::Tauri
     }
 }
 
 impl Default for PasteMethod {
     fn default() -> Self {
-        // Default to CtrlV for macOS and Windows, Direct for Linux
-        #[cfg(target_os = "linux")]
-        return PasteMethod::Direct;
-        #[cfg(not(target_os = "linux"))]
-        return PasteMethod::CtrlV;
-    }
-}
-
-impl ModelUnloadTimeout {
-    pub fn to_minutes(self) -> Option<u64> {
-        match self {
-            ModelUnloadTimeout::Never => None,
-            ModelUnloadTimeout::Immediately => Some(0), // Special case for immediate unloading
-            ModelUnloadTimeout::Min2 => Some(2),
-            ModelUnloadTimeout::Min5 => Some(5),
-            ModelUnloadTimeout::Min10 => Some(10),
-            ModelUnloadTimeout::Min15 => Some(15),
-            ModelUnloadTimeout::Hour1 => Some(60),
-            ModelUnloadTimeout::Sec5 => Some(0), // Special case for debug - handled separately
-        }
-    }
-
-    pub fn to_seconds(self) -> Option<u64> {
-        match self {
-            ModelUnloadTimeout::Never => None,
-            ModelUnloadTimeout::Immediately => Some(0), // Special case for immediate unloading
-            ModelUnloadTimeout::Sec5 => Some(5),
-            _ => self.to_minutes().map(|m| m * 60),
-        }
+        PasteMethod::CtrlV
     }
 }
 
@@ -338,16 +321,12 @@ pub struct AppSettings {
     pub autostart_enabled: bool,
     #[serde(default = "default_update_checks_enabled")]
     pub update_checks_enabled: bool,
-    #[serde(default = "default_model")]
-    pub selected_model: String,
     #[serde(default = "default_always_on_microphone")]
     pub always_on_microphone: bool,
     #[serde(default)]
     pub selected_microphone: Option<String>,
     #[serde(default)]
     pub microphone_priority: Vec<String>,
-    #[serde(default)]
-    pub clamshell_microphone: Option<String>,
     #[serde(default)]
     pub selected_output_device: Option<String>,
     #[serde(default = "default_translate_to_english")]
@@ -364,8 +343,6 @@ pub struct AppSettings {
     pub log_level: LogLevel,
     #[serde(default)]
     pub custom_words: Vec<String>,
-    #[serde(default)]
-    pub model_unload_timeout: ModelUnloadTimeout,
     #[serde(default = "default_word_correction_threshold")]
     pub word_correction_threshold: f64,
     #[serde(default = "default_history_limit")]
@@ -437,10 +414,6 @@ pub struct AppSettings {
     pub dictionary_terms: Vec<String>,
     #[serde(default)]
     pub dictionary_context: String,
-}
-
-fn default_model() -> String {
-    "".to_string()
 }
 
 fn default_always_on_microphone() -> bool {
@@ -572,14 +545,7 @@ fn default_post_process_selected_prompt_id() -> Option<String> {
 }
 
 fn default_bindings() -> HashMap<String, ShortcutBinding> {
-    #[cfg(target_os = "windows")]
     let default_shortcut = "ctrl+space";
-    #[cfg(target_os = "macos")]
-    let default_shortcut = "fn";
-    #[cfg(target_os = "linux")]
-    let default_shortcut = "ctrl+space";
-    #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
-    let default_shortcut = "alt+space";
 
     let mut bindings = HashMap::new();
     bindings.insert(
@@ -593,14 +559,7 @@ fn default_bindings() -> HashMap<String, ShortcutBinding> {
             post_process_prompt_id: None,
         },
     );
-    #[cfg(target_os = "windows")]
     let default_post_process_shortcut = "ctrl+shift+space";
-    #[cfg(target_os = "macos")]
-    let default_post_process_shortcut = "option+shift+space";
-    #[cfg(target_os = "linux")]
-    let default_post_process_shortcut = "ctrl+shift+space";
-    #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
-    let default_post_process_shortcut = "alt+shift+space";
 
     bindings.insert(
         "transcribe_with_post_process".to_string(),
@@ -647,80 +606,17 @@ pub enum StatsDateRange {
 }
 
 fn default_stt_provider_id() -> String {
-    "local".to_string()
+    "soniox".to_string()
 }
 
 fn default_stt_providers() -> Vec<SttProvider> {
     vec![
-        SttProvider {
-            id: "local".to_string(),
-            label: "Local (on-device)".to_string(),
-            provider_type: SttProviderType::Local,
-            base_url: String::new(),
-            default_model: String::new(),
-        },
-        SttProvider {
-            id: "openai_stt".to_string(),
-            label: "OpenAI".to_string(),
-            provider_type: SttProviderType::Cloud,
-            base_url: "https://api.openai.com/v1".to_string(),
-            default_model: "gpt-4o-mini-transcribe".to_string(),
-        },
-        SttProvider {
-            id: "cartesia".to_string(),
-            label: "Cartesia".to_string(),
-            provider_type: SttProviderType::Cloud,
-            base_url: "https://api.cartesia.ai".to_string(),
-            default_model: "ink-whisper".to_string(),
-        },
-        SttProvider {
-            id: "mistral".to_string(),
-            label: "Mistral AI".to_string(),
-            provider_type: SttProviderType::Cloud,
-            base_url: "https://api.mistral.ai".to_string(),
-            default_model: "voxtral-mini-latest".to_string(),
-        },
-        SttProvider {
-            id: "elevenlabs".to_string(),
-            label: "ElevenLabs".to_string(),
-            provider_type: SttProviderType::Cloud,
-            base_url: "https://api.elevenlabs.io/v1".to_string(),
-            default_model: "scribe_v2".to_string(),
-        },
-        SttProvider {
-            id: "groq".to_string(),
-            label: "Groq".to_string(),
-            provider_type: SttProviderType::Cloud,
-            base_url: "https://api.groq.com/openai/v1".to_string(),
-            default_model: "whisper-large-v3-turbo".to_string(),
-        },
         SttProvider {
             id: "soniox".to_string(),
             label: "Soniox".to_string(),
             provider_type: SttProviderType::Cloud,
             base_url: "https://api.soniox.com/v1".to_string(),
             default_model: "stt-rt-v4".to_string(),
-        },
-        SttProvider {
-            id: "deepgram".to_string(),
-            label: "Deepgram".to_string(),
-            provider_type: SttProviderType::Cloud,
-            base_url: "https://api.deepgram.com/v1".to_string(),
-            default_model: "nova-3".to_string(),
-        },
-        SttProvider {
-            id: "assemblyai".to_string(),
-            label: "AssemblyAI".to_string(),
-            provider_type: SttProviderType::Cloud,
-            base_url: "https://api.assemblyai.com".to_string(),
-            default_model: "universal-3-pro".to_string(),
-        },
-        SttProvider {
-            id: "fireworks".to_string(),
-            label: "Fireworks AI".to_string(),
-            provider_type: SttProviderType::Cloud,
-            base_url: "https://audio-prod.api.fireworks.ai/v1".to_string(),
-            default_model: "whisper-v3".to_string(),
         },
         SttProvider {
             id: "doubao".to_string(),
@@ -764,6 +660,44 @@ fn default_stt_cloud_models() -> HashMap<String, String> {
 
 fn ensure_stt_defaults(settings: &mut AppSettings) -> bool {
     let mut changed = false;
+    let allowed_provider_ids: HashSet<String> = default_stt_providers()
+        .into_iter()
+        .map(|provider| provider.id)
+        .collect();
+
+    let before_counts = (
+        settings.stt_api_keys.len(),
+        settings.stt_cloud_models.len(),
+        settings.stt_cloud_options.len(),
+        settings.stt_realtime_enabled.len(),
+        settings.stt_verified_providers.len(),
+    );
+    settings
+        .stt_api_keys
+        .retain(|provider_id, _| allowed_provider_ids.contains(provider_id));
+    settings
+        .stt_cloud_models
+        .retain(|provider_id, _| allowed_provider_ids.contains(provider_id));
+    settings
+        .stt_cloud_options
+        .retain(|provider_id, _| allowed_provider_ids.contains(provider_id));
+    settings
+        .stt_realtime_enabled
+        .retain(|provider_id, _| allowed_provider_ids.contains(provider_id));
+    settings
+        .stt_verified_providers
+        .retain(|provider_id| allowed_provider_ids.contains(provider_id));
+    let after_counts = (
+        settings.stt_api_keys.len(),
+        settings.stt_cloud_models.len(),
+        settings.stt_cloud_options.len(),
+        settings.stt_realtime_enabled.len(),
+        settings.stt_verified_providers.len(),
+    );
+    if before_counts != after_counts {
+        changed = true;
+    }
+
     for provider in default_stt_providers() {
         match settings
             .stt_providers
@@ -783,27 +717,25 @@ fn ensure_stt_defaults(settings: &mut AppSettings) -> bool {
             }
         }
 
-        if provider.provider_type == SttProviderType::Cloud {
-            if !settings.stt_api_keys.contains_key(&provider.id) {
-                settings
-                    .stt_api_keys
-                    .insert(provider.id.clone(), String::new());
-                changed = true;
-            }
+        if !settings.stt_api_keys.contains_key(&provider.id) {
+            settings
+                .stt_api_keys
+                .insert(provider.id.clone(), String::new());
+            changed = true;
+        }
 
-            if !settings.stt_cloud_models.contains_key(&provider.id) {
-                settings
-                    .stt_cloud_models
-                    .insert(provider.id.clone(), provider.default_model.clone());
-                changed = true;
-            }
+        if !settings.stt_cloud_models.contains_key(&provider.id) {
+            settings
+                .stt_cloud_models
+                .insert(provider.id.clone(), provider.default_model.clone());
+            changed = true;
+        }
 
-            if !settings.stt_cloud_options.contains_key(&provider.id) {
-                settings
-                    .stt_cloud_options
-                    .insert(provider.id.clone(), "{}".to_string());
-                changed = true;
-            }
+        if !settings.stt_cloud_options.contains_key(&provider.id) {
+            settings
+                .stt_cloud_options
+                .insert(provider.id.clone(), "{}".to_string());
+            changed = true;
         }
     }
 
@@ -1123,11 +1055,9 @@ fn recover_settings_from_value(settings_value: JsonValue) -> AppSettings {
     recover_field!(start_hidden);
     recover_field!(autostart_enabled);
     recover_field!(update_checks_enabled);
-    recover_field!(selected_model);
     recover_field!(always_on_microphone);
     recover_field!(selected_microphone);
     recover_field!(microphone_priority);
-    recover_field!(clamshell_microphone);
     recover_field!(selected_output_device);
     recover_field!(translate_to_english);
     recover_field!(selected_language);
@@ -1139,7 +1069,6 @@ fn recover_settings_from_value(settings_value: JsonValue) -> AppSettings {
     recover_field!(debug_mode);
     recover_field!(log_level);
     recover_field!(custom_words);
-    recover_field!(model_unload_timeout);
     recover_field!(word_correction_threshold);
     recover_field!(history_limit);
     recover_field!(recording_retention_period);
@@ -1185,6 +1114,7 @@ fn recover_settings_from_value(settings_value: JsonValue) -> AppSettings {
         &mut settings,
         configured_custom_post_process_base_url(object),
     );
+    apply_settings_migrations(&mut settings);
 
     settings
 }
@@ -1290,8 +1220,7 @@ fn read_or_create_app_settings(app: &AppHandle, log_existing: bool) -> AppSettin
                 });
                 if log_existing {
                     debug!(
-                        "Found existing settings: selected_model={}, stt_provider_id={}, post_process_provider_id={}, bindings={:?}, microphone_priority={:?}, clipboard_handling={:?}, mute_while_recording={}, app_language={}, stats_date_range={:?}, configured_stt_api_keys={:?}, configured_post_process_api_keys={:?}",
-                        settings.selected_model,
+                        "Found existing settings: stt_provider_id={}, post_process_provider_id={}, bindings={:?}, microphone_priority={:?}, clipboard_handling={:?}, mute_while_recording={}, app_language={}, stats_date_range={:?}, configured_stt_api_keys={:?}, configured_post_process_api_keys={:?}",
                         settings.stt_provider_id,
                         settings.post_process_provider_id,
                         settings.bindings,
@@ -1339,11 +1268,9 @@ pub fn get_default_settings() -> AppSettings {
         start_hidden: default_start_hidden(),
         autostart_enabled: default_autostart_enabled(),
         update_checks_enabled: default_update_checks_enabled(),
-        selected_model: "".to_string(),
         always_on_microphone: false,
         selected_microphone: None,
         microphone_priority: Vec::new(),
-        clamshell_microphone: None,
         selected_output_device: None,
         translate_to_english: false,
         selected_language: "auto".to_string(),
@@ -1352,7 +1279,6 @@ pub fn get_default_settings() -> AppSettings {
         debug_mode: false,
         log_level: default_log_level(),
         custom_words: Vec::new(),
-        model_unload_timeout: ModelUnloadTimeout::Never,
         word_correction_threshold: default_word_correction_threshold(),
         history_limit: default_history_limit(),
         recording_retention_period: default_recording_retention_period(),
@@ -1512,9 +1438,10 @@ mod tests {
                     "post_process_prompt_id": "default_restructure"
                 }
             },
-            "stt_provider_id": "deepgram",
+            "stt_provider_id": "local",
             "stt_api_keys": {
-                "deepgram": "dg-key"
+                "deepgram": "dg-key",
+                "soniox": "sx-key"
             },
             "post_process_provider_id": "groq",
             "post_process_api_keys": {
@@ -1546,9 +1473,10 @@ mod tests {
 
         let recovered = recover_settings_from_value(invalid_settings);
 
+        assert!(!recovered.stt_api_keys.contains_key("deepgram"));
         assert_eq!(
-            recovered.stt_api_keys.get("deepgram").map(String::as_str),
-            Some("dg-key")
+            recovered.stt_api_keys.get("soniox").map(String::as_str),
+            Some("sx-key")
         );
         assert_eq!(
             recovered
@@ -1557,13 +1485,13 @@ mod tests {
                 .map(String::as_str),
             Some("groq-key")
         );
-        assert_eq!(recovered.stt_provider_id, "deepgram");
+        assert_eq!(recovered.stt_provider_id, "soniox");
         assert_eq!(recovered.post_process_provider_id, "groq");
         assert_eq!(recovered.dictionary_terms, vec!["handless"]);
         assert!(recovered
             .stt_providers
             .iter()
-            .any(|provider| provider.id == "deepgram"));
+            .any(|provider| provider.id == "soniox"));
         assert!(recovered
             .stt_providers
             .iter()

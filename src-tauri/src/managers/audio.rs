@@ -1,20 +1,15 @@
 use crate::audio_toolkit::{list_input_devices, AudioRecorder};
-#[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
-use crate::audio_toolkit::{vad::SmoothedVad, SileroVad};
-use crate::helpers::clamshell;
 use crate::settings::{get_settings, AppSettings};
 use crate::utils;
 use log::{debug, error, info};
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
-use tauri::Manager;
 
-fn set_mute(mute: bool) {
+fn set_mute(_mute: bool) {
     // Expected behavior:
     // - Windows: works on most systems using standard audio drivers.
     // - Linux: works on many systems (PipeWire, PulseAudio, ALSA),
     //   but some distros may lack the tools used.
-    // - macOS: works on most standard setups via AppleScript.
     // If unsupported, fails silently.
 
     #[cfg(target_os = "windows")]
@@ -49,7 +44,7 @@ fn set_mute(mute: bool) {
                 default_device.Activate::<IAudioEndpointVolume>(CLSCTX_ALL, None)
             );
 
-            let _ = volume_interface.SetMute(mute, std::ptr::null());
+            let _ = volume_interface.SetMute(_mute, std::ptr::null());
         }
     }
 
@@ -57,8 +52,8 @@ fn set_mute(mute: bool) {
     {
         use std::process::Command;
 
-        let mute_val = if mute { "1" } else { "0" };
-        let amixer_state = if mute { "mute" } else { "unmute" };
+        let mute_val = if _mute { "1" } else { "0" };
+        let amixer_state = if _mute { "mute" } else { "unmute" };
 
         // Try multiple backends to increase compatibility
         // 1. PipeWire (wpctl)
@@ -86,74 +81,9 @@ fn set_mute(mute: bool) {
             .args(["set", "Master", amixer_state])
             .output();
     }
-
-    #[cfg(target_os = "macos")]
-    {
-        use coreaudio_sys::{
-            kAudioDevicePropertyMute, kAudioHardwarePropertyDefaultOutputDevice,
-            kAudioObjectPropertyElementMaster, kAudioObjectPropertyScopeGlobal,
-            kAudioObjectPropertyScopeOutput, kAudioObjectSystemObject, AudioDeviceID,
-            AudioObjectGetPropertyData, AudioObjectPropertyAddress, AudioObjectSetPropertyData,
-        };
-        use std::{ffi::c_void, mem, process::Command, ptr};
-
-        unsafe fn fallback_to_osascript(mute: bool) {
-            let script = format!(
-                "set volume output muted {}",
-                if mute { "true" } else { "false" }
-            );
-            let _ = Command::new("osascript").args(["-e", &script]).output();
-        }
-
-        let default_output_address = AudioObjectPropertyAddress {
-            mSelector: kAudioHardwarePropertyDefaultOutputDevice,
-            mScope: kAudioObjectPropertyScopeGlobal,
-            mElement: kAudioObjectPropertyElementMaster,
-        };
-
-        let mut device_id: AudioDeviceID = 0;
-        let mut device_id_size = mem::size_of::<AudioDeviceID>() as u32;
-        let default_output_status = unsafe {
-            AudioObjectGetPropertyData(
-                kAudioObjectSystemObject,
-                &default_output_address,
-                0,
-                ptr::null(),
-                &mut device_id_size,
-                &mut device_id as *mut _ as *mut c_void,
-            )
-        };
-
-        if default_output_status != 0 || device_id == 0 {
-            unsafe { fallback_to_osascript(mute) };
-            return;
-        }
-
-        let mute_address = AudioObjectPropertyAddress {
-            mSelector: kAudioDevicePropertyMute,
-            mScope: kAudioObjectPropertyScopeOutput,
-            mElement: kAudioObjectPropertyElementMaster,
-        };
-
-        let mute_value: u32 = u32::from(mute);
-        let mute_status = unsafe {
-            AudioObjectSetPropertyData(
-                device_id,
-                &mute_address,
-                0,
-                ptr::null(),
-                mem::size_of_val(&mute_value) as u32,
-                &mute_value as *const _ as *const c_void,
-            )
-        };
-
-        if mute_status != 0 {
-            unsafe { fallback_to_osascript(mute) };
-        }
-    }
 }
 
-const WHISPER_SAMPLE_RATE: usize = 16000;
+const STT_SAMPLE_RATE: usize = 16000;
 
 /* ──────────────────────────────────────────────────────────────── */
 
@@ -171,26 +101,9 @@ pub enum MicrophoneMode {
 
 /* ──────────────────────────────────────────────────────────────── */
 
-fn create_audio_recorder(
-    _vad_path: &str,
-    app_handle: &tauri::AppHandle,
-    use_vad: bool,
-) -> Result<AudioRecorder, anyhow::Error> {
+fn create_audio_recorder(app_handle: &tauri::AppHandle) -> Result<AudioRecorder, anyhow::Error> {
     let mut recorder = AudioRecorder::new()
         .map_err(|e| anyhow::anyhow!("Failed to create AudioRecorder: {}", e))?;
-
-    #[cfg(all(target_os = "macos", target_arch = "x86_64"))]
-    if use_vad {
-        info!("Silero VAD is unavailable on Intel macOS; recording without local VAD");
-    }
-
-    #[cfg(not(all(target_os = "macos", target_arch = "x86_64")))]
-    if use_vad {
-        let silero = SileroVad::new(_vad_path, 0.15)
-            .map_err(|e| anyhow::anyhow!("Failed to create SileroVad: {}", e))?;
-        let smoothed_vad = SmoothedVad::new(Box::new(silero), 15, 15, 2);
-        recorder = recorder.with_vad(Box::new(smoothed_vad));
-    }
 
     recorder = recorder.with_level_callback({
         let app_handle = app_handle.clone();
@@ -211,7 +124,6 @@ pub struct AudioRecordingManager {
     app_handle: tauri::AppHandle,
 
     recorder: Arc<Mutex<Option<AudioRecorder>>>,
-    last_vad_enabled: Arc<Mutex<Option<bool>>>,
     is_open: Arc<Mutex<bool>>,
     is_recording: Arc<Mutex<bool>>,
     did_mute: Arc<Mutex<bool>>,
@@ -234,7 +146,6 @@ impl AudioRecordingManager {
             app_handle: app.clone(),
 
             recorder: Arc::new(Mutex::new(None)),
-            last_vad_enabled: Arc::new(Mutex::new(None)),
             is_open: Arc::new(Mutex::new(false)),
             is_recording: Arc::new(Mutex::new(false)),
             did_mute: Arc::new(Mutex::new(false)),
@@ -264,18 +175,6 @@ impl AudioRecordingManager {
     }
 
     fn get_effective_microphone_device(&self, settings: &AppSettings) -> Option<cpal::Device> {
-        // Check if we're in clamshell mode and have a clamshell microphone configured
-        let use_clamshell_mic = if let Ok(is_clamshell) = clamshell::is_clamshell() {
-            is_clamshell && settings.clamshell_microphone.is_some()
-        } else {
-            false
-        };
-
-        if use_clamshell_mic {
-            let device_name = settings.clamshell_microphone.as_ref().unwrap();
-            return Self::find_device_by_name(device_name);
-        }
-
         // Use microphone_priority list: return the first available device
         if !settings.microphone_priority.is_empty() {
             match list_input_devices() {
@@ -352,27 +251,10 @@ impl AudioRecordingManager {
         *did_mute_guard = false;
 
         let settings = get_settings(&self.app_handle);
-        let use_vad = settings.stt_provider_id == "local";
-
         let mut recorder_opt = self.recorder.lock().unwrap();
-        let mut last_vad = self.last_vad_enabled.lock().unwrap();
 
-        // Only recreate when the VAD requirement changed (or first call).
-        if recorder_opt.is_none() || *last_vad != Some(use_vad) {
-            let vad_path = self
-                .app_handle
-                .path()
-                .resolve(
-                    "resources/models/silero_vad_v4.onnx",
-                    tauri::path::BaseDirectory::Resource,
-                )
-                .map_err(|e| anyhow::anyhow!("Failed to resolve VAD path: {}", e))?;
-            *recorder_opt = Some(create_audio_recorder(
-                vad_path.to_str().unwrap(),
-                &self.app_handle,
-                use_vad,
-            )?);
-            *last_vad = Some(use_vad);
+        if recorder_opt.is_none() {
+            *recorder_opt = Some(create_audio_recorder(&self.app_handle)?);
         }
 
         let selected_device = self.get_effective_microphone_device(&settings);
@@ -520,9 +402,9 @@ impl AudioRecordingManager {
 
                 // Pad if very short
                 let s_len = samples.len();
-                if s_len < WHISPER_SAMPLE_RATE && s_len > 0 {
+                if s_len < STT_SAMPLE_RATE && s_len > 0 {
                     let mut padded = samples;
-                    padded.resize(WHISPER_SAMPLE_RATE * 5 / 4, 0.0);
+                    padded.resize(STT_SAMPLE_RATE * 5 / 4, 0.0);
                     Some(padded)
                 } else {
                     Some(samples)

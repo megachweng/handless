@@ -92,7 +92,7 @@ fn resolve_models_dev_id(provider_id: &str, model_id: &str) -> Option<String> {
         return None;
     }
     match provider_id {
-        "custom" | "apple_intelligence" => None,
+        "custom" => None,
         "gemini" => Some(format!("google/{model_id}")),
         // OpenRouter models already use "vendor/model" format
         "openrouter" => Some(model_id.to_string()),

@@ -1,1 +1,1 @@
-pub const WHISPER_SAMPLE_RATE: u32 = 16000;
+pub const STT_SAMPLE_RATE: u32 = 16000;

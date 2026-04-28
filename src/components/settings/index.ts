@@ -10,7 +10,6 @@ export { DictionarySettings } from "./dictionary/DictionarySettings";
 
 // Individual setting components
 export { MicrophoneSelector } from "./MicrophoneSelector";
-export { ClamshellMicrophoneSelector } from "./ClamshellMicrophoneSelector";
 export { OutputDeviceSelector } from "./OutputDeviceSelector";
 export { AlwaysOnMicrophone } from "./AlwaysOnMicrophone";
 export { ActivationModeSelector } from "./ActivationModeSelector";
@@ -22,7 +21,6 @@ export { TranslateToEnglish } from "./TranslateToEnglish";
 export { PostProcessingSettingsApi } from "./PostProcessingSettingsApi";
 export { PostProcessingSettingsPrompts } from "./PostProcessingSettingsPrompts";
 export { AppDataDirectory } from "./AppDataDirectory";
-export { ModelUnloadTimeoutSetting } from "./ModelUnloadTimeout";
 export { StartHidden } from "./StartHidden";
 
 export { RecordingRetentionPeriodSelector } from "./RecordingRetentionPeriod";

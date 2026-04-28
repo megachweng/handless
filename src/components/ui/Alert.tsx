@@ -38,7 +38,8 @@ const variantIcons: Record<string, React.ElementType> = {
 };
 
 interface AlertProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof alertVariants> {
   contained?: boolean;
 }

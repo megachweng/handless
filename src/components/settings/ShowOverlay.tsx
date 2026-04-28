@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { platform } from "@tauri-apps/plugin-os";
 import { SettingContainer } from "../ui/SettingContainer";
 import { ToggleSwitch } from "../ui/ToggleSwitch";
 import { useSettings } from "../../hooks/useSettings";
@@ -18,20 +17,13 @@ export const ShowOverlay: React.FC<ShowOverlayProps> = React.memo(
     const { getSetting, updateSetting, isUpdating } = useSettings();
 
     const overlayOptions = useMemo(() => {
-      const opts = [
+      return [
         {
           value: "bottom",
           label: t("settings.advanced.overlay.options.bottom"),
         },
         { value: "top", label: t("settings.advanced.overlay.options.top") },
       ];
-      if (platform() === "macos") {
-        opts.push({
-          value: "notch",
-          label: t("settings.advanced.overlay.options.notch"),
-        });
-      }
-      return opts;
     }, [t]);
 
     const selectedPosition = (getSetting("overlay_position") ||

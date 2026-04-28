@@ -1,6 +1,6 @@
 use std::{
     io::Error,
-    sync::{mpsc, Arc, Mutex},
+    sync::{mpsc, Arc},
     time::Duration,
 };
 
@@ -12,8 +12,6 @@ use cpal::{
 use crate::audio_toolkit::{
     audio::{AudioVisualiser, FrameResampler},
     constants,
-    vad::{self, VadFrame},
-    VoiceActivityDetector,
 };
 
 enum Cmd {
@@ -26,7 +24,6 @@ pub struct AudioRecorder {
     device: Option<Device>,
     cmd_tx: Option<mpsc::Sender<Cmd>>,
     worker_handle: Option<std::thread::JoinHandle<()>>,
-    vad: Option<Arc<Mutex<Box<dyn vad::VoiceActivityDetector>>>>,
     level_cb: Option<Arc<dyn Fn(Vec<f32>) + Send + Sync + 'static>>,
 }
 
@@ -36,14 +33,8 @@ impl AudioRecorder {
             device: None,
             cmd_tx: None,
             worker_handle: None,
-            vad: None,
             level_cb: None,
         })
-    }
-
-    pub fn with_vad(mut self, vad: Box<dyn VoiceActivityDetector>) -> Self {
-        self.vad = Some(Arc::new(Mutex::new(vad)));
-        self
     }
 
     pub fn with_level_callback<F>(mut self, cb: F) -> Self
@@ -71,7 +62,6 @@ impl AudioRecorder {
         };
 
         let thread_device = device.clone();
-        let vad = self.vad.clone();
         // Move the optional level callback into the worker thread
         let level_cb = self.level_cb.clone();
 
@@ -117,7 +107,7 @@ impl AudioRecorder {
             stream.play().expect("failed to start stream");
 
             // keep the stream alive while we process samples
-            run_consumer(sample_rate, vad, sample_rx, cmd_rx, level_cb);
+            run_consumer(sample_rate, sample_rx, cmd_rx, level_cb);
             // stream is dropped here, after run_consumer returns
         });
 
@@ -218,8 +208,8 @@ impl AudioRecorder {
 
         // Try to find a config that supports 16kHz, prioritizing better formats
         for config_range in supported_configs {
-            if config_range.min_sample_rate().0 <= constants::WHISPER_SAMPLE_RATE
-                && config_range.max_sample_rate().0 >= constants::WHISPER_SAMPLE_RATE
+            if config_range.min_sample_rate().0 <= constants::STT_SAMPLE_RATE
+                && config_range.max_sample_rate().0 >= constants::STT_SAMPLE_RATE
             {
                 match best_config {
                     None => best_config = Some(config_range),
@@ -241,7 +231,7 @@ impl AudioRecorder {
         }
 
         if let Some(config) = best_config {
-            return Ok(config.with_sample_rate(cpal::SampleRate(constants::WHISPER_SAMPLE_RATE)));
+            return Ok(config.with_sample_rate(cpal::SampleRate(constants::STT_SAMPLE_RATE)));
         }
 
         // If no config supports 16kHz, fall back to default
@@ -251,14 +241,13 @@ impl AudioRecorder {
 
 fn run_consumer(
     in_sample_rate: u32,
-    vad: Option<Arc<Mutex<Box<dyn vad::VoiceActivityDetector>>>>,
     sample_rx: mpsc::Receiver<Vec<f32>>,
     cmd_rx: mpsc::Receiver<Cmd>,
     level_cb: Option<Arc<dyn Fn(Vec<f32>) + Send + Sync + 'static>>,
 ) {
     let mut frame_resampler = FrameResampler::new(
         in_sample_rate as usize,
-        constants::WHISPER_SAMPLE_RATE as usize,
+        constants::STT_SAMPLE_RATE as usize,
         Duration::from_millis(30),
     );
 
@@ -280,7 +269,6 @@ fn run_consumer(
     fn handle_frame(
         samples: &[f32],
         recording: bool,
-        vad: &Option<Arc<Mutex<Box<dyn vad::VoiceActivityDetector>>>>,
         out_buf: &mut Vec<f32>,
         stream_tap: &Option<tokio::sync::mpsc::Sender<Vec<f32>>>,
     ) {
@@ -288,22 +276,9 @@ fn run_consumer(
             return;
         }
 
-        if let Some(vad_arc) = vad {
-            let mut det = vad_arc.lock().unwrap();
-            match det.push_frame(samples).unwrap_or(VadFrame::Speech(samples)) {
-                VadFrame::Speech(buf) => {
-                    out_buf.extend_from_slice(buf);
-                    if let Some(tap) = stream_tap {
-                        let _ = tap.try_send(buf.to_vec());
-                    }
-                }
-                VadFrame::Noise => {}
-            }
-        } else {
-            out_buf.extend_from_slice(samples);
-            if let Some(tap) = stream_tap {
-                let _ = tap.try_send(samples.to_vec());
-            }
+        out_buf.extend_from_slice(samples);
+        if let Some(tap) = stream_tap {
+            let _ = tap.try_send(samples.to_vec());
         }
     }
 
@@ -317,7 +292,7 @@ fn run_consumer(
 
         // ---------- existing pipeline ------------------------------------ //
         frame_resampler.push(&raw, &mut |frame: &[f32]| {
-            handle_frame(frame, recording, &vad, &mut processed_samples, &stream_tap)
+            handle_frame(frame, recording, &mut processed_samples, &stream_tap)
         });
 
         // non-blocking check for a command
@@ -328,9 +303,6 @@ fn run_consumer(
                     stream_tap = tap_tx;
                     recording = true;
                     visualizer.reset();
-                    if let Some(v) = &vad {
-                        v.lock().unwrap().reset();
-                    }
                 }
                 Cmd::Stop(reply_tx) => {
                     recording = false;
@@ -338,12 +310,12 @@ fn run_consumer(
                     // Drain any audio chunks that were captured but not yet consumed
                     while let Ok(remaining) = sample_rx.try_recv() {
                         frame_resampler.push(&remaining, &mut |frame: &[f32]| {
-                            handle_frame(frame, true, &vad, &mut processed_samples, &stream_tap)
+                            handle_frame(frame, true, &mut processed_samples, &stream_tap)
                         });
                     }
 
                     frame_resampler.finish(&mut |frame: &[f32]| {
-                        handle_frame(frame, true, &vad, &mut processed_samples, &stream_tap)
+                        handle_frame(frame, true, &mut processed_samples, &stream_tap)
                     });
 
                     // Drop the stream tap so the receiver side knows audio is done

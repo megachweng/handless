@@ -1,6 +1,4 @@
 pub(crate) mod actions;
-#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-mod apple_intelligence;
 mod audio_feedback;
 pub mod audio_toolkit;
 pub mod cli;
@@ -8,13 +6,9 @@ mod clipboard;
 pub mod cloud_stt;
 mod commands;
 mod device_watcher;
-mod helpers;
 mod input;
 mod managers;
-#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-pub(crate) mod notch;
 mod overlay;
-mod permission_assistant;
 pub mod post_process;
 mod settings;
 mod shortcut;
@@ -33,7 +27,6 @@ use tauri_specta::{collect_commands, Builder};
 use env_filter::Builder as EnvFilterBuilder;
 use managers::audio::AudioRecordingManager;
 use managers::history::HistoryManager;
-use managers::model::ModelManager;
 use managers::transcription::TranscriptionManager;
 #[cfg(unix)]
 use signal_hook::consts::{SIGUSR1, SIGUSR2};
@@ -45,11 +38,11 @@ use tauri::image::Image;
 pub use transcription_coordinator::TranscriptionCoordinator;
 
 use tauri::tray::TrayIconBuilder;
-use tauri::{AppHandle, Emitter, Listener, Manager};
-use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
+use tauri::{AppHandle, Emitter, Manager};
+use tauri_plugin_autostart::{MacosLauncher as StartupLauncher, ManagerExt};
 use tauri_plugin_log::{Builder as LogBuilder, RotationStrategy, Target, TargetKind};
 
-use crate::settings::{get_settings, ModelUnloadTimeout};
+use crate::settings::get_settings;
 
 // Global atomic to store the file log level filter
 // We use u8 to store the log::LevelFilter as a number
@@ -99,13 +92,6 @@ fn show_main_window(app: &AppHandle) {
         if let Err(e) = main_window.set_focus() {
             log::error!("Failed to focus window: {}", e);
         }
-        // Optional: On macOS, ensure the app becomes active if it was an accessory
-        #[cfg(target_os = "macos")]
-        {
-            if let Err(e) = app.set_activation_policy(tauri::ActivationPolicy::Regular) {
-                log::error!("Failed to set activation policy to Regular: {}", e);
-            }
-        }
     } else {
         log::error!("Main window not found.");
     }
@@ -114,25 +100,20 @@ fn show_main_window(app: &AppHandle) {
 fn initialize_core_logic(app_handle: &AppHandle) {
     // Note: Enigo (keyboard/mouse simulation) is NOT initialized here.
     // The frontend is responsible for calling the `initialize_enigo` command
-    // after onboarding completes. This avoids triggering permission dialogs
-    // on macOS before the user is ready.
+    // after onboarding completes.
 
     // Initialize the managers
     let recording_manager = Arc::new(
         AudioRecordingManager::new(app_handle).expect("Failed to initialize recording manager"),
     );
-    let model_manager =
-        Arc::new(ModelManager::new(app_handle).expect("Failed to initialize model manager"));
     let transcription_manager = Arc::new(
-        TranscriptionManager::new(app_handle, model_manager.clone())
-            .expect("Failed to initialize transcription manager"),
+        TranscriptionManager::new(app_handle).expect("Failed to initialize transcription manager"),
     );
     let history_manager =
         Arc::new(HistoryManager::new(app_handle).expect("Failed to initialize history manager"));
 
     // Add managers to Tauri's managed state
     app_handle.manage(recording_manager.clone());
-    app_handle.manage(model_manager.clone());
     app_handle.manage(transcription_manager.clone());
     app_handle.manage(history_manager.clone());
 
@@ -145,21 +126,12 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     // Abort handle for the transcription pipeline task
     app_handle.manage(actions::PipelineAbortHandle::default());
 
-    // Preload the transcription model in the background so it's ready
-    // for the first transcription without the 2-5s cold-start delay.
-    {
-        let settings = get_settings(app_handle);
-        if settings.model_unload_timeout != ModelUnloadTimeout::Immediately {
-            transcription_manager.initiate_model_load();
-        }
-    }
-
     // Subscribe to OS audio device change notifications
     device_watcher::start(app_handle);
 
     // Note: Shortcuts are NOT initialized here.
     // The frontend is responsible for calling the `initialize_shortcuts` command
-    // after permissions are confirmed (on macOS) or after onboarding completes.
+    // after onboarding completes.
     // This matches the pattern used for Enigo initialization.
 
     #[cfg(unix)]
@@ -168,15 +140,6 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     #[cfg(unix)]
     signal_handle::setup_signal_handler(app_handle.clone(), signals);
 
-    // Apply macOS Accessory policy if starting hidden and tray is available.
-    // If the tray icon is disabled, keep the dock icon so the user can reopen.
-    #[cfg(target_os = "macos")]
-    {
-        let settings = settings::get_settings(app_handle);
-        if settings.start_hidden && settings.show_tray_icon {
-            let _ = app_handle.set_activation_policy(tauri::ActivationPolicy::Accessory);
-        }
-    }
     // Get the current theme to set the appropriate initial icon
     let initial_theme = tray::get_current_theme(app_handle);
 
@@ -209,17 +172,6 @@ fn initialize_core_logic(app_handle: &AppHandle) {
             "copy_last_transcript" => {
                 tray::copy_last_transcript(app);
             }
-            "unload_model" => {
-                let transcription_manager = app.state::<Arc<TranscriptionManager>>();
-                if !transcription_manager.is_model_loaded() {
-                    log::warn!("No model is currently loaded.");
-                    return;
-                }
-                match transcription_manager.unload_model() {
-                    Ok(()) => log::info!("Model unloaded via tray."),
-                    Err(e) => log::error!("Failed to unload model via tray: {}", e),
-                }
-            }
             "cancel" => {
                 use crate::utils::cancel_current_operation;
 
@@ -244,12 +196,6 @@ fn initialize_core_logic(app_handle: &AppHandle) {
         tray::set_tray_visibility(app_handle, false);
     }
 
-    // Refresh tray menu when model state changes
-    let app_handle_for_listener = app_handle.clone();
-    app_handle.listen("model-state-changed", move |_| {
-        tray::update_tray_menu(&app_handle_for_listener, &tray::TrayIconState::Idle, None);
-    });
-
     // Get the autostart manager and configure based on user setting
     let autostart_manager = app_handle.autolaunch();
     let settings = settings::get_settings(app_handle);
@@ -264,10 +210,6 @@ fn initialize_core_logic(app_handle: &AppHandle) {
 
     // Create the recording overlay window (hidden by default)
     utils::create_recording_overlay(app_handle);
-
-    // Initialize the native notch indicator panel (macOS Apple Silicon only)
-    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-    notch::init();
 }
 
 #[tauri::command]
@@ -355,20 +297,8 @@ pub fn run(cli_args: CliArgs) {
         commands::open_app_data_dir,
         commands::open_settings_file,
         commands::reload_settings,
-        commands::check_apple_intelligence_available,
-        commands::is_homebrew_install,
         commands::initialize_enigo,
         commands::initialize_shortcuts,
-        commands::present_permission_assistant,
-        commands::dismiss_permission_assistant,
-        commands::models::get_available_models,
-        commands::models::get_model_info,
-        commands::models::download_model,
-        commands::models::delete_model,
-        commands::models::cancel_download,
-        commands::models::set_active_model,
-        commands::models::get_current_model,
-        commands::models::get_transcription_model_status,
         commands::models::get_all_stt_providers,
         commands::models::test_stt_api_key,
         commands::models::change_stt_cloud_options_setting,
@@ -385,13 +315,8 @@ pub fn run(cli_args: CliArgs) {
         commands::audio::get_selected_output_device,
         commands::audio::play_test_sound,
         commands::audio::check_custom_sounds,
-        commands::audio::set_clamshell_microphone,
-        commands::audio::get_clamshell_microphone,
         commands::audio::get_effective_microphone_name,
         commands::audio::is_recording,
-        commands::transcription::set_model_unload_timeout,
-        commands::transcription::get_model_load_status,
-        commands::transcription::unload_model_manually,
         commands::history::get_history_entries,
         commands::history::get_history_entries_page,
         commands::history::toggle_history_entry_saved,
@@ -405,7 +330,6 @@ pub fn run(cli_args: CliArgs) {
         commands::data_transfer::export_app_data,
         commands::data_transfer::validate_import_file,
         commands::data_transfer::import_app_data,
-        helpers::clamshell::is_laptop,
     ]);
 
     #[cfg(debug_assertions)] // <- Only export on non-release builds
@@ -416,7 +340,7 @@ pub fn run(cli_args: CliArgs) {
         )
         .expect("Failed to export typescript bindings");
 
-    let mut builder = tauri::Builder::default()
+    let builder = tauri::Builder::default()
         .device_event_filter(tauri::DeviceEventFilter::Always)
         .plugin(tauri_plugin_dialog::init())
         .plugin(
@@ -443,11 +367,6 @@ pub fn run(cli_args: CliArgs) {
                 .build(),
         );
 
-    #[cfg(target_os = "macos")]
-    {
-        builder = builder.plugin(tauri_nspanel::init());
-    }
-
     builder
         .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
             if args.iter().any(|a| a == "--toggle-transcription") {
@@ -465,34 +384,28 @@ pub fn run(cli_args: CliArgs) {
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_clipboard_manager::init())
-        .plugin(tauri_plugin_macos_permissions::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_autostart::init(
-            MacosLauncher::LaunchAgent,
+            StartupLauncher::LaunchAgent,
             Some(vec![]),
         ))
         .manage(cli_args.clone())
         .setup(move |app| {
             // Build the main window during setup so startup window creation follows
-            // the same lifecycle as Handy and does not flash the dock icon on macOS.
-            let mut builder =
+            // the same lifecycle as Handy.
+            let builder =
                 tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
                     .title("Handless")
                     .inner_size(900.0, 587.0)
                     .min_inner_size(900.0, 587.0)
                     .resizable(true)
                     .maximizable(false)
-                    .visible(false)
-                    .transparent(true);
+                    .visible(false);
 
-            #[cfg(target_os = "macos")]
-            {
-                builder = builder
-                    .title_bar_style(tauri::TitleBarStyle::Overlay)
-                    .hidden_title(true);
-            }
+            #[cfg(target_os = "windows")]
+            let builder = builder.transparent(true);
 
             builder.build()?;
 
@@ -514,27 +427,12 @@ pub fn run(cli_args: CliArgs) {
             initialize_core_logic(&app_handle);
 
             // Apply native vibrancy/blur effect to main window
+            #[cfg(target_os = "windows")]
             if let Some(main_window) = app_handle.get_webview_window("main") {
-                #[cfg(target_os = "macos")]
-                {
-                    use window_vibrancy::{
-                        apply_vibrancy, NSVisualEffectMaterial, NSVisualEffectState,
-                    };
-                    let _ = apply_vibrancy(
-                        &main_window,
-                        NSVisualEffectMaterial::HudWindow,
-                        Some(NSVisualEffectState::Active),
-                        None,
-                    );
-                }
-
-                #[cfg(target_os = "windows")]
-                {
-                    use window_vibrancy::{apply_acrylic, apply_mica};
-                    // Try Mica (Win11) first, fall back to Acrylic (Win10)
-                    if apply_mica(&main_window, Some(true)).is_err() {
-                        let _ = apply_acrylic(&main_window, Some((5, 5, 5, 180)));
-                    }
+                use window_vibrancy::{apply_acrylic, apply_mica};
+                // Try Mica (Win11) first, fall back to Acrylic (Win10)
+                if apply_mica(&main_window, Some(true)).is_err() {
+                    let _ = apply_acrylic(&main_window, Some((5, 5, 5, 180)));
                 }
             }
 
@@ -563,24 +461,6 @@ pub fn run(cli_args: CliArgs) {
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 api.prevent_close();
                 let _res = window.hide();
-
-                let settings = get_settings(window.app_handle());
-                let tray_visible =
-                    settings.show_tray_icon && !window.app_handle().state::<CliArgs>().no_tray;
-
-                #[cfg(target_os = "macos")]
-                {
-                    if tray_visible {
-                        // Tray is available: hide the dock icon, app lives in the tray
-                        let res = window
-                            .app_handle()
-                            .set_activation_policy(tauri::ActivationPolicy::Accessory);
-                        if let Err(e) = res {
-                            log::error!("Failed to set activation policy: {}", e);
-                        }
-                    }
-                    // No tray: keep the dock icon visible so the user can reopen
-                }
             }
             tauri::WindowEvent::ThemeChanged(theme) => {
                 log::info!("Theme changed to: {:?}", theme);
@@ -592,11 +472,5 @@ pub fn run(cli_args: CliArgs) {
         .invoke_handler(specta_builder.invoke_handler())
         .build(tauri::generate_context!())
         .expect("error while building tauri application")
-        .run(|app, event| {
-            #[cfg(target_os = "macos")]
-            if let tauri::RunEvent::Reopen { .. } = &event {
-                show_main_window(app);
-            }
-            let _ = (app, event); // suppress unused warnings on non-macOS
-        });
+        .run(|_, _| {});
 }

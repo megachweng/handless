@@ -4,7 +4,6 @@ import { Dropdown } from "../ui/Dropdown";
 import { SettingContainer } from "../ui/SettingContainer";
 import { Input } from "../ui/Input";
 import { useSettings } from "../../hooks/useSettings";
-import { useOsType } from "../../hooks/useOsType";
 import type { PasteMethod } from "@/bindings";
 
 interface PasteMethodProps {
@@ -16,16 +15,13 @@ export const PasteMethodSetting: React.FC<PasteMethodProps> = React.memo(
   ({ descriptionMode = "tooltip", grouped = false }) => {
     const { t } = useTranslation();
     const { getSetting, updateSetting, isUpdating } = useSettings();
-    const osType = useOsType();
 
-    const getPasteMethodOptions = (osType: string) => {
-      const mod = osType === "macos" ? "Cmd" : "Ctrl";
-
+    const getPasteMethodOptions = () => {
       const options = [
         {
           value: "ctrl_v",
           label: t("settings.advanced.pasteMethod.options.clipboard", {
-            modifier: mod,
+            modifier: "Ctrl",
           }),
         },
         {
@@ -38,31 +34,18 @@ export const PasteMethodSetting: React.FC<PasteMethodProps> = React.memo(
         },
       ];
 
-      // Add Shift+Insert and Ctrl+Shift+V options for Windows and Linux only
-      if (osType === "windows" || osType === "linux") {
-        options.push(
-          {
-            value: "ctrl_shift_v",
-            label: t(
-              "settings.advanced.pasteMethod.options.clipboardCtrlShiftV",
-            ),
-          },
-          {
-            value: "shift_insert",
-            label: t(
-              "settings.advanced.pasteMethod.options.clipboardShiftInsert",
-            ),
-          },
-        );
-      }
-
-      // External script is only available on Linux
-      if (osType === "linux") {
-        options.push({
-          value: "external_script",
-          label: t("settings.advanced.pasteMethod.options.externalScript"),
-        });
-      }
+      options.push(
+        {
+          value: "ctrl_shift_v",
+          label: t("settings.advanced.pasteMethod.options.clipboardCtrlShiftV"),
+        },
+        {
+          value: "shift_insert",
+          label: t(
+            "settings.advanced.pasteMethod.options.clipboardShiftInsert",
+          ),
+        },
+      );
 
       return options;
     };
@@ -71,7 +54,7 @@ export const PasteMethodSetting: React.FC<PasteMethodProps> = React.memo(
       "ctrl_v") as PasteMethod;
     const externalScriptPath = getSetting("external_script_path") || "";
 
-    const pasteMethodOptions = getPasteMethodOptions(osType);
+    const pasteMethodOptions = getPasteMethodOptions();
 
     return (
       <SettingContainer

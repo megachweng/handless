@@ -13,12 +13,7 @@ export function useModelPricing(
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (
-      !providerId ||
-      !modelId ||
-      providerId === "custom" ||
-      providerId === "apple_intelligence"
-    ) {
+    if (!providerId || !modelId || providerId === "custom") {
       setAutoPricing(null);
       setIsLoading(false);
       return;

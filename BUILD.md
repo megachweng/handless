@@ -5,9 +5,10 @@ This guide covers how to set up the development environment and build Handless f
 ## Prerequisites
 
 - [Rust](https://rustup.rs/) (latest stable)
-- [Bun](https://bun.sh/) package manager
+- [Node.js](https://nodejs.org/) 20.19 or newer
+- [pnpm](https://pnpm.io/) 10.33.2
 - [Tauri Prerequisites](https://tauri.app/start/prerequisites/)
-- Xcode Command Line Tools: `xcode-select --install`
+- Windows build tools for Tauri
 
 ## Setup Instructions
 
@@ -21,11 +22,11 @@ cd handless
 ### 2. Install Dependencies
 
 ```bash
-bun install
+pnpm install
 ```
 
 ### 3. Start Dev Server
 
 ```bash
-bun tauri dev
+pnpm tauri dev
 ```

@@ -5,10 +5,8 @@ import { useAppVersion } from "@/hooks/useAppVersion";
 import { AutostartToggle } from "../AutostartToggle";
 import { StartHidden } from "../StartHidden";
 import { ShowTrayIcon } from "../ShowTrayIcon";
-import { ModelUnloadTimeoutSetting } from "../ModelUnloadTimeout";
 import { ClipboardHandlingSetting } from "../ClipboardHandling";
 import { AppendTrailingSpace } from "../AppendTrailingSpace";
-import { TypingToolSetting } from "../TypingTool";
 import { MuteWhileRecording } from "../MuteWhileRecording";
 import { ThemeSelector } from "../ThemeSelector";
 import { PasteMethodSetting } from "../PasteMethod";
@@ -37,7 +35,6 @@ export const AdvancedSettings: React.FC = () => {
         <StartHidden descriptionMode="tooltip" grouped={true} />
         <AutostartToggle descriptionMode="tooltip" grouped={true} />
         <ShowTrayIcon descriptionMode="tooltip" grouped={true} />
-        <ModelUnloadTimeoutSetting descriptionMode="tooltip" grouped={true} />
         <MuteWhileRecording descriptionMode="tooltip" grouped={true} />
       </SettingsGroup>
 
@@ -46,7 +43,6 @@ export const AdvancedSettings: React.FC = () => {
         <AutoSubmit descriptionMode="tooltip" grouped={true} />
         <ClipboardHandlingSetting descriptionMode="tooltip" grouped={true} />
         <AppendTrailingSpace descriptionMode="tooltip" grouped={true} />
-        <TypingToolSetting descriptionMode="tooltip" grouped={true} />
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.advanced.groups.configuration")}>

@@ -4,7 +4,6 @@
     "settings": "Einstellungen...",
     "checkUpdates": "Nach Updates suchen...",
     "copyLastTranscript": "Letzte Transkription kopieren",
-    "unloadModel": "Modell entladen",
     "quit": "Beenden",
     "cancel": "Abbrechen"
   },
@@ -19,142 +18,10 @@
     "debug": "Debug"
   },
   "onboarding": {
-    "subtitle": "Wähle ein Transkriptionsmodell, um loszulegen",
-    "recommended": "Empfohlen",
-    "download": "Herunterladen",
-    "downloading": "Wird heruntergeladen...",
-    "customModelDescription": "Nicht offiziell unterstützt",
-    "downloadFailed": "Download fehlgeschlagen. Bitte erneut versuchen.",
-    "modelCard": {
-      "accuracy": "Genauigkeit",
-      "speed": "Geschwindigkeit"
-    },
-    "models": {
-      "small": {
-        "name": "Whisper Small",
-        "description": "Schnell und recht genau."
-      },
-      "medium": {
-        "name": "Whisper Medium",
-        "description": "Gute Genauigkeit, mittlere Geschwindigkeit"
-      },
-      "turbo": {
-        "name": "Whisper Turbo",
-        "description": "Ausgewogene Genauigkeit und Geschwindigkeit."
-      },
-      "large": {
-        "name": "Whisper Large",
-        "description": "Gute Genauigkeit, aber langsam."
-      },
-      "parakeet-tdt-0.6b-v2": {
-        "name": "Parakeet V2",
-        "description": "Nur Englisch. Das beste Modell für englischsprachige Nutzer."
-      },
-      "parakeet-tdt-0.6b-v3": {
-        "name": "Parakeet V3",
-        "description": "Schnell und genau. Unterstützt 25 europäische Sprachen."
-      },
-      "moonshine-base": {
-        "name": "Moonshine Base",
-        "description": "Sehr schnell, nur Englisch. Verarbeitet Akzente gut."
-      },
-      "moonshine-tiny-streaming-en": {
-        "name": "Moonshine V2 Tiny",
-        "description": "Ultraschnell, nur Englisch"
-      },
-      "moonshine-small-streaming-en": {
-        "name": "Moonshine V2 Small",
-        "description": "Schnell, nur Englisch. Gute Balance zwischen Geschwindigkeit und Genauigkeit."
-      },
-      "moonshine-medium-streaming-en": {
-        "name": "Moonshine V2 Medium",
-        "description": "Nur Englisch. Hohe Qualität."
-      },
-      "breeze-asr": {
-        "name": "Breeze ASR",
-        "description": "Optimiert für taiwanesisches Mandarin. Unterstützung für Code-Switching."
-      },
-      "sense-voice-int8": {
-        "name": "SenseVoice",
-        "description": "Sehr schnell. Chinesisch, Englisch, Japanisch, Koreanisch, Kantonesisch."
-      },
-      "gigaam-v3-e2e-ctc": {
-        "name": "GigaAM v3",
-        "description": "Russian speech recognition. Fast and accurate."
-      },
-      "canary-180m-flash": {
-        "name": "Canary 180M Flash",
-        "description": "Very fast. English, German, Spanish, French. Supports translation."
-      },
-      "canary-1b-v2": {
-        "name": "Canary 1B v2",
-        "description": "Accurate multilingual. 25 European languages. Supports translation."
-      },
-      "cohere-int8": {
-        "name": "Cohere",
-        "description": "A large, slower, but very accurate multilingual model."
-      }
-    },
-    "errors": {
-      "loadModels": "Verfügbare Modelle konnten nicht geladen werden",
-      "downloadModel": "Modell konnte nicht heruntergeladen werden: {{error}}"
-    },
-    "permissions": {
-      "title": "Berechtigungen erforderlich",
-      "description": "Handless benötigt einige Berechtigungen, um richtig zu funktionieren.",
-      "microphone": {
-        "title": "Mikrofonzugriff",
-        "description": "Erforderlich, um Ihre Stimme für die Transkription zu hören."
-      },
-      "accessibility": {
-        "title": "Bedienungshilfen-Zugriff",
-        "description": "Erforderlich, um transkribierten Text in Ihre Anwendungen einzugeben."
-      },
-      "grant": "Berechtigung erteilen",
-      "granted": "Erteilt",
-      "waiting": "Warten...",
-      "allGranted": "Alles bereit!",
-      "errors": {
-        "checkFailed": "Berechtigungsprüfung fehlgeschlagen. Bitte erneut versuchen.",
-        "requestFailed": "Berechtigungsanfrage fehlgeschlagen. Bitte erneut versuchen."
-      }
-    },
     "cloud": {
-      "openai_stt": {
-        "name": "OpenAI",
-        "description": "OpenAIs Cloud-Sprache-zu-Text-API. Schnell und genau mit Unterstützung für über 57 Sprachen."
-      },
-      "elevenlabs": {
-        "name": "ElevenLabs",
-        "description": "ElevenLabs Scribe Sprache-zu-Text. Hohe Genauigkeit mit Unterstützung für 90+ Sprachen."
-      },
-      "groq": {
-        "name": "Groq",
-        "description": "Groqs ultraschnelle Whisper-Transkription. Blitzschnelle Verarbeitung mit Unterstützung für 99+ Sprachen."
-      },
       "soniox": {
         "name": "Soniox",
         "description": "Soniox Cloud-Sprache-zu-Text. Hohe Genauigkeit mit Echtzeit-Transkription."
-      },
-      "deepgram": {
-        "name": "Deepgram",
-        "description": "Deepgrams Nova Sprache-zu-Text-API. Schnell und genau mit Unterstützung für 50+ Sprachen."
-      },
-      "assemblyai": {
-        "name": "AssemblyAI",
-        "description": "AssemblyAI Sprache-zu-Text. Unternehmensqualität mit Sprechererkennung und 40+ Sprachen."
-      },
-      "cartesia": {
-        "name": "Cartesia",
-        "description": "Cartesias Ink Sprache-zu-Text-API. Echtzeit-Streaming-Transkription mit Unterstützung für 99+ Sprachen."
-      },
-      "mistral": {
-        "name": "Mistral AI",
-        "description": "Mistral AIs Voxtral Sprache-zu-Text. Hohe Genauigkeit mit Kontextausrichtungsunterstützung."
-      },
-      "fireworks": {
-        "name": "Fireworks AI",
-        "description": "Fireworks AI Sprache-zu-Text. Ultraschnelle Whisper-Transkription mit Unterstützung für 95+ Sprachen."
       },
       "doubao": {
         "name": "Doubao",
@@ -163,23 +30,8 @@
     }
   },
   "modelSelector": {
-    "custom": "Benutzerdefiniert",
     "active": "Aktiv",
-    "switching": "Wechseln...",
     "noModelsAvailable": "Keine Modelle verfügbar",
-    "extracting": "Entpacke {{modelName}}...",
-    "extractingMultiple": "Entpacke {{count}} Modelle...",
-    "extractingGeneric": "Wird entpackt...",
-    "downloading": "Herunterladen {{percentage}}%",
-    "downloadingMultiple": "Lade {{count}} Modelle herunter...",
-    "modelReady": "Modell bereit",
-    "loading": "Lade {{modelName}}...",
-    "loadingGeneric": "Wird geladen...",
-    "modelError": "Modellfehler",
-    "modelUnloaded": "Modell entladen",
-    "noModelDownloadRequired": "Kein Modell - Download erforderlich",
-    "deleteModel": "{{modelName}} löschen",
-    "downloadSpeed": "{{speed}} MB/s",
     "capabilities": {
       "languageSelection": "Unterstützt mehrere Eingabesprachen",
       "multiLanguage": "Mehrsprachig",
@@ -190,9 +42,8 @@
       "singleLanguage": "Unterstützt nur diese Sprache",
       "languageOnly": "Nur {{language}}"
     },
-    "cancel": "Abbrechen",
-    "cancelDownload": "Download abbrechen",
-    "notAvailable": "Nicht verfügbar"
+    "notAvailable": "Nicht verfügbar",
+    "switchProviderError": "Failed to switch STT provider: {{error}}"
   },
   "settings": {
     "modelSettings": {
@@ -200,26 +51,8 @@
       "noSettingsNeeded": "Dieses Modell funktioniert automatisch ohne Konfiguration."
     },
     "models": {
-      "title": "Transkriptionsmodelle",
-      "description": "Wähle ein Transkriptionsmodell aus oder lade zusätzliche Modelle herunter. Verschiedene Modelle bieten unterschiedliche Genauigkeits- und Geschwindigkeitsstufen.",
-      "downloaded": "Heruntergeladen",
-      "available": "Zum Download verfügbar",
-      "deleteConfirm": "Bist du sicher, dass du {{modelName}} löschen möchtest? Du musst es erneut herunterladen, um es zu verwenden.",
-      "deleteActiveConfirm": "{{modelName}} ist dein aktives Modell. Das Löschen stoppt Transkriptionen, bis du ein neues Modell auswählst. Bist du sicher?",
-      "deleteTitle": "Modell löschen",
-      "filters": {
-        "all": "Alle",
-        "multiLanguage": "Mehrsprachig",
-        "translation": "Übersetzung",
-        "allLanguages": "Alle Sprachen"
-      },
-      "noModelsMatch": "Keine Modelle entsprechen diesem Filter.",
-      "yourModels": "Heruntergeladene Modelle",
-      "availableModels": "Zum Download verfügbar",
-      "tabs": {
-        "myModels": "Meine Modelle",
-        "library": "Bibliothek"
-      },
+      "title": "Cloud STT Providers",
+      "description": "Configure Soniox and DoubaoASR cloud speech-to-text providers.",
       "cloudProviders": {
         "title": "Cloud-Anbieter",
         "badge": "Cloud",
@@ -249,10 +82,6 @@
           "selectLanguageHint": "Leer lassen für automatische Erkennung",
           "selectLanguages": "Sprachen auswählen...",
           "selectTranslate": "Sprachen auswählen...",
-          "prompt": "Prompt",
-          "promptDescription": "Optionaler Text, um den Stil des Modells zu lenken oder ein vorheriges Segment fortzusetzen. Nicht unterstützt von gpt-4o-transcribe-diarize.",
-          "temperature": "Temperatur",
-          "temperatureDescription": "Höhere Werte erzeugen zufälligere Ergebnisse (0-1). Nur von whisper-1 unterstützt.",
           "languageHints": "Sprachhinweise",
           "languageHintsStrict": "Strikte Sprachhinweise",
           "languageHintsStrictDescription": "Nur in den angegebenen Sprachen transkribieren",
@@ -260,16 +89,12 @@
           "contextTermsDescription": "Kommagetrennte Begriffe zur Verbesserung der Erkennungsgenauigkeit",
           "contextDescription": "Kontextbeschreibung",
           "contextDescriptionDescription": "Freitext mit allgemeinem Kontext zum Audioinhalt",
-          "smartFormat": "Smart-Formatierung",
-          "smartFormatDescription": "Formatierung für verbesserte Lesbarkeit anwenden, einschließlich Satzzeichen, Großschreibung und mehr",
           "punctuate": "Satzzeichen",
           "punctuateDescription": "Satzzeichen und Großschreibung zum Transkript hinzufügen",
           "enableSpeakerDiarization": "Sprechererkennung",
           "enableSpeakerDiarizationDescription": "Verschiedene Sprecher identifizieren und trennen",
           "enableLanguageIdentification": "Spracherkennung",
           "enableLanguageIdentificationDescription": "Sprache für jedes Segment erkennen",
-          "contextBias": "Kontextausrichtung",
-          "contextBiasDescription": "Kommagetrennte Begriffe, um das Modell zur korrekten Schreibweise zu führen",
           "enableItn": "Inverse Text Normalization",
           "enableItnDescription": "Convert spoken numbers, dates, and units to written form",
           "enableDdc": "Disfluency Removal",
@@ -285,12 +110,6 @@
           "verifyFirst": "Verify your Access Token first",
           "openSpeechConsole": "Open speech console"
         }
-      },
-      "localModels": {
-        "title": "Lokale Modelle"
-      },
-      "myModels": {
-        "noModelsConfigured": "Keine Modelle konfiguriert. Besuche die Bibliothek, um Modelle herunterzuladen oder Cloud-Anbieter einzurichten."
       }
     },
     "general": {
@@ -395,8 +214,7 @@
         "options": {
           "none": "Keine",
           "bottom": "Unten",
-          "top": "Oben",
-          "notch": "Notch"
+          "top": "Oben"
         }
       },
       "pasteMethod": {
@@ -412,13 +230,6 @@
         },
         "externalScriptPlaceholder": "/pfad/zu/ihrem/skript.sh"
       },
-      "typingTool": {
-        "title": "Eingabetool",
-        "description": "Wählen Sie, welches Linux-Eingabetool für die Direkt-Einfügen-Methode verwendet werden soll. Auto erkennt und verwendet automatisch das beste verfügbare Tool für Ihr System.",
-        "options": {
-          "auto": "Auto (Empfohlen)"
-        }
-      },
       "clipboardHandling": {
         "title": "Zwischenablage-Verhalten",
         "description": "Zwischenablage nicht ändern bewahrt den aktuellen Inhalt nach der Transkription. In Zwischenablage kopieren hinterlässt das Transkriptionsergebnis in der Zwischenablage.",
@@ -429,11 +240,10 @@
       },
       "autoSubmit": {
         "title": "Automatisch absenden",
-        "description": "Sendet nach dem Einfügen von Text automatisch die ausgewählte Tastenkombination. Cmd+Enter gilt für macOS, während Windows/Linux Super+Enter verwenden.",
+        "description": "Automatically send the selected key combination after text insertion.",
         "options": {
           "off": "Aus",
           "enter": "Enter",
-          "cmdEnter": "Cmd+Enter",
           "superEnter": "Super+Enter",
           "ctrlEnter": "Ctrl+Enter"
         }
@@ -442,20 +252,6 @@
         "label": "Ins Englische übersetzen",
         "description": "Sprache aus anderen Sprachen automatisch während der Transkription ins Englische übersetzen.",
         "descriptionUnsupported": "Übersetzung wird vom {{model}}-Modell nicht unterstützt."
-      },
-      "modelUnload": {
-        "title": "Modell entladen",
-        "description": "GPU/CPU-Speicher automatisch freigeben, wenn das Modell für die angegebene Zeit nicht verwendet wurde",
-        "options": {
-          "never": "Nie",
-          "immediately": "Sofort",
-          "min2": "Nach 2 Minuten",
-          "min5": "Nach 5 Minuten",
-          "min10": "Nach 10 Minuten",
-          "min15": "Nach 15 Minuten",
-          "hour1": "Nach 1 Stunde",
-          "sec5": "Nach 5 Sekunden (Debug)"
-        }
       },
       "customWords": {
         "title": "Benutzerdefinierte Wörter",
@@ -520,12 +316,6 @@
           "title": "Anbieter",
           "description": "Wähle einen OpenAI-kompatiblen Anbieter."
         },
-        "appleIntelligence": {
-          "title": "Apple Intelligence",
-          "description": "Läuft vollständig auf dem Gerät. Kein API-Schlüssel oder Netzwerkzugriff erforderlich.",
-          "requirements": "Erfordert einen Apple Silicon Mac mit macOS Tahoe (26.0) oder neuer. Apple Intelligence muss in den Systemeinstellungen aktiviert sein.",
-          "unavailable": "Apple Intelligence ist auf diesem Gerät nicht verfügbar. Erfordert einen Apple Silicon Mac mit macOS Tahoe (26.0) oder neuer und aktiviertem Apple Intelligence in den Systemeinstellungen."
-        },
         "baseUrl": {
           "title": "Basis-URL",
           "description": "API-Basis-URL für den ausgewählten Anbieter. Nur der benutzerdefinierte Anbieter kann bearbeitet werden.",
@@ -538,10 +328,8 @@
         },
         "model": {
           "title": "Modell",
-          "descriptionApple": "Gib ein optionales numerisches Token-Limit an oder behalte die Standard-Gerätevorgabe.",
           "descriptionCustom": "Gib die Modellkennung an, die von deinem benutzerdefinierten Endpunkt erwartet wird.",
           "descriptionDefault": "Wähle ein Modell des ausgewählten Anbieters.",
-          "placeholderApple": "Apple Intelligence",
           "placeholderWithOptions": "Modell suchen oder auswählen",
           "placeholderNoOptions": "Modellnamen eingeben",
           "refreshModels": "Modelle aktualisieren"
@@ -668,10 +456,6 @@
         "label": "Mikrofon immer aktiv",
         "description": "Mikrofon für schnellere Reaktion aktiv halten"
       },
-      "clamshellMicrophone": {
-        "title": "Clamshell-Mikrofon",
-        "description": "Mikrofon bei geschlossenem Laptop-Deckel"
-      },
       "postProcessingToggle": {
         "label": "Nachbearbeitung",
         "description": "KI-gestützte Textverfeinerung nach der Transkription aktivieren"
@@ -752,19 +536,16 @@
     }
   },
   "footer": {
-    "downloadingModel": "Lade {{model}} herunter...",
     "checkingUpdates": "Suche nach Updates...",
     "updateAvailable": "Update verfügbar: {{version}}",
     "updateAvailableShort": "Update verfügbar",
     "upToDate": "Aktuell",
-    "downloadUpdate": "Update herunterladen",
     "restart": "Neustart",
     "updateCheckingDisabled": "Update-Prüfung deaktiviert",
     "downloading": "Wird heruntergeladen... {{progress}}%",
     "installing": "Wird installiert...",
     "preparing": "Wird vorbereitet...",
-    "checkForUpdates": "Nach Updates suchen",
-    "updateViaBrew": "Update via: brew upgrade --cask handless"
+    "checkForUpdates": "Nach Updates suchen"
   },
   "common": {
     "loading": "Wird geladen...",
@@ -791,9 +572,6 @@
     "search": "Suchen..."
   },
   "accessibility": {
-    "permissionsRequired": "Bedienungshilfen-Berechtigungen erforderlich",
-    "permissionsDescription": "Handless benötigt Bedienungshilfen-Berechtigungen, um transkribierten Text einzugeben.",
-    "openSettings": "Systemeinstellungen öffnen",
     "dismiss": "Schließen"
   },
   "errors": {

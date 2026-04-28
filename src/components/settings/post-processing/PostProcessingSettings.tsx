@@ -210,20 +210,15 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
   useEffect(() => {
     if (userExpanded !== null) return;
     if (!state.selectedProvider) return;
-    const configured = state.isAppleProvider || state.apiKey.trim() !== "";
+    const configured = state.apiKey.trim() !== "";
     setUserExpanded(!configured);
-  }, [
-    userExpanded,
-    state.selectedProvider,
-    state.isAppleProvider,
-    state.apiKey,
-  ]);
+  }, [userExpanded, state.selectedProvider, state.apiKey]);
 
   const expanded = userExpanded ?? true;
   const toggle = () => setUserExpanded(!expanded);
 
   const hasProvider = !!state.selectedProvider?.label;
-  const hasModel = !state.isAppleProvider && !!state.model;
+  const hasModel = !!state.model;
 
   const statsLine = stats
     ? `${stats.model}${stats.tokens_per_second != null ? ` \u2014 ${t("settings.postProcessing.api.tokensPerSecond", { value: stats.tokens_per_second.toFixed(1) })}` : ""}`
@@ -236,8 +231,7 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
         expanded={expanded}
         onToggle={toggle}
         trailing={
-          state.isVerified &&
-          !state.isAppleProvider && (
+          state.isVerified && (
             <Check
               className="w-3.5 h-3.5 text-green-400"
               aria-label={t("settings.postProcessing.api.verified")}
@@ -295,72 +289,62 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
             </div>
           </SettingContainer>
 
-          {state.isAppleProvider ? (
-            state.appleIntelligenceUnavailable ? (
-              <Alert variant="destructive" contained>
-                {t("settings.postProcessing.api.appleIntelligence.unavailable")}
-              </Alert>
-            ) : null
-          ) : (
-            <>
-              {state.selectedProvider?.id === "custom" && (
-                <SettingContainer
-                  title={t("settings.postProcessing.api.baseUrl.title")}
-                  description={t(
-                    "settings.postProcessing.api.baseUrl.description",
-                  )}
-                  descriptionMode="tooltip"
-                  layout="horizontal"
-                  grouped={true}
-                >
-                  <div className="flex items-center gap-2">
-                    <BaseUrlField
-                      value={state.baseUrl}
-                      onBlur={state.handleBaseUrlChange}
-                      placeholder={t(
-                        "settings.postProcessing.api.baseUrl.placeholder",
-                      )}
-                      disabled={state.isBaseUrlUpdating}
-                      className={FIELD_WIDTH}
-                    />
-                    <FieldAlignmentSpacer />
-                  </div>
-                </SettingContainer>
-              )}
-
+          <>
+            {state.selectedProvider?.id === "custom" && (
               <SettingContainer
-                title={t("settings.postProcessing.api.apiKey.title")}
+                title={t("settings.postProcessing.api.baseUrl.title")}
                 description={t(
-                  "settings.postProcessing.api.apiKey.description",
+                  "settings.postProcessing.api.baseUrl.description",
                 )}
                 descriptionMode="tooltip"
                 layout="horizontal"
                 grouped={true}
               >
                 <div className="flex items-center gap-2">
-                  <ApiKeyField
-                    value={state.apiKey}
-                    onBlur={state.handleApiKeyChange}
+                  <BaseUrlField
+                    value={state.baseUrl}
+                    onBlur={state.handleBaseUrlChange}
                     placeholder={t(
-                      "settings.postProcessing.api.apiKey.placeholder",
+                      "settings.postProcessing.api.baseUrl.placeholder",
                     )}
-                    disabled={state.isApiKeyUpdating}
+                    disabled={state.isBaseUrlUpdating}
                     className={FIELD_WIDTH}
                   />
-                  <FieldAlignmentSpacer>
-                    {state.isVerified && (
-                      <Check
-                        className="w-4 h-4 text-green-400"
-                        aria-label={t("settings.postProcessing.api.verified")}
-                      />
-                    )}
-                  </FieldAlignmentSpacer>
+                  <FieldAlignmentSpacer />
                 </div>
               </SettingContainer>
-            </>
-          )}
+            )}
 
-          {state.fetchError && !state.isAppleProvider && (
+            <SettingContainer
+              title={t("settings.postProcessing.api.apiKey.title")}
+              description={t("settings.postProcessing.api.apiKey.description")}
+              descriptionMode="tooltip"
+              layout="horizontal"
+              grouped={true}
+            >
+              <div className="flex items-center gap-2">
+                <ApiKeyField
+                  value={state.apiKey}
+                  onBlur={state.handleApiKeyChange}
+                  placeholder={t(
+                    "settings.postProcessing.api.apiKey.placeholder",
+                  )}
+                  disabled={state.isApiKeyUpdating}
+                  className={FIELD_WIDTH}
+                />
+                <FieldAlignmentSpacer>
+                  {state.isVerified && (
+                    <Check
+                      className="w-4 h-4 text-green-400"
+                      aria-label={t("settings.postProcessing.api.verified")}
+                    />
+                  )}
+                </FieldAlignmentSpacer>
+              </div>
+            </SettingContainer>
+          </>
+
+          {state.fetchError && (
             <Alert
               variant="destructive"
               contained
@@ -380,62 +364,56 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
             </Alert>
           )}
 
-          {!state.isAppleProvider && (
-            <SettingContainer
-              title={t("settings.postProcessing.api.model.title")}
-              description={
-                state.isCustomProvider
-                  ? t("settings.postProcessing.api.model.descriptionCustom")
-                  : t("settings.postProcessing.api.model.descriptionDefault")
-              }
-              descriptionMode="tooltip"
-              layout="horizontal"
-              grouped={true}
-            >
-              <div className="flex items-center gap-2">
-                <ModelSelect
-                  value={state.model}
-                  options={state.modelOptions}
-                  disabled={state.isModelUpdating}
-                  isLoading={state.isFetchingModels}
-                  placeholder={
-                    state.modelOptions.length > 0
-                      ? t(
-                          "settings.postProcessing.api.model.placeholderWithOptions",
-                        )
-                      : t(
-                          "settings.postProcessing.api.model.placeholderNoOptions",
-                        )
-                  }
-                  onSelect={state.handleModelSelect}
-                  onCreateValue={state.handleModelSelect}
-                  className={FIELD_WIDTH}
+          <SettingContainer
+            title={t("settings.postProcessing.api.model.title")}
+            description={
+              state.isCustomProvider
+                ? t("settings.postProcessing.api.model.descriptionCustom")
+                : t("settings.postProcessing.api.model.descriptionDefault")
+            }
+            descriptionMode="tooltip"
+            layout="horizontal"
+            grouped={true}
+          >
+            <div className="flex items-center gap-2">
+              <ModelSelect
+                value={state.model}
+                options={state.modelOptions}
+                disabled={state.isModelUpdating}
+                isLoading={state.isFetchingModels}
+                placeholder={
+                  state.modelOptions.length > 0
+                    ? t(
+                        "settings.postProcessing.api.model.placeholderWithOptions",
+                      )
+                    : t(
+                        "settings.postProcessing.api.model.placeholderNoOptions",
+                      )
+                }
+                onSelect={state.handleModelSelect}
+                onCreateValue={state.handleModelSelect}
+                className={FIELD_WIDTH}
+              />
+              <ResetButton
+                onClick={state.handleRefreshModels}
+                disabled={state.isFetchingModels}
+                ariaLabel={t("settings.postProcessing.api.model.refreshModels")}
+              >
+                <ArrowsClockwise
+                  className={`h-4 w-4 ${state.isFetchingModels ? "animate-spin" : ""}`}
                 />
-                <ResetButton
-                  onClick={state.handleRefreshModels}
-                  disabled={state.isFetchingModels}
-                  ariaLabel={t(
-                    "settings.postProcessing.api.model.refreshModels",
-                  )}
-                >
-                  <ArrowsClockwise
-                    className={`h-4 w-4 ${state.isFetchingModels ? "animate-spin" : ""}`}
-                  />
-                </ResetButton>
-              </div>
-            </SettingContainer>
-          )}
+              </ResetButton>
+            </div>
+          </SettingContainer>
 
-          {!state.isAppleProvider && (
-            <PricingFields
-              inputPrice={state.inputPrice}
-              outputPrice={state.outputPrice}
-              autoInputPrice={state.autoPricing?.input ?? null}
-              autoOutputPrice={state.autoPricing?.output ?? null}
-              onPricingChange={state.handlePricingChange}
-              disabled={state.isPricingUpdating}
-            />
-          )}
+          <PricingFields
+            inputPrice={state.inputPrice}
+            outputPrice={state.outputPrice}
+            autoInputPrice={state.autoPricing?.input ?? null}
+            autoOutputPrice={state.autoPricing?.output ?? null}
+            onPricingChange={state.handlePricingChange}
+            disabled={state.isPricingUpdating}
+          />
 
           {statsLine && (
             <div className="px-3 py-2">

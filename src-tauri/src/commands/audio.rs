@@ -1,6 +1,5 @@
 use crate::audio_feedback;
 use crate::audio_toolkit::audio::{list_input_devices, list_output_devices};
-use crate::helpers::clamshell;
 use crate::managers::audio::{AudioRecordingManager, MicrophoneMode};
 use crate::settings::{get_settings, write_settings};
 use log::warn;
@@ -189,41 +188,12 @@ pub async fn play_test_sound(app: AppHandle, sound_type: String) {
     audio_feedback::play_test_sound(&app, sound);
 }
 
-#[tauri::command]
-#[specta::specta]
-pub fn set_clamshell_microphone(app: AppHandle, device_name: String) -> Result<(), String> {
-    let mut settings = get_settings(&app);
-    settings.clamshell_microphone = if device_name == "default" {
-        None
-    } else {
-        Some(device_name)
-    };
-    write_settings(&app, settings);
-    Ok(())
-}
-
-#[tauri::command]
-#[specta::specta]
-pub fn get_clamshell_microphone(app: AppHandle) -> Result<String, String> {
-    let settings = get_settings(&app);
-    Ok(settings
-        .clamshell_microphone
-        .unwrap_or_else(|| "default".to_string()))
-}
-
 /// Returns the name of the microphone the backend would currently select.
 /// Mirrors the resolution logic in `AudioRecordingManager::get_effective_microphone_device`.
 #[tauri::command]
 #[specta::specta]
 pub fn get_effective_microphone_name(app: AppHandle) -> Result<String, String> {
     let settings = get_settings(&app);
-
-    // Clamshell override
-    let use_clamshell =
-        clamshell::is_clamshell().unwrap_or(false) && settings.clamshell_microphone.is_some();
-    if use_clamshell {
-        return Ok(settings.clamshell_microphone.unwrap());
-    }
 
     // Priority list
     if !settings.microphone_priority.is_empty() {

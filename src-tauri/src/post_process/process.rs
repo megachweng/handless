@@ -1,7 +1,5 @@
-#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-use crate::apple_intelligence;
 use crate::post_process::client::Usage;
-use crate::settings::{AppSettings, APPLE_INTELLIGENCE_PROVIDER_ID};
+use crate::settings::AppSettings;
 use log::{debug, error};
 use serde::Serialize;
 use std::time::Instant;
@@ -92,11 +90,9 @@ pub async fn post_process_transcription(
         return None;
     }
 
-    // Skip post-processing if the provider is not verified (except Apple Intelligence)
-    if provider.id != APPLE_INTELLIGENCE_PROVIDER_ID
-        && !settings
-            .post_process_verified_providers
-            .contains(&provider.id)
+    if !settings
+        .post_process_verified_providers
+        .contains(&provider.id)
     {
         debug!(
             "Post-processing skipped because provider '{}' is not verified",
@@ -138,49 +134,6 @@ pub async fn post_process_transcription(
 
     let system_prompt = prompt.trim().to_string();
     let user_content = format!("Transcript: {}", transcription);
-
-    // Handle Apple Intelligence separately since it uses native Swift APIs
-    if provider.id == APPLE_INTELLIGENCE_PROVIDER_ID {
-        #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-        {
-            if !apple_intelligence::check_apple_intelligence_availability() {
-                debug!("Apple Intelligence selected but not currently available on this device");
-                return None;
-            }
-
-            let token_limit = model.trim().parse::<i32>().unwrap_or(0);
-            let start = Instant::now();
-            return match apple_intelligence::process_text_with_system_prompt(
-                &system_prompt,
-                &user_content,
-                token_limit,
-            ) {
-                Ok(result) => {
-                    if result.trim().is_empty() {
-                        debug!("Apple Intelligence returned an empty response");
-                        None
-                    } else {
-                        let result = strip_invisible_chars(&result);
-                        debug!(
-                            "Apple Intelligence post-processing succeeded. Output length: {} chars",
-                            result.len()
-                        );
-                        Some(PostProcessResult::new(result, start, None, model))
-                    }
-                }
-                Err(err) => {
-                    error!("Apple Intelligence post-processing failed: {}", err);
-                    None
-                }
-            };
-        }
-
-        #[cfg(not(all(target_os = "macos", target_arch = "aarch64")))]
-        {
-            debug!("Apple Intelligence provider selected on unsupported platform");
-            return None;
-        }
-    }
 
     // Build JSON schema for structured output when supported by the provider
     let json_schema = if provider.supports_structured_output {

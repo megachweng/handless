@@ -1,6 +1,4 @@
-use crate::settings::{
-    AppSettings, APPLE_INTELLIGENCE_DEFAULT_MODEL_ID, APPLE_INTELLIGENCE_PROVIDER_ID,
-};
+use crate::settings::AppSettings;
 use log::debug;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -78,22 +76,6 @@ pub fn default_providers() -> Vec<PostProcessProvider> {
         },
     ];
 
-    // Note: We always include Apple Intelligence on macOS ARM64 without checking availability
-    // at startup. The availability check is deferred to when the user actually tries to use it
-    // (in actions.rs). This prevents crashes on macOS 26.x beta where accessing
-    // SystemLanguageModel.default during early app initialization causes SIGABRT.
-    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-    {
-        providers.push(PostProcessProvider {
-            id: APPLE_INTELLIGENCE_PROVIDER_ID.to_string(),
-            label: "Apple Intelligence".to_string(),
-            base_url: "apple-intelligence://local".to_string(),
-            allow_base_url_edit: false,
-            models_endpoint: None,
-            supports_structured_output: true,
-        });
-    }
-
     // Custom provider always comes last
     providers.push(PostProcessProvider {
         id: "custom".to_string(),
@@ -108,9 +90,7 @@ pub fn default_providers() -> Vec<PostProcessProvider> {
 }
 
 pub(crate) fn default_model_for_provider(provider_id: &str) -> String {
-    if provider_id == APPLE_INTELLIGENCE_PROVIDER_ID {
-        return APPLE_INTELLIGENCE_DEFAULT_MODEL_ID.to_string();
-    }
+    let _ = provider_id;
     String::new()
 }
 

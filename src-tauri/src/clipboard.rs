@@ -565,10 +565,10 @@ fn send_return_key(enigo: &mut Enigo, key_type: AutoSubmitKey) -> Result<(), Str
                 .key(Key::Control, Direction::Release)
                 .map_err(|e| format!("Failed to release Control key: {}", e))?;
         }
-        AutoSubmitKey::CmdEnter => {
+        AutoSubmitKey::SuperEnter => {
             enigo
                 .key(Key::Meta, Direction::Press)
-                .map_err(|e| format!("Failed to press Meta/Cmd key: {}", e))?;
+                .map_err(|e| format!("Failed to press Meta/Super key: {}", e))?;
             enigo
                 .key(Key::Return, Direction::Press)
                 .map_err(|e| format!("Failed to press Return key: {}", e))?;
@@ -577,7 +577,7 @@ fn send_return_key(enigo: &mut Enigo, key_type: AutoSubmitKey) -> Result<(), Str
                 .map_err(|e| format!("Failed to release Return key: {}", e))?;
             enigo
                 .key(Key::Meta, Direction::Release)
-                .map_err(|e| format!("Failed to release Meta/Cmd key: {}", e))?;
+                .map_err(|e| format!("Failed to release Meta/Super key: {}", e))?;
         }
     }
 

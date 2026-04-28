@@ -625,11 +625,6 @@ pub fn change_overlay_enabled_setting(app: AppHandle, enabled: bool) -> Result<(
 
     settings::write_settings(&app, settings.clone());
 
-    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-    if !enabled || settings.overlay_position != OverlayPosition::Notch {
-        crate::notch::update_state(crate::notch::NotchState::Hidden);
-    }
-
     crate::utils::update_overlay_position(&app);
 
     Ok(())
@@ -643,7 +638,6 @@ pub fn change_overlay_position_setting(app: AppHandle, position: String) -> Resu
         "none" => OverlayPosition::None,
         "top" => OverlayPosition::Top,
         "bottom" => OverlayPosition::Bottom,
-        "notch" => OverlayPosition::Notch,
         other => {
             warn!("Invalid overlay position '{}', defaulting to bottom", other);
             OverlayPosition::Bottom
@@ -652,12 +646,6 @@ pub fn change_overlay_position_setting(app: AppHandle, position: String) -> Resu
     settings.overlay_position = parsed;
     settings.overlay_enabled = parsed != OverlayPosition::None;
     settings::write_settings(&app, settings);
-
-    // Dismiss the notch indicator when switching away from notch mode
-    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-    if parsed != OverlayPosition::Notch {
-        crate::notch::update_state(crate::notch::NotchState::Hidden);
-    }
 
     // Update overlay position without recreating window
     crate::utils::update_overlay_position(&app);
@@ -872,7 +860,7 @@ pub fn change_auto_submit_key_setting(app: AppHandle, key: String) -> Result<(),
     let parsed = match key.as_str() {
         "enter" => AutoSubmitKey::Enter,
         "ctrl_enter" => AutoSubmitKey::CtrlEnter,
-        "cmd_enter" => AutoSubmitKey::CmdEnter,
+        "super_enter" => AutoSubmitKey::SuperEnter,
         other => {
             warn!("Invalid auto submit key '{}', defaulting to enter", other);
             AutoSubmitKey::Enter

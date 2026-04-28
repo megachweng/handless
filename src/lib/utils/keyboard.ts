@@ -2,12 +2,11 @@
  * Keyboard utility functions for handling keyboard events
  */
 
-export type OSType = "macos" | "windows" | "linux" | "unknown";
+export type OSType = "windows" | "linux" | "unknown";
 
 /**
  * Extract a consistent key name from a KeyboardEvent
- * This function provides cross-platform keyboard event handling
- * and returns key names appropriate for the target operating system
+ * This function returns key names appropriate for Windows shortcut handling.
  */
 export const getKeyName = (
   e: KeyboardEvent,
@@ -37,18 +36,15 @@ export const getKeyName = (
       return code.replace("Numpad", "numpad ").toLowerCase();
     }
 
-    // Handle modifier keys - OS-specific naming
     const getModifierName = (baseModifier: string): string => {
       switch (baseModifier) {
         case "shift":
           return "shift";
         case "ctrl":
-          return osType === "macos" ? "ctrl" : "ctrl";
+          return "ctrl";
         case "alt":
-          return osType === "macos" ? "option" : "alt";
+          return "alt";
         case "meta":
-          // Windows key on Windows/Linux, Command key on Mac
-          if (osType === "macos") return "command";
           return "super";
         default:
           return baseModifier;
@@ -125,15 +121,12 @@ export const getKeyName = (
   if (e.key) {
     const key = e.key;
 
-    // Handle special key names with OS-specific formatting
     const keyMap: Record<string, string> = {
-      Control: osType === "macos" ? "ctrl" : "ctrl",
-      Alt: osType === "macos" ? "option" : "alt",
+      Control: "ctrl",
+      Alt: "alt",
       Shift: "shift",
-      Meta:
-        osType === "macos" ? "command" : osType === "windows" ? "win" : "super",
-      OS:
-        osType === "macos" ? "command" : osType === "windows" ? "win" : "super",
+      Meta: "super",
+      OS: "super",
       CapsLock: "caps lock",
       ArrowUp: "up",
       ArrowDown: "down",
@@ -168,24 +161,11 @@ const capitalizeKey = (key: string): string => {
   return key.replace(/\b\w/g, (c) => c.toUpperCase());
 };
 
-/** macOS modifier symbols */
-const MACOS_SYMBOLS: Record<string, string> = {
-  command: "⌘",
-  cmd: "⌘",
-  shift: "⇧",
-  option: "⌥",
-  alt: "⌥",
-  ctrl: "⌃",
-  control: "⌃",
-  fn: "fn",
-};
-
 /**
  * Format a single key part for display.
  * Handles _left/_right suffixes and capitalizes names.
- * On macOS, modifier keys are shown as symbols (⌘ ⇧ ⌥ ⌃).
  */
-const formatKeyPart = (part: string, osType: OSType): string => {
+const formatKeyPart = (part: string): string => {
   const trimmed = part.trim();
   if (!trimmed) return "";
 
@@ -197,13 +177,6 @@ const formatKeyPart = (part: string, osType: OSType): string => {
     baseName = trimmed.slice(0, -6);
   }
 
-  // On macOS, use symbols for modifiers
-  if (osType === "macos") {
-    const symbol = MACOS_SYMBOLS[baseName.toLowerCase()];
-    if (symbol) return symbol;
-  }
-
-  // Non-macOS or non-modifier: use text with Left/Right prefix
   if (trimmed.endsWith("_left")) {
     return `Left ${capitalizeKey(baseName)}`;
   }
@@ -215,19 +188,17 @@ const formatKeyPart = (part: string, osType: OSType): string => {
 };
 
 /**
- * Get display-friendly key combination string for the current OS
+ * Get display-friendly key combination string.
  * Formats raw hotkey strings like "option_left+shift+space" into
- * human-readable form. On macOS, uses symbols: "⌥⇧Space"
+ * human-readable form.
  */
 export const formatKeyCombination = (
   combination: string,
-  osType: OSType,
+  _osType: OSType,
 ): string => {
   if (!combination) return "";
-  const parts = combination
-    .split("+")
-    .map((part) => formatKeyPart(part, osType));
-  return osType === "macos" ? parts.join("") : parts.join(" + ");
+  const parts = combination.split("+").map((part) => formatKeyPart(part));
+  return parts.join(" + ");
 };
 
 /**
