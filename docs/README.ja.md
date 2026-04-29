@@ -5,7 +5,7 @@
 <h1 align="center">Handless</h1>
 
 <p align="center">
-  無料・オープンソースのmacOS音声入力アプリ。<br/>
+  Windows デスクトップ音声入力アプリ。<br/>
   ショートカットを押して話すだけで、あらゆるアプリにテキストを入力。プライバシーのためにローカルで実行するか、クラウドAPIを使用できます。
 </p>
 
@@ -29,14 +29,12 @@
 - **クラウドSTT** -- OpenAIまたはSoniox経由
 - **音声アクティビティ検出** (ローカルモデルのみ)
 - **LLM後処理** -- 文字起こしの整形や再フォーマット
-- **macOS** (Intel & Apple Silicon)
+- **Windows**
 - **17言語対応**
 
 ## インストール
 
-**[macOS 版をダウンロード](https://github.com/ElwinLiu/handless/releases/latest)**（Intel & Apple Silicon）
-
-[handless.elwin.cc](https://handless.elwin.cc) からもダウンロードできます。ソースからビルドする場合は[BUILD.md](../BUILD.md)を参照してください。
+ソースからビルドする場合は[BUILD.md](../BUILD.md)を参照してください。
 
 ## CLI
 
@@ -59,11 +57,9 @@ handless --help                    # 全フラグ一覧
 
 自由に組み合わせ可能: `handless --start-hidden --no-tray`
 
-> **macOS:** バイナリを直接実行してください: `/Applications/Handless.app/Contents/MacOS/Handless --toggle-transcription`
-
 ## トラブルシューティング
 
-`Cmd+Shift+D` でデバッグパネルを開きます。
+`Ctrl+Shift+D` でデバッグパネルを開きます。
 
 ## コントリビューション
 
@@ -73,8 +69,4 @@ handless --help                    # 全フラグ一覧
 
 [MIT](../LICENSE)
 
-## 謝辞
-
-[Handy](https://github.com/cjpais/Handy) v0.7.8からフォーク。
-
-[Whisper](https://github.com/openai/whisper) | [whisper.cpp](https://github.com/ggerganov/whisper.cpp) | [NeMo Parakeet](https://github.com/NVIDIA/NeMo) | [Moonshine](https://github.com/usefulsensors/moonshine) | [SenseVoice](https://github.com/FunAudioLLM/SenseVoice) | [Silero VAD](https://github.com/snakers4/silero-vad) | [Tauri](https://tauri.app) | [Handy](https://github.com/cjpais/Handy)
+[Whisper](https://github.com/openai/whisper) | [whisper.cpp](https://github.com/ggerganov/whisper.cpp) | [NeMo Parakeet](https://github.com/NVIDIA/NeMo) | [Moonshine](https://github.com/usefulsensors/moonshine) | [SenseVoice](https://github.com/FunAudioLLM/SenseVoice) | [Silero VAD](https://github.com/snakers4/silero-vad) | [Tauri](https://tauri.app)

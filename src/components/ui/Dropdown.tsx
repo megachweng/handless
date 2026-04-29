@@ -303,7 +303,8 @@ const SimpleDropdown: React.FC<DropdownProps> = ({
       <SelectPrimitive.Portal>
         <SelectPrimitive.Content
           className={cn(
-            "overflow-hidden glass-panel rounded-lg shadow-glass-hover z-50",
+            "overflow-hidden rounded-lg shadow-glass-hover z-50",
+            "border border-glass-border bg-[var(--color-glass-bg-solid)]",
             "min-w-[var(--radix-select-trigger-width)]",
             "animate-in fade-in-0 zoom-in-95",
             "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",

@@ -144,43 +144,22 @@ pub fn unregister_shortcut(app: &AppHandle, binding: ShortcutBinding) -> Result<
 
 /// Register the cancel shortcut (called when recording starts)
 pub fn register_cancel_shortcut(app: &AppHandle) {
-    // Cancel shortcut is disabled on Linux due to instability with dynamic shortcut registration
-    #[cfg(target_os = "linux")]
-    {
-        let _ = app;
-        return;
-    }
-
-    #[cfg(not(target_os = "linux"))]
-    {
-        let app_clone = app.clone();
-        tauri::async_runtime::spawn(async move {
-            if let Some(cancel_binding) = get_settings(&app_clone).bindings.get("cancel").cloned() {
-                if let Err(e) = register_shortcut(&app_clone, cancel_binding) {
-                    error!("Failed to register cancel shortcut: {}", e);
-                }
+    let app_clone = app.clone();
+    tauri::async_runtime::spawn(async move {
+        if let Some(cancel_binding) = get_settings(&app_clone).bindings.get("cancel").cloned() {
+            if let Err(e) = register_shortcut(&app_clone, cancel_binding) {
+                error!("Failed to register cancel shortcut: {}", e);
             }
-        });
-    }
+        }
+    });
 }
 
 /// Unregister the cancel shortcut (called when recording stops)
 pub fn unregister_cancel_shortcut(app: &AppHandle) {
-    // Cancel shortcut is disabled on Linux due to instability with dynamic shortcut registration
-    #[cfg(target_os = "linux")]
-    {
-        let _ = app;
-        return;
-    }
-
-    #[cfg(not(target_os = "linux"))]
-    {
-        let app_clone = app.clone();
-        tauri::async_runtime::spawn(async move {
-            if let Some(cancel_binding) = get_settings(&app_clone).bindings.get("cancel").cloned() {
-                // We ignore errors here as it might already be unregistered
-                let _ = unregister_shortcut(&app_clone, cancel_binding);
-            }
-        });
-    }
+    let app_clone = app.clone();
+    tauri::async_runtime::spawn(async move {
+        if let Some(cancel_binding) = get_settings(&app_clone).bindings.get("cancel").cloned() {
+            let _ = unregister_shortcut(&app_clone, cancel_binding);
+        }
+    });
 }

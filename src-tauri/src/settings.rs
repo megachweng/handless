@@ -296,12 +296,8 @@ pub enum AppTheme {
 #[serde(rename_all = "snake_case")]
 pub enum TypingTool {
     #[default]
+    #[serde(other)]
     Auto,
-    Wtype,
-    Kwtype,
-    Dotool,
-    Ydotool,
-    Xdotool,
 }
 
 /* still useful for composing the initial JSON in the store ------------- */
@@ -319,8 +315,6 @@ pub struct AppSettings {
     pub start_hidden: bool,
     #[serde(default = "default_autostart_enabled")]
     pub autostart_enabled: bool,
-    #[serde(default = "default_update_checks_enabled")]
-    pub update_checks_enabled: bool,
     #[serde(default = "default_always_on_microphone")]
     pub always_on_microphone: bool,
     #[serde(default)]
@@ -432,10 +426,6 @@ fn default_autostart_enabled() -> bool {
     false
 }
 
-fn default_update_checks_enabled() -> bool {
-    true
-}
-
 fn default_selected_language() -> String {
     "auto".to_string()
 }
@@ -445,17 +435,11 @@ fn default_overlay_enabled() -> bool {
 }
 
 fn default_overlay_enabled_for_new_install() -> bool {
-    #[cfg(target_os = "linux")]
-    return false;
-    #[cfg(not(target_os = "linux"))]
-    return true;
+    true
 }
 
 fn default_overlay_position() -> OverlayPosition {
-    #[cfg(target_os = "linux")]
-    return OverlayPosition::None;
-    #[cfg(not(target_os = "linux"))]
-    return OverlayPosition::Bottom;
+    OverlayPosition::Bottom
 }
 
 fn default_debug_mode() -> bool {
@@ -1054,7 +1038,6 @@ fn recover_settings_from_value(settings_value: JsonValue) -> AppSettings {
     recover_field!(sound_theme);
     recover_field!(start_hidden);
     recover_field!(autostart_enabled);
-    recover_field!(update_checks_enabled);
     recover_field!(always_on_microphone);
     recover_field!(selected_microphone);
     recover_field!(microphone_priority);
@@ -1267,7 +1250,6 @@ pub fn get_default_settings() -> AppSettings {
         sound_theme: default_sound_theme(),
         start_hidden: default_start_hidden(),
         autostart_enabled: default_autostart_enabled(),
-        update_checks_enabled: default_update_checks_enabled(),
         always_on_microphone: false,
         selected_microphone: None,
         microphone_priority: Vec::new(),
@@ -1486,7 +1468,7 @@ mod tests {
             Some("groq-key")
         );
         assert_eq!(recovered.stt_provider_id, "soniox");
-        assert_eq!(recovered.post_process_provider_id, "groq");
+        assert_eq!(recovered.post_process_provider_id, "openai");
         assert_eq!(recovered.dictionary_terms, vec!["handless"]);
         assert!(recovered
             .stt_providers

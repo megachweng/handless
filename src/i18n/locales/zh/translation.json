@@ -2,7 +2,6 @@
   "appName": "Handless",
   "tray": {
     "settings": "设置...",
-    "checkUpdates": "检查更新...",
     "copyLastTranscript": "复制最新转录",
     "quit": "退出",
     "cancel": "取消"
@@ -424,10 +423,6 @@
         "title": "日志级别",
         "description": "设置日志的详细程度"
       },
-      "updateChecks": {
-        "label": "检查更新",
-        "description": "自动检查 Handless 的新版本"
-      },
       "soundTheme": {
         "label": "声音主题",
         "description": "选择录制开始和停止反馈的声音主题",
@@ -492,18 +487,6 @@
       "appDataDirectory": {
         "title": "应用数据目录",
         "description": "Handless 存储数据的位置"
-      },
-      "sourceCode": {
-        "title": "源代码",
-        "description": "查看源代码并贡献",
-        "button": "在 GitHub 上查看"
-      },
-      "acknowledgments": {
-        "handy": {
-          "title": "Handy",
-          "description": "Handless 分支自的开源语音转文字应用",
-          "details": "基于 CJ Pais 的 Handy。感谢这个基础。"
-        }
       }
     }
   },
@@ -534,18 +517,6 @@
       "description": "转录后经常被误听或拼写错误的单词。系统会自动将输出中发音相似的单词修正为您列表中的单词。这是在转录后应用的，与指导转录前引擎的术语不同。",
       "empty": "尚未添加修正。输入单词并按 Enter。"
     }
-  },
-  "footer": {
-    "checkingUpdates": "检查更新中...",
-    "updateAvailable": "有可用更新: {{version}}",
-    "updateAvailableShort": "有可用更新",
-    "upToDate": "已是最新版本",
-    "restart": "重启",
-    "updateCheckingDisabled": "更新检查已禁用",
-    "downloading": "下载中... {{progress}}%",
-    "installing": "安装中...",
-    "preparing": "准备中...",
-    "checkForUpdates": "检查更新"
   },
   "common": {
     "loading": "加载中...",

@@ -2,7 +2,7 @@
  * Keyboard utility functions for handling keyboard events
  */
 
-export type OSType = "windows" | "linux" | "unknown";
+export type OSType = "windows" | "unknown";
 
 /**
  * Extract a consistent key name from a KeyboardEvent

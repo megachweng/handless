@@ -2,7 +2,6 @@
   "appName": "Handless",
   "tray": {
     "settings": "Ustawienia...",
-    "checkUpdates": "Sprawdź aktualizacje...",
     "copyLastTranscript": "Kopiuj ostatnią transkrypcję",
     "quit": "Zamknij",
     "cancel": "Anuluj"
@@ -424,10 +423,6 @@
         "title": "Poziom logów",
         "description": "Ustaw poziom szczegółowości logowania"
       },
-      "updateChecks": {
-        "label": "Sprawdzaj aktualizacje",
-        "description": "Automatycznie sprawdzaj nowe wersje Handless"
-      },
       "soundTheme": {
         "label": "Motyw dźwiękowy",
         "description": "Wybierz motyw dźwiękowy dla informacji o rozpoczęciu i zakończeniu nagrywania",
@@ -492,18 +487,6 @@
       "appDataDirectory": {
         "title": "Katalog danych aplikacji",
         "description": "Miejsce, gdzie Handless przechowuje swoje dane"
-      },
-      "sourceCode": {
-        "title": "Kod źródłowy",
-        "description": "Zobacz kod źródłowy i współtwórz",
-        "button": "Zobacz na GitHub"
-      },
-      "acknowledgments": {
-        "handy": {
-          "title": "Handy",
-          "description": "Aplikacja open-source do zamiany mowy na tekst, z której Handless został sforkowany",
-          "details": "Zbudowane na podstawie Handy autorstwa CJ Pais. Dziękujemy za fundament."
-        }
       }
     }
   },
@@ -534,18 +517,6 @@
       "description": "Słowa, które są często źle słyszane lub błędnie pisane po transkrypcji. System automatycznie poprawi podobnie brzmiące słowa w wyjściu, aby pasowały do Twojej listy. Jest to stosowane po transkrypcji, w przeciwieństwie do terminów, które kierują silnikiem przed transkrypcją.",
       "empty": "Nie dodano żadnych korekt. Wpisz słowo i naciśnij Enter."
     }
-  },
-  "footer": {
-    "checkingUpdates": "Sprawdzanie aktualizacji...",
-    "updateAvailable": "Dostępna aktualizacja: {{version}}",
-    "updateAvailableShort": "Dostępna aktualizacja",
-    "upToDate": "Aktualne",
-    "restart": "Uruchom ponownie",
-    "updateCheckingDisabled": "Sprawdzanie aktualizacji wyłączone",
-    "downloading": "Pobieranie... {{progress}}%",
-    "installing": "Instalowanie...",
-    "preparing": "Przygotowywanie...",
-    "checkForUpdates": "Sprawdź aktualizacje"
   },
   "common": {
     "loading": "Wczytywanie...",

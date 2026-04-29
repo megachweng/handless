@@ -14,7 +14,6 @@ const GRANTED_STATE: PermissionsState = {
 export function usePermissionRequests() {
   return {
     allGranted: true,
-    isMacOS: false,
     permissions: GRANTED_STATE,
     requestPermission: async (_kind: PermissionKind) => {},
   };

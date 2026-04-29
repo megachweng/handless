@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import { toast, Toaster } from "sonner";
 import { useTranslation } from "react-i18next";
-import { platform } from "@tauri-apps/plugin-os";
 import { MotionConfig, AnimatePresence, motion } from "motion/react";
 import { DragRegion } from "./components/ui/DragRegion";
 import "./App.css";
@@ -180,7 +179,7 @@ function App() {
             exit="exit"
             transition={pageTransition}
             dir={direction}
-            className={`h-screen flex flex-col select-none cursor-default ${platform() === "linux" ? "bg-background" : ""}`}
+            className="h-screen flex flex-col select-none cursor-default"
           >
             <Toaster
               position="top-center"

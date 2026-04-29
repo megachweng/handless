@@ -327,14 +327,6 @@ async changeAppLanguageSetting(language: string) : Promise<Result<null, string>>
     else return { status: "error", error: e  as any };
 }
 },
-async changeUpdateChecksSetting(enabled: boolean) : Promise<Result<null, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("change_update_checks_setting", { enabled }) };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
 /**
  * Change the keyboard implementation with runtime switching.
  * This will unregister all shortcuts from the old implementation,
@@ -809,7 +801,7 @@ async importAppData(importPath: string, importSettings: boolean, importHistory: 
 /** user-defined types **/
 
 export type ActivationMode = "toggle" | "hold" | "hold_or_toggle"
-export type AppSettings = { bindings?: Partial<{ [key in string]: ShortcutBinding }>; activation_mode?: ActivationMode; audio_feedback_volume?: number; sound_theme?: SoundTheme; start_hidden?: boolean; autostart_enabled?: boolean; update_checks_enabled?: boolean; always_on_microphone?: boolean; selected_microphone?: string | null; microphone_priority?: string[]; selected_output_device?: string | null; translate_to_english?: boolean; selected_language?: string; overlay_enabled?: boolean; overlay_position?: OverlayPosition; debug_mode?: boolean; log_level?: LogLevel; custom_words?: string[]; word_correction_threshold?: number; history_limit?: number; recording_retention_period?: RecordingRetentionPeriod; paste_method?: PasteMethod; clipboard_handling?: ClipboardHandling; auto_submit?: boolean; auto_submit_key?: AutoSubmitKey; stt_provider_id?: string; stt_providers?: SttProvider[]; stt_api_keys?: Partial<{ [key in string]: string }>; stt_cloud_models?: Partial<{ [key in string]: string }>; post_process_enabled?: boolean; post_process_provider_id?: string; post_process_providers?: PostProcessProvider[]; post_process_api_keys?: Partial<{ [key in string]: string }>; post_process_models?: Partial<{ [key in string]: string }>; post_process_prompts?: LLMPrompt[]; post_process_selected_prompt_id?: string | null; mute_while_recording?: boolean; append_trailing_space?: boolean; app_language?: string; keyboard_implementation?: KeyboardImplementation; show_tray_icon?: boolean; paste_delay_ms?: number; typing_tool?: TypingTool; external_script_path: string | null; app_theme?: AppTheme; stt_verified_providers?: string[]; post_process_verified_providers?: string[]; post_process_input_prices?: Partial<{ [key in string]: number }>; post_process_output_prices?: Partial<{ [key in string]: number }>; stt_cloud_options?: Partial<{ [key in string]: string }>; stt_realtime_enabled?: Partial<{ [key in string]: boolean }>; stats_date_range?: StatsDateRange; dictionary_terms?: string[]; dictionary_context?: string }
+export type AppSettings = { bindings?: Partial<{ [key in string]: ShortcutBinding }>; activation_mode?: ActivationMode; audio_feedback_volume?: number; sound_theme?: SoundTheme; start_hidden?: boolean; autostart_enabled?: boolean; always_on_microphone?: boolean; selected_microphone?: string | null; microphone_priority?: string[]; selected_output_device?: string | null; translate_to_english?: boolean; selected_language?: string; overlay_enabled?: boolean; overlay_position?: OverlayPosition; debug_mode?: boolean; log_level?: LogLevel; custom_words?: string[]; word_correction_threshold?: number; history_limit?: number; recording_retention_period?: RecordingRetentionPeriod; paste_method?: PasteMethod; clipboard_handling?: ClipboardHandling; auto_submit?: boolean; auto_submit_key?: AutoSubmitKey; stt_provider_id?: string; stt_providers?: SttProvider[]; stt_api_keys?: Partial<{ [key in string]: string }>; stt_cloud_models?: Partial<{ [key in string]: string }>; post_process_enabled?: boolean; post_process_provider_id?: string; post_process_providers?: PostProcessProvider[]; post_process_api_keys?: Partial<{ [key in string]: string }>; post_process_models?: Partial<{ [key in string]: string }>; post_process_prompts?: LLMPrompt[]; post_process_selected_prompt_id?: string | null; mute_while_recording?: boolean; append_trailing_space?: boolean; app_language?: string; keyboard_implementation?: KeyboardImplementation; show_tray_icon?: boolean; paste_delay_ms?: number; typing_tool?: TypingTool; external_script_path: string | null; app_theme?: AppTheme; stt_verified_providers?: string[]; post_process_verified_providers?: string[]; post_process_input_prices?: Partial<{ [key in string]: number }>; post_process_output_prices?: Partial<{ [key in string]: number }>; stt_cloud_options?: Partial<{ [key in string]: string }>; stt_realtime_enabled?: Partial<{ [key in string]: boolean }>; stats_date_range?: StatsDateRange; dictionary_terms?: string[]; dictionary_context?: string }
 export type AppTheme = "dark" | "light" | "system"
 export type AudioDevice = { index: string; name: string; is_default: boolean }
 export type AutoSubmitKey = "enter" | "ctrl_enter" | "super_enter"
@@ -849,7 +841,7 @@ export type StatsDateRange = "today" | "3days" | "week" | "month" | "all" | "cus
 export type SttProvider = { id: string; label: string; provider_type: SttProviderType; base_url: string; default_model: string }
 export type SttProviderInfo = { id: string; name: string; description: string; supported_languages: string[]; supports_translation: boolean; supports_realtime: boolean; is_recommended: boolean; backend: ProviderBackend; available_options?: CloudProviderOption[]; supports_dictionary_terms?: boolean; supports_dictionary_context?: boolean }
 export type SttProviderType = "cloud"
-export type TypingTool = "auto" | "wtype" | "kwtype" | "dotool" | "ydotool" | "xdotool"
+export type TypingTool = "auto"
 
 /** tauri-specta globals **/
 

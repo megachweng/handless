@@ -2,7 +2,6 @@
   "appName": "Handless",
   "tray": {
     "settings": "Paramètres...",
-    "checkUpdates": "Rechercher des mises à jour...",
     "copyLastTranscript": "Copier la dernière transcription",
     "quit": "Quitter",
     "cancel": "Annuler"
@@ -424,10 +423,6 @@
         "title": "Niveau de journalisation",
         "description": "Définir le niveau de détail de la journalisation"
       },
-      "updateChecks": {
-        "label": "Vérifier les mises à jour",
-        "description": "Vérifier automatiquement les nouvelles versions de Handless"
-      },
       "soundTheme": {
         "label": "Thème sonore",
         "description": "Choisir un thème sonore pour les retours de début et de fin d'enregistrement",
@@ -492,18 +487,6 @@
       "appDataDirectory": {
         "title": "Emplacement des données de l'application",
         "description": "Emplacement où Handless stocke ses données"
-      },
-      "sourceCode": {
-        "title": "Code source",
-        "description": "Voir le code source et contribuer",
-        "button": "Voir sur GitHub"
-      },
-      "acknowledgments": {
-        "handy": {
-          "title": "Handy",
-          "description": "L'application open-source de reconnaissance vocale dont Handless a été forké",
-          "details": "Basé sur Handy de CJ Pais. Merci pour la base."
-        }
       }
     }
   },
@@ -534,18 +517,6 @@
       "description": "Mots souvent mal entendus ou mal orthographiés après la transcription. Le système corrigera automatiquement les mots ressemblant dans la sortie pour correspondre à votre liste. Ceci s'applique après la transcription, contrairement aux termes qui guident le moteur avant la transcription.",
       "empty": "Aucune correction ajoutée. Tapez un mot et appuyez sur Entrée."
     }
-  },
-  "footer": {
-    "checkingUpdates": "Recherche de mises à jour...",
-    "updateAvailable": "Mise à jour disponible : {{version}}",
-    "updateAvailableShort": "Mise à jour disponible",
-    "upToDate": "À jour",
-    "restart": "Redémarrer",
-    "updateCheckingDisabled": "Vérification des mises à jour désactivée",
-    "downloading": "Téléchargement... {{progress}}%",
-    "installing": "Installation...",
-    "preparing": "Préparation...",
-    "checkForUpdates": "Rechercher des mises à jour"
   },
   "common": {
     "loading": "Chargement...",

@@ -30,7 +30,7 @@ const BUBBLE_CHROME = 18; // 8+8 padding + 1+1 border on .streaming-text-bubble
 const BUBBLE_GAP = 6; // must match .overlay-wrapper { gap }
 const BUBBLE_MARGIN = 2; // small safety margin around bubble during animation
 
-// Apple-style waveform: thick rounded bars that stretch vertically
+// Rounded waveform bars that stretch vertically
 const BAR_WIDTH = 2.5;
 const BAR_GAP = 2;
 const BAR_MIN_HEIGHT = 3;
@@ -205,7 +205,7 @@ const RecordingOverlay: React.FC = () => {
     const avgEnergy = current.reduce((a, b) => a + b, 0) / current.length;
     const rgb = accentRgbRef.current;
 
-    // Draw Apple-style vertical bars
+    // Draw vertical bars
     const canvas = canvasRef.current;
     if (canvas) {
       if (!canvasCtxRef.current) {

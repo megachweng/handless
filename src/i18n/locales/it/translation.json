@@ -2,7 +2,6 @@
   "appName": "Handless",
   "tray": {
     "settings": "Impostazioni...",
-    "checkUpdates": "Verifica aggiornamenti...",
     "copyLastTranscript": "Copia l'ultima trascrizione",
     "quit": "Esci",
     "cancel": "Annulla"
@@ -424,10 +423,6 @@
         "title": "Livello di Log",
         "description": "Imposta il livello di dettaglio dei log"
       },
-      "updateChecks": {
-        "label": "Controlla aggiornamenti",
-        "description": "Controlla automaticamente la disponibilità di nuove versioni di Handless"
-      },
       "soundTheme": {
         "label": "Tema Sonoro",
         "description": "Scegli un tema sonoro per il feedback di inizio e fine registrazione",
@@ -492,18 +487,6 @@
       "appDataDirectory": {
         "title": "Cartella Dati App",
         "description": "Cartella in cui Handless salva i dati"
-      },
-      "sourceCode": {
-        "title": "Codice Sorgente",
-        "description": "Vedi e contribuisci al codice sorgente",
-        "button": "Vedi su GitHub"
-      },
-      "acknowledgments": {
-        "handy": {
-          "title": "Handy",
-          "description": "L'app open-source di riconoscimento vocale da cui Handless è stato derivato",
-          "details": "Costruito su Handy di CJ Pais. Grazie per il fondamento."
-        }
       }
     }
   },
@@ -534,18 +517,6 @@
       "description": "Parole che vengono spesso fraintese o scritte in modo errato dopo la trascrizione. Il sistema correggerà automaticamente le parole dal suono simile nell'output affinché corrispondano al tuo elenco. Questo viene applicato dopo la trascrizione, a differenza dei termini che guidano il motore prima della trascrizione.",
       "empty": "Nessuna correzione aggiunta. Digita una parola e premi Invio."
     }
-  },
-  "footer": {
-    "checkingUpdates": "Controllo aggiornamenti...",
-    "updateAvailable": "Aggiornamento disponibile: {{version}}",
-    "updateAvailableShort": "Aggiornamento disponibile",
-    "upToDate": "Aggiornato",
-    "restart": "Riavvia",
-    "updateCheckingDisabled": "Controllo Aggiornamenti Disabilitato",
-    "downloading": "Download... {{progress}}%",
-    "installing": "Installazione...",
-    "preparing": "Preparazione...",
-    "checkForUpdates": "Controlla aggiornamenti"
   },
   "common": {
     "loading": "Caricamento...",

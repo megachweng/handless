@@ -2,7 +2,6 @@ import React from "react";
 import { useAppVersion } from "@/hooks/useAppVersion";
 
 import ModelSelector from "../model-selector";
-import UpdateChecker from "../update-checker";
 
 const Footer: React.FC = () => {
   const version = useAppVersion();
@@ -14,10 +13,7 @@ const Footer: React.FC = () => {
           <ModelSelector />
         </div>
 
-        {/* Update Status */}
         <div className="flex items-center gap-1">
-          <UpdateChecker />
-          <span>•</span>
           {/* eslint-disable-next-line i18next/no-literal-string */}
           <span>v{version}</span>
         </div>

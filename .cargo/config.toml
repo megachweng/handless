@@ -1,5 +1,15 @@
 [build]
 
-[env]
-MACOSX_DEPLOYMENT_TARGET = "10.15"
-CMAKE_OSX_DEPLOYMENT_TARGET = "10.15"
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source."git+https://github.com/cjpais/rodio.git"]
+git = "https://github.com/cjpais/rodio.git"
+replace-with = "vendored-sources"
+
+[source."git+https://github.com/rustdesk-org/rdev"]
+git = "https://github.com/rustdesk-org/rdev"
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "vendor"

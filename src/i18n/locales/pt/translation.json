@@ -2,7 +2,6 @@
   "appName": "Handless",
   "tray": {
     "settings": "Configurações...",
-    "checkUpdates": "Verificar Atualizações...",
     "copyLastTranscript": "Copiar última transcrição",
     "quit": "Sair",
     "cancel": "Cancelar"
@@ -424,10 +423,6 @@
         "title": "Nível de Log",
         "description": "Definir a verbosidade do registro"
       },
-      "updateChecks": {
-        "label": "Verificar Atualizações",
-        "description": "Verificar automaticamente novas versões do Handless"
-      },
       "soundTheme": {
         "label": "Tema de Som",
         "description": "Escolha um tema de som para feedback de início e parada de gravação",
@@ -492,18 +487,6 @@
       "appDataDirectory": {
         "title": "Diretório de Dados do App",
         "description": "Local onde o Handless armazena seus dados"
-      },
-      "sourceCode": {
-        "title": "Código Fonte",
-        "description": "Visualizar código fonte e contribuir",
-        "button": "Ver no GitHub"
-      },
-      "acknowledgments": {
-        "handy": {
-          "title": "Handy",
-          "description": "O aplicativo de voz para texto de código aberto de que o Handless foi bifurcado",
-          "details": "Construído sobre Handy por CJ Pais. Obrigado pela base."
-        }
       }
     }
   },
@@ -534,18 +517,6 @@
       "description": "Palavras que são frequentemente mal ouvidas ou mal escritas após a transcrição. O sistema irá corrigir automaticamente palavras semelhantes na saída para corresponder à sua lista. Isto é aplicado após a transcrição, ao contrário dos termos que guiam o mecanismo antes da transcrição.",
       "empty": "Nenhuma correção adicionada. Digite uma palavra e pressione Enter."
     }
-  },
-  "footer": {
-    "checkingUpdates": "Verificando atualizações...",
-    "updateAvailable": "Atualização disponível: {{version}}",
-    "updateAvailableShort": "Atualização disponível",
-    "upToDate": "Atualizado",
-    "restart": "Reiniciar",
-    "updateCheckingDisabled": "Verificação de Atualização Desabilitada",
-    "downloading": "Baixando... {{progress}}%",
-    "installing": "Instalando...",
-    "preparing": "Preparando...",
-    "checkForUpdates": "Verificar atualizações"
   },
   "common": {
     "loading": "Carregando...",

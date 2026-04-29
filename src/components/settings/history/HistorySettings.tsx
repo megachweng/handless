@@ -23,9 +23,7 @@ import {
 } from "@phosphor-icons/react";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import { readFile } from "@tauri-apps/plugin-fs";
 import { commands, type HistoryEntry } from "@/bindings";
-import { useOsType } from "@/hooks/useOsType";
 import { useTranscribeShortcut } from "@/hooks/useTranscribeShortcut";
 import {
   formatRelativeTime,
@@ -63,7 +61,6 @@ const OpenRecordingsButton: React.FC<OpenRecordingsButtonProps> = ({
 
 export const HistorySettings: React.FC = () => {
   const { t } = useTranslation();
-  const osType = useOsType();
   const shortcutDisplay = useTranscribeShortcut();
   const [activeTab, setActiveTab] = useState<HistoryTab>("stats");
   const tabs: TabItem[] = useMemo(
@@ -186,26 +183,18 @@ export const HistorySettings: React.FC = () => {
     }
   }, []);
 
-  const getAudioUrl = useCallback(
-    async (fileName: string) => {
-      try {
-        const result = await commands.getAudioFilePath(fileName);
-        if (result.status === "ok") {
-          if (osType === "linux") {
-            const fileData = await readFile(result.data);
-            const blob = new Blob([fileData], { type: "audio/wav" });
-            return URL.createObjectURL(blob);
-          }
-          return convertFileSrc(result.data, "asset");
-        }
-        return null;
-      } catch (error) {
-        console.error("Failed to get audio file path:", error);
-        return null;
+  const getAudioUrl = useCallback(async (fileName: string) => {
+    try {
+      const result = await commands.getAudioFilePath(fileName);
+      if (result.status === "ok") {
+        return convertFileSrc(result.data, "asset");
       }
-    },
-    [osType],
-  );
+      return null;
+    } catch (error) {
+      console.error("Failed to get audio file path:", error);
+      return null;
+    }
+  }, []);
 
   const deleteEntry = useCallback(
     async (id: number) => {

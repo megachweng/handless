@@ -2,7 +2,6 @@
   "appName": "Handless",
   "tray": {
     "settings": "Ayarlar...",
-    "checkUpdates": "Güncellemeleri Kontrol Et...",
     "copyLastTranscript": "Son transkripti kopyala",
     "quit": "Çıkış",
     "cancel": "İptal"
@@ -424,10 +423,6 @@
         "title": "Log Seviyesi",
         "description": "Loglamanın ayrıntı düzeyini ayarla"
       },
-      "updateChecks": {
-        "label": "Güncellemeleri Kontrol Et",
-        "description": "Handless için yeni sürümleri otomatik olarak kontrol eder"
-      },
       "soundTheme": {
         "label": "Ses Teması",
         "description": "Kayıt başlangıç ve bitişi için sesli geri bildirim temasını seçin",
@@ -492,18 +487,6 @@
       "appDataDirectory": {
         "title": "Uygulama Veri Dizini",
         "description": "Handless'nin verilerini sakladığı konum"
-      },
-      "sourceCode": {
-        "title": "Kaynak Kodu",
-        "description": "Kaynak kodunu görüntüle ve katkıda bulun",
-        "button": "GitHub'da Görüntüle"
-      },
-      "acknowledgments": {
-        "handy": {
-          "title": "Handy",
-          "description": "Handless'in fork edildiği açık kaynak konuşmadan metne uygulaması",
-          "details": "CJ Pais tarafından yapılan Handy üzerine inşa edilmiştir. Temel için teşekkürler."
-        }
       }
     }
   },
@@ -534,18 +517,6 @@
       "description": "Transkripsiyon sonrası sıkça yanlış duyulan veya yanlış yazılan kelimeler. Sistem, çıktıdaki benzer sesli kelimeleri listenizle eşleştirmek için otomatik olarak düzeltir. Bu, transkripsiyondan sonra uygulanır, motor öncesinde yönlendiren terimlerden farklıdır.",
       "empty": "Düzeltme eklenmedi. Kelime yazın ve Enter tuşuna basın."
     }
-  },
-  "footer": {
-    "checkingUpdates": "Güncellemeler kontrol ediliyor...",
-    "updateAvailable": "Güncelleme mevcut: {{version}}",
-    "updateAvailableShort": "Güncelleme mevcut",
-    "upToDate": "Güncel",
-    "restart": "Yeniden Başlat",
-    "updateCheckingDisabled": "Güncelleme Kontrolü Devre Dışı",
-    "downloading": "İndiriliyor... %{{progress}}",
-    "installing": "Yükleniyor...",
-    "preparing": "Hazırlanıyor...",
-    "checkForUpdates": "Güncellemeleri kontrol et"
   },
   "common": {
     "loading": "Yükleniyor...",

@@ -2,7 +2,6 @@
   "appName": "Handless",
   "tray": {
     "settings": "Nastavení...",
-    "checkUpdates": "Zkontrolovat aktualizace...",
     "copyLastTranscript": "Zkopírovat poslední přepis",
     "quit": "Ukončit",
     "cancel": "Zrušit"
@@ -424,10 +423,6 @@
         "title": "Úroveň logování",
         "description": "Nastavte úroveň podrobnosti logování"
       },
-      "updateChecks": {
-        "label": "Kontrolovat aktualizace",
-        "description": "Automaticky kontrolovat nové verze Handless"
-      },
       "soundTheme": {
         "label": "Zvukový motiv",
         "description": "Vyberte zvukový motiv pro odezvu při startu a ukončení nahrávání",
@@ -492,18 +487,6 @@
       "appDataDirectory": {
         "title": "Adresář dat aplikace",
         "description": "Umístění, kde Handless ukládá data"
-      },
-      "sourceCode": {
-        "title": "Zdrojový kód",
-        "description": "Zobrazit zdrojový kód a přispět",
-        "button": "Zobrazit na GitHubu"
-      },
-      "acknowledgments": {
-        "handy": {
-          "title": "Handy",
-          "description": "Aplikace s otevřeným zdrojovým kódem pro převod řeči na text, ze které byl Handless vytvořen",
-          "details": "Vytvořeno na základě Handy od CJ Paise. Děkujeme za základ."
-        }
       }
     }
   },
@@ -534,18 +517,6 @@
       "description": "Slova, která jsou často špatně slyšena nebo chybně napsána po přepisu. Systém automaticky opraví podobně znějící slova na výstupu tak, aby odpovídala vašemu seznamu. To je aplikováno po přepisu, na rozdíl od výrazů, které vedou stroj před přepisem.",
       "empty": "Nebyly přidány žádné opravy. Zadejte slovo a stiskněte Enter."
     }
-  },
-  "footer": {
-    "checkingUpdates": "Kontroluji aktualizace...",
-    "updateAvailable": "Dostupná aktualizace: {{version}}",
-    "updateAvailableShort": "Dostupná aktualizace",
-    "upToDate": "Vše aktuální",
-    "restart": "Restartovat",
-    "updateCheckingDisabled": "Kontrola aktualizací vypnuta",
-    "downloading": "Stahování... {{progress}}%",
-    "installing": "Instalace...",
-    "preparing": "Příprava...",
-    "checkForUpdates": "Zkontrolovat aktualizace"
   },
   "common": {
     "loading": "Načítání...",

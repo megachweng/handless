@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { openUrl } from "@tauri-apps/plugin-opener";
 import { useAppVersion } from "@/hooks/useAppVersion";
 import { AutostartToggle } from "../AutostartToggle";
 import { StartHidden } from "../StartHidden";
@@ -17,7 +16,6 @@ import { LogDirectory } from "../debug";
 import { AppDataDirectory } from "../AppDataDirectory";
 import { SettingsGroup } from "../../ui/SettingsGroup";
 import { SettingContainer } from "../../ui/SettingContainer";
-import { Button } from "../../ui/Button";
 import { ExportImportSettings } from "./ExportImportSettings";
 import { ConfigFileSettings } from "./ConfigFileSettings";
 
@@ -67,28 +65,6 @@ export const AdvancedSettings: React.FC = () => {
         >
           {/* eslint-disable-next-line i18next/no-literal-string */}
           <span className="text-sm font-mono">v{version}</span>
-        </SettingContainer>
-        <SettingContainer
-          title={t("settings.about.sourceCode.title")}
-          description={t("settings.about.sourceCode.description")}
-          grouped={true}
-        >
-          <Button
-            variant="secondary"
-            size="default"
-            onClick={() => openUrl("https://github.com/ElwinLiu/handless")}
-          >
-            {t("settings.about.sourceCode.button")}
-          </Button>
-        </SettingContainer>
-        <SettingContainer
-          title={t("settings.about.acknowledgments.handy.title")}
-          description={t("settings.about.acknowledgments.handy.description")}
-          grouped={true}
-        >
-          <span className="text-sm text-muted">
-            {t("settings.about.acknowledgments.handy.details")}
-          </span>
         </SettingContainer>
       </SettingsGroup>
     </div>

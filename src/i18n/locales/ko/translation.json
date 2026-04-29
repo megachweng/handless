@@ -2,7 +2,6 @@
   "appName": "Handless",
   "tray": {
     "settings": "설정...",
-    "checkUpdates": "업데이트 확인...",
     "copyLastTranscript": "마지막 녹음 내용 복사",
     "quit": "종료",
     "cancel": "취소"
@@ -424,10 +423,6 @@
         "title": "로그 레벨",
         "description": "로깅의 상세도 설정"
       },
-      "updateChecks": {
-        "label": "업데이트 확인",
-        "description": "Handless의 새 버전을 자동으로 확인합니다"
-      },
       "soundTheme": {
         "label": "사운드 테마",
         "description": "녹음 시작 및 정지 피드백을 위한 사운드 테마를 선택하세요",
@@ -492,18 +487,6 @@
       "appDataDirectory": {
         "title": "앱 데이터 디렉토리",
         "description": "Handless가 데이터를 저장하는 위치"
-      },
-      "sourceCode": {
-        "title": "소스 코드",
-        "description": "소스 코드 보기 및 기여",
-        "button": "GitHub에서 보기"
-      },
-      "acknowledgments": {
-        "handy": {
-          "title": "Handy",
-          "description": "Handless가 포크된 오픈소스 음성-텍스트 변환 앱",
-          "details": "CJ Pais의 Handy를 기반으로 구축. 기초를 제공해주셔서 감사합니다."
-        }
       }
     }
   },
@@ -534,18 +517,6 @@
       "description": "텍스트 변환 후 자주 잘못 들리거나 철자가 틀리는 단어. 시스템이 출력에서 유사한 소리의 단어를 목록과 일치하도록 자동으로 수정합니다. 이는 전사 후 적용되며, 용어는 전사 전에 엔진을 안내합니다.",
       "empty": "추가된 수정이 없습니다. 단어를 입력하고 Enter를 누르세요."
     }
-  },
-  "footer": {
-    "checkingUpdates": "업데이트 확인 중...",
-    "updateAvailable": "업데이트 사용 가능: {{version}}",
-    "updateAvailableShort": "업데이트 사용 가능",
-    "upToDate": "최신 상태",
-    "restart": "재시작",
-    "updateCheckingDisabled": "업데이트 확인 비활성화됨",
-    "downloading": "다운로드 중... {{progress}}%",
-    "installing": "설치 중...",
-    "preparing": "준비 중...",
-    "checkForUpdates": "업데이트 확인"
   },
   "common": {
     "loading": "로딩 중...",

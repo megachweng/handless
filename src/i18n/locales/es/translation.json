@@ -2,7 +2,6 @@
   "appName": "Handless",
   "tray": {
     "settings": "Configuración...",
-    "checkUpdates": "Buscar actualizaciones...",
     "copyLastTranscript": "Copiar la última transcripción",
     "quit": "Salir",
     "cancel": "Cancelar"
@@ -424,10 +423,6 @@
         "title": "Nivel de Registro",
         "description": "Establece el nivel de detalle del registro"
       },
-      "updateChecks": {
-        "label": "Buscar Actualizaciones",
-        "description": "Buscar automáticamente nuevas versiones de Handless"
-      },
       "soundTheme": {
         "label": "Tema de Sonido",
         "description": "Elige un tema de sonido para la retroalimentación de inicio y parada de grabación",
@@ -492,18 +487,6 @@
       "appDataDirectory": {
         "title": "Directorio de Datos de la Aplicación",
         "description": "Ubicación donde Handless almacena sus datos"
-      },
-      "sourceCode": {
-        "title": "Código Fuente",
-        "description": "Ver código fuente y contribuir",
-        "button": "Ver en GitHub"
-      },
-      "acknowledgments": {
-        "handy": {
-          "title": "Handy",
-          "description": "La aplicación de voz a texto de código abierto de la que se bifurcó Handless",
-          "details": "Basado en Handy de CJ Pais. Gracias por la base."
-        }
       }
     }
   },
@@ -534,18 +517,6 @@
       "description": "Palabras que a menudo se escuchan mal o se escriben incorrectamente después de la transcripción. El sistema corregirá automáticamente palabras con sonido similar en la salida para que coincidan con tu lista. Esto se aplica después de la transcripción, a diferencia de los términos que guían el motor antes de la transcripción.",
       "empty": "Sin correcciones añadidas. Escribe una palabra y presiona Enter."
     }
-  },
-  "footer": {
-    "checkingUpdates": "Buscando actualizaciones...",
-    "updateAvailable": "Actualización disponible: {{version}}",
-    "updateAvailableShort": "Actualización disponible",
-    "upToDate": "Actualizado",
-    "restart": "Reiniciar",
-    "updateCheckingDisabled": "Búsqueda de Actualizaciones Deshabilitada",
-    "downloading": "Descargando... {{progress}}%",
-    "installing": "Instalando...",
-    "preparing": "Preparando...",
-    "checkForUpdates": "Buscar actualizaciones"
   },
   "common": {
     "loading": "Cargando...",

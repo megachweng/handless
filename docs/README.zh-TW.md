@@ -5,7 +5,7 @@
 <h1 align="center">Handless</h1>
 
 <p align="center">
-  免費、開源的 macOS 語音轉文字工具。<br/>
+  Windows 桌面語音轉文字工具。<br/>
   按下快捷鍵，說話，即可在任意應用程式中取得文字。支援本地執行以保護隱私，也可使用雲端 API。
 </p>
 
@@ -29,14 +29,12 @@
 - **雲端語音轉文字**，支援 OpenAI 或 Soniox
 - **語音活動偵測**（僅限本地模型）
 - **LLM 後處理**，用於清理或重新格式化轉錄內容
-- **macOS**（Intel 與 Apple Silicon）
+- **Windows**
 - **17 種語言**
 
 ## 安裝
 
-**[下載 macOS 版本](https://github.com/ElwinLiu/handless/releases/latest)**（Intel 和 Apple Silicon）
-
-也可透過 [handless.elwin.cc](https://handless.elwin.cc) 下載。從原始碼建置：請參閱 [BUILD.md](../BUILD.md)。
+從原始碼建置：請參閱 [BUILD.md](../BUILD.md)。
 
 ## 命令列
 
@@ -59,11 +57,9 @@ handless --help                    # 所有參數
 
 可自由組合：`handless --start-hidden --no-tray`
 
-> **macOS：** 直接呼叫二進位檔案：`/Applications/Handless.app/Contents/MacOS/Handless --toggle-transcription`
-
 ## 疑難排解
 
-`Cmd+Shift+D` 開啟除錯面板。
+`Ctrl+Shift+D` 開啟除錯面板。
 
 ## 參與貢獻
 
@@ -73,8 +69,4 @@ handless --help                    # 所有參數
 
 [MIT](../LICENSE)
 
-## 致謝
-
-基於 [Handy](https://github.com/cjpais/Handy) v0.7.8 分叉開發。
-
-[Whisper](https://github.com/openai/whisper) | [whisper.cpp](https://github.com/ggerganov/whisper.cpp) | [NeMo Parakeet](https://github.com/NVIDIA/NeMo) | [Moonshine](https://github.com/usefulsensors/moonshine) | [SenseVoice](https://github.com/FunAudioLLM/SenseVoice) | [Silero VAD](https://github.com/snakers4/silero-vad) | [Tauri](https://tauri.app) | [Handy](https://github.com/cjpais/Handy)
+[Whisper](https://github.com/openai/whisper) | [whisper.cpp](https://github.com/ggerganov/whisper.cpp) | [NeMo Parakeet](https://github.com/NVIDIA/NeMo) | [Moonshine](https://github.com/usefulsensors/moonshine) | [SenseVoice](https://github.com/FunAudioLLM/SenseVoice) | [Silero VAD](https://github.com/snakers4/silero-vad) | [Tauri](https://tauri.app)

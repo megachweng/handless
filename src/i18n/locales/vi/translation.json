@@ -2,7 +2,6 @@
   "appName": "Handless",
   "tray": {
     "settings": "Cài đặt...",
-    "checkUpdates": "Kiểm tra cập nhật...",
     "copyLastTranscript": "Sao chép bản chép lời mới nhất",
     "quit": "Thoát",
     "cancel": "Hủy"
@@ -424,10 +423,6 @@
         "title": "Mức nhật ký",
         "description": "Đặt mức độ chi tiết của nhật ký"
       },
-      "updateChecks": {
-        "label": "Kiểm tra cập nhật",
-        "description": "Tự động kiểm tra phiên bản mới của Handless"
-      },
       "soundTheme": {
         "label": "Chủ đề âm thanh",
         "description": "Chọn chủ đề âm thanh cho phản hồi bắt đầu và kết thúc ghi âm",
@@ -492,18 +487,6 @@
       "appDataDirectory": {
         "title": "Thư mục dữ liệu ứng dụng",
         "description": "Vị trí Handless lưu trữ dữ liệu"
-      },
-      "sourceCode": {
-        "title": "Mã nguồn",
-        "description": "Xem mã nguồn và đóng góp",
-        "button": "Xem trên GitHub"
-      },
-      "acknowledgments": {
-        "handy": {
-          "title": "Handy",
-          "description": "Ứng dụng chuyển đổi giọng nói thành văn bản mã nguồn mở mà Handless được fork từ đó",
-          "details": "Được xây dựng dựa trên Handy bởi CJ Pais. Cảm ơn vì nền tảng."
-        }
       }
     }
   },
@@ -534,18 +517,6 @@
       "description": "Các từ thường bị nghe nhầm hoặc viết sai sau khi chuyển đổi. Hệ thống sẽ tự động sửa các từ có âm thanh tương tự trong kết quả để khớp với danh sách của bạn. Điều này được áp dụng sau khi chuyển đổi, không giống như thuật ngữ dẫn dắt công cụ trước khi chuyển đổi.",
       "empty": "Chưa thêm sửa chữa. Nhập một từ và nhấn Enter."
     }
-  },
-  "footer": {
-    "checkingUpdates": "Đang kiểm tra cập nhật...",
-    "updateAvailable": "Có bản cập nhật: {{version}}",
-    "updateAvailableShort": "Có bản cập nhật",
-    "upToDate": "Đã cập nhật",
-    "restart": "Khởi động lại",
-    "updateCheckingDisabled": "Đã tắt kiểm tra cập nhật",
-    "downloading": "Đang tải... {{progress}}%",
-    "installing": "Đang cài đặt...",
-    "preparing": "Đang chuẩn bị...",
-    "checkForUpdates": "Kiểm tra cập nhật"
   },
   "common": {
     "loading": "Đang tải...",

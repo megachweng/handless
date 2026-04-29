@@ -30,7 +30,7 @@ Audio (CPAL) -> VAD (Silero) -> STT Provider (local Whisper/Parakeet/Moonshine/S
 
 ### Managers (`managers/`)
 
-- `audio.rs` - Recording, VAD integration, system audio mute/unmute, clamshell detection
+- `audio.rs` - Recording, VAD integration, system audio mute/unmute
 - `model.rs` - Model download/extraction, engine types, state tracking
 - `transcription.rs` - STT coordination, provider integration
 - `history.rs` - SQLite history DB, migrations, audio file storage
@@ -53,7 +53,6 @@ Audio (CPAL) -> VAD (Silero) -> STT Provider (local Whisper/Parakeet/Moonshine/S
 
 - `stt_provider.rs` - Provider abstraction (local vs cloud)
 - `cloud_stt/` - Cloud integrations (OpenAI, Soniox realtime via WebSocket)
-- `apple_intelligence.rs` - macOS ARM64 Apple Intelligence provider
 
 ### Post-Processing (`post_process/`)
 
@@ -65,15 +64,15 @@ Audio (CPAL) -> VAD (Silero) -> STT Provider (local Whisper/Parakeet/Moonshine/S
 
 ### Platform & UI
 
-- `overlay.rs` - Platform-specific overlay (NSPanel/GTK layer shell/WebviewWindow)
+- `overlay.rs` - Recording overlay window
 - `shortcut/` - Global shortcuts + HandyKeys library
 - `input.rs` - Keyboard/mouse simulation via Enigo
-- `clipboard.rs` - Clipboard save/restore (Wayland support via wl-copy)
+- `clipboard.rs` - Clipboard save/restore and paste handling
 - `tray.rs` / `tray_i18n.rs` - System tray with theme detection
 - `device_watcher.rs` - Audio device hot-plug detection
 - `audio_feedback.rs` - Start/stop recording sounds
 - `cli.rs` - CLI flags (clap derive)
-- `signal_handle.rs` - Unix signal handlers (SIGUSR1/2)
+- `remote_control.rs` - Shared remote-control transcription trigger
 
 ## Frontend (`src/`)
 
@@ -95,8 +94,6 @@ Audio (CPAL) -> VAD (Silero) -> STT Provider (local Whisper/Parakeet/Moonshine/S
 - `settings/debug/` - Debug tools
 - `settings/about/` - App info
 - `model-selector/` - Model selection UI
-- `onboarding/` - First-run flow
-- `update-checker/` - Auto-update
 - `ui/` - 25+ base components (Radix UI + Tailwind)
 
 ### Overlay (`overlay/`)

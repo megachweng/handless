@@ -2,7 +2,6 @@
   "appName": "Handless",
   "tray": {
     "settings": "...الإعدادات",
-    "checkUpdates": "...التحقق من وجود تحديثات",
     "copyLastTranscript": "نسخ آخر نص تم تفريغه",
     "quit": "إنهاء",
     "cancel": "إلغاء"
@@ -424,10 +423,6 @@
         "title": "مستوى السجل",
         "description": "ضبط درجة تفصيل السجلات"
       },
-      "updateChecks": {
-        "label": "التحقق من وجود تحديثات",
-        "description": "التحقق تلقائياً من وجود إصدارات جديدة من Handless"
-      },
       "soundTheme": {
         "label": "سمة الصوت",
         "description": "اختر سمة صوت لتنبيهات بدء وتوقف التسجيل",
@@ -492,18 +487,6 @@
       "appDataDirectory": {
         "title": "مجلد بيانات التطبيق",
         "description": "الموقع الذي يخزن فيه Handless بياناته"
-      },
-      "sourceCode": {
-        "title": "كود المصدر",
-        "description": "عرض كود المصدر والمساهمة",
-        "button": "عرض على GitHub"
-      },
-      "acknowledgments": {
-        "handy": {
-          "title": "Handy",
-          "description": "تطبيق التفريغ الصوتي مفتوح المصدر الذي تم استنساخ Handless منه",
-          "details": "تم بناؤه على Handy بواسطة CJ Pais. شكراً على الأساس."
-        }
       }
     }
   },
@@ -534,18 +517,6 @@
       "description": "الكلمات التي غالباً ما يتم فهمها بشكل خاطئ أو كتابتها بشكل خاطئ بعد التفريغ. سيقوم النظام تلقائياً بتصحيح الكلمات ذات الصوت المماثل في الإخراج لتطابق قائمتك. يتم تطبيق هذا بعد التفريغ، بخلاف المصطلحات التي توجه المحرك قبل التفريغ.",
       "empty": "لم تتم إضافة تصحيحات. اكتب كلمة واضغط على Enter."
     }
-  },
-  "footer": {
-    "checkingUpdates": "...جاري التحقق من وجود تحديثات",
-    "updateAvailable": "تحديث متاح: {{version}}",
-    "updateAvailableShort": "تحديث متاح",
-    "upToDate": "محدث",
-    "restart": "إعادة تشغيل",
-    "updateCheckingDisabled": "تم تعطيل التحقق من التحديث",
-    "downloading": "...جاري التنزيل {{progress}}%",
-    "installing": "...جاري التثبيت",
-    "preparing": "...جاري التحضير",
-    "checkForUpdates": "التحقق من وجود تحديثات"
   },
   "common": {
     "loading": "...جاري التحميل",

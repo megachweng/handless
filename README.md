@@ -5,7 +5,7 @@
 <h1 align="center">Handless</h1>
 
 <p align="center">
-  Free, open-source macOS speech-to-text.<br/>
+  Windows desktop speech-to-text.<br/>
   Press a shortcut, speak, get text in any app. Run locally for privacy or use cloud APIs.
 </p>
 
@@ -28,14 +28,12 @@
 - **Cloud STT** via OpenAI or Soniox
 - **Voice Activity Detection** (local models only)
 - **LLM post-processing** to clean up or reformat transcriptions
-- **macOS** (Intel & Apple Silicon)
+- **Windows**
 - **17 languages**
 
 ## Install
 
-**[Download for macOS](https://github.com/ElwinLiu/handless/releases/latest)** (Intel & Apple Silicon)
-
-Also available at [handless.elwin.cc](https://handless.elwin.cc). Build from source: see [BUILD.md](BUILD.md).
+Build from source: see [BUILD.md](BUILD.md).
 
 ## CLI
 
@@ -58,11 +56,9 @@ handless --help                    # All flags
 
 Combine freely: `handless --start-hidden --no-tray`
 
-> **macOS:** invoke the binary directly: `/Applications/Handless.app/Contents/MacOS/Handless --toggle-transcription`
-
 ## Troubleshooting
 
-`Cmd+Shift+D` opens the debug panel.
+`Ctrl+Shift+D` opens the debug panel.
 
 ## Contributing
 
@@ -72,8 +68,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). For translations: [CONTRIBUTING_TRANSLAT
 
 [MIT](LICENSE)
 
-## Acknowledgments
-
-Forked from [Handy](https://github.com/cjpais/Handy) v0.7.8.
-
-[Whisper](https://github.com/openai/whisper) | [whisper.cpp](https://github.com/ggerganov/whisper.cpp) | [NeMo Parakeet](https://github.com/NVIDIA/NeMo) | [Moonshine](https://github.com/usefulsensors/moonshine) | [SenseVoice](https://github.com/FunAudioLLM/SenseVoice) | [Silero VAD](https://github.com/snakers4/silero-vad) | [Tauri](https://tauri.app) | [Handy](https://github.com/cjpais/Handy)
+[Whisper](https://github.com/openai/whisper) | [whisper.cpp](https://github.com/ggerganov/whisper.cpp) | [NeMo Parakeet](https://github.com/NVIDIA/NeMo) | [Moonshine](https://github.com/usefulsensors/moonshine) | [SenseVoice](https://github.com/FunAudioLLM/SenseVoice) | [Silero VAD](https://github.com/snakers4/silero-vad) | [Tauri](https://tauri.app)

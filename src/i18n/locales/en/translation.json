@@ -2,7 +2,6 @@
   "appName": "Handless",
   "tray": {
     "settings": "Settings...",
-    "checkUpdates": "Check for Updates...",
     "copyLastTranscript": "Copy Last Transcript",
     "quit": "Quit",
     "cancel": "Cancel"
@@ -424,10 +423,6 @@
         "title": "Log Level",
         "description": "Set the verbosity of logging"
       },
-      "updateChecks": {
-        "label": "Check for Updates",
-        "description": "Automatically check for new versions of Handless"
-      },
       "soundTheme": {
         "label": "Sound Theme",
         "description": "Choose a sound theme for recording start and stop feedback",
@@ -492,18 +487,6 @@
       "appDataDirectory": {
         "title": "App Data Directory",
         "description": "Location where Handless stores its data"
-      },
-      "sourceCode": {
-        "title": "Source Code",
-        "description": "View source code and contribute",
-        "button": "View on GitHub"
-      },
-      "acknowledgments": {
-        "handy": {
-          "title": "Handy",
-          "description": "The open-source speech-to-text app that Handless was forked from",
-          "details": "Built on Handy by CJ Pais. Thanks for the foundation."
-        }
       }
     }
   },
@@ -534,18 +517,6 @@
       "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription.",
       "empty": "No corrections added. Type a word and press Enter."
     }
-  },
-  "footer": {
-    "checkingUpdates": "Checking for updates...",
-    "updateAvailable": "Update available: {{version}}",
-    "updateAvailableShort": "Update available",
-    "upToDate": "Up to date",
-    "restart": "Restart",
-    "updateCheckingDisabled": "Update Checking Disabled",
-    "downloading": "Downloading... {{progress}}%",
-    "installing": "Installing...",
-    "preparing": "Preparing...",
-    "checkForUpdates": "Check for updates"
   },
   "common": {
     "loading": "Loading...",
