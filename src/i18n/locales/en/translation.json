@@ -326,6 +326,11 @@
           "description": "API key for the selected provider.",
           "placeholder": "sk-..."
         },
+        "atlantis": {
+          "clientSecret": "Client Secret",
+          "clientSecretDescription": "Azure AD client secret for Atlantis.",
+          "clientSecretPlaceholder": "Enter client secret"
+        },
         "model": {
           "title": "Model",
           "descriptionCustom": "Provide the model identifier expected by your custom endpoint.",

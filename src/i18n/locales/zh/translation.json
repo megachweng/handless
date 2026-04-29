@@ -325,6 +325,11 @@
           "description": "所选提供商的 API 密钥。",
           "placeholder": "sk-..."
         },
+        "atlantis": {
+          "clientSecret": "Client Secret",
+          "clientSecretDescription": "Azure AD client secret for Atlantis.",
+          "clientSecretPlaceholder": "Enter client secret"
+        },
         "model": {
           "title": "模型",
           "descriptionCustom": "提供自定义端点期望的模型标识符。",

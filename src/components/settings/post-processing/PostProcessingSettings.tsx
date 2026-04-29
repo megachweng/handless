@@ -219,6 +219,7 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
 
   const hasProvider = !!state.selectedProvider?.label;
   const hasModel = !!state.model;
+  const isAtlantisProvider = state.selectedProvider?.id === "atlantis";
 
   const statsLine = stats
     ? `${stats.model}${stats.tokens_per_second != null ? ` \u2014 ${t("settings.postProcessing.api.tokensPerSecond", { value: stats.tokens_per_second.toFixed(1) })}` : ""}`
@@ -316,8 +317,16 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
             )}
 
             <SettingContainer
-              title={t("settings.postProcessing.api.apiKey.title")}
-              description={t("settings.postProcessing.api.apiKey.description")}
+              title={t(
+                isAtlantisProvider
+                  ? "settings.postProcessing.api.atlantis.clientSecret"
+                  : "settings.postProcessing.api.apiKey.title",
+              )}
+              description={t(
+                isAtlantisProvider
+                  ? "settings.postProcessing.api.atlantis.clientSecretDescription"
+                  : "settings.postProcessing.api.apiKey.description",
+              )}
               descriptionMode="tooltip"
               layout="horizontal"
               grouped={true}
@@ -327,7 +336,9 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
                   value={state.apiKey}
                   onBlur={state.handleApiKeyChange}
                   placeholder={t(
-                    "settings.postProcessing.api.apiKey.placeholder",
+                    isAtlantisProvider
+                      ? "settings.postProcessing.api.atlantis.clientSecretPlaceholder"
+                      : "settings.postProcessing.api.apiKey.placeholder",
                   )}
                   disabled={state.isApiKeyUpdating}
                   className={FIELD_WIDTH}

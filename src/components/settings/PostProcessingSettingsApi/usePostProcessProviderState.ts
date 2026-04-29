@@ -52,7 +52,7 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
   const providers = settings?.post_process_providers || [];
 
   const selectedProviderId = useMemo(() => {
-    return settings?.post_process_provider_id || providers[0]?.id || "openai";
+    return settings?.post_process_provider_id || providers[0]?.id || "atlantis";
   }, [providers, settings?.post_process_provider_id]);
 
   const selectedProvider = useMemo(() => {

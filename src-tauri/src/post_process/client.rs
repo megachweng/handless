@@ -1,8 +1,14 @@
-use crate::post_process::providers::PostProcessProvider;
+use crate::post_process::providers::{
+    default_model_for_provider, PostProcessProvider, ATLANTIS_API_VERSION, ATLANTIS_CLIENT_ID,
+    ATLANTIS_PROVIDER_ID, ATLANTIS_SCOPE, ATLANTIS_TOKEN_URL,
+};
 use log::debug;
+use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE, REFERER, USER_AGENT};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::sync::Mutex;
+use std::time::{Duration, Instant};
 
 #[derive(Debug, Serialize)]
 struct ChatMessage {
@@ -55,8 +61,150 @@ struct ChatMessageResponse {
     content: Option<String>,
 }
 
+#[derive(Debug, Deserialize)]
+struct AtlantisTokenResponse {
+    access_token: Option<String>,
+    expires_in: Option<u64>,
+    error: Option<String>,
+    error_description: Option<String>,
+}
+
+struct AtlantisTokenCache {
+    client_secret: String,
+    access_token: String,
+    expires_at: Instant,
+}
+
+static ATLANTIS_TOKEN_CACHE: Mutex<Option<AtlantisTokenCache>> = Mutex::new(None);
+const ATLANTIS_TOKEN_EXPIRY_SKEW: Duration = Duration::from_secs(60);
+
+fn is_atlantis(provider: &PostProcessProvider) -> bool {
+    provider.id == ATLANTIS_PROVIDER_ID
+}
+
+fn form_value(value: &str) -> String {
+    utf8_percent_encode(value, NON_ALPHANUMERIC).to_string()
+}
+
+fn atlantis_token_form(client_secret: &str) -> String {
+    [
+        ("client_id", ATLANTIS_CLIENT_ID),
+        ("client_secret", client_secret),
+        ("scope", ATLANTIS_SCOPE),
+        ("grant_type", "client_credentials"),
+    ]
+    .into_iter()
+    .map(|(key, value)| format!("{}={}", key, form_value(value)))
+    .collect::<Vec<_>>()
+    .join("&")
+}
+
+async fn acquire_atlantis_token(client_secret: &str) -> Result<String, String> {
+    if client_secret.trim().is_empty() {
+        return Err("Atlantis client secret is required".to_string());
+    }
+
+    if let Ok(cache) = ATLANTIS_TOKEN_CACHE.lock() {
+        if let Some(cached) = cache.as_ref() {
+            if cached.client_secret == client_secret && Instant::now() < cached.expires_at {
+                return Ok(cached.access_token.clone());
+            }
+        }
+    }
+
+    debug!("Acquiring Atlantis Azure AD token");
+
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(30))
+        .build()
+        .map_err(|e| format!("Failed to build Atlantis token client: {}", e))?;
+
+    let response = client
+        .post(ATLANTIS_TOKEN_URL)
+        .header(CONTENT_TYPE, "application/x-www-form-urlencoded")
+        .body(atlantis_token_form(client_secret))
+        .send()
+        .await
+        .map_err(|e| format!("Atlantis token request failed: {}", e))?;
+
+    let status = response.status();
+    let text = response
+        .text()
+        .await
+        .map_err(|e| format!("Failed to read Atlantis token response: {}", e))?;
+
+    let token_response: AtlantisTokenResponse = serde_json::from_str(&text)
+        .map_err(|e| format!("Failed to parse Atlantis token response: {}", e))?;
+
+    if !status.is_success() {
+        let message = token_response
+            .error_description
+            .or(token_response.error)
+            .unwrap_or_else(|| format!("HTTP {}", status));
+        return Err(format!("Failed to acquire Atlantis token: {}", message));
+    }
+
+    let access_token = token_response
+        .access_token
+        .ok_or_else(|| "Atlantis token response did not include an access token".to_string())?;
+    let expires_in = token_response.expires_in.unwrap_or(1800);
+    let cache_ttl = Duration::from_secs(expires_in).saturating_sub(ATLANTIS_TOKEN_EXPIRY_SKEW);
+
+    if let Ok(mut cache) = ATLANTIS_TOKEN_CACHE.lock() {
+        *cache = Some(AtlantisTokenCache {
+            client_secret: client_secret.to_string(),
+            access_token: access_token.clone(),
+            expires_at: Instant::now() + cache_ttl,
+        });
+    }
+
+    Ok(access_token)
+}
+
+async fn resolve_auth_token(
+    provider: &PostProcessProvider,
+    api_key: &str,
+) -> Result<String, String> {
+    if is_atlantis(provider) {
+        acquire_atlantis_token(api_key).await
+    } else {
+        Ok(api_key.to_string())
+    }
+}
+
+fn chat_completions_url(provider: &PostProcessProvider, model: &str) -> String {
+    let base_url = provider.base_url.trim_end_matches('/');
+    if is_atlantis(provider) {
+        return format!(
+            "{}/openai/deployments/{}/chat/completions?api-version={}",
+            base_url,
+            model.trim(),
+            ATLANTIS_API_VERSION
+        );
+    }
+
+    format!("{}/chat/completions", base_url)
+}
+
+fn models_url(provider: &PostProcessProvider) -> Option<String> {
+    let endpoint = provider.models_endpoint.as_deref()?;
+
+    if endpoint.starts_with("http://") || endpoint.starts_with("https://") {
+        return Some(endpoint.to_string());
+    }
+
+    let base_url = provider.base_url.trim_end_matches('/');
+    let endpoint = if endpoint.starts_with('/') {
+        endpoint.to_string()
+    } else {
+        format!("/{}", endpoint)
+    };
+
+    Some(format!("{}{}", base_url, endpoint))
+}
+
 /// Build headers for API requests based on provider type
-fn build_headers(provider: &PostProcessProvider, api_key: &str) -> Result<HeaderMap, String> {
+fn build_headers(provider: &PostProcessProvider, auth_token: &str) -> Result<HeaderMap, String> {
     let mut headers = HeaderMap::new();
 
     // Common headers
@@ -72,18 +220,18 @@ fn build_headers(provider: &PostProcessProvider, api_key: &str) -> Result<Header
     headers.insert("X-Title", HeaderValue::from_static("Handless"));
 
     // Provider-specific auth headers
-    if !api_key.is_empty() {
+    if !auth_token.is_empty() {
         if provider.id == "anthropic" {
             headers.insert(
                 "x-api-key",
-                HeaderValue::from_str(api_key)
+                HeaderValue::from_str(auth_token)
                     .map_err(|e| format!("Invalid API key header value: {}", e))?,
             );
             headers.insert("anthropic-version", HeaderValue::from_static("2023-06-01"));
         } else {
             headers.insert(
                 AUTHORIZATION,
-                HeaderValue::from_str(&format!("Bearer {}", api_key))
+                HeaderValue::from_str(&format!("Bearer {}", auth_token))
                     .map_err(|e| format!("Invalid authorization header value: {}", e))?,
             );
         }
@@ -93,10 +241,14 @@ fn build_headers(provider: &PostProcessProvider, api_key: &str) -> Result<Header
 }
 
 /// Create an HTTP client with provider-specific headers
-fn create_client(provider: &PostProcessProvider, api_key: &str) -> Result<reqwest::Client, String> {
-    let headers = build_headers(provider, api_key)?;
+fn create_client(
+    provider: &PostProcessProvider,
+    auth_token: &str,
+) -> Result<reqwest::Client, String> {
+    let headers = build_headers(provider, auth_token)?;
     reqwest::Client::builder()
         .default_headers(headers)
+        .danger_accept_invalid_certs(is_atlantis(provider))
         .build()
         .map_err(|e| format!("Failed to build HTTP client: {}", e))
 }
@@ -112,12 +264,12 @@ pub async fn send_chat_completion(
     system_prompt: String,
     json_schema: Option<Value>,
 ) -> Result<(Option<String>, Option<Usage>), String> {
-    let base_url = provider.base_url.trim_end_matches('/');
-    let url = format!("{}/chat/completions", base_url);
+    let url = chat_completions_url(provider, model);
 
     debug!("Sending chat completion request to: {}", url);
 
-    let client = create_client(provider, &api_key)?;
+    let auth_token = resolve_auth_token(provider, &api_key).await?;
+    let client = create_client(provider, &auth_token)?;
 
     let messages = vec![
         ChatMessage {
@@ -183,12 +335,20 @@ pub async fn fetch_models(
     provider: &PostProcessProvider,
     api_key: String,
 ) -> Result<Vec<String>, String> {
-    let base_url = provider.base_url.trim_end_matches('/');
-    let url = format!("{}/models", base_url);
+    let auth_token = resolve_auth_token(provider, &api_key).await?;
+
+    let Some(url) = models_url(provider) else {
+        let default_model = default_model_for_provider(&provider.id);
+        return if default_model.is_empty() {
+            Ok(Vec::new())
+        } else {
+            Ok(vec![default_model])
+        };
+    };
 
     debug!("Fetching models from: {}", url);
 
-    let client = create_client(provider, &api_key)?;
+    let client = create_client(provider, &auth_token)?;
 
     let response = client
         .get(&url)

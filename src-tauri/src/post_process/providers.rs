@@ -3,6 +3,16 @@ use log::debug;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 
+pub(crate) const ATLANTIS_PROVIDER_ID: &str = "atlantis";
+pub(crate) const ATLANTIS_BASE_URL: &str = "https://atlantis.azureai-np.swissre.com";
+pub(crate) const ATLANTIS_API_VERSION: &str = "2024-12-01-preview";
+pub(crate) const ATLANTIS_DEFAULT_MODEL: &str = "gpt-4o";
+pub(crate) const ATLANTIS_CLIENT_ID: &str = "beb71cb9-a912-4821-b363-08bd49aa0fb0";
+pub(crate) const ATLANTIS_TOKEN_URL: &str =
+    "https://login.microsoftonline.com/45597f60-6e37-4be7-acfb-4c9e23b261ea/oauth2/v2.0/token";
+pub(crate) const ATLANTIS_SCOPE: &str =
+    "api://79f8f8aa-c15a-4b6e-a4d5-f6a420bb1524/.default";
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Type)]
 pub struct PostProcessProvider {
     pub id: String,
@@ -19,6 +29,14 @@ pub struct PostProcessProvider {
 pub fn default_providers() -> Vec<PostProcessProvider> {
     let mut providers = vec![
         PostProcessProvider {
+            id: ATLANTIS_PROVIDER_ID.to_string(),
+            label: "Atlantis".to_string(),
+            base_url: ATLANTIS_BASE_URL.to_string(),
+            allow_base_url_edit: false,
+            models_endpoint: None,
+            supports_structured_output: false,
+        },
+        PostProcessProvider {
             id: "openai".to_string(),
             label: "OpenAI".to_string(),
             base_url: "https://api.openai.com/v1".to_string(),
@@ -29,7 +47,7 @@ pub fn default_providers() -> Vec<PostProcessProvider> {
         PostProcessProvider {
             id: "openrouter".to_string(),
             label: "OpenRouter".to_string(),
-            base_url: "https://openrouter.ai/api/v1".to_string(),
+            base_url: "https://gateway.ai.cloudflare.com/v1/793fcc3066fb7812c082e5eac9dbc75b/gateway/openrouter/v1".to_string(),
             allow_base_url_edit: false,
             models_endpoint: Some("/models".to_string()),
             supports_structured_output: true,
@@ -50,8 +68,10 @@ pub fn default_providers() -> Vec<PostProcessProvider> {
 }
 
 pub(crate) fn default_model_for_provider(provider_id: &str) -> String {
-    let _ = provider_id;
-    String::new()
+    match provider_id {
+        ATLANTIS_PROVIDER_ID => ATLANTIS_DEFAULT_MODEL.to_string(),
+        _ => String::new(),
+    }
 }
 
 pub fn ensure_provider_defaults(settings: &mut AppSettings) -> bool {

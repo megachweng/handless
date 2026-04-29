@@ -504,7 +504,16 @@ fn default_show_tray_icon() -> bool {
 }
 
 fn default_post_process_provider_id() -> String {
-    "openai".to_string()
+    crate::post_process::providers::ATLANTIS_PROVIDER_ID.to_string()
+}
+
+fn should_migrate_legacy_post_process_default(settings: &AppSettings) -> bool {
+    settings.post_process_provider_id == "openai"
+        && settings
+            .post_process_api_keys
+            .get("openai")
+            .map(|api_key| api_key.trim().is_empty())
+            .unwrap_or(true)
 }
 
 fn default_post_process_providers() -> Vec<PostProcessProvider> {
@@ -1190,6 +1199,11 @@ fn apply_settings_migrations(settings: &mut AppSettings) -> bool {
         updated = true;
     }
 
+    if should_migrate_legacy_post_process_default(settings) {
+        settings.post_process_provider_id = default_post_process_provider_id();
+        updated = true;
+    }
+
     updated |= ensure_stt_defaults(settings);
     updated |= ensure_post_process_defaults(settings);
 
@@ -1408,6 +1422,45 @@ mod tests {
     }
 
     #[test]
+    fn default_post_process_provider_is_atlantis() {
+        let settings = get_default_settings();
+
+        assert_eq!(settings.post_process_provider_id, "atlantis");
+        assert!(settings.post_process_provider("atlantis").is_some());
+        assert_eq!(
+            settings
+                .post_process_models
+                .get("atlantis")
+                .map(String::as_str),
+            Some("gpt-4o")
+        );
+    }
+
+    #[test]
+    fn migration_switches_unconfigured_legacy_openai_default_to_atlantis() {
+        let mut settings = get_default_settings();
+        settings.post_process_provider_id = "openai".to_string();
+        settings
+            .post_process_api_keys
+            .insert("openai".to_string(), String::new());
+
+        assert!(apply_settings_migrations(&mut settings));
+        assert_eq!(settings.post_process_provider_id, "atlantis");
+    }
+
+    #[test]
+    fn migration_keeps_configured_openai_provider() {
+        let mut settings = get_default_settings();
+        settings.post_process_provider_id = "openai".to_string();
+        settings
+            .post_process_api_keys
+            .insert("openai".to_string(), "sk-configured".to_string());
+
+        apply_settings_migrations(&mut settings);
+        assert_eq!(settings.post_process_provider_id, "openai");
+    }
+
+    #[test]
     fn legacy_push_to_talk_settings_still_deserialize_into_activation_mode() {
         let hold_settings = json!({
             "push_to_talk": true
@@ -1485,7 +1538,7 @@ mod tests {
             Some("groq-key")
         );
         assert_eq!(recovered.stt_provider_id, "soniox");
-        assert_eq!(recovered.post_process_provider_id, "openai");
+        assert_eq!(recovered.post_process_provider_id, "atlantis");
         assert_eq!(recovered.dictionary_terms, vec!["handless"]);
         assert!(recovered
             .stt_providers

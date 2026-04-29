@@ -1,7 +1,16 @@
 use crate::post_process::pricing::ModelPricing;
+use crate::post_process::providers::{PostProcessProvider, ATLANTIS_PROVIDER_ID};
 use crate::post_process::prompts::{is_builtin_prompt, LLMPrompt};
 use crate::settings;
 use tauri::AppHandle;
+
+fn credential_label(provider: &PostProcessProvider) -> &'static str {
+    if provider.id == ATLANTIS_PROVIDER_ID {
+        "Client secret"
+    } else {
+        "API key"
+    }
+}
 
 /// Generic helper to validate provider exists
 fn validate_provider_exists(
@@ -116,7 +125,8 @@ pub async fn fetch_post_process_models(
     // Skip fetching if no API key for providers that typically need one
     if api_key.trim().is_empty() && provider.id != "custom" {
         return Err(format!(
-            "API key is required for {}. Please add an API key to list available models.",
+            "{} is required for {}. Please add it to list available models.",
+            credential_label(provider),
             provider.label
         ));
     }
