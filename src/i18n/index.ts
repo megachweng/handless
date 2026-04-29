@@ -1,6 +1,5 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import { locale } from "@tauri-apps/plugin-os";
 import { LANGUAGE_METADATA } from "./languages";
 import { commands } from "@/bindings";
 import {
@@ -52,7 +51,7 @@ export const SUPPORTED_LANGUAGES = Object.keys(resources)
 export type SupportedLanguageCode = string;
 
 // Check if a language code is supported
-const getSupportedLanguage = (
+export const getSupportedLanguage = (
   langCode: string | null | undefined,
 ): SupportedLanguageCode | null => {
   if (!langCode) return null;
@@ -89,18 +88,14 @@ i18n.use(initReactI18next).init({
 export const syncLanguageFromSettings = async () => {
   try {
     const result = await commands.getAppSettings();
-    if (result.status === "ok" && result.data.app_language) {
-      const supported = getSupportedLanguage(result.data.app_language);
-      if (supported && supported !== i18n.language) {
-        await i18n.changeLanguage(supported);
-      }
-    } else {
-      // Fall back to system locale detection if no saved preference
-      const systemLocale = await locale();
-      const supported = getSupportedLanguage(systemLocale);
-      if (supported && supported !== i18n.language) {
-        await i18n.changeLanguage(supported);
-      }
+    const supported =
+      result.status === "ok"
+        ? getSupportedLanguage(result.data.app_language)
+        : null;
+    const nextLanguage = supported || "en";
+
+    if (nextLanguage !== i18n.language) {
+      await i18n.changeLanguage(nextLanguage);
     }
   } catch (e) {
     console.warn("Failed to sync language from settings:", e);

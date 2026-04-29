@@ -1,7 +1,7 @@
 {
   "name": "handless-app",
   "private": true,
-  "version": "0.2.9",
+  "version": "1.0.0",
   "type": "module",
   "description": "Windows desktop speech-to-text with cloud STT.",
   "keywords": [
@@ -13,14 +13,6 @@
     "desktop",
     "transcription"
   ],
-  "homepage": "https://github.com/ElwinLiu/handless",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ElwinLiu/handless.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ElwinLiu/handless/issues"
-  },
   "author": "Elwin Liu",
   "packageManager": "pnpm@10.33.2",
   "engines": {

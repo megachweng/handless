@@ -29,6 +29,11 @@ dist-ssr
 
 /target/
 recording_*
+
+# Local AI tooling
+.agents/
+.claude/
+.codex/
 .crush/
 
 # Playwright
@@ -40,9 +45,3 @@ blob-report/
 .envrc
 .env
 .env.*
-
-# Claude Code
-.claude/*
-!.claude/skills/
-!.claude/hooks/
-!.claude/settings.json

@@ -73,13 +73,13 @@ All user-facing strings use i18next (ESLint enforces no hardcoded JSX strings).
 
 **During development:**
 
-1. Add key to `src/i18n/locales/en/translation.json` only
+1. Add key to `src/i18n/locales/en/translation.json`
 2. Use in component: `const { t } = useTranslation(); t('key.path')`
 
 **Before committing:**
 
-3. Add the same key to all 16 other locale files (ar, cs, de, es, fr, it, ja, ko, pl, pt, ru, tr, uk, vi, zh, zh-TW) — use English as placeholder
-4. Run `pnpm run check:translations` to verify all locales have matching keys
+3. Add the same key to `src/i18n/locales/zh/translation.json` — use English as placeholder if a Chinese translation is not ready
+4. Run `pnpm run check:translations` to verify both locales have matching keys
 
 Keys are organized by feature area: `tray.*`, `sidebar.*`, `onboarding.*`, `settings.*`, `models.*`, etc.
 

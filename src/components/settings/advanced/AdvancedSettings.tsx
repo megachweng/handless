@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useAppVersion } from "@/hooks/useAppVersion";
 import { AutostartToggle } from "../AutostartToggle";
 import { StartHidden } from "../StartHidden";
 import { ShowTrayIcon } from "../ShowTrayIcon";
@@ -15,13 +14,11 @@ import { KeyboardImplementationSelector } from "../debug/KeyboardImplementationS
 import { LogDirectory } from "../debug";
 import { AppDataDirectory } from "../AppDataDirectory";
 import { SettingsGroup } from "../../ui/SettingsGroup";
-import { SettingContainer } from "../../ui/SettingContainer";
 import { ExportImportSettings } from "./ExportImportSettings";
 import { ConfigFileSettings } from "./ConfigFileSettings";
 
 export const AdvancedSettings: React.FC = () => {
   const { t } = useTranslation();
-  const version = useAppVersion();
 
   return (
     <div className="max-w-3xl w-full space-y-8">
@@ -55,17 +52,6 @@ export const AdvancedSettings: React.FC = () => {
         <ExportImportSettings />
         <AppDataDirectory descriptionMode="tooltip" grouped={true} />
         <LogDirectory grouped={true} />
-      </SettingsGroup>
-
-      <SettingsGroup title={t("settings.about.title")}>
-        <SettingContainer
-          title={t("settings.about.version.title")}
-          description={t("settings.about.version.description")}
-          grouped={true}
-        >
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <span className="text-sm font-mono">v{version}</span>
-        </SettingContainer>
       </SettingsGroup>
     </div>
   );

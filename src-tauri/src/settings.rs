@@ -483,9 +483,20 @@ fn default_post_process_enabled() -> bool {
 }
 
 fn default_app_language() -> String {
-    tauri_plugin_os::locale()
-        .map(|l| l.replace('_', "-"))
-        .unwrap_or_else(|| "en".to_string())
+    "en".to_string()
+}
+
+fn normalize_app_language(language: &str) -> String {
+    let code = language
+        .split(['-', '_'])
+        .next()
+        .unwrap_or("en")
+        .to_lowercase();
+
+    match code.as_str() {
+        "zh" => "zh".to_string(),
+        _ => "en".to_string(),
+    }
 }
 
 fn default_show_tray_icon() -> bool {
@@ -1133,6 +1144,12 @@ fn backup_invalid_settings_store(app: &AppHandle) {
 fn apply_settings_migrations(settings: &mut AppSettings) -> bool {
     let mut updated = normalize_provider_catalogs(settings);
     updated |= normalize_settings_definitions(settings);
+
+    let normalized_app_language = normalize_app_language(&settings.app_language);
+    if settings.app_language != normalized_app_language {
+        settings.app_language = normalized_app_language;
+        updated = true;
+    }
 
     if settings.microphone_priority.is_empty() {
         if let Some(ref mic) = settings.selected_microphone {

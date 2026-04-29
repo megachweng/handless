@@ -479,11 +479,6 @@
       }
     },
     "about": {
-      "title": "About",
-      "version": {
-        "title": "Version",
-        "description": "Current version of Handless"
-      },
       "appDataDirectory": {
         "title": "App Data Directory",
         "description": "Location where Handless stores its data"

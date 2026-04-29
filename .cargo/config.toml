@@ -1,15 +1,1 @@
 [build]
-
-[source.crates-io]
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/cjpais/rodio.git"]
-git = "https://github.com/cjpais/rodio.git"
-replace-with = "vendored-sources"
-
-[source."git+https://github.com/rustdesk-org/rdev"]
-git = "https://github.com/rustdesk-org/rdev"
-replace-with = "vendored-sources"
-
-[source.vendored-sources]
-directory = "vendor"
